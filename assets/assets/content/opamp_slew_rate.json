@@ -1,0 +1,758 @@
+{
+  "topics": [
+    {
+      "id": "opamp_slew_rate",
+      "title": "Slew-rate limiting",
+      "summary": "An op-amp output can only change so many volts per microsecond; big, fast sine waves turn into triangles.",
+      "lenses": [
+        "circuit",
+        "signals",
+        "physics"
+      ],
+      "prerequisites": [
+        "opamp_noninverting",
+        "opamp_bandwidth"
+      ],
+      "lensNotes": {
+        "circuit": "Slew rate is the fastest the output can move, in V/µs. For a sine, the limit is 2πf·V_p ≤ SR, so big signals run out of speed long before small ones.",
+        "signals": "Slew limiting is a large-signal distortion: sines turn into triangles. Unlike the GBW limit, it depends on amplitude.",
+        "physics": "Inside the op amp, a limited current charges an internal compensation capacitor. dV/dt = I/C sets the slew rate, like filling a tank through a pipe with a maximum flow."
+      },
+      "formulas": [
+        {
+          "label": "Full-power bandwidth",
+          "tex": "f_{max} = \\frac{SR}{2\\pi V_p}"
+        },
+        {
+          "label": "Sine slope",
+          "tex": "\\left.\\frac{dv}{dt}\\right|_{max} = 2\\pi f V_p"
+        }
+      ],
+      "prerequisiteNotes": {
+        "opamp_noninverting": "Slew rate limits how fast an amplifier's output can move; you meet it first when a follower or non-inverting stage has to swing large signals.",
+        "opamp_bandwidth": "GBW limits small signals; slew rate is the second, amplitude-dependent limit, and the lower of the two sets the ceiling."
+      },
+      "goals": [
+        "Find the highest frequency at which an op amp can deliver a sine of a given peak (the full-power bandwidth)",
+        "Find the slew rate a design needs from its largest output peak and highest frequency",
+        "Tell slew limiting from the small-signal bandwidth limit by how each depends on amplitude",
+        "Recognize slew distortion on a scope: a sine turning into a smaller triangle"
+      ],
+      "intuition": "An op amp's output can only move so many volts per microsecond, so a sine comes out clean only while its steepest slope, 2πf·Vp at the zero crossings, stays below the slew rate: a large, fast signal runs out of speed where a small one at the same frequency does not.",
+      "why": "Inside a typical internally compensated op amp, a stage with a limited bias current I charges the compensation capacitor C that also sets the GBW. A capacitor's voltage can change no faster than I/C, and the output follows that capacitor's voltage, so the output slope has a ceiling: the slew rate. A small signal asks for only a small slope, and the current stays well below its limit. A large, fast signal asks for more current than the stage can supply; the current stops at I, and the output ramps in a straight line at I/C, whatever the input is doing.",
+      "explanation": "The gain-bandwidth product describes small signals: above the bandwidth a sine comes out smaller, but still a sine. A second limit depends on size. An op amp's output can only change so fast: the slew rate, SR, quoted in volts per microsecond. A sine Vp·sin(2πft), with f in hertz, is steepest where it crosses zero, with slope 2πf·Vp volts per second. While that slope stays below the slew rate, the sine comes out clean. Set them equal to get the full-power bandwidth: f_max = SR / (2π·Vp). Convert units first: 1 V/µs is 10⁶ V/s. Because Vp is in the formula, a smaller signal can go faster before it hits the limit: a tenth of the amplitude, ten times the frequency. Above f_max the output cannot keep up: it ramps at the slew rate near each zero crossing, and well above f_max the sine becomes a triangle that shrinks as the frequency rises. That is distortion, not just a loss of level, and more GBW does not cure it. Work out both limits: GBW / noise gain for small signals, and SR / (2π·Vp) for the largest output you need. The lower one is the real ceiling.",
+      "workedExample": {
+        "problem": "A non-inverting amplifier with Rf = 100 kΩ and Rg = 10 kΩ runs on ±15 V supplies. Its op amp has a GBW of 1 MHz and a slew rate of 0.5 V/µs. It must deliver a 10 V peak sine at 20 kHz. Does it, and if not, what limits it?",
+        "steps": [
+          "Gain: 1 + 100 kΩ / 10 kΩ = 11, so a 10 V peak output needs 10 V / 11 = 0.909 V peak at the input. 10 V peak is inside the ±15 V supplies.",
+          "Small-signal bandwidth: 1 MHz / 11 = 90.9 kHz, well above 20 kHz, so GBW is not the problem.",
+          "Slope needed: 2π × 20 kHz × 10 V = 1.26 × 10⁶ V/s = 1.26 V/µs, more than the 0.5 V/µs available.",
+          "Full-power bandwidth at 10 V peak: f_max = 0.5 × 10⁶ V/s / (2π × 10 V) = 7.96 kHz. Above that the 10 V sine starts to distort, and well above it becomes a triangle.",
+          "At 20 kHz the largest clean sine is Vp = 0.5 × 10⁶ V/s / (2π × 20 kHz) = 3.98 V peak.",
+          "So slew rate, not GBW, is the ceiling: 7.96 kHz for 10 V peak against a 90.9 kHz small-signal bandwidth. The fix is an op amp that slews at least 1.26 V/µs, with margin; an op amp with more GBW but the same slew rate would not help."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Operational Amplifiers\" (last update 23 September 2026), section 5.7.7 \"Slew rate\" (p. 190)",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_opamp.pdf",
+          "note": "Slew rate is the fastest the output can rise or fall, set by limited internal currents charging capacitance (mainly the compensation capacitor) per I = C dV/dt, so a slewing output ramps linearly; a 741 is typically about 0.5 V/µs."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. II (AC), ch. 4 \"Reactance and Impedance -- Capacitive\", section \"AC capacitor circuits\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/AC/AC_4.html#xtocid88941",
+          "note": "A sine wave's slope is steepest where it crosses zero and zero at its peaks."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "slew_fmax",
+      "topicId": "opamp_slew_rate",
+      "prompt": "An op amp with a slew rate of {SR} V/µs runs from supplies large enough for the swing (±15 V). Considering only its slew rate, what is the highest frequency at which it can output an undistorted sine wave of {Vp} peak (its full-power bandwidth)?",
+      "variables": [
+        {
+          "name": "SR",
+          "unit": "",
+          "range": {
+            "min": 0.5,
+            "max": 20,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "Vp",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 10,
+            "step": 1
+          }
+        }
+      ],
+      "answer": {
+        "formula": "SR*1e6/(2*pi*Vp)",
+        "unit": "Hz"
+      },
+      "explanation": "A sine V_p·sin(2πft) changes fastest at its zero crossings, at 2πf·V_p volts per second. Setting that equal to the slew rate: f_max = SR / (2π V_p) = {SR} × 10⁶ / (2π × {Vp}) = {answer} (the full-power bandwidth).",
+      "hints": [
+        "How fast does a sine wave change at its steepest point?",
+        "The maximum slope is 2πf·Vp; set it equal to SR (in V/s)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "SR/(2*pi*Vp)",
+          "feedback": "The slew rate is in V/µs; convert to V/s (× 10⁶) before dividing."
+        }
+      ],
+      "estimate": true,
+      "followUps": [
+        {
+          "prompt": "Why does this frequency limit depend on the amplitude, when the gain-bandwidth limit doesn't?",
+          "choices": [
+            {
+              "text": "The output can only move so many volts per microsecond, and a sine's steepest slope, 2πf·Vp, grows with its amplitude",
+              "feedback": "Right: halve the amplitude and the steepest slope halves, so twice the frequency fits under the same slew rate.",
+              "correct": true
+            },
+            {
+              "text": "A bigger signal needs more gain, and more gain leaves less bandwidth, so big signals run out sooner",
+              "feedback": "The gain is the same for a big and a small signal; only the amplitude differs. Gain × bandwidth doesn't care about amplitude."
+            },
+            {
+              "text": "Big signals clip on the supply rails first, and the clipping gets worse as the frequency rises",
+              "feedback": "Clipping flattens the peaks at any frequency. Here the ±15 V supplies leave room for the whole swing, so the rails aren't reached; the limit is how fast the output can move."
+            },
+            {
+              "text": "It doesn't really: f_max is a fixed property of the op amp, like the GBW, whatever the signal size",
+              "feedback": "Try it: at a tenth of the amplitude the steepest slope is a tenth, so the sine can go ten times faster before reaching the slew rate."
+            }
+          ],
+          "explanation": "Inside the op amp, a limited current I charges the compensation capacitor C, so the output can't move faster than dV/dt = I/C, the slew rate (the same rule as charging any capacitor from a current, from RC time constant). A sine Vp·sin(2πft) is steepest at its zero crossings, 2πf·Vp volts per second. A small signal never asks for that much slope; a big one does, and its crossings turn into straight ramps. The gain-bandwidth limit is different: it shrinks the whole sine smoothly, whatever its size."
+        }
+      ],
+      "noDrawing": "slew-rate arithmetic for an op amp; no stage described",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "slew_required",
+      "topicId": "opamp_slew_rate",
+      "prompt": "An amplifier must deliver a {Vp} peak sine wave at {f}. What is the minimum slew rate, in V/µs?",
+      "variables": [
+        {
+          "name": "Vp",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "series": "E12",
+          "decades": [
+            3,
+            5
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "2*pi*f*Vp/1e6",
+        "unit": "V/µs"
+      },
+      "explanation": "The steepest slope of the sine is 2πf·V_p = 2π × {f} × {Vp}, in volts per second. Divide by 10⁶ for V/µs: {answer}.",
+      "hints": [
+        "The maximum slope of Vp·sin(2πft) is 2πf·Vp.",
+        "Convert V/s to V/µs by dividing by 10⁶."
+      ],
+      "misconceptions": [
+        {
+          "formula": "2*pi*f*Vp",
+          "feedback": "That's in V/s. The question asks for V/µs: divide by 10⁶."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "The required slew rate comes from the sine's steepest slope. Where on the wave is it steepest, and why?",
+          "choices": [
+            {
+              "text": "At the zero crossings: at the peaks the wave stops and turns round, but through the middle it moves fastest",
+              "feedback": "Right: the slope of Vp·sin(2πft) is 2πf·Vp·cos(2πft), largest where the sine crosses zero.",
+              "correct": true
+            },
+            {
+              "text": "At the peaks: the voltage is biggest there, so the output has the most volts to move in each microsecond",
+              "feedback": "A big voltage isn't a fast-changing one. At the top of a peak the wave stops for an instant: its slope there is zero."
+            },
+            {
+              "text": "Nowhere in particular: a sine rises at the same rate all the way from its trough to its peak",
+              "feedback": "That's a triangle wave. A sine's slope varies like a cosine: largest at the crossings, zero at the peaks."
+            },
+            {
+              "text": "An eighth of a cycle after the crossing (halfway in time to the peak), where the wave has both built up speed and gained height",
+              "feedback": "An eighth of a cycle is 45° of phase, so there the slope is only cos 45° ≈ 0.71 of its largest value; it keeps growing all the way to the crossing."
+            }
+          ],
+          "explanation": "The slope of Vp·sin(2πft) is 2πf·Vp·cos(2πft): biggest at the zero crossings, zero at the peaks. So the op amp must manage 2πf·Vp = {answer} at the crossings. If it can't, the crossings are the first place the output ramps in a straight line instead of following the curve; push harder and the whole wave becomes a triangle."
+        }
+      ],
+      "noDrawing": "slew-rate arithmetic for an op amp; no stage described",
+      "review": "verified"
+    },
+    {
+      "id": "slew_max_amplitude",
+      "topicId": "opamp_slew_rate",
+      "prompt": "An op amp with a {SR} V/µs slew rate must reproduce a sine wave at {f}. What is the largest peak amplitude it can output without slew distortion (ignore the supply limit)?",
+      "variables": [
+        {
+          "name": "SR",
+          "unit": "",
+          "range": {
+            "min": 0.5,
+            "max": 10,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "series": "E12",
+          "decades": [
+            5,
+            5
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "SR*1e6/(2*pi*f)",
+        "unit": "V"
+      },
+      "explanation": "Solve 2πf·V_p = SR for V_p: V_p = {SR} × 10⁶ / (2π × {f}) = {answer}. (If the supply limits the swing to less than this, the supply wins.)",
+      "hints": [
+        "Same relation as before, solved for amplitude.",
+        "V_p = SR / (2πf), with SR in V/s."
+      ],
+      "misconceptions": [],
+      "noDrawing": "slew-rate arithmetic for an op amp; no stage described",
+      "review": "verified"
+    },
+    {
+      "id": "slew_shape",
+      "topicId": "opamp_slew_rate",
+      "prompt": "A large sine wave at a frequency well above an op amp's full-power bandwidth is applied. What does the output look like?",
+      "choices": [
+        {
+          "text": "A triangle wave of reduced amplitude",
+          "correct": true,
+          "feedback": "Yes: the output ramps up and down at the maximum slew rate and never catches the input."
+        },
+        {
+          "text": "A square wave",
+          "feedback": "A square wave has near-instant edges, which is exactly what slew limiting prevents."
+        },
+        {
+          "text": "A clean sine wave, just smaller",
+          "feedback": "That's what small-signal bandwidth limiting does. Slew limiting changes the shape: straight-line ramps."
+        },
+        {
+          "text": "A sine wave clipped flat at the top",
+          "feedback": "Flat tops come from hitting the supply rails, not from slew rate."
+        }
+      ],
+      "explanation": "The output can only change at the slew rate, so it moves in straight ramps: a triangle whose amplitude shrinks as the frequency rises. This is a large-signal limit, separate from the gain-bandwidth limit.",
+      "noDrawing": "what slew limiting does to a waveform; no particular stage",
+      "review": "verified"
+    },
+    {
+      "id": "bridge_slew_amplitude",
+      "topicId": "opamp_slew_rate",
+      "bridge": [
+        "signals",
+        "physics"
+      ],
+      "prompt": "At 50 kHz an op amp reproduces a 0.1 V sine cleanly but turns a 10 V sine into a triangle. Why the difference?",
+      "choices": [
+        {
+          "text": "The 10 V sine has to change 100 times faster (in V/µs), beyond the slew rate",
+          "correct": true,
+          "feedback": "Yes: the steepest slope is 2πf·V_p, proportional to amplitude."
+        },
+        {
+          "text": "The op amp's gain-bandwidth product is lower for large signals",
+          "feedback": "The GBW is a small-signal figure and doesn't change with amplitude. What runs out is how fast the output can move: the slew rate."
+        },
+        {
+          "text": "The larger signal clips at the supply",
+          "feedback": "Clipping would flatten the tops, not make a triangle."
+        },
+        {
+          "text": "Large signals have higher frequency",
+          "feedback": "Both are 50 kHz; the larger one just needs a steeper slope."
+        }
+      ],
+      "explanation": "Slope = 2πf·V_p. Inside the op amp, a limited current charges a compensation capacitor (dV/dt = I/C), capping the slope. Small signals never reach that cap; big ones hit it and become triangles.",
+      "noDrawing": "why slew limiting depends on amplitude; no particular stage",
+      "review": "verified"
+    },
+    {
+      "id": "slew_what_if_amplitude",
+      "topicId": "opamp_slew_rate",
+      "prompt": "An op amp with a slew rate of {SR} V/µs can deliver a sine of {Vp} peak without slew distortion up to {before}. The signal is turned down to {new_Vp} peak. What happens to the frequency at which slew distortion sets in?",
+      "variables": [
+        {
+          "name": "SR",
+          "unit": "",
+          "range": {
+            "min": 0.5,
+            "max": 2,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "Vp",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 10,
+            "step": 1
+          }
+        }
+      ],
+      "whatIf": {
+        "quantity": "the frequency at which slew distortion sets in",
+        "formula": "SR*1e6/(2*pi*Vp)",
+        "unit": "Hz",
+        "change": {
+          "Vp": "Vp/10"
+        },
+        "askFactor": false,
+        "feedback": {
+          "down": "A smaller sine has a gentler slope at the same frequency: its steepest slope is 2πf·Vp. At the old limit frequency it no longer needs the full slew rate, so distortion can't set in there; the sine has to change faster before its slope reaches SR.",
+          "same": "That would be true of the gain-bandwidth limit, which ignores amplitude. The slew limit is in volts per microsecond, and a smaller sine has fewer volts to cover in each cycle."
+        }
+      },
+      "explanation": "f_max = SR/(2π·Vp), so it goes as 1/Vp: a tenth of the amplitude lets the sine go ten times faster before it needs more than the slew rate, {before} → {after}. Once the slew limit climbs into the hundreds of kilohertz, check GBW / gain (Op-amp bandwidth and offset): for small signals that, not the slew rate, is usually the ceiling.",
+      "hints": [
+        "Does a smaller sine at the same frequency change faster or slower?",
+        "f_max = SR/(2π·Vp)."
+      ],
+      "noDrawing": "slew-rate arithmetic for an op amp; no stage described",
+      "review": "verified",
+      "placement": true,
+      "followUps": [
+        {
+          "prompt": "What sets the frequency at which slew distortion begins?",
+          "choices": [
+            {
+              "text": "The sine's steepest slope, 2πf·Vp at its zero crossing, reaching the slew rate",
+              "correct": true,
+              "feedback": "Right: the output distorts as soon as the fastest part of the sine needs more than SR. Setting 2πf·Vp = SR fixes the product f·Vp, so a tenth of the amplitude allows ten times the frequency."
+            },
+            {
+              "text": "The time to swing from −Vp to +Vp at the slew rate, 2Vp/SR, filling half a period",
+              "feedback": "That uses the sine's average slope over a half cycle, 4f·Vp. A sine is steepest where it crosses zero, 2πf·Vp, about 1.57 times the average, and it distorts as soon as that steepest part needs more than SR. The limit is SR/(2π·Vp), not SR/(4·Vp)."
+            },
+            {
+              "text": "The gain left at that frequency, GBW/f, falling to the stage's closed-loop gain",
+              "feedback": "That is the small-signal bandwidth, and it doesn't depend on amplitude. This frequency moved when only the amplitude changed, so it is the slew limit: a maximum rate in volts per microsecond, which a bigger sine reaches at a lower frequency."
+            },
+            {
+              "text": "The output's peak reaching a supply rail, which a smaller sine stays clear of",
+              "feedback": "Rail clipping depends on the amplitude alone and happens at any frequency, even at DC, so it can't set a frequency. The slew limit is a rate: how many volts per microsecond the output can move."
+            }
+          ],
+          "explanation": "A sine Vp·sin(2πft) changes fastest as it crosses zero, at 2πf·Vp volts per second. The output can't move faster than the slew rate, so distortion sets in at f = SR/(2π·Vp). Amplitude and frequency trade inversely (f·Vp is fixed): {before} at {Vp} peak becomes {after} at {new_Vp} peak."
+        }
+      ]
+    },
+    {
+      "id": "slew_what_if_gbw",
+      "topicId": "opamp_slew_rate",
+      "prompt": "A voltage follower uses an op amp running from ±15 V (not drawn), with a GBW of {GBW} and a slew rate of {SR} V/µs, and must deliver a {Vp} peak sine. The op amp is swapped for one with ten times the GBW ({new_GBW}) but the same slew rate. What happens to the highest frequency at which it delivers that sine undistorted?",
+      "variables": [
+        {
+          "name": "GBW",
+          "unit": "Hz",
+          "series": "E12",
+          "decades": [
+            6,
+            6
+          ]
+        },
+        {
+          "name": "SR",
+          "unit": "",
+          "range": {
+            "min": 0.5,
+            "max": 5,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "Vp",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 10,
+            "step": 1
+          }
+        }
+      ],
+      "whatIf": {
+        "quantity": "the highest undistorted frequency",
+        "formula": "SR*1e6/(2*pi*Vp)",
+        "unit": "Hz",
+        "change": {
+          "GBW": "10*GBW"
+        },
+        "feedback": {
+          "up": "More GBW helps small signals, but this big sine hits the slew limit long before the small-signal bandwidth. The limit is how fast the output can move, and the slew rate hasn't changed.",
+          "down": "A bigger GBW takes nothing away. The slew rate alone sets how fast the output can swing, and it is unchanged."
+        }
+      },
+      "explanation": "At {Vp} peak the follower hits the slew limit at SR/(2π·Vp) = {before}, well below its small-signal bandwidth (for a follower that equals the GBW, {GBW}; see Op-amp bandwidth and offset). The slew rate is the bottleneck, so a bigger GBW leaves the limit at {after}. Large, fast signals need a faster-slewing part; small ones need more GBW.",
+      "hints": [
+        "Which limit bites first for a big sine here: the GBW or the slew rate?"
+      ],
+      "schematic": {
+        "netlist": "follower\nV1 in 0 SIN(0 {Vp:spice} 1k)\nX1 in out out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "{Vp} peak"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "flip": true,
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ],
+            [
+              13,
+              7
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "slew_design_gain",
+      "topicId": "opamp_slew_rate",
+      "prompt": "A non-inverting amplifier amplifies a {Vin} peak sine at {f}. Its op amp runs from ±15 V (not drawn) and has a slew rate of {SR} V/µs; take its gain-bandwidth product as high enough that only the slew rate limits. The output should be as large as the slew rate allows without distortion: no larger than that limit, and no more than 25% below it. Choose R_f and R_g from the E24 series, between 1 kΩ and 1 MΩ.",
+      "variables": [
+        {
+          "name": "SR",
+          "unit": "",
+          "range": {
+            "min": 0.5,
+            "max": 1,
+            "step": 0.1
+          }
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "values": [
+            15000,
+            18000,
+            22000,
+            27000
+          ]
+        },
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 0.5,
+            "max": 1,
+            "step": 0.1
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vmax",
+          "formula": "SR*1e6/(2*pi*f)",
+          "unit": "V"
+        },
+        {
+          "name": "Vlo",
+          "formula": "0.75*SR*1e6/(2*pi*f)",
+          "unit": "V"
+        },
+        {
+          "name": "Gmax",
+          "formula": "SR*1e6/(2*pi*f*Vin)",
+          "unit": ""
+        },
+        {
+          "name": "Rfex",
+          "formula": "(SR*1e6/(2*pi*f*Vin)-1)*10000",
+          "unit": "Ω"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "Rf",
+            "label": "R_f",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 1000,
+            "max": 1000000
+          },
+          {
+            "name": "Rg",
+            "label": "R_g",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 1000,
+            "max": 1000000
+          }
+        ],
+        "result": "Vin*(1+Rf/Rg)",
+        "resultLabel": "output peak",
+        "resultUnit": "V",
+        "target": "SR*1e6/(2*pi*f)",
+        "tolerance": 0.25,
+        "mode": "atMost"
+      },
+      "explanation": "A sine is steepest at its zero crossings, with slope 2πf·V_p. The op amp can manage at most {SR} V/µs, which is {SR} × 10⁶ V/s, so the largest clean output peak at {f} is SR/(2πf) = {Vmax}. That allows a gain of at most {Vmax}/{Vin} = {Gmax}, and the output must stay above {Vlo}. With R_g = 10 kΩ, R_f = (G − 1)·R_g = {Rfex}. Round R_f down to an E24 value (rounding up would ask for more slope than the op amp has) and check that {Vin}·(1 + R_f/R_g) lies between {Vlo} and {Vmax}. A real op amp with this slew rate often has a GBW near 1 MHz; at a gain near 20 its closed-loop bandwidth (about 50 kHz) would also trim the output by a few percent at these frequencies.",
+      "hints": [
+        "What is the largest peak the op amp can slew at this frequency?",
+        "V_p,max = SR/(2πf) with SR in V/s; then 1 + R_f/R_g must not exceed V_p,max/V_in."
+      ],
+      "followUps": [
+        {
+          "prompt": "Could you get a larger clean output at {f} from this op amp by choosing more gain?",
+          "choices": [
+            {
+              "text": "No: a larger output needs a steeper slope, 2πf·V_p, and the slew rate caps the slope whatever the gain",
+              "feedback": "Right: at {f} no clean sine above {Vmax} peak is possible from this op amp. More gain only distorts the output toward a triangle.",
+              "correct": true
+            },
+            {
+              "text": "Yes: the gain sets the output, so more gain always gives more clean output",
+              "feedback": "More gain asks for a larger output, but its slope 2πf·V_p would then exceed the slew rate. The output bends toward a triangle: it can still grow a little, to at most SR/(4f), but it is no longer a clean sine."
+            },
+            {
+              "text": "Yes, by using smaller R_f and R_g with the same ratio",
+              "feedback": "The resistor values change loading and noise, not how fast the output can move. The slew rate is set inside the op amp."
+            },
+            {
+              "text": "Only up to the ±15 V supplies, which set the limit here",
+              "feedback": "The supplies do cap the output near the rails, but here the slew limit, {Vmax} peak, bites first, below the rails."
+            }
+          ],
+          "explanation": "The output peak is limited by how fast the output can move: at {f}, a clean sine can be at most SR/(2πf) = {Vmax} peak. Only a faster-slewing op amp or a lower frequency raises that ceiling; the gain only decides how close to it you run."
+        }
+      ],
+      "schematic": {
+        "netlist": "non-inverting\nV1 in 0 SIN(0 {Vin:spice} {f:spice})\nX1 in inv out OA\nRF out inv {Rf:spice}\nRG inv 0 {Rg:spice}\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "{Vin} peak\n{f}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "flip": true,
+            "label": ""
+          },
+          {
+            "ref": "RG",
+            "at": [
+              7,
+              8
+            ],
+            "rot": 90,
+            "label": "R_g\n{Rg}"
+          },
+          {
+            "ref": "RF",
+            "at": [
+              13,
+              8
+            ],
+            "rot": 180,
+            "label": "R_f {Rf}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              8
+            ]
+          ],
+          [
+            [
+              13,
+              4
+            ],
+            [
+              13,
+              8
+            ]
+          ],
+          [
+            [
+              9,
+              8
+            ],
+            [
+              7,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

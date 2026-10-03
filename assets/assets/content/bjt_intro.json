@@ -1,0 +1,705 @@
+{
+  "topics": [
+    {
+      "id": "bjt_intro",
+      "title": "Bipolar transistor basics",
+      "summary": "A small base current controls a collector current β times larger, as long as the transistor stays in its active region.",
+      "lenses": [
+        "circuit",
+        "physics"
+      ],
+      "prerequisites": [
+        "diode_models"
+      ],
+      "lensNotes": {
+        "circuit": "A small base current controls a collector current β times larger, as long as the base-emitter junction is forward biased and the base-collector junction reverse biased (the active region).",
+        "physics": "The emitter injects carriers into a very thin base; almost all of them diffuse across it and are swept into the collector by its field before they can recombine. The few that do recombine make up the base current."
+      },
+      "formulas": [
+        {
+          "label": "Current gain",
+          "tex": "I_C = \\beta I_B"
+        },
+        {
+          "label": "Emitter current",
+          "tex": "I_E = I_C + I_B = (\\beta + 1) I_B"
+        },
+        {
+          "label": "Base current through the base resistor",
+          "tex": "I_B = \\frac{V_{in} - 0.7\\ \\text{V}}{R_B}"
+        },
+        {
+          "label": "Common-base current gain",
+          "tex": "\\alpha = \\frac{I_C}{I_E} = \\frac{\\beta}{\\beta + 1}"
+        },
+        {
+          "label": "Saturation limit",
+          "tex": "I_C = \\min\\left(\\beta I_B,\\ \\frac{V_{CC} - V_{CE(sat)}}{R_C}\\right)"
+        }
+      ],
+      "prerequisiteNotes": {
+        "diode_models": "A bipolar transistor is two PN junctions back to back; the base–emitter junction behaves like a diode with about 0.7 V across it."
+      },
+      "goals": [
+        "Find the collector and emitter currents from the base current with I_C = β·I_B and I_E = I_C + I_B, after checking that the transistor is in its active region",
+        "Tell whether a transistor is in cutoff, the active region or saturation from its junction biases or its collector–emitter voltage",
+        "Explain why a small base current controls a collector current about β times larger, and where the power for that current comes from",
+        "Predict when more base current stops raising the collector current, because the circuit around the transistor cannot pass β·I_B"
+      ],
+      "intuition": "In the active region (base–emitter junction conducting at about 0.7 V, collector more than about 0.2 V above the emitter), a bipolar transistor's collector current is set by the base current: β times larger, drawn from the supply.",
+      "why": "In an NPN transistor the forward-biased base–emitter junction injects electrons from the emitter into the base. The base is thin and lightly doped, so almost all of them cross it without recombining, and the field of the reverse-biased base–collector junction sweeps them into the collector. The base current only replaces the few holes lost to recombination in the base or injected across into the emitter, so I_C is a fixed multiple of it: β. All the current leaves by the emitter: I_E = I_C + I_B. If the circuit cannot pass β·I_B, the collector falls until the base–collector junction conducts too (saturation), and I_C = β·I_B fails.",
+      "explanation": "A diode is one PN junction that conducts forward at about 0.6–0.7 V. A bipolar junction transistor (BJT) is two junctions sharing a thin middle layer, the base, between the emitter and the collector. The base–emitter junction behaves like the diode you know: V_BE ≈ 0.7 V when it conducts, falling about 2 mV per °C at a fixed current. The new part is the collector. In the active region, base–emitter forward biased and base–collector reverse biased, the collector current is β times the base current: I_C = β·I_B. β, the current gain, is often 100 or more for small-signal transistors, and it varies two or three times between parts of the same type. Both currents leave through the emitter: I_E = I_C + I_B = (β + 1)·I_B, so with β = 100, I_C and I_E differ by about 1 %. With no base current the transistor is off (cutoff). If the collector resistor cannot pass β·I_B, the collector falls to about 0.2 V, both junctions conduct, and the transistor saturates: the supply and the resistor then set I_C, which is less than β·I_B. Check the region before using β.",
+      "workedExample": {
+        "problem": "A small-signal NPN transistor such as a 2N3904 (assume β = 100 and V_BE = 0.7 V) has its emitter grounded and R_C = 1.0 kΩ from its collector to a 9 V supply. Its base is fed from a 5 V source through R_B = 100 kΩ. Find I_B, I_C, I_E and V_CE, and check the region. Then R_B is changed to 22 kΩ: what is I_C now?",
+        "steps": [
+          "Base current (base–emitter junction as a constant 0.7 V drop): R_B has 5 V − 0.7 V = 4.3 V across it, so I_B = 4.3 V / 100 kΩ = 43 µA.",
+          "Collector current, assuming the active region: I_C = β·I_B = 100 × 43 µA = 4.3 mA.",
+          "Check the assumption (KVL from the supply through R_C): V_CE = 9 V − 4.3 mA × 1.0 kΩ = 4.7 V. That is well above 0.2 V, so the base–collector junction is reverse biased and the active-region model holds.",
+          "Emitter current (KCL): I_E = I_C + I_B = 4.3 mA + 0.043 mA = 4.343 mA. The base current is 1/(β + 1) = 1/101 of it, about 1 %.",
+          "With R_B = 22 kΩ: I_B = 4.3 V / 22 kΩ = 195 µA, and the active-region model asks for I_C = 100 × 195 µA = 19.5 mA. R_C would have to drop 19.5 mA × 1.0 kΩ = 19.5 V, more than the whole 9 V supply, so the active-region model fails here.",
+          "Saturation model (V_CE(sat) ≈ 0.2 V): the collector sits at 0.2 V and Ohm's law on R_C sets the current: I_C = (9 V − 0.2 V) / 1.0 kΩ = 8.8 mA. The ratio I_C/I_B = 8.8 mA / 0.195 mA = 45, well below β = 100: once saturated, more base current no longer raises I_C."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Bipolar Junction Transistors\" (last update 27 September 2026), ch. 4 \"Full Tutorial\", section 4.2 \"Injected charge carriers\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_bjt.pdf",
+          "note": "Forward bias of about 0.7 V on the base-emitter junction of the thin-base NPN sandwich sends emitter electrons into the base, most of which are swept by the reverse-biased base-collector field into the collector, roughly 100 for each one that leaves by the base."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Bipolar Junction Transistors\" (last update 27 September 2026), ch. 4 \"Full Tutorial\", section 4.3 \"BJT characteristics\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_bjt.pdf",
+          "note": "β = I_C/I_B is the ratio for the maximum collector current the base current allows, often over 100 for small transistors, and KCL gives I_E = I_C + I_B, so I_E/I_B = β + 1 and I_C/I_E = β/(β + 1)."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 4 \"Bipolar Junction Transistors\", section \"Active mode operation\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_4.html#xtocid90363",
+          "note": "Cutoff is no collector current with no base current, saturation is the transistor passing all the current the supply and load allow, the active mode lies between with I_C = β·I_B, and β differs between parts of one type and shifts with operating conditions."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "bjt_ic_from_ib",
+      "topicId": "bjt_intro",
+      "prompt": "An NPN transistor in its active region has β = {beta} and a base current of {Ib}. What is the collector current?",
+      "variables": [
+        {
+          "name": "beta",
+          "unit": "",
+          "range": {
+            "min": 50,
+            "max": 300,
+            "step": 10
+          }
+        },
+        {
+          "name": "Ib",
+          "unit": "A",
+          "series": "E12",
+          "decades": [
+            -6,
+            -5
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "beta*Ib",
+        "unit": "A"
+      },
+      "explanation": "In the active region I_C = β·I_B = {beta} × {Ib} = {answer}.",
+      "hints": [
+        "β is the current gain from base to collector.",
+        "I_C = β · I_B."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Ib/beta",
+          "feedback": "The collector current is β times larger than the base current, not smaller."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does a small base current control a much larger collector current?",
+          "choices": [
+            {
+              "text": "Most carriers injected from the emitter cross the thin base and are swept into the collector; only a few recombine in the base and need replacing by base current",
+              "feedback": "Right: the base current only makes up for the few that recombine, so I_C is about β times I_B.",
+              "correct": true
+            },
+            {
+              "text": "The transistor amplifies energy by itself, like a small generator",
+              "feedback": "The extra power comes from the supply; the transistor only controls how much current flows."
+            },
+            {
+              "text": "The base current flows through the collector and is multiplied there",
+              "feedback": "Base current leaves through the emitter; it isn't the same current as the collector current."
+            },
+            {
+              "text": "The collector resistor sets the ratio",
+              "feedback": "The load sets the voltages, but in the active region the ratio I_C/I_B is set by the transistor (β)."
+            }
+          ],
+          "explanation": "The forward-biased base–emitter junction injects carriers into a thin, lightly doped base. Almost all of them diffuse across and are collected by the reverse-biased collector junction. The base current only replaces the small fraction that recombine, so a small I_B holds a large I_C = β·I_B, with the power coming from the supply."
+        }
+      ],
+      "noDrawing": "β arithmetic for a transistor on its own; no circuit is described",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "bjt_ie",
+      "topicId": "bjt_intro",
+      "prompt": "A power transistor with β = {beta} carries a base current of {Ib}. What is the emitter current?",
+      "variables": [
+        {
+          "name": "beta",
+          "unit": "",
+          "range": {
+            "min": 10,
+            "max": 35,
+            "step": 5
+          }
+        },
+        {
+          "name": "Ib",
+          "unit": "A",
+          "series": "E12",
+          "decades": [
+            -3,
+            -2
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Ic",
+          "formula": "beta*Ib",
+          "unit": "A"
+        },
+        {
+          "name": "pct",
+          "formula": "100/(beta+1)",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "(beta+1)*Ib",
+        "unit": "A"
+      },
+      "explanation": "Both currents leave through the emitter (KCL): I_E = I_C + I_B = {Ic} + {Ib} = {answer}, which is (β + 1)·I_B.",
+      "hints": [
+        "Apply KCL to the transistor as a node.",
+        "I_E = I_C + I_B = (β + 1) I_B."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why is it usually fine to say I_C ≈ I_E in a transistor circuit?",
+          "choices": [
+            {
+              "text": "The base current is only 1/(β + 1) of the emitter current, so the collector carries almost all of it",
+              "feedback": "Right: with β = {beta}, I_C is {beta}/({beta} + 1) of I_E. For small-signal transistors with β of 100 or more that is within 1 %; low-β power transistors like this one are the exception.",
+              "correct": true
+            },
+            {
+              "text": "The base current flows on through the collector, so the two are equal",
+              "feedback": "Base current enters at the base and leaves through the emitter, where it joins the collector current. It never reaches the collector, which is why I_E is the larger one."
+            },
+            {
+              "text": "The emitter and collector are built the same way, so they must carry the same current",
+              "feedback": "They aren't built the same: the emitter is heavily doped to inject carriers, the collector is built to collect them. The currents are nearly equal because few carriers are lost in the base."
+            },
+            {
+              "text": "The 0.7 V base–emitter drop cancels the base current",
+              "feedback": "0.7 V is a voltage; it doesn't remove any current. KCL still says I_E = I_C + I_B."
+            }
+          ],
+          "explanation": "KCL at the transistor: I_E = I_C + I_B. With I_B = I_C/β, the base part is only 1/(β + 1) of I_E, so for small-signal transistors with β of 100 or more I_C and I_E differ by 1 % or less. A low-β power transistor like this one is the exception: with β = {beta} the gap is 1/({beta} + 1) of I_E, {pct} percent. That's why bias calculations find I_E from the emitter resistor (V_E/R_E) and use it as I_C."
+        }
+      ],
+      "misconceptions": [
+        {
+          "formula": "beta*Ib",
+          "feedback": "That's the collector current. The emitter carries the base current too: I_E = (β + 1) I_B. With a low-β power transistor like this one, the base current is 1/(β + 1) of the total, too much to drop."
+        }
+      ],
+      "noDrawing": "β arithmetic for a transistor on its own; no circuit is described",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "bjt_alpha",
+      "topicId": "bjt_intro",
+      "prompt": "A transistor has β = {beta}. What is its common-base current gain α = I_C / I_E?",
+      "variables": [
+        {
+          "name": "beta",
+          "unit": "",
+          "range": {
+            "min": 20,
+            "max": 300,
+            "step": 10
+          }
+        }
+      ],
+      "answer": {
+        "formula": "beta/(beta+1)",
+        "unit": "",
+        "unitless": true,
+        "tolerance": 0.001
+      },
+      "explanation": "α = I_C / I_E = β I_B / ((β + 1) I_B) = {beta} / ({beta} + 1) = {answer}. It's just below 1: nearly all emitter current reaches the collector.",
+      "hints": [
+        "Write I_C and I_E in terms of I_B.",
+        "α = β / (β + 1)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(beta+1)/beta",
+          "feedback": "That's I_E / I_C. α = I_C / I_E is slightly less than 1."
+        }
+      ],
+      "noDrawing": "the definition of α from β; no circuit is described",
+      "review": "verified"
+    },
+    {
+      "id": "bjt_active_region",
+      "topicId": "bjt_intro",
+      "prompt": "What junction conditions put an NPN transistor in its active (amplifying) region?",
+      "choices": [
+        {
+          "text": "Base-emitter forward biased, base-collector reverse biased",
+          "correct": true,
+          "feedback": "Yes: the emitter injects carriers and the reverse-biased collector sweeps them up, so I_C = β I_B."
+        },
+        {
+          "text": "Both junctions forward biased",
+          "feedback": "That's saturation: the transistor acts like a closed switch and I_C < β I_B."
+        },
+        {
+          "text": "Both junctions reverse biased",
+          "feedback": "That's cutoff: essentially no current flows."
+        },
+        {
+          "text": "Base-emitter reverse biased, base-collector forward biased",
+          "feedback": "That's the rarely used reverse-active mode, with very low gain."
+        }
+      ],
+      "explanation": "Active: B-E forward (about 0.7 V), B-C reverse biased (or forward by less than about 0.5 V, i.e. V_CE above roughly 0.2 V). Saturation: both forward. Cutoff: both reverse.",
+      "noDrawing": "about the junction biases of the device itself, no circuit",
+      "level": "recall",
+      "review": "verified"
+    },
+    {
+      "id": "bridge_thin_base",
+      "topicId": "bjt_intro",
+      "bridge": [
+        "physics",
+        "circuit"
+      ],
+      "prompt": "Why is a bipolar transistor's base made very thin and lightly doped?",
+      "choices": [
+        {
+          "text": "So nearly all carriers injected by the emitter reach the collector before recombining, giving a high β",
+          "correct": true,
+          "feedback": "Yes: few recombinations means little base current for a given collector current."
+        },
+        {
+          "text": "To lower the base-emitter voltage",
+          "feedback": "V_BE is set by the junction physics (about 0.7 V); the thin base is about recombination."
+        },
+        {
+          "text": "To make the transistor handle more power",
+          "feedback": "Power handling depends on the collector area and heat sinking, not base thickness."
+        },
+        {
+          "text": "To make the base a better conductor",
+          "feedback": "Light doping actually makes the base a poorer conductor; the point is that carriers cross it quickly."
+        }
+      ],
+      "explanation": "Base current is mostly carriers that recombine in the base. A thin, lightly doped base leaves little time and few holes to recombine with, and few holes are injected back into the emitter, so the collector gets almost everything: β = I_C/I_B becomes large.",
+      "noDrawing": "about the physical construction of the base, no circuit",
+      "level": "recall",
+      "review": "verified"
+    },
+    {
+      "id": "bjt_what_if_saturation",
+      "topicId": "bjt_intro",
+      "prompt": "An NPN transistor with β = {beta} has its emitter grounded and a collector resistor R_C = {Rc} to a {Vcc} supply. Its base current is {Ib}, which keeps it in the active region: I_C = β·I_B and V_CE is several volts. The base current is raised ten times, to {new_Ib}. What happens to the collector current? (A saturated transistor has V_CE ≈ 0.2 V.)",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "range": {
+            "min": 9,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "Rc",
+          "unit": "Ω",
+          "value": 2200
+        },
+        {
+          "name": "beta",
+          "unit": "",
+          "values": [
+            150,
+            200,
+            250
+          ]
+        },
+        {
+          "name": "Ib",
+          "unit": "A",
+          "values": [
+            4.7e-06,
+            6.8e-06,
+            1e-05
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Iask",
+          "formula": "beta*10*Ib",
+          "unit": "A"
+        },
+        {
+          "name": "Isat",
+          "formula": "(Vcc-0.2)/Rc",
+          "unit": "A"
+        },
+        {
+          "name": "Vce",
+          "formula": "Vcc-beta*Ib*Rc",
+          "unit": "V"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the collector current",
+        "formula": "min(beta*Ib, (Vcc-0.2)/Rc)",
+        "unit": "A",
+        "change": {
+          "Ib": "10*Ib"
+        },
+        "askFactor": true,
+        "feedback": {
+          "down": "More base current never pushes the collector current down: the base current is what lets the collector conduct, so more of it never lets less through. What can stop the rise is R_C: once it drops nearly the whole supply, the collector can't fall any further.",
+          "same": "Saturation caps the current, but it doesn't freeze it where it was. While the collector is still above about 0.2 V, the extra base current is still multiplied by β and R_C drops more voltage; the cap is reached only when R_C has the whole supply minus about 0.2 V across it."
+        },
+        "factorHint": "β·I_B is only the current the base asks for. R_C also caps it: with the collector down near 0.2 V, R_C can pass at most (V_CC − 0.2 V)/R_C. Compare ten times the old β·I_B with that cap; the smaller one is what flows."
+      },
+      "explanation": "Before: I_C = β·I_B = {beta} × {Ib} = {before}, with V_CE = {Vce}, well above 0.2 V (active region). Ten times the base current would ask for β·I_B = {Iask}, but that would need R_C to drop more than the whole supply. The collector falls to about 0.2 V and the transistor saturates, so Ohm's law on R_C sets the current: ({Vcc} − 0.2 V)/{Rc} = {after}. I_C = β·I_B holds only while the base–collector junction is reverse biased (active region).",
+      "hints": [
+        "How much current can R_C pass at most, with the collector at 0.2 V?",
+        "Compare β × (new I_B) with (V_CC − 0.2 V)/R_C. The smaller one wins."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why can't the collector current keep up with β·I_B?",
+          "choices": [
+            {
+              "text": "The collector can't fall below about 0.2 V, so R_C can drop at most V_CC − 0.2 V; the base–collector junction becomes forward biased and the transistor saturates",
+              "feedback": "Right: past that point the transistor is a closed switch and the circuit around it sets the current.",
+              "correct": true
+            },
+            {
+              "text": "β falls to a much lower value when the base current is large",
+              "feedback": "At a few mA a small-signal transistor's β hardly changes. The limit is outside the transistor: the supply and R_C can only pass (V_CC − 0.2 V)/R_C."
+            },
+            {
+              "text": "The base–emitter junction breaks down at the higher current",
+              "feedback": "At tens of µA the base–emitter junction is simply forward biased at about 0.7 V; nothing breaks down."
+            },
+            {
+              "text": "The supply voltage sags under the extra load",
+              "feedback": "The supply is ideal here and stays at V_CC. The limit is how much of it R_C can use."
+            }
+          ],
+          "explanation": "In the active region the reverse-biased collector junction sweeps up whatever the emitter injects, so I_C = β·I_B and R_C just takes the drop I_C·R_C. That drop can't exceed V_CC − 0.2 V. Asking for more pulls the collector below the base, the base–collector junction turns on, and the transistor saturates: from then on the current is set by the supply and R_C, and extra base current is wasted. Transistor switches (later in this unit) are driven into this state on purpose."
+        }
+      ],
+      "schematic": {
+        "netlist": "Saturation (drawing)\nVCC vcc 0 {Vcc:spice}\nRC vcc c {Rc:spice}\nQ1 c b 0 QN\nIB 0 b {Ib:spice}\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              12,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C\n{Rc}"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              10,
+              6
+            ],
+            "label": "β = {beta}"
+          },
+          {
+            "ref": "IB",
+            "at": [
+              4,
+              10
+            ],
+            "rot": 270,
+            "label": "I_B\n{Ib}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              12,
+              0
+            ]
+          ],
+          [
+            [
+              4,
+              6
+            ],
+            [
+              10,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            12,
+            8
+          ],
+          [
+            4,
+            10
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "bjt_design_base_resistor",
+      "topicId": "bjt_intro",
+      "prompt": "An NPN transistor with β = {beta} has its emitter grounded and R_C = 1 kΩ to a 12 V supply. Its base is driven from a 5 V logic output through R_B. Choose R_B (an E24 value) so the collector current is {Ic}, within 8 %. Take V_BE = 0.7 V and check that the transistor stays in its active region.",
+      "variables": [
+        {
+          "name": "beta",
+          "unit": "",
+          "values": [
+            100,
+            150,
+            200,
+            250,
+            300
+          ]
+        },
+        {
+          "name": "Ic",
+          "unit": "A",
+          "range": {
+            "min": 0.001,
+            "max": 0.005,
+            "step": 0.0005
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "Ib",
+          "formula": "Ic/beta",
+          "unit": "A"
+        },
+        {
+          "name": "Rex",
+          "formula": "4.3*beta/Ic",
+          "unit": "Ω"
+        },
+        {
+          "name": "Vce",
+          "formula": "12-Ic*1000",
+          "unit": "V"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "RB",
+            "label": "R_B",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 1000,
+            "max": 2200000
+          }
+        ],
+        "result": "beta*(5-0.7)/RB",
+        "resultLabel": "collector current",
+        "resultUnit": "A",
+        "target": "Ic",
+        "tolerance": 0.08
+      },
+      "explanation": "Work backwards. In the active region the collector carries β times the base current, so the base needs I_B = I_C/β = {Ic}/{beta} = {Ib}. R_B has the logic level less V_BE across it: 5 V − 0.7 V = 4.3 V. So R_B = 4.3 V/{Ib} = {Rex}; pick the nearest E24 value. Check: V_CE = 12 V − {Ic} × 1 kΩ = {Vce}, far above about 0.2 V, so the transistor is in its active region and I_C = β·I_B holds.",
+      "hints": [
+        "Start from the collector current: what base current gives it?",
+        "I_B = I_C/β, and R_B carries I_B with 5 V − 0.7 V across it."
+      ],
+      "followUps": [
+        {
+          "prompt": "You build this stage with a resistor within 1 % of your value, and the meter shows I_C about 40 % above the target. What is the most likely reason?",
+          "choices": [
+            {
+              "text": "This particular transistor's β is higher than the value you designed with; β spreads widely between parts of one type, and here that spread passes straight into I_C",
+              "correct": true,
+              "feedback": "Right: R_B fixes I_B, and the transistor multiplies it by its own β. Nothing in this circuit corrects for a different β."
+            },
+            {
+              "text": "R_C is only 1 kΩ, so Ohm's law lets more collector current through than planned",
+              "feedback": "In the active region R_C doesn't set I_C; it only takes the drop I_C·R_C. R_C limits the current only once the transistor saturates."
+            },
+            {
+              "text": "V_BE is really about 0.65 V, not 0.7 V",
+              "feedback": "That raises R_B's voltage from 4.3 V to 4.35 V, about 1 %. It can't explain a 40 % error."
+            },
+            {
+              "text": "The collector current also flows back through R_B",
+              "feedback": "Only the base current flows through R_B. The collector current comes from the 12 V supply through R_C and leaves through the emitter."
+            }
+          ],
+          "explanation": "This design rests on a single number, β, and a datasheet gives it as a wide range (often 2:1 or more between parts of one type, and it changes with temperature and current). R_B fixes the base current, so I_C follows whatever β the part in hand has. That's why real bias circuits (the next topic) add an emitter resistor and a divider, which set I_C from resistors instead of from β."
+        }
+      ],
+      "schematic": {
+        "netlist": "Base drive (drawing)\nVCC vcc 0 12\nVIN in 0 5\nRB in b 100k\nRC vcc c 1k\nQ1 c b 0 QN\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              8
+            ],
+            "rot": 90,
+            "label": "5 V logic"
+          },
+          {
+            "ref": "RB",
+            "at": [
+              2,
+              6
+            ],
+            "label": "R_B = ?"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "β = {beta}"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C\n1 kΩ"
+          },
+          {
+            "ref": "VCC",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              8
+            ],
+            [
+              0,
+              6
+            ],
+            [
+              2,
+              6
+            ]
+          ],
+          [
+            [
+              6,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              16,
+              2
+            ],
+            [
+              16,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            12
+          ],
+          [
+            10,
+            8
+          ],
+          [
+            16,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    }
+  ]
+}

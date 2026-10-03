@@ -1,0 +1,1892 @@
+{
+  "topics": [
+    {
+      "id": "voltage_energy",
+      "title": "Voltage and energy",
+      "summary": "A voltage is the energy each coulomb of charge gains or gives up between two points: one volt is one joule per coulomb, and a voltage is always measured between two nodes.",
+      "lenses": [
+        "physics",
+        "circuit",
+        "math"
+      ],
+      "prerequisites": [
+        "charge_current"
+      ],
+      "prerequisiteNotes": {
+        "charge_current": "Voltage is energy per coulomb, so it builds on the coulomb and on current as charge per second; the charge that flows through a part is what the field does work on as it crosses that part."
+      },
+      "lensNotes": {
+        "physics": "The volt is defined from energy: 1 V = 1 J/C. Inside a battery, chemical reactions do work on charge, moving it against the electric field between the terminals; in the wires and parts outside, the field does work on the moving charge, and the parts turn that energy into heat, light or motion. Only differences of potential are physical: adding the same constant to every potential changes no force and no energy transfer.",
+        "circuit": "A node voltage on a schematic is measured from ground, the node marked with the ground symbol. The voltage across a part is the difference of its two node voltages. A voltmeter goes across the part, one lead on each side, with the circuit left intact; with its black lead on ground it reads a node voltage.",
+        "math": "V = W/Q is a ratio, so W = Q·V and Q = W/V follow by rearranging. Potentials are defined up to an added constant: moving ground shifts every node voltage by the same amount, and every difference V_a − V_b stays the same."
+      },
+      "formulas": [
+        {
+          "label": "Voltage",
+          "tex": "V = \\frac{W}{Q}\\quad (1\\ \\text{V} = 1\\ \\text{J/C})"
+        },
+        {
+          "label": "Energy delivered",
+          "tex": "W = Q\\,V"
+        },
+        {
+          "label": "Voltage across a part",
+          "tex": "V_{ab} = V_a - V_b"
+        },
+        {
+          "label": "Electron-volt",
+          "tex": "1\\ \\text{eV} = 1.602\\times10^{-19}\\ \\text{J}"
+        }
+      ],
+      "goals": [
+        "Find the energy a charge delivers moving through a voltage (W = Q·V), and the charge that delivers a given energy (Q = W/V)",
+        "Read node voltages from a chosen ground, including negative ones, and find the voltage across a part as the difference of its two node voltages",
+        "Explain why a voltage always belongs to two points: why a voltmeter goes across a part, why ground can be any node, and why a bird on one power line is safe",
+        "Convert the energy of a single electron between electron-volts and joules"
+      ],
+      "intuition": "A voltage is the energy each coulomb gains or gives up going from one point to another, so it always belongs to a pair of points: charge flows through a part, and the voltage is across it.",
+      "why": "Charges push on each other through the electric field. Moving a charge against the field takes work, which is stored as electric potential energy; when the charge moves with the field, that energy is released. The potential difference between two points is that energy per unit charge, in joules per coulomb (volts). A battery's chemistry does work on the charge inside it, so each coulomb leaving its + terminal has gained the battery's voltage in energy (1.5 J per coulomb for an alkaline cell). Outside, the field in the wires and parts pushes the charge around, and each part takes the energy that matches the voltage across it: a coulomb crossing 12 V gives up 12 J. Only differences matter: adding the same amount to every potential changes no force and no energy transfer, which is why any node can be chosen as ground.",
+      "explanation": "As charge moves through the circuit, the field does work on it; voltage says how much: the energy each coulomb gains or gives up between two points, V = W/Q. One volt is one joule per coulomb. So every coulomb that passes through a lamp with 12 V across it delivers 12 J, and the energy delivered is W = Q·V.\n\nA voltage always belongs to two points. A voltmeter has two leads and goes across a part, one lead on each side. When a schematic says a node is at 5 V, it means 5 V above ground, the node chosen as the reference and marked with the ground symbol. Ground is a choice: move it and every node voltage shifts by the same amount, but the voltage across each part, the difference of its two node voltages, stays the same. Nodes below ground read negative.\n\nCurrent flows through a part; voltage is across it. A battery on a shelf has 9 V across its terminals and no current. For a single electron the handy unit is the electron-volt: 1 eV = 1.602 × 10⁻¹⁹ J, the energy one electron gains crossing 1 V.",
+      "workedExample": {
+        "problem": "A 12 V battery runs an LED and its series resistor at 20 mA for 10 minutes. With 2.0 V across the LED and 10.0 V across the resistor, how much charge flows, how much energy does the battery deliver, and where does it go?",
+        "steps": [
+          "Time in seconds: 10 min × 60 s/min = 600 s.",
+          "Charge: Q = I·t = 0.020 A × 600 s = 12 C (one amp is one coulomb per second).",
+          "Energy from the battery: W = Q·V = 12 C × 12 V = 144 J. Units: C × J/C = J.",
+          "Each coulomb gives up 2.0 J in the LED and 10.0 J in the resistor, because those are the voltages across them: LED 12 C × 2.0 V = 24 J, resistor 12 C × 10.0 V = 120 J.",
+          "Check: 24 J + 120 J = 144 J. All the energy the battery supplied is delivered to the parts; none of the charge is used up, since the same 12 C returns to the battery's − terminal."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 2 \"Ohm's Law\", section \"How voltage, current, and resistance relate\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_2.html#xtocid87160",
+          "note": "Checked the definition of the volt as one joule of potential energy per coulomb (so a source of V volts hands each coulomb V joules) and the amp as one coulomb per second, used in the worked example."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 3 \"Electrical Safety\", section \"Shock current path\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_3.html#xtocid87252",
+          "note": "Checked that voltage exists only between two points, so a bird with both feet on one line has no voltage across it, and that touching one wire while standing on earth ground does put a voltage across the body."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Voltage, Current, Resistance, and Basic Circuit Concepts\" (last update 25 August 2026), sections 4.3 \"Electric potential and voltage\" (p. 44), 4.6 \"Energy transfer in circuits\" (p. 51) and 5.2 \"James Clerk Maxwell on charge, potential, and electrical energy\" (p. 64)",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_vir.pdf",
+          "note": "Checked voltage as energy gained or lost per coulomb between two points (meaningless at a single point), energy = charge times voltage, the source raising the carriers' energy while each load takes a share equal to the voltage across it, and zero voltage between electrically common points."
+        }
+      ],
+      "analogy": {
+        "text": "Voltage plays the part of height in a uniform gravity field, and charge the part of mass: a coulomb moving through 1 V gains or gives up 1 J, as a kilogram moved through a height h gains or gives up g·h joules. Only differences in height matter, and the zero, sea level or the node called ground, is a choice. The voltage across a part is like the drop between two heights: the energy each coulomb gives up going through it.",
+        "breaksDown": "Charge comes in two signs, so electrons, being negative, move toward higher potential, and in a closed circuit nothing collects at the bottom: the charge goes around and the battery's chemistry raises it again. A falling mass speeds up, but charge crossing a voltage in a wire or resistor does not: it keeps drifting slowly and the energy goes to the load or to the lattice as heat. Where magnetic fields are changing (inductors, transformers) the voltage between two points depends on the path taken, so no single height can be given to each point."
+      }
+    }
+  ],
+  "templates": [
+    {
+      "id": "ve_energy_charge",
+      "topicId": "voltage_energy",
+      "prompt": "A lamp runs from a {V} battery (treat it as ideal: it holds {V} across the lamp). Over a few minutes, {Q} of charge passes through the lamp. How much energy does the battery deliver to the lamp?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            1.5,
+            3,
+            4.5,
+            6,
+            9,
+            12
+          ]
+        },
+        {
+          "name": "Q",
+          "unit": "C",
+          "range": {
+            "min": 5,
+            "max": 60,
+            "step": 5
+          }
+        }
+      ],
+      "answer": {
+        "formula": "Q*V",
+        "unit": "J"
+      },
+      "estimate": true,
+      "explanation": "A voltage of {V} means each coulomb that crosses it gives up that many joules: 1 V = 1 J/C. So W = Q·V = {Q} × {V} = {answer}. Units: C × J/C = J.",
+      "hints": [
+        "A volt is a joule per coulomb.",
+        "W = Q·V."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Q/V",
+          "feedback": "Dividing the charge by the voltage gives coulombs per volt, not joules. Each coulomb gives up {V}'s worth of energy, so multiply: W = Q·V."
+        },
+        {
+          "formula": "V/Q",
+          "feedback": "Volts per coulomb is not an energy. The voltage is already energy per coulomb; multiply it by the number of coulombs: W = Q·V."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why is the energy delivered the charge times the voltage?",
+          "choices": [
+            {
+              "text": "The voltage across the lamp is the energy each coulomb gives up between its two terminals, so the total is that energy per coulomb times the number of coulombs",
+              "feedback": "Right: 1 V = 1 J/C, so Q coulombs crossing V volts give up Q·V joules.",
+              "correct": true
+            },
+            {
+              "text": "The voltage flows through the lamp along with the charge, and each of them carries part of the energy",
+              "feedback": "Voltage doesn't flow. Charge flows through the lamp; the voltage is between its two terminals and says how much energy each coulomb gives up on the way through."
+            },
+            {
+              "text": "The charge is used up in the lamp, and the energy it held is released as it disappears",
+              "feedback": "Charge is not used up: every coulomb that enters one terminal of the lamp leaves by the other and returns to the battery. What the charge gives up is energy, not itself."
+            },
+            {
+              "text": "A higher voltage pushes each coulomb through faster, and faster charge carries more energy",
+              "feedback": "The energy per coulomb is set by the voltage, not by how fast the charge drifts (well under a millimeter per second in a wire). A coulomb crossing 6 V gives up 6 J whether it takes a second or an hour."
+            }
+          ],
+          "explanation": "Voltage is defined as energy per charge, V = W/Q. Rearranged, W = Q·V: count the coulombs that cross the voltage and multiply by the joules each one gives up."
+        }
+      ],
+      "schematic": {
+        "netlist": "battery and lamp\nV1 a 0 {V:spice}\nR1 a 0 100\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "lamp",
+            "symbol": "lamp"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "ve_charge_from_energy",
+      "topicId": "voltage_energy",
+      "prompt": "A power bank is labeled {cap}: the charge its lithium-ion cell can deliver at the cell's nominal {Vc} (its average voltage over a full discharge). A converter inside (a circuit that changes one DC voltage into another) raises the cell's voltage to the USB port's {Vo}, and, like most such converters, it passes on about 85 % of the energy and turns the rest into heat (it gets slightly warm). Starting fully charged, a USB meter between the bank and a phone counts {Qm} by the time the bank shuts off. The owner says the label must be false. Does the reading show that?",
+      "variables": [
+        {
+          "name": "cap",
+          "unit": "Ah",
+          "values": [
+            5,
+            10,
+            20
+          ]
+        },
+        {
+          "name": "Vc",
+          "unit": "V",
+          "value": 3.7
+        },
+        {
+          "name": "Vo",
+          "unit": "V",
+          "value": 5
+        }
+      ],
+      "derived": [
+        {
+          "name": "Qc",
+          "formula": "cap*3600",
+          "unit": "C"
+        },
+        {
+          "name": "E",
+          "formula": "cap*3600*Vc",
+          "unit": "J"
+        },
+        {
+          "name": "QoC",
+          "formula": "cap*3600*Vc/Vo",
+          "unit": "C"
+        },
+        {
+          "name": "Qout",
+          "formula": "cap*Vc/Vo",
+          "unit": "Ah"
+        },
+        {
+          "name": "Qup",
+          "formula": "cap*Vo/Vc",
+          "unit": "Ah"
+        },
+        {
+          "name": "Qm",
+          "formula": "0.85*cap*Vc/Vo",
+          "unit": "Ah"
+        }
+      ],
+      "choices": [
+        {
+          "text": "No: the cell stores {E}, and at {Vo} each coulomb carries more joules than at {Vc}, so even a converter that wasted nothing could deliver only {Qout}",
+          "correct": true,
+          "feedback": "Right: the converter passes on energy; it doesn't have to pass on the same number of coulombs. Q = E/V = {E} / {Vo} = {QoC} = {Qout}; the meter's {Qm} is less, and the difference is the energy the converter turned into heat."
+        },
+        {
+          "text": "Yes: charge is conserved, so every coulomb the cell delivers must come out of the USB port, and an honest bank would show {cap}",
+          "feedback": "Charge is conserved at every junction, but that doesn't force the converter's output current to equal its input current. Inside it, for part of each cycle the cell's current flows through the inductor and a switch straight back to the cell's negative terminal, so fewer coulombs reach the port, each carrying more energy. What the converter conserves (less its losses) is power, V·I. The energy is fixed at {E}, and at {Vo} it can carry at most Q = E/V = {Qout}."
+        },
+        {
+          "text": "Yes: the higher output voltage pushes more charge out, so an honest bank would show more than its label, about {Qup}",
+          "feedback": "That multiplies by the voltage ratio instead of dividing. A higher voltage means more joules per coulomb, so the same {E} fills fewer coulombs: Q = E/V = {Qout}. A converter can't make energy, and making more charge at a higher voltage would need more energy than the cell holds."
+        },
+        {
+          "text": "No: the meter counts current, not charge, so its reading in Ah can't be compared with the label at all",
+          "feedback": "An Ah counter adds up current × time, which is a charge, the same quantity the label counts (1 Ah = 3600 C). The two numbers can be compared; they differ because they count charge at different voltages, and at {Vo} each coulomb carries more energy."
+        }
+      ],
+      "explanation": "The label is a charge: {cap} = {Qc} (1 Ah = 3600 C). Each of those coulombs gains 3.7 J on average crossing the cell's nominal {Vc}, so the cell stores E = Q·V = {Qc} × {Vc} = {E}. The converter hands on that energy, not a fixed number of coulombs: at the USB port each coulomb gives up 5 J, so the most charge the energy can carry is Q = E/V = {E} / {Vo} = {QoC} = {Qout}. The converter passes on about 85 % of the energy, and 0.85 × {Qout} = {Qm}, which is exactly what the meter counted. So the reading fits an honest label. Many power banks print both numbers: the cell's capacity at 3.7 V, and a smaller rated capacity at 5 V that already allows for the converter's losses.",
+      "hints": [
+        "Does the label count charge or energy? Which of the two must the converter pass on from the cell to the USB port?",
+        "Find the cell's energy, E = Q·V at {Vc}, then how much charge carries that energy at {Vo}: Q = E/V."
+      ],
+      "noDrawing": "a power bank's label and a USB meter's count; the converter inside is not a circuit to solve here",
+      "review": "verified"
+    },
+    {
+      "id": "ve_ev_voltage",
+      "topicId": "voltage_energy",
+      "prompt": "In a cathode-ray tube (an old television picture tube), each electron leaves the hot cathode almost at rest and reaches the screen with a kinetic energy of {W}, all of it gained from the accelerating voltage. Through what voltage was it accelerated?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            10000,
+            15000,
+            20000,
+            25000
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "W",
+          "formula": "1.602176634e-19*V",
+          "unit": "J"
+        },
+        {
+          "name": "EeV",
+          "formula": "V",
+          "unit": "eV"
+        }
+      ],
+      "answer": {
+        "formula": "W/1.602176634e-19",
+        "unit": "V"
+      },
+      "explanation": "An electron carries a charge of magnitude e = 1.602 × 10⁻¹⁹ C, and crossing a voltage V it gains W = e·V. So V = W/e = {W} / 1.602 × 10⁻¹⁹ C = {answer}. In electron-volts the energy is {EeV}: an electron crossing a voltage gains that many electron-volts, which is why the unit exists. Joules are an awkward size for one particle.",
+      "hints": [
+        "W = Q·V still holds; here Q is the charge of one electron.",
+        "V = W/e, with e = 1.602 × 10⁻¹⁹ C."
+      ],
+      "misconceptions": [
+        {
+          "formula": "1.602176634e-19/W",
+          "feedback": "That is charge divided by energy, coulombs per joule, the inverse of a volt. Voltage is energy per charge: V = W/e."
+        },
+        {
+          "formula": "W",
+          "feedback": "That is the energy in joules, not a voltage. Divide by the electron's charge, 1.602 × 10⁻¹⁹ C, to get joules per coulomb (volts)."
+        }
+      ],
+      "noDrawing": "a single electron accelerated in a vacuum tube; no circuit to solve",
+      "review": "verified"
+    },
+    {
+      "id": "ve_node_below_ground",
+      "topicId": "voltage_energy",
+      "prompt": "Three batteries are stacked in series and light a lamp connected from a to d: {V1} on top (+ at a, − at b), {V2} in the middle (+ at b, − at c) and {V3} at the bottom (+ at c, − at d). Ground is node c. A voltmeter has its black lead on ground and its red lead on node d. What does it read?",
+      "variables": [
+        {
+          "name": "V1",
+          "unit": "V",
+          "values": [
+            1.5,
+            3,
+            4.5
+          ]
+        },
+        {
+          "name": "V2",
+          "unit": "V",
+          "values": [
+            1.5,
+            3
+          ]
+        },
+        {
+          "name": "V3",
+          "unit": "V",
+          "values": [
+            1.5,
+            3,
+            4.5
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Va",
+          "formula": "V1+V2",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "-V3",
+        "unit": "V"
+      },
+      "explanation": "Start at ground, node c, at 0 V. The bottom battery has its + terminal on c and its − terminal on d, so d is {V3} below c: V_d = 0 − {V3} = {answer}. For comparison, node a is {Va} above ground. Nothing about the circuit makes d special; it reads negative only because it lies below the node chosen as the reference.",
+      "hints": [
+        "Find ground first: that node reads 0 V. Then step from it to d through one battery.",
+        "Going from a battery's + terminal to its − terminal, the potential falls by the battery's voltage."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V3",
+          "feedback": "The size is right, but d is on the − side of the bottom battery, below ground. A node below the reference reads negative."
+        },
+        {
+          "formula": "0",
+          "feedback": "Node d is the bottom of the drawing, but ground is node c, not d. The bottom battery sits between them, so d is {V3} below ground."
+        },
+        {
+          "formula": "V1+V2+V3",
+          "feedback": "That is the whole stack, the voltage from d up to a. The meter reads from ground (c) to d, which spans only the bottom battery, and d is below ground."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does node d read negative?",
+          "choices": [
+            {
+              "text": "It is at a lower potential than the node chosen as ground; the minus sign only means below the reference",
+              "feedback": "Right: a node voltage is a difference from ground, and d lies {V3} below c.",
+              "correct": true
+            },
+            {
+              "text": "The bottom battery is connected backward",
+              "feedback": "Its + terminal is on c and its − on d, the same way around as the others; all three add up to drive the lamp. The sign comes from where ground was chosen."
+            },
+            {
+              "text": "Current flows out of node d into ground",
+              "feedback": "A node voltage says nothing about current into ground. Here no current flows through the ground connection at all; the current goes around the loop through the batteries and the lamp."
+            },
+            {
+              "text": "Charge at node d has run out of energy",
+              "feedback": "A negative reading is not a lack of energy; it is a potential below the chosen reference. With ground moved to d, the same node would read 0 V and nothing physical would change."
+            }
+          ],
+          "explanation": "Only potential differences are physical. Choosing c as ground sets c to 0 V; everything above it reads positive and everything below it negative. The lamp, the batteries and the current are the same wherever ground is."
+        }
+      ],
+      "schematic": {
+        "netlist": "three batteries in series\nV1 a b {V1:spice}\nV2 b 0 {V2:spice}\nV3 0 d {V3:spice}\nR1 a d 100\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "{V1}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "{V2}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "V3",
+            "at": [
+              0,
+              8
+            ],
+            "rot": 90,
+            "label": "{V3}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              4
+            ],
+            "rot": 90,
+            "label": "lamp",
+            "symbol": "lamp"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              8
+            ],
+            [
+              8,
+              12
+            ],
+            [
+              0,
+              12
+            ]
+          ],
+          [
+            [
+              0,
+              8
+            ],
+            [
+              -4,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            -4,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              0,
+              0
+            ],
+            "left": true
+          },
+          {
+            "text": "b",
+            "at": [
+              0,
+              4
+            ],
+            "left": true
+          },
+          {
+            "text": "c",
+            "at": [
+              0,
+              8
+            ],
+            "left": true
+          },
+          {
+            "text": "d",
+            "at": [
+              0,
+              12
+            ],
+            "left": true
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "ve_across_from_nodes",
+      "topicId": "voltage_energy",
+      "prompt": "Three resistors in series run from the + terminal of a {Vs} supply to ground: R1 first, then R2, then R3. A voltmeter with its black lead on ground reads {Vx} at node x (between R1 and R2) and {Vy} at node y (between R2 and R3). What is the voltage across R2?",
+      "variables": [
+        {
+          "name": "Vs",
+          "unit": "V",
+          "value": 12
+        },
+        {
+          "name": "Vx",
+          "unit": "V",
+          "range": {
+            "min": 6.2,
+            "max": 11.4,
+            "step": 0.2
+          }
+        },
+        {
+          "name": "Vy",
+          "unit": "V",
+          "range": {
+            "min": 0.6,
+            "max": 2.8,
+            "step": 0.2
+          }
+        }
+      ],
+      "answer": {
+        "formula": "Vx-Vy",
+        "unit": "V"
+      },
+      "explanation": "R2 sits between x and y, so its voltage is the difference of their node voltages: V_R2 = V_x − V_y = {Vx} − {Vy} = {answer}. Each coulomb going from x to y gives up that many joules in R2 (1 V = 1 J/C). The ground reference cancels: both readings were taken from the same ground.",
+      "hints": [
+        "A voltage across a part is the difference between the potentials at its two ends.",
+        "V_R2 = V_x − V_y."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vx",
+          "feedback": "That is node x measured from ground: it spans R2 and R3 together. Subtract node y's voltage to leave R2 alone."
+        },
+        {
+          "formula": "Vy",
+          "feedback": "That is node y measured from ground: the voltage across R3 alone. R2 lies between x and y, so take the difference V_x − V_y."
+        },
+        {
+          "formula": "Vx+Vy",
+          "feedback": "Node voltages don't add to give the voltage between them. Each is measured from ground, so the voltage from x to y is the difference, V_x − V_y."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Where do you put the meter leads to read R2's voltage directly?",
+          "choices": [
+            {
+              "text": "Red lead on node x and black lead on node y, one on each end of R2, with the circuit left connected",
+              "feedback": "Right: a voltmeter goes across the part it measures, and then it reads V_x − V_y directly.",
+              "correct": true
+            },
+            {
+              "text": "Black lead on ground and red lead on R2, since every voltage is measured from ground",
+              "feedback": "Ground is only the reference for node voltages. A voltage across a part is between its own two ends; with the black lead on ground the meter reads a node voltage, not R2's."
+            },
+            {
+              "text": "Disconnect R2 at node y and put the meter in the gap, so R2's current flows through it",
+              "feedback": "That is how an ammeter goes in. A voltmeter (about 10 MΩ) in series would almost stop the current and read nearly the full {Vs}, not R2's voltage."
+            },
+            {
+              "text": "Both leads on node x, where R2's voltage enters it",
+              "feedback": "Two leads on one node read 0 V: there is no difference between a point and itself. Voltage doesn't enter a part; it is between the part's two ends."
+            }
+          ],
+          "explanation": "A voltmeter reads the potential difference between its two leads. Put them on the two ends of the part, in parallel with it, and leave the circuit intact."
+        }
+      ],
+      "schematic": {
+        "netlist": "three resistors in series\nV1 in 0 {Vs:spice}\nR1 in x {R1:spice}\nR2 x y {R2:spice}\nR3 y 0 {R3:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vs}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "R2"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "R3"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              14,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            7,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "x",
+            "at": [
+              7,
+              0
+            ]
+          },
+          {
+            "text": "y",
+            "at": [
+              14,
+              0
+            ]
+          }
+        ]
+      },
+      "derived": [
+        {
+          "name": "R1",
+          "formula": "(Vs-Vx)*1000",
+          "unit": "Ω"
+        },
+        {
+          "name": "R2",
+          "formula": "(Vx-Vy)*1000",
+          "unit": "Ω"
+        },
+        {
+          "name": "R3",
+          "formula": "Vy*1000",
+          "unit": "Ω"
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "ve_bird_on_wire",
+      "topicId": "voltage_energy",
+      "prompt": "A bird perches with both feet on one bare overhead power line that sits at 7200 V from the ground (a common US distribution voltage). It is unharmed. Why?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "Both feet are on the same wire, so the voltage between them is only millivolts (a few centimeters of thick conductor), and almost no current is driven through the bird",
+          "feedback": "Right: the 7200 V is between the wire and the ground, not between the bird's feet.",
+          "correct": true
+        },
+        {
+          "text": "A bird's feet are insulators, so no current can enter its body",
+          "feedback": "Its feet and body conduct well enough: a bird that touches the line and a grounded pole at the same time is killed. What protects it is that almost no voltage is across it."
+        },
+        {
+          "text": "7200 V is too low to harm an animal",
+          "feedback": "7200 V across a body drives a lethal current. The bird is safe because that 7200 V is between the line and the ground, and the bird is not across that pair of points."
+        },
+        {
+          "text": "The bird is not touching the ground, and current only flows into the ground",
+          "feedback": "Current flows around any closed path with a voltage across it, ground or not: a bird that bridges two different lines is killed without touching the ground. What matters is that both feet are at almost the same potential."
+        },
+        {
+          "text": "The current in the line moves past too fast to turn into the bird",
+          "feedback": "Speed has nothing to do with it; on this AC line the electrons only oscillate over a tiny distance. Charge flows through the bird only if there is a voltage across it, and between two points on one wire there is almost none."
+        }
+      ],
+      "explanation": "Current is driven through a body by the voltage across it. Both feet touch the same conductor, and the voltage between two points a few centimeters apart on a thick line carrying even hundreds of amps is only millivolts. The bird's body is a second path across those few centimeters, with millivolts across it, so the current through it is negligible. The line is 7200 V from the ground, but the bird is not connected across that pair of points.",
+      "hints": [
+        "A voltage is always between two points. Which two points is the bird connected between?"
+      ],
+      "followUps": [
+        {
+          "prompt": "Still standing on the line, the bird stretches a wing and touches a grounded metal pole. What changes?",
+          "choices": [
+            {
+              "text": "Nearly the full 7200 V is now across its body, between the line and the pole, so a large current flows through it",
+              "feedback": "Right: the bird now connects two points about 7200 V apart.",
+              "correct": true
+            },
+            {
+              "text": "Nothing: its feet are still on one wire",
+              "feedback": "The feet still have almost no voltage between them, but the wing adds a new pair of points: line and grounded pole, about 7200 V apart."
+            },
+            {
+              "text": "The whole line current now flows through the bird instead of the wire",
+              "feedback": "The line current continues to the load. What flows through the bird is set by the 7200 V across its body and its own resistance, and that alone is lethal."
+            },
+            {
+              "text": "Only the wing is affected, because the voltage stays inside the wire",
+              "feedback": "A voltage isn't held inside a wire; it is the potential difference between two points. Line to pole is about 7200 V, and the bird's body is the path between them."
+            }
+          ],
+          "explanation": "Danger comes from being connected between two points at different potentials. Line workers are trained to never bridge the line and anything grounded, or two lines, for this reason."
+        }
+      ],
+      "noDrawing": "a bird on an overhead power line; the point is which two points it touches, with no circuit to solve",
+      "review": "verified"
+    },
+    {
+      "id": "ve_voltage_across",
+      "topicId": "voltage_energy",
+      "level": "recall",
+      "prompt": "A 12 V battery lights a lamp. Which sentence describes the circuit correctly?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "Charge flows through the lamp, and 12 V is across it: each coulomb that passes through gives up 12 J in the lamp",
+          "feedback": "Right: current is through a part, voltage is across it, and 1 V = 1 J/C.",
+          "correct": true
+        },
+        {
+          "text": "12 V flows through the lamp, and the current is across it",
+          "feedback": "That swaps the two. Charge flows through the lamp (that flow is the current); the voltage is between its two terminals and says how much energy each coulomb gives up."
+        },
+        {
+          "text": "12 V of charge flows out of the battery into the lamp",
+          "feedback": "Volts don't measure charge; coulombs do. A volt is a joule per coulomb, so 12 V says how much energy each coulomb gives up crossing the lamp."
+        },
+        {
+          "text": "The voltage is used up in the lamp, so the wire back to the battery carries no voltage and no current",
+          "feedback": "The same current flows in the return wire as in the lamp: charge isn't used up. What the lamp takes is energy. The return wire is at the potential of the − terminal, and a voltage isn't carried along a wire; it is between two points."
+        }
+      ],
+      "explanation": "Current is a flow of charge through a part. Voltage is a potential difference across a part, between its two terminals: the energy per coulomb given up there. The battery gives every coulomb 12 J; the lamp takes those 12 J as the coulomb passes through; the charge returns to the battery and goes around again.",
+      "hints": [
+        "Which of the two, charge or voltage, can move?"
+      ],
+      "schematic": {
+        "netlist": "battery and lamp\nV1 a 0 12\nR1 a 0 100\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "lamp",
+            "symbol": "lamp"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ve_node_label",
+      "topicId": "voltage_energy",
+      "level": "recall",
+      "prompt": "A schematic labels node b \"5 V\". What does that label mean?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "Node b is 5 V above the node marked with the ground symbol: each coulomb going from b to ground gives up 5 J",
+          "feedback": "Right: a node voltage is a potential difference, with ground as the other point.",
+          "correct": true
+        },
+        {
+          "text": "5 V of voltage is stored at node b",
+          "feedback": "A voltage isn't stored at one point; it is a difference between two points. The label has a second point implied: ground."
+        },
+        {
+          "text": "Node b is 5 V above the earth under the circuit, wherever ground is drawn",
+          "feedback": "Ground on a schematic is the node chosen as the reference, the one marked with the ground symbol. A battery-powered circuit usually has no connection to the earth at all."
+        },
+        {
+          "text": "A voltmeter with its red lead on b and its black lead unconnected would read 5 V",
+          "feedback": "A meter reads the difference between its two leads. With one lead unconnected there is no second point, and it reads about 0 V. Put the black lead on ground to read 5 V."
+        }
+      ],
+      "explanation": "A voltage at a single point means nothing on its own. Schematics write node voltages because they all share one reference, ground, chosen by the designer (usually the battery's − terminal). \"5 V at b\" is short for \"5 V from ground to b\".",
+      "hints": [
+        "How many points does a voltmeter touch?"
+      ],
+      "noDrawing": "about what a node label on any schematic means; no particular circuit",
+      "review": "verified"
+    },
+    {
+      "id": "ve_voltmeter_across",
+      "topicId": "voltage_energy",
+      "prompt": "You want to measure the voltage across the lamp in this circuit with a multimeter set to DC volts. How do you connect it?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            3,
+            4.5,
+            6,
+            9
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "text": "One lead on each terminal of the lamp, with the circuit left as it is",
+          "feedback": "Right: a voltmeter goes across the part, in parallel with it.",
+          "correct": true
+        },
+        {
+          "text": "Break the circuit next to the lamp and put the meter in the gap",
+          "feedback": "That is how an ammeter goes in. A voltmeter has about 10 MΩ inside, so in series it almost stops the current: the lamp goes dark and the meter reads nearly the whole battery voltage, not the lamp's."
+        },
+        {
+          "text": "Red lead on one terminal of the lamp, black lead left free",
+          "feedback": "A voltage is a difference between two points. With one lead free the meter has no second point and reads about 0 V."
+        },
+        {
+          "text": "Both leads on the same terminal of the lamp",
+          "feedback": "Both leads on one node read 0 V: there is no potential difference between a point and itself. The leads go on the lamp's two different terminals."
+        }
+      ],
+      "explanation": "A voltmeter measures the potential difference between its two leads, so it goes across the part, one lead on each side, without breaking the circuit. With the battery treated as ideal, it reads {V} here.",
+      "hints": [
+        "A voltage is between two points. Which two points?"
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does a digital voltmeter have a very high input resistance (about 10 MΩ)?",
+          "choices": [
+            {
+              "text": "So it draws almost no current from the points it sits across, and barely changes the voltage it measures",
+              "feedback": "Right: an ideal voltmeter takes no current; 10 MΩ comes close in most circuits.",
+              "correct": true
+            },
+            {
+              "text": "So the voltage can flow through it slowly enough to be counted",
+              "feedback": "Voltage doesn't flow. The meter senses the potential difference between its leads; the less current it draws, the less it disturbs that difference."
+            },
+            {
+              "text": "To protect it from the large current that a voltage measurement passes",
+              "feedback": "A voltage measurement should pass almost no current. The high resistance is what keeps the current tiny, not a guard against a large one."
+            },
+            {
+              "text": "So it can be put in series with the circuit, in the path of the current",
+              "feedback": "In series, 10 MΩ would almost stop the current. The high resistance is for a meter placed across a part, where it takes only a tiny side current."
+            }
+          ],
+          "explanation": "A voltmeter is a second path across the part. To leave the circuit as it was, that path must take a negligible current, which needs a resistance much larger than the parts around it."
+        }
+      ],
+      "schematic": {
+        "netlist": "battery and lamp\nV1 a 0 {V:spice}\nR1 a 0 100\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "lamp",
+            "symbol": "lamp"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ve_battery_no_current",
+      "topicId": "voltage_energy",
+      "prompt": "A 9 V battery sits on a shelf with nothing connected. A meter across its terminals briefly reads 9.4 V (the meter itself draws about a microamp while connected). With the meter removed and nothing connected, what current flows out of the battery?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "None: the voltage is there, but there is no closed path for charge to flow around",
+          "feedback": "Right: voltage is the energy each coulomb would give up; current needs a complete path as well.",
+          "correct": true
+        },
+        {
+          "text": "About 9.4 A, since the voltage sets the current",
+          "feedback": "Volts and amps measure different things: energy per coulomb, and coulombs per second. The current depends on the path connected, and here there isn't one."
+        },
+        {
+          "text": "A small current through the air from + to −, which is what the meter measured",
+          "feedback": "Dry air insulates at 9 V. The meter measured the potential difference between the terminals; it doesn't need a current to be flowing already."
+        },
+        {
+          "text": "None, so the voltage between the terminals is really zero until something is connected",
+          "feedback": "The voltage exists without current: the chemistry holds the terminals 9.4 V apart, and the meter reports it. Connect a lamp and each coulomb gives up that energy."
+        }
+      ],
+      "explanation": "A voltage is a potential difference: the energy per coulomb available between two points. Current is a flow of charge, and it needs a closed path. The battery keeps its terminals about 9.4 V apart whether or not anything is connected; only when a path is connected does charge flow and deliver energy.",
+      "hints": [
+        "What does charge need in order to flow?"
+      ],
+      "noDrawing": "a battery alone with nothing connected; there is no circuit to draw",
+      "review": "verified"
+    },
+    {
+      "id": "ve_what_if_ground_node",
+      "topicId": "voltage_energy",
+      "prompt": "Three batteries are stacked in series and light a lamp from a to d: {V1} on top (a to b), {V2} in the middle (b to c) and {V3} at the bottom (c to d), each with + at the upper node. Ground is node d. Ground is moved to node c, with nothing else changed. What happens to the voltage at node a, measured from ground?",
+      "variables": [
+        {
+          "name": "V1",
+          "unit": "V",
+          "values": [
+            1.5,
+            3,
+            4.5
+          ]
+        },
+        {
+          "name": "V2",
+          "unit": "V",
+          "values": [
+            1.5,
+            3
+          ]
+        },
+        {
+          "name": "V3",
+          "unit": "V",
+          "values": [
+            1.5,
+            3,
+            4.5
+          ]
+        },
+        {
+          "name": "g",
+          "unit": "V",
+          "value": 0
+        }
+      ],
+      "whatIf": {
+        "quantity": "the voltage at node a",
+        "formula": "V1+V2+V3-g",
+        "unit": "V",
+        "change": {
+          "g": "V3"
+        },
+        "feedback": {
+          "same": "The batteries didn't change, but a node voltage is measured from ground. The reference moved {V3} up the stack, so a is now only {V1} + {V2} above it.",
+          "up": "Moving ground toward a doesn't raise a's reading. A node voltage is the potential difference between that node and ground, and with ground at c only the top two batteries lie between them; the bottom battery is now below the reference."
+        }
+      },
+      "explanation": "A node voltage is the potential difference from ground. With ground at d, a is the whole stack above it: {before}. With ground at c, the bottom battery is below the reference, so a reads {after}, lower by {V3}. Every node reading drops by the same {V3}; no voltage across any part changes, and the lamp is exactly as bright.",
+      "hints": [
+        "Count the batteries between ground and node a, before and after."
+      ],
+      "schematic": {
+        "netlist": "three batteries in series\nV1 a b {V1:spice}\nV2 b c {V2:spice}\nV3 c 0 {V3:spice}\nR1 a 0 100\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "{V1}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "{V2}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "V3",
+            "at": [
+              0,
+              8
+            ],
+            "rot": 90,
+            "label": "{V3}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              4
+            ],
+            "rot": 90,
+            "label": "lamp",
+            "symbol": "lamp"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              8
+            ],
+            [
+              8,
+              12
+            ],
+            [
+              0,
+              12
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              0,
+              0
+            ],
+            "left": true
+          },
+          {
+            "text": "b",
+            "at": [
+              0,
+              4
+            ],
+            "left": true
+          },
+          {
+            "text": "c",
+            "at": [
+              0,
+              8
+            ],
+            "left": true
+          },
+          {
+            "text": "d",
+            "at": [
+              0,
+              12
+            ],
+            "left": true
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ve_what_if_ground_across",
+      "topicId": "voltage_energy",
+      "prompt": "Three batteries are stacked in series and light a lamp from a to d: {V1} on top (a to b), {V2} in the middle (b to c) and {V3} at the bottom (c to d), each with + at the upper node. Ground is node d. Ground is moved to node a, the top, so every other node now reads negative. What happens to the voltage across the lamp?",
+      "variables": [
+        {
+          "name": "V1",
+          "unit": "V",
+          "values": [
+            1.5,
+            3,
+            4.5
+          ]
+        },
+        {
+          "name": "V2",
+          "unit": "V",
+          "values": [
+            1.5,
+            3
+          ]
+        },
+        {
+          "name": "V3",
+          "unit": "V",
+          "values": [
+            1.5,
+            3,
+            4.5
+          ]
+        },
+        {
+          "name": "g",
+          "unit": "V",
+          "value": 0
+        }
+      ],
+      "whatIf": {
+        "quantity": "the voltage across the lamp (a to d)",
+        "formula": "(V1+V2+V3-g)-(0-g)",
+        "unit": "V",
+        "change": {
+          "g": "V1+V2+V3"
+        },
+        "feedback": {
+          "down": "Node a now reads 0 V instead of the full stack, but node d drops by exactly the same amount, to minus the full stack. The lamp sees the difference, which hasn't changed.",
+          "up": "Nothing was added to the circuit: the batteries and the lamp are the same, and moving ground moves no charge and adds no energy. Both ends of the lamp shift by the same amount."
+        }
+      },
+      "explanation": "The voltage across the lamp is V_a − V_d. Moving ground subtracts the same amount from both node voltages, so the difference stays {before} → {after}. Ground is a reference the designer picks, not a part of the circuit; only potential differences drive current, so the lamp is exactly as bright.",
+      "hints": [
+        "Write the lamp's voltage as the difference of its two node voltages, before and after."
+      ],
+      "followUps": [
+        {
+          "prompt": "With ground at a, node d reads minus the full stack. Why doesn't the lamp go dark or change?",
+          "choices": [
+            {
+              "text": "The lamp responds only to the potential difference between its two terminals, and moving the reference changes both node voltages equally",
+              "feedback": "Right: physics depends only on differences of potential.",
+              "correct": true
+            },
+            {
+              "text": "Negative voltages are just as strong as positive ones, so the lamp still gets energy",
+              "feedback": "The sign of a node voltage doesn't decide anything about the lamp: the lamp sees V_a − V_d, which is the same as before. A negative node voltage just means below the reference."
+            },
+            {
+              "text": "The batteries push extra voltage to make up for the new ground",
+              "feedback": "Nothing in the circuit changed, so nothing has to make anything up. The batteries hold the same voltages; only the labels on the nodes moved."
+            },
+            {
+              "text": "Current now flows into ground at a, and that replaces the current through the lamp",
+              "feedback": "The ground symbol carries no current here; it only marks the reference node. The current flows around the loop through the batteries and the lamp, as before."
+            }
+          ],
+          "explanation": "Adding the same constant to every potential changes no force on any charge and no energy transfer. That is why the choice of ground is free, and why every node voltage on a schematic needs to know where ground is."
+        }
+      ],
+      "schematic": {
+        "netlist": "three batteries in series\nV1 a b {V1:spice}\nV2 b c {V2:spice}\nV3 c 0 {V3:spice}\nR1 a 0 100\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "{V1}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "{V2}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "V3",
+            "at": [
+              0,
+              8
+            ],
+            "rot": 90,
+            "label": "{V3}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              4
+            ],
+            "rot": 90,
+            "label": "lamp",
+            "symbol": "lamp"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              8
+            ],
+            [
+              8,
+              12
+            ],
+            [
+              0,
+              12
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              0,
+              0
+            ],
+            "left": true
+          },
+          {
+            "text": "b",
+            "at": [
+              0,
+              4
+            ],
+            "left": true
+          },
+          {
+            "text": "c",
+            "at": [
+              0,
+              8
+            ],
+            "left": true
+          },
+          {
+            "text": "d",
+            "at": [
+              0,
+              12
+            ],
+            "left": true
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ve_what_if_energy_v",
+      "topicId": "voltage_energy",
+      "prompt": "{Q} of charge passes through a small motor running from {V}. The motor is moved to a {new_V} supply, and again {Q} passes through it. What happens to the energy delivered to the motor?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            3,
+            4.5,
+            6
+          ]
+        },
+        {
+          "name": "Q",
+          "unit": "C",
+          "range": {
+            "min": 10,
+            "max": 50,
+            "step": 10
+          }
+        }
+      ],
+      "whatIf": {
+        "quantity": "the energy delivered",
+        "formula": "Q*V",
+        "unit": "J",
+        "change": {
+          "V": "2*V"
+        },
+        "askFactor": true,
+        "feedback": {
+          "same": "The charge is the same, but the energy each coulomb gives up crossing the motor is the voltage across it: one volt is one joule per coulomb. At the higher supply voltage every coulomb gives up more, W = Q·V.",
+          "down": "A higher voltage doesn't spread the energy thinner. Voltage is energy per unit charge, so each coulomb crossing {new_V} gives up more joules than it did crossing {V}, and the same number of coulombs pass."
+        }
+      },
+      "explanation": "W = Q·V. The same {Q} crosses twice the voltage, and each coulomb gives up twice the energy, so the total doubles: {before} → {after}. (How quickly that charge passes depends on the motor's load; that sets the power, not the energy each coulomb gives up.)",
+      "hints": [
+        "How much energy does each coulomb give up at each voltage?"
+      ],
+      "schematic": {
+        "netlist": "battery and motor\nV1 a 0 {V:spice}\nR1 a 0 100\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "motor",
+            "symbol": "motor"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ve_what_if_charge_v",
+      "topicId": "voltage_energy",
+      "prompt": "A heater must receive {W} of energy. One version runs from {V}; a second version runs from {new_V} and receives the same {W}. What happens to the charge that must pass through the heater?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            3,
+            4.5,
+            6
+          ]
+        },
+        {
+          "name": "W",
+          "unit": "J",
+          "range": {
+            "min": 60,
+            "max": 600,
+            "step": 60
+          }
+        }
+      ],
+      "whatIf": {
+        "quantity": "the charge that passes",
+        "formula": "W/V",
+        "unit": "C",
+        "change": {
+          "V": "2*V"
+        },
+        "askFactor": true,
+        "feedback": {
+          "up": "A higher voltage doesn't need more charge. Voltage is energy per coulomb, so at {new_V} each coulomb gives up more joules crossing the heater, and fewer of them add up to the same {W}: Q = W/V.",
+          "same": "The energy is the same, but the energy per coulomb is not: crossing {new_V}, each coulomb gives up more joules than it did crossing {V}, so fewer coulombs add up to the same {W}, Q = W/V."
+        }
+      },
+      "explanation": "Q = W/V. At {new_V} each coulomb gives up twice the energy it did at {V}, so half the charge delivers the same {W}: {before} → {after}. This is why power is sent over long distances at high voltage: the same energy needs less charge per second (less current), and less current heats the wires less.",
+      "hints": [
+        "How much energy does each coulomb deliver at each voltage?"
+      ],
+      "schematic": {
+        "netlist": "battery and heating resistor\nV1 a 0 {V:spice}\nR1 a 0 100\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "heater"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ve_fault_reversed_cell",
+      "topicId": "voltage_energy",
+      "prompt": "A holder with three {Vc} cells in series powers a lamp. Cell 1 sits on ground, cell 2 above it, cell 3 on top; node n1 is between cells 1 and 2, n2 between cells 2 and 3. The pack should give {h2} at the top, but the lamp is dim or dark. A voltmeter with its black lead on ground reads the three nodes below. Which fault explains the readings?",
+      "variables": [
+        {
+          "name": "Vc",
+          "unit": "V",
+          "values": [
+            1.2,
+            1.5
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            22,
+            33,
+            47
+          ]
+        }
+      ],
+      "fault": {
+        "netlist": "three cells and a lamp\nV1 n1 0 {Vc:spice}\nV2 n2 n1 {Vc:spice}\nV3 top n2 {Vc:spice}\nR1 top 0 {RL:spice}\n",
+        "probes": [
+          {
+            "label": "Voltage at n1 (black lead on ground)",
+            "probe": "v(n1)"
+          },
+          {
+            "label": "Voltage at n2 (black lead on ground)",
+            "probe": "v(n2)"
+          },
+          {
+            "label": "Voltage at the top (black lead on ground)",
+            "probe": "v(top)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "Cell 1 is in backward",
+            "value": {
+              "ref": "V1",
+              "formula": "-Vc"
+            },
+            "feedback": "A backward cell 1 would put n1 below ground, reading minus one cell, and the top would be only one cell above ground.",
+            "why": "Stepping up from ground, the potential falls by {Vc} across the reversed cell 1 (n1 negative), then rises by {Vc} twice: n1 = −{Vc}, n2 = 0 V, top = {Vc}."
+          },
+          {
+            "text": "Cell 2 is in backward",
+            "value": {
+              "ref": "V2",
+              "formula": "-Vc"
+            },
+            "feedback": "A backward cell 2 would leave n1 normal but bring n2 back down to 0 V, and the top would be only one cell above ground.",
+            "why": "Cell 1 lifts n1 to {Vc}; the reversed cell 2 drops n2 back to 0 V; cell 3 lifts the top to {Vc}. The steps add to one cell instead of three."
+          },
+          {
+            "text": "Cell 3 is in backward",
+            "value": {
+              "ref": "V3",
+              "formula": "-Vc"
+            },
+            "feedback": "A backward cell 3 would leave n1 and n2 normal, and the top would fall back to one cell instead of rising to three.",
+            "why": "n1 and n2 read normally; the reversed cell 3 takes the top {Vc} below n2 instead of above it, so the lamp gets one cell's voltage."
+          },
+          {
+            "text": "Cell 3 is nearly flat",
+            "value": {
+              "ref": "V3",
+              "formula": "0.6*Vc"
+            },
+            "feedback": "A nearly flat cell 3 would leave n1 and n2 normal and still raise the top above n2, just by less than a full cell.",
+            "why": "n1 and n2 read normally; the step from n2 to the top is smaller than {Vc}, so cell 3 is giving each coulomb less energy than it should. (Measured with the lamp connected, so a worn cell's internal resistance shows up as a smaller step.)"
+          }
+        ]
+      },
+      "explanation": "Each node reading is the sum of the cell voltages between ground and that node, with a backward cell counting negative. Read the steps: from ground to n1 is cell 1, n1 to n2 is cell 2, n2 to the top is cell 3. The step that is negative, or too small, points at the faulty cell. A reversed cell doesn't just add nothing; it subtracts its voltage, so the pack loses two cells' worth.",
+      "hints": [
+        "Work out the step across each cell: n1 − 0, n2 − n1, top − n2.",
+        "A healthy cell gives a step of +{Vc}; a backward one gives −{Vc}."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V3",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "cell 3\n{Vc}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "cell 2\n{Vc}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              8
+            ],
+            "rot": 90,
+            "label": "cell 1\n{Vc}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              4
+            ],
+            "rot": 90,
+            "label": "lamp",
+            "symbol": "lamp"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              8
+            ],
+            [
+              8,
+              12
+            ],
+            [
+              0,
+              12
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "top",
+            "at": [
+              0,
+              0
+            ],
+            "left": true
+          },
+          {
+            "text": "n2",
+            "at": [
+              0,
+              4
+            ],
+            "left": true
+          },
+          {
+            "text": "n1",
+            "at": [
+              0,
+              8
+            ],
+            "left": true
+          }
+        ]
+      },
+      "review": "verified"
+    }
+  ]
+}

@@ -1,0 +1,1296 @@
+{
+  "topics": [
+    {
+      "id": "schem_passive_blocks",
+      "title": "Spotting passive building blocks",
+      "summary": "Recognize dividers, RC filters, RC timers, pull-ups and decoupling capacitors at a glance, and say what each does to a signal.",
+      "lenses": [
+        "circuit",
+        "signals"
+      ],
+      "prerequisites": [
+        "schem_nodes",
+        "dividers",
+        "rc_lowpass_cutoff"
+      ],
+      "prerequisiteNotes": {
+        "schem_nodes": "Recognizing a block starts with seeing which parts share which nodes.",
+        "dividers": "The divider is the most common block of all: two resistors in series with the output taken from the middle.",
+        "rc_lowpass_cutoff": "Whether an RC pair is a low-pass or high-pass filter depends only on which part is in series and which goes to ground."
+      },
+      "lensNotes": {
+        "circuit": "Look for patterns: two resistors in series from a supply with a tap between them is a divider; R in series then C to ground is a low-pass filter; C in series then R to ground is a high-pass filter; a resistor to the supply on a logic input is a pull-up; a small capacitor from a chip's supply pin to ground is decoupling.",
+        "signals": "Each passive block has a job in the signal chain: scale (divider), remove fast wiggles (low-pass), remove DC or slow drift (high-pass), set a delay (RC timer), or hold a supply steady against fast current spikes (decoupling)."
+      },
+      "formulas": [
+        {
+          "label": "Divider",
+          "tex": "V_{out} = V_{in}\\,\\frac{R_2}{R_1 + R_2}"
+        },
+        {
+          "label": "RC filter corner",
+          "tex": "f_c = \\frac{1}{2\\pi RC}"
+        },
+        {
+          "label": "RC timer",
+          "tex": "\\tau = RC"
+        }
+      ],
+      "goals": [
+        "Name the passive block a group of parts forms (divider, RC low-pass or high-pass filter, RC timer, pull-up or pull-down, decoupling capacitor) from the nodes the parts connect",
+        "Tell a low-pass from a high-pass filter by which part the signal passes through and which part goes to ground",
+        "Put a number on what each block does: a divider's output, a filter's cutoff, a timer's τ, a pull-up's current",
+        "Explain why a floating logic input needs a pull-up or pull-down, and why a decoupling capacitor belongs right at the chip"
+      ],
+      "intuition": "Most of a schematic is a few passive patterns repeated: find which part the signal must pass through and which part goes to ground, and the pattern (divider, filter, timer, pull-up, decoupling) tells you what it does.",
+      "why": "Each block rests on one physical fact. Two resistors in series carry one current, so the voltage splits in the ratio of their resistances: a divider. A capacitor's voltage changes only as charge flows in, so a resistor feeding it limits how fast it can follow: slow changes reach the capacitor and fast ones are lost across the resistor (low-pass), and a step becomes a curve rising with τ = RC (timer). Swap the two and only changes get across the capacitor (high-pass). A logic input draws almost no current, so a resistor to the supply sets its voltage whenever nothing stronger drives it. A capacitor at a chip holds charge close by, so fast current spikes need not come through long, inductive supply wires.",
+      "explanation": "You know the divider and the RC filter as circuits to calculate; now find them inside a larger drawing. Use the node reading from the last topic: trace the path the signal takes from input to output, then ask of each part whether the signal passes through it (series) or whether it connects the path to ground or a supply (shunt). Two resistors in series from a source to ground, with the output taken between them, form a divider: it scales the voltage by R2/(R1 + R2). Series R then shunt C is a low-pass filter; series C then shunt R is a high-pass filter. Both have the corner f_c = 1/(2πRC), where R is all the resistance the capacitor sees, including a source's output resistance. Drive the low-pass shape with a step instead of a sine and it is an RC timer, such as a power-on reset. A resistor from a logic input to the supply is a pull-up (to ground, a pull-down): it sets the level while a switch is open. A small capacitor from a chip's supply pin straight to ground is decoupling. A drawing shows only connections, so which way a part is drawn never decides the block.",
+      "workedExample": {
+        "problem": "A battery monitor on a 3.3 V microcontroller board is described part by part. R1 = 33 kΩ runs from the 12 V battery's + terminal to node a, and R2 = 10 kΩ from a to ground. C1 = 1 µF, drawn off to one side, also runs from a to ground, and a feeds an ADC input (assume it draws no current). R3 = 10 kΩ runs from a button input pin to 3.3 V, and the button connects that pin to ground. C2 = 100 nF runs from the microcontroller's 3.3 V pin straight to its ground pin. Name each block, say what it does, and put numbers on it.",
+        "steps": [
+          "R1 and R2: two resistors in series from the battery to ground, output at a: a divider. V_a = 12 V × 10 kΩ / (33 kΩ + 10 kΩ) = 2.79 V, inside the ADC's 0–3.3 V range. It draws 12 V / 43 kΩ = 0.279 mA from the battery all the time.",
+          "C1 connects a to ground, the same two nodes as R2, so it is in parallel with R2 wherever it is drawn. The signal reaches it through R1: series R, shunt C, a low-pass filter.",
+          "The filter's R: seen from C1, the divider is a 2.79 V source with output resistance R1 ∥ R2 = 33 kΩ × 10 kΩ / 43 kΩ = 7.67 kΩ. So f_c = 1 / (2π × 7.67 kΩ × 1 µF) = 20.7 Hz: fast noise on the battery line is filtered out, while the slow battery voltage passes, scaled by the divider. Using R1 alone would give 4.8 Hz; R2 matters.",
+          "The same pair is also a timer: at power-up C1 starts at 0 V and charges with τ = 7.67 kΩ × 1 µF = 7.67 ms, so a reads correctly only after about 5τ ≈ 38 ms.",
+          "R3, from a logic input to the supply: a pull-up. With the button open the pin draws almost no current, so it sits at 3.3 V (high). Pressed, the button connects the pin to ground (low), and 3.3 V / 10 kΩ = 0.33 mA flows through R3.",
+          "C2, from a chip's supply pin straight to ground with nothing in series: decoupling. It carries no signal. It supplies the chip's fast current spikes from its own charge, which is why it must sit right at the pins."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 6 \"Divider Circuits and Kirchhoff's Laws\", section \"Voltage divider circuits\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_6.html#xtocid87520",
+          "note": "Checked that series resistors share one current, so each one's share of the total voltage equals its share of the total resistance (the divider formula)."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. II (AC), ch. 8 \"Filters\", section \"Low-pass filters\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/AC/AC_8.html#xtocid89301",
+          "note": "Checked the series-R, shunt-C low-pass shape, its cutoff f = 1/(2πRC), that other resistance connected to the filter shifts the real response, and that a capacitor placed right across a load's supply terminals is a decoupling capacitor."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. IV (Digital), ch. 3 \"Logic Gates\", section \"CMOS gate circuitry\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Digital/DIGI_3.html#xtocid916014",
+          "note": "Checked that a resistor to the supply (pull-up) or to ground (pull-down) gives a CMOS input a defined level when the switch or output driving it is open."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "spb_identify_highpass",
+      "topicId": "schem_passive_blocks",
+      "prompt": "Which building block is drawn here, and what does it do to the signal on its way from in to out?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "A high-pass filter: with C1 in series, changes pass to out and a steady DC level is blocked",
+          "feedback": "Right: the part in series decides. A series capacitor passes changes and blocks DC.",
+          "correct": true
+        },
+        {
+          "text": "A low-pass filter: the capacitor is drawn going down toward ground, so it shunts fast changes",
+          "feedback": "C1's lower end goes to out, not to ground; only R1 reaches a ground symbol. The capacitor is in series, which makes it a high-pass filter. Which part is in series decides the type, not which way it is drawn."
+        },
+        {
+          "text": "A voltage divider: out is a fixed fraction of in at every frequency, like two resistors",
+          "feedback": "A divider needs a DC current through both parts. C1 lets no steady current through, so for DC R1 drops nothing and out sits at 0 V. The fraction that gets through depends on frequency."
+        },
+        {
+          "text": "An RC timer: it delays the input, so out rises slowly after a step at in and then stays",
+          "feedback": "That's R in series with C to ground: C charges slowly. Here C1 is in series, so a step passes straight through to out and then fades away as C1 charges."
+        }
+      ],
+      "explanation": "Read the path from in to out: the part you must pass through is in series, the part that goes to ground is the shunt. Series C, shunt R is a high-pass filter (cutoff 1/(2πRC) ≈ 159 Hz here); series R, shunt C is a low-pass filter. C1 is drawn vertically, but its bottom is out, not ground.",
+      "hints": [
+        "Follow the path from in to out. Which part do you pass through, and which part goes to ground?"
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "signal"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "C1\n100 nF"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              4
+            ],
+            "rot": 90,
+            "label": "R1\n10 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              12,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            6,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              12,
+              4
+            ]
+          }
+        ],
+        "netlist": "HP\nV1 in 0 SIN(0 1 1k)\nC1 in out 100n\nR1 out 0 10k\n"
+      },
+      "followUps": [
+        {
+          "prompt": "Why does out sit at 0 V when the input is a steady DC voltage?",
+          "choices": [
+            {
+              "text": "A charged C1 passes no current, so R1 carries none and has 0 V across it",
+              "feedback": "Right: no current, no drop across R1, and out is tied to ground through R1.",
+              "correct": true
+            },
+            {
+              "text": "A capacitor's reactance is zero at DC, so C1 shorts the whole signal away",
+              "feedback": "It's the other way round: X_C = 1/(2πfC) grows without limit as f → 0. At DC a capacitor is an open circuit."
+            },
+            {
+              "text": "C1 soaks up the steady DC current itself, so none of it reaches R1",
+              "feedback": "No DC current flows into C1 at all once it has charged; that's why R1 carries none and drops 0 V."
+            },
+            {
+              "text": "R1 is much larger than C1, so R1 takes all of the input voltage",
+              "feedback": "A resistance and a capacitance can't be compared like that (ohms vs farads). At DC the point is that C1 lets no current through."
+            }
+          ],
+          "explanation": "At DC a charged capacitor is an open circuit. With no current, Ohm's law gives 0 V across R1, so out equals ground. That is why a series capacitor is used to block DC between stages while passing the signal (a coupling capacitor)."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "spb_lowpass_what_if_r",
+      "topicId": "schem_passive_blocks",
+      "prompt": "Spot the filter in this drawing (R1 = {R1}, C1 = {C}). R1 is swapped for {new_R1}. What happens to the filter's cutoff frequency?",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -9,
+            -7
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the cutoff frequency",
+        "formula": "1/(2*pi*R1*C)",
+        "unit": "Hz",
+        "change": {
+          "R1": "10*R1"
+        },
+        "askFactor": true,
+        "feedback": {
+          "up": "A bigger R1 lets less current charge C1, so C1 takes longer to follow a change at the input. The cutoff is the frequency where C1 stops keeping up.",
+          "same": "The cutoff is 1/(2πR1·C1), so it depends on both parts. Changing R1 moves it."
+        },
+        "factorHint": "f_c = 1/(2πR1·C1). Write it before and after with only R1 changed, then divide one by the other."
+      },
+      "explanation": "R1 is in series and C1 goes from out to ground: a low-pass filter, with f_c = 1/(2πR1·C1). Making R1 ten times bigger makes f_c ten times smaller: {before} → {after}. A bigger R1 charges C1 more slowly, so only slower signals get through.",
+      "hints": [
+        "Which part is in series from in to out? That decides the filter type.",
+        "f_c = 1/(2πRC): what does a bigger R do to it?"
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "signal"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              6,
+              4
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              12,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            6,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              12,
+              4
+            ]
+          }
+        ],
+        "netlist": "LP\nV1 in 0 SIN(0 1 1k)\nR1 in out {R1:spice}\nC1 out 0 {C:spice}\n"
+      },
+      "followUps": [
+        {
+          "prompt": "Is this filter a low-pass or a high-pass, and what tells you?",
+          "choices": [
+            {
+              "text": "Low-pass, because R1 is in series and C1 goes to ground, shunting fast signals away",
+              "feedback": "Right: C1's reactance falls as frequency rises, so fast signals are shunted to ground.",
+              "correct": true
+            },
+            {
+              "text": "High-pass, because R1 is drawn going down toward ground, draining the lows away",
+              "feedback": "R1's bottom end is out, not ground; C1 is the part that reaches ground. The direction a part is drawn means nothing."
+            },
+            {
+              "text": "High-pass, because the capacitor comes after the resistor on the way to out",
+              "feedback": "Order along the page doesn't matter; what matters is which part is in series and which goes to ground. Series R, shunt C is a low-pass."
+            },
+            {
+              "text": "Neither, because an RC pair only sets a time delay; it doesn't filter",
+              "feedback": "The same RC pair does both: its time constant RC sets the delay for a step and the cutoff 1/(2πRC) for a sine. They are two views of one block."
+            }
+          ],
+          "explanation": "Series R, capacitor to ground: low-pass. Series C, resistor to ground: high-pass. Both have their corner at 1/(2πRC); the arrangement decides which side of it gets through."
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "spb_fault_divider_filter",
+      "topicId": "schem_passive_blocks",
+      "prompt": "A divider (R1 = {R1}, R2 = {R2}, fed from {Vin}) feeds an RC low-pass filter (R3 = {R3}, C1 = {C}). The circuit has settled, so the meter reads steady DC. The readings are below. Which fault explains them?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -9,
+            -6
+          ]
+        }
+      ],
+      "fault": {
+        "netlist": "chain\nV1 in 0 {Vin:spice}\nR1 in a {R1:spice}\nR2 a 0 {R2:spice}\nR3 a out {R3:spice}\nC1 out 0 {C:spice}\n",
+        "probes": [
+          {
+            "label": "Voltage at node a (the divider tap)",
+            "probe": "v(a)"
+          },
+          {
+            "label": "Voltage at out",
+            "probe": "v(out)"
+          },
+          {
+            "label": "Current through R1",
+            "probe": "i(R1)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "R1 is open",
+            "open": "R1",
+            "feedback": "An open R1 would cut the supply off: node a, out and the R1 current would all read zero.",
+            "why": "With R1 open nothing connects the circuit to {Vin}, so node a and out fall to 0 V and no current flows."
+          },
+          {
+            "text": "R2 is open",
+            "open": "R2",
+            "feedback": "An open R2 would leave no DC path to ground (C1 is open at DC), so no current would flow and node a and out would both rise to the full input.",
+            "why": "With R2 open, the only way from node a to ground is through C1, which is open at DC. No current flows, R1 drops nothing, and node a and out both sit at {Vin} (the meter reads a little lower: its 10 MΩ draws a tiny current through R1, and through R3 too when it reads out)."
+          },
+          {
+            "text": "R2 is shorted",
+            "short": "R2",
+            "feedback": "A shorted R2 would pull node a (and out) to 0 V while R1 carries more current than normal, Vin/R1.",
+            "why": "With R2 shorted, node a is tied to ground, so it and out read 0 V, and R1 carries the whole input: Vin/R1, more than normal."
+          },
+          {
+            "text": "C1 is shorted (failed short)",
+            "short": "C1",
+            "feedback": "A shorted C1 would pull out to 0 V and make R3 a load on the divider, so node a would sag below normal and the R1 current would rise.",
+            "why": "Healthy, C1 is open at DC, so R3 carries no current and out equals node a. Shorted, C1 ties out to ground, R3 now loads node a in parallel with R2, node a sags, and R1 carries more current."
+          }
+        ]
+      },
+      "explanation": "At DC a capacitor is an open circuit, so a healthy filter carries no current through R3 and out equals node a. So in the healthy circuit out reads the same as node a. When out drops to 0 V, node a and the R1 current tell you whether C1 or the divider is to blame. (An open C1 would change nothing at DC: a DC meter can't find that fault; you'd need a signal and a scope.) If out and node a both rise to the full input with no current, the bottom of the divider is open.",
+      "hints": [
+        "In a healthy circuit at DC, how much current flows through R3? What does that make out?",
+        "Zero current means something is open; more than normal means something is shorted."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              16,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "a",
+            "at": [
+              8,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              16,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "spb_spot_decoupling",
+      "topicId": "schem_passive_blocks",
+      "prompt": "These are the passive parts around a small chip (the chip itself isn't drawn). On the real board the 5 V supply is at the end of long wires, and the chip draws short spikes of current every time its logic switches. Which part is the decoupling capacitor?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "C1: it connects straight across VCC and ground, with nothing in series",
+          "feedback": "Right: C1 sits across the supply right at the chip, so it can supply the charge for each current spike before VCC dips.",
+          "correct": true
+        },
+        {
+          "text": "C2, because it's a capacitor to ground",
+          "feedback": "C2 can only push current back through R1's 10 kΩ: even a 0.5 V dip on VCC draws just 50 µA from it, far too little for a current spike (and draining C2 would pull RESET low). It goes to the RESET pin, where with R1 it forms a delay."
+        },
+        {
+          "text": "R3, because it holds the REF pin steady",
+          "feedback": "R3 is the bottom of the R2–R3 divider that sets REF to half of VCC. A resistor stores no charge, so it can't supply sudden current."
+        },
+        {
+          "text": "None is needed: the 5 V supply already holds VCC steady",
+          "feedback": "The supply is steady at its own terminals, but the long wires have inductance and resistance that stop them delivering fast current spikes. Without a local capacitor VCC would dip each time the chip switches."
+        }
+      ],
+      "explanation": "A decoupling capacitor goes directly from a chip's supply pin to ground, with nothing in series. It is a small local store of charge: fast spikes come from the capacitor, and the distant supply only has to refill it slowly. Here only C1 fits that pattern. The schematic shows only the connection; placing it right beside the pin is a layout rule for the board, not something the drawing's position tells you.",
+      "hints": [
+        "A decoupling capacitor has one end on the supply rail and the other on ground, with nothing in series."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "5 V"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R2\n10 kΩ"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              6,
+              9
+            ],
+            "rot": 90,
+            "label": "R3\n10 kΩ"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              29,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n10 kΩ"
+          },
+          {
+            "ref": "C2",
+            "at": [
+              29,
+              9
+            ],
+            "rot": 90,
+            "label": "C2\n1 µF"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              19,
+              0
+            ],
+            "rot": 90,
+            "label": "C1\n100 nF"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              42,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              6,
+              9
+            ]
+          ],
+          [
+            [
+              6,
+              7
+            ],
+            [
+              8,
+              7
+            ]
+          ],
+          [
+            [
+              29,
+              4
+            ],
+            [
+              29,
+              9
+            ]
+          ],
+          [
+            [
+              29,
+              7
+            ],
+            [
+              31,
+              7
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            6,
+            13
+          ],
+          [
+            29,
+            13
+          ],
+          [
+            19,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "VCC",
+            "at": [
+              2,
+              0
+            ]
+          },
+          {
+            "text": "to chip VCC pin",
+            "at": [
+              42,
+              0
+            ]
+          },
+          {
+            "text": "to chip REF pin",
+            "at": [
+              8,
+              7
+            ]
+          },
+          {
+            "text": "to chip RESET pin",
+            "at": [
+              31,
+              7
+            ]
+          }
+        ],
+        "netlist": "board\nV1 vcc 0 5\nR2 vcc ref 10k\nR3 ref 0 10k\nR1 vcc rst 10k\nC2 rst 0 1u\nC1 vcc 0 100n\n"
+      },
+      "followUps": [
+        {
+          "prompt": "Why must a decoupling capacitor sit right beside the chip's supply pin?",
+          "choices": [
+            {
+              "text": "Any wire between C1 and the chip's VCC and ground pins has inductance, which slows how fast current can change; a short loop lets C1 deliver the spike quickly",
+              "feedback": "Right: the closer the capacitor, the smaller the inductance in the path, and the faster it can respond.",
+              "correct": true
+            },
+            {
+              "text": "So that it charges up faster at power-on",
+              "feedback": "Charging speed at power-on isn't the point; C1 is there to supply fast current spikes during operation."
+            },
+            {
+              "text": "To divide the supply voltage down to what the chip needs",
+              "feedback": "A capacitor across the supply doesn't change the steady voltage; at DC it is an open circuit."
+            },
+            {
+              "text": "Because a capacitor only works when it touches a chip",
+              "feedback": "A capacitor works anywhere; it is placed close because of the wiring between it and the pin."
+            }
+          ],
+          "explanation": "The inductance of a wire or PCB trace resists changes in current (V = L·di/dt). A current spike through a long path makes a voltage dip across that inductance. Putting the capacitor at the pin keeps that path, and so the dip, as small as possible."
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "spb_rc_reset",
+      "topicId": "schem_passive_blocks",
+      "prompt": "R1 and C2 connect to the chip's RESET pin, which holds the chip in reset while it's low. At power-up VCC jumps from 0 V to 5 V. What does the RESET pin do?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "It starts at 0 V and rises toward 5 V with τ = R1·C2, holding the chip in reset at first",
+          "feedback": "Right: R in series, C to ground is an RC timer. C2 starts empty and charges through R1 with τ = 10 kΩ × 1 µF = 10 ms.",
+          "correct": true
+        },
+        {
+          "text": "It settles at 2.5 V and stays there, because R1 and C2 form a divider like R2 and R3",
+          "feedback": "They look the same on the page, but C2 lets no steady current through. Once charged, R1 carries no current and drops nothing, so RESET ends at the full 5 V. Only resistors divide DC."
+        },
+        {
+          "text": "It jumps straight to 5 V at power-up and stays, because the capacitor C2 blocks DC",
+          "feedback": "C2 blocks steady DC, but at the moment of power-up it's empty and holds RESET at 0 V. It takes time to charge through R1."
+        },
+        {
+          "text": "It jumps to 5 V at power-up and then decays back to 0 V with τ = R1·C2",
+          "feedback": "That's the step response of a high-pass (C in series, R to ground). Here R1 is in series and C2 goes to ground, so the pin rises slowly instead."
+        }
+      ],
+      "explanation": "Series R, capacitor to ground, fed with a step: an RC timer (the same shape as a low-pass filter, seen in time instead of frequency). The capacitor's voltage can't jump, so RESET starts at 0 V and follows 5 V × (1 − e^(−t/τ)) with τ = R1·C2 = 10 ms. The chip leaves reset once RESET crosses its high threshold (about 0.7 × 5 V, reached after about 1.2τ ≈ 12 ms), so the supply has time to settle first; by 5τ = 50 ms the pin is essentially at 5 V.",
+      "hints": [
+        "Can a capacitor's voltage jump instantly?",
+        "What current flows into C2 once it has charged?"
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "5 V"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R2\n10 kΩ"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              6,
+              4
+            ],
+            "rot": 90,
+            "label": "R3\n10 kΩ"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              20,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n10 kΩ"
+          },
+          {
+            "ref": "C2",
+            "at": [
+              20,
+              4
+            ],
+            "rot": 90,
+            "label": "C2\n1 µF"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              34,
+              0
+            ],
+            "rot": 90,
+            "label": "C1\n100 nF"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              38,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              11,
+              4
+            ]
+          ],
+          [
+            [
+              20,
+              4
+            ],
+            [
+              25,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            6,
+            8
+          ],
+          [
+            20,
+            8
+          ],
+          [
+            34,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "VCC",
+            "at": [
+              2,
+              0
+            ]
+          },
+          {
+            "text": "to chip VCC pin",
+            "at": [
+              38,
+              0
+            ]
+          },
+          {
+            "text": "to chip REF pin",
+            "at": [
+              11,
+              4
+            ]
+          },
+          {
+            "text": "to chip RESET pin",
+            "at": [
+              25,
+              4
+            ]
+          }
+        ],
+        "netlist": "board\nV1 vcc 0 5\nR2 vcc ref 10k\nR3 ref 0 10k\nR1 vcc rst 10k\nC2 rst 0 1u\nC1 vcc 0 100n\n"
+      },
+      "followUps": [
+        {
+          "prompt": "Once C2 has charged, why is RESET at the full 5 V and not divided down?",
+          "choices": [
+            {
+              "text": "A charged C2 takes no current, so R1 carries none and has no voltage across it",
+              "feedback": "Right: V = I·R = 0 across R1, so RESET equals VCC.",
+              "correct": true
+            },
+            {
+              "text": "C2 keeps charging until its voltage matches R1's, so the two share VCC",
+              "feedback": "Charging stops only when the current is zero; then R1 drops 0 V and C2 holds all 5 V."
+            },
+            {
+              "text": "The chip's RESET pin pulls itself up to the full 5 V through an internal pull-up",
+              "feedback": "Some chips do have a weak internal pull-up on RESET, but none is drawn here, and it isn't why the pin reaches 5 V: with no current into C2, R1 drops nothing."
+            },
+            {
+              "text": "R1 is much smaller than C2, so R1 takes almost none of the 5 V",
+              "feedback": "Ohms and farads can't be compared. What matters is that the current is zero."
+            }
+          ],
+          "explanation": "In steady DC a capacitor is an open circuit. The same reasoning makes R1 a pull-up: with no current through it, it simply passes VCC to the pin."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "spb_pullup",
+      "topicId": "schem_passive_blocks",
+      "prompt": "A pushbutton connects a microcontroller's input pin to ground when pressed. A 10 kΩ resistor goes from the same pin to 3.3 V. What is the resistor for?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "It's a pull-up: it holds the pin at 3.3 V except while the button pulls it to 0 V",
+          "feedback": "Right: the resistor sets the voltage when nothing else does, and is weak enough for the button to pull the pin low when pressed.",
+          "correct": true
+        },
+        {
+          "text": "It isn't really needed: with the button open, the pin reads a clean 0 V anyway",
+          "feedback": "An unconnected input floats: it draws almost no current, so stray charge and nearby signals move its voltage around, and it reads random highs and lows."
+        },
+        {
+          "text": "It's a divider: it brings 3.3 V down to a safer logic level for the pin",
+          "feedback": "A divider needs two resistors carrying current. With the button open no current flows, so the pin sees the full 3.3 V."
+        },
+        {
+          "text": "It protects the pin from too much current flowing into it from the 3.3 V supply",
+          "feedback": "The input draws almost no current, so there is nothing to limit on that side. The current the resistor limits flows through the button when it's pressed."
+        }
+      ],
+      "explanation": "A logic input has very high resistance, so on its own it has no definite voltage. A pull-up resistor gives it one (high) whenever the switch is open; the switch overrides it by connecting the pin to ground. Current only flows while the button is pressed: 3.3 V / 10 kΩ = 0.33 mA. A pull-down is the mirror image: resistor to ground, switch to the supply.",
+      "hints": [
+        "What voltage does an input with nothing connected to it have?"
+      ],
+      "followUps": [
+        {
+          "prompt": "Why use a resistor rather than a plain wire from the pin to 3.3 V?",
+          "choices": [
+            {
+              "text": "Pressing the button would then short 3.3 V straight to ground",
+              "feedback": "Right: a wire has no resistance, so the button would connect the supply to ground; the resistor keeps that current small.",
+              "correct": true
+            },
+            {
+              "text": "A wire can't hold the pin at 3.3 V the way a resistor can",
+              "feedback": "A wire carries any voltage; the problem is what happens when the button closes."
+            },
+            {
+              "text": "The pin would then read low all the time, pressed or not",
+              "feedback": "With a wire to 3.3 V, pressing the button shorts the supply to ground: the pin never gets a clean low, and the supply sags or its protection trips."
+            },
+            {
+              "text": "It makes no difference, a resistor just looks tidier",
+              "feedback": "It makes all the difference: with a wire, pressing the button is a dead short."
+            }
+          ],
+          "explanation": "The pull-up must be strong enough to hold the pin high against leakage and noise, but weak enough that the button can pull the pin low without a large current. A few kΩ to a few tens of kΩ does both."
+        }
+      ],
+      "schematic": {
+        "netlist": "Pull-up\nV1 vdd 0 3.3\nR1 vdd pin 10k\nRS1 pin 0 1e9\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "3.3 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "10 kΩ"
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              6,
+              4
+            ],
+            "rot": 90,
+            "symbol": "switch",
+            "label": "button"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              11,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            4
+          ],
+          [
+            6,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "input pin",
+            "at": [
+              11,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "spb_highpass_corner",
+      "topicId": "schem_passive_blocks",
+      "prompt": "The block drawn here is a high-pass filter (C1 = {C}, R1 = {R}; the signal source is ideal and nothing loads out). What is its corner frequency?",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -9,
+            -7
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "tau",
+          "formula": "R*C",
+          "unit": "s"
+        }
+      ],
+      "answer": {
+        "formula": "1/(2*pi*R*C)",
+        "unit": "Hz"
+      },
+      "estimate": true,
+      "explanation": "C1 is in series from in to out and R1 goes from out to ground: a high-pass filter. Its corner is where C1's reactance equals R1: f_c = 1/(2πR1C1) = 1/(2π × {R} × {C}) = {answer}. Below it C1's reactance is larger than R1 and takes most of the signal; above it R1 takes most of it and the signal passes. The low-pass (the parts swapped) has the same formula; the layout decides which side of f_c gets through.",
+      "hints": [
+        "Which part is in series with the signal, and which goes to ground?",
+        "The corner of any single RC filter is f_c = 1/(2πRC)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "1/(R*C)",
+          "feedback": "That is the corner in radians per second, ω_c = 1/(RC). In hertz it is 2π times smaller: f_c = 1/(2πRC)."
+        },
+        {
+          "formula": "R*C",
+          "feedback": "That is the time constant τ = RC, in seconds, not a frequency. The corner is f_c = 1/(2πτ)."
+        }
+      ],
+      "schematic": {
+        "netlist": "HP\nV1 in 0 SIN(0 1 1k)\nC1 in out {C:spice}\nR1 out 0 {R:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "signal"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              4
+            ],
+            "rot": 90,
+            "label": "R1\n{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              12,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            6,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              12,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    }
+  ]
+}

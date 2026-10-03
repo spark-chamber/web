@@ -1,0 +1,2292 @@
+{
+  "topics": [
+    {
+      "id": "schem_signal_path",
+      "title": "Following the signal through a circuit",
+      "summary": "Read a multi-stage circuit from input to output: say what each stage does, estimate the voltage at each node, and reason about what a fault or change would do.",
+      "lenses": [
+        "circuit",
+        "signals"
+      ],
+      "prerequisites": [
+        "schem_opamp_blocks",
+        "schem_part_purpose"
+      ],
+      "prerequisiteNotes": {
+        "schem_opamp_blocks": "Real circuits chain op-amp stages; each one must be recognized before the whole makes sense.",
+        "schem_part_purpose": "Knowing why each part is there lets you predict what happens when one fails."
+      },
+      "lensNotes": {
+        "circuit": "Split the circuit into stages at the nodes where one block hands its output to the next. Work out each stage's job and its output, then feed that into the next, like reading sentences in order.",
+        "signals": "Follow one signal: a sensor voltage is scaled by a divider, amplified, filtered, compared with a threshold and finally drives a load. At each node ask what the signal looks like now."
+      },
+      "formulas": [
+        {
+          "label": "Divider",
+          "tex": "V_{out} = V_{in}\\frac{R_2}{R_1 + R_2}"
+        },
+        {
+          "label": "Non-inverting gain",
+          "tex": "G = 1 + \\frac{R_f}{R_g}"
+        },
+        {
+          "label": "Chained stages",
+          "tex": "G_{total} = G_1 \\cdot G_2 \\cdot G_3 \\cdots"
+        },
+        {
+          "label": "RC low-pass",
+          "tex": "f_c = \\frac{1}{2\\pi R C}\\ (R\\text{ includes the source resistance})"
+        },
+        {
+          "label": "Base current",
+          "tex": "I_B = \\frac{V_{drive} - 0.7}{R_B}"
+        }
+      ],
+      "goals": [
+        "Split a multi-stage circuit into stages at the nodes where one block hands its output to the next, and say what each stage does",
+        "Carry a DC level through chained stages, stage by stage, and explain why an op-amp input does not load the stage before it",
+        "Work backwards from a comparator threshold to the sensor value that trips it",
+        "Locate a fault by finding the first stage boundary whose reading is wrong"
+      ],
+      "intuition": "A circuit reads as a chain of stages: find the nodes where one block hands its output to the next, work out what each stage does to the signal, and carry the result forward.",
+      "why": "Stages can be read one at a time only when each stage's output is not disturbed by the next. An op amp's input draws essentially no current, and its output has a low resistance (with negative feedback, nearly zero), so a divider feeding an op amp keeps the voltage it would have alone, and an op amp can supply a transistor's base current without its output sagging. That is why a chain multiplies: V_b = G₂·V_a, and the total gain is G₁·G₂·G₃…. Where a stage does load the one before, such as a low-resistance load on a divider, the boundary is no longer clean and the two stages must be solved together.",
+      "explanation": "You can now name blocks and say why each part is there. Real circuits chain them: a sensor makes a voltage, a divider scales it, an amplifier boosts it, a filter smooths it, a comparator decides, a transistor switches a load. Read them the way the signal travels. First mark the boundaries: the nodes where one block's output becomes the next block's input. Label them (a, b, ref); they are where a meter probe goes when you debug. Next, name each stage with the reading skills you already have, starting from the feedback on each op amp. Then carry a number forward: the voltage at the first boundary, times the next stage's gain, and so on. An op amp's high input resistance is what lets you do this stage by stage. A comparator ends the analog chain: its output sits at one rail or the other, so the question becomes when it switches. Answer it by working backwards from its reference to the input that reaches it. To reason about a change or a fault, find the stage it is in; every later stage sees only what that stage now hands on. When hunting a fault, measure the boundaries in order. The first wrong reading points at the stage that drives that node, or at something in the next stage loading it; lifting the next stage's input tells the two apart. On a long chain, measuring first at the middle boundary is faster: one reading rules out half the stages (split-half).",
+      "workedExample": {
+        "problem": "An over-temperature alarm runs from one 12 V supply (assume op amps whose outputs swing from rail to rail). Stage 1: R1 = 100 kΩ from 12 V to node a, and a sensor R2 from a to ground whose resistance rises with temperature; right now it reads 4.7 kΩ. Stage 2: X1 has a on its + input, Rf = 47 kΩ from its output (node b) to its − input, and Rg = 4.7 kΩ from − to ground. Stage 3: X2 has b on its + input and node ref on its − input, where R3 = R4 = 10 kΩ divide 12 V; its output connects only to RB. Stage 4: RB = 10 kΩ drives the base of NPN transistor Q1, whose collector pulls current through an LED and 1 kΩ from 12 V. Is the LED on now, and at what sensor resistance does it come on?",
+        "steps": [
+          "Stage 1, a divider: V_a = 12 V × 4.7 kΩ / (100 kΩ + 4.7 kΩ) = 0.539 V. X1's + input takes no current, so stage 2 does not load it.",
+          "Stage 2: feedback to the − input with the signal on +, a non-inverting amplifier. G = 1 + 47 kΩ / 4.7 kΩ = 11, so V_b = 11 × 0.539 V = 5.93 V.",
+          "Stage 3: no feedback, a comparator. V_ref = 12 V × 10 kΩ / (10 kΩ + 10 kΩ) = 6 V. V_b = 5.93 V is below 6 V, so X2's output is at 0 V, Q1 is off and the LED is dark.",
+          "Working backwards: the LED comes on when V_b reaches 6 V, that is when V_a = 6 V / 11 = 0.5455 V. From the divider, R2 = R1 × V_a / (12 V − V_a) = 100 kΩ × 0.5455 V / 11.45 V = 4.76 kΩ. A rise of only about 1.3% in the sensor (4.7 kΩ to 4.76 kΩ) trips the alarm. With no hysteresis, the LED would flicker as the temperature drifts slowly through this point; feedback to X2's + input would fix that.",
+          "Stage 4, once X2 switches to 12 V: I_B = (12 V − 0.7 V) / 10 kΩ = 1.13 mA. Assume an LED drop of 2.0 V and V_CE(sat) ≈ 0.2 V: the LED current is (12 V − 2.0 V − 0.2 V) / 1 kΩ = 9.8 mA. That needs a current gain of only 9.8 mA / 1.13 mA ≈ 8.7, so Q1 is driven hard into saturation and acts as a closed switch.",
+          "The same map guides a repair: if the LED never lights on a hot day, measure a, b and ref in order. The first reading that disagrees with these numbers points at the stage just before that node, or at the next stage loading it."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 1 \"Amplifiers and Active Devices\", section \"Amplifier gain\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_1.html#xtocid90093",
+          "note": "Checked that the overall gain of staged amplifiers is the product of the individual stage gains."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 8 \"Operational Amplifiers\", section \"Negative feedback\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_8.html#xtocid90723",
+          "note": "Checked that an op amp with negative feedback has a high input impedance and a low output impedance, with its output current coming from the supply rather than from the input source."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Diagnostic Fundamentals\", ch. 3 \"Tutorial\", section 3.5 \"Diagnostic strategy\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_diagnostic.pdf",
+          "note": "Checked the method of comparing a measurement at chosen test points with the value a healthy circuit should give, so that one reading clears everything on one side of the point and localizes the fault."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "sig_alarm_stage3",
+      "topicId": "schem_signal_path",
+      "prompt": "An over-temperature alarm runs from one 12 V supply. R2 is a sensor whose resistance rises with temperature. Read it as four stages: (1) R1 and the sensor R2 turn temperature into a voltage at node a; (2) X1 with Rf and Rg amplifies it to node b; (3) op amp X2, whose output swings from 0 V to 12 V, takes node b and node ref, the reference R3–R4 sets; (4) Q1 switches the LED. Read the wiring around X2: what does stage 3 do?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "It is a comparator: its output goes high when b is above ref and low when below",
+          "feedback": "Right: with no feedback, X2's huge gain drives its output to a rail; which one depends only on whether b is above or below ref.",
+          "correct": true
+        },
+        {
+          "text": "It is a non-inverting amplifier that amplifies node b with a gain set by R3 and R4",
+          "feedback": "An amplifier needs negative feedback: a resistor divider from its output back to the − input, like Rf and Rg around X1. R3 and R4 hang from the supply, not from X2's output, so they only set a fixed voltage."
+        },
+        {
+          "text": "It is a voltage follower that buffers node b so it can drive the transistor",
+          "feedback": "A follower has its output wired straight back to its own − input. Here X2's − input goes to the R3–R4 divider, and its output goes only to RB."
+        },
+        {
+          "text": "It is a difference amplifier whose output follows the difference b − ref",
+          "feedback": "A difference amplifier needs input resistors and a feedback resistor from the output to the − input. With no feedback, the op amp's gain of about 100 000 applies in full: 1 mV of difference would ask for 100 V: the output can only sit at a rail."
+        }
+      ],
+      "explanation": "Find the feedback first. X1's output returns to its − input through Rf–Rg, so X1 is an amplifier. X2's output goes only to RB: no feedback, so X2 is a comparator. R3–R4 hold its − input at 6 V; when node b passes 6 V, X2's output jumps to 12 V and Q1 turns the LED on. Read as a sentence: temperature → voltage → bigger voltage → yes/no → light.",
+      "hints": [
+        "Does anything connect X2's output back to one of its inputs?",
+        "What fixed voltage do R3 and R4 make from the 12 V supply?"
+      ],
+      "bridge": [
+        "circuit",
+        "signals"
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              -6
+            ],
+            "rot": 90,
+            "label": "R1\n100 kΩ"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              2,
+              0
+            ],
+            "rot": 90,
+            "label": "R2 sensor\n4.7 kΩ"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              13,
+              1
+            ],
+            "flip": true
+          },
+          {
+            "ref": "RG",
+            "at": [
+              12,
+              8
+            ],
+            "rot": 90,
+            "label": "Rg\n10 kΩ"
+          },
+          {
+            "ref": "RF",
+            "at": [
+              19,
+              8
+            ],
+            "rot": 180,
+            "label": "Rf 47 kΩ"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              22,
+              4
+            ],
+            "rot": 90,
+            "label": "R3\n10 kΩ"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              22,
+              8
+            ],
+            "rot": 90,
+            "label": "R4\n10 kΩ"
+          },
+          {
+            "ref": "X2",
+            "at": [
+              31,
+              2
+            ],
+            "flip": true
+          },
+          {
+            "ref": "RB",
+            "at": [
+              36,
+              2
+            ],
+            "label": "RB 10 kΩ"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              40,
+              2
+            ]
+          },
+          {
+            "ref": "D1",
+            "at": [
+              42,
+              -4
+            ],
+            "rot": 90,
+            "label": "LED"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              42,
+              -8
+            ],
+            "rot": 90,
+            "label": "1 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              2,
+              -2
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              2,
+              0
+            ],
+            [
+              13,
+              0
+            ]
+          ],
+          [
+            [
+              13,
+              2
+            ],
+            [
+              12,
+              2
+            ],
+            [
+              12,
+              8
+            ],
+            [
+              15,
+              8
+            ]
+          ],
+          [
+            [
+              17,
+              1
+            ],
+            [
+              31,
+              1
+            ]
+          ],
+          [
+            [
+              20,
+              1
+            ],
+            [
+              20,
+              8
+            ],
+            [
+              19,
+              8
+            ]
+          ],
+          [
+            [
+              22,
+              8
+            ],
+            [
+              30,
+              8
+            ],
+            [
+              30,
+              3
+            ],
+            [
+              31,
+              3
+            ]
+          ],
+          [
+            [
+              35,
+              2
+            ],
+            [
+              36,
+              2
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            2,
+            4
+          ],
+          [
+            12,
+            12
+          ],
+          [
+            22,
+            12
+          ],
+          [
+            42,
+            4
+          ]
+        ],
+        "hidden": [
+          "VCC"
+        ],
+        "labels": [
+          {
+            "text": "+12 V",
+            "at": [
+              2,
+              -6
+            ]
+          },
+          {
+            "text": "+12 V",
+            "at": [
+              22,
+              4
+            ]
+          },
+          {
+            "text": "+12 V",
+            "at": [
+              42,
+              -8
+            ]
+          },
+          {
+            "text": "a",
+            "at": [
+              4,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              22,
+              1
+            ]
+          },
+          {
+            "text": "ref",
+            "at": [
+              27,
+              8
+            ]
+          }
+        ],
+        "netlist": "Temperature alarm\nVCC vcc 0 12\nR1 vcc a 100k\nR2 a 0 4.7k\nX1 a inv b OA\nRF b inv 47k\nRG inv 0 10k\nR3 vcc ref 10k\nR4 ref 0 10k\nX2 b ref c OA\nRB c base 10k\nQ1 k base 0 QN\nD1 l k DL\nRL vcc l 1k\n.model OA OPAMP(VPOS=12 VNEG=0)\n.model QN NPN\n.model DL D(N=2)\n"
+      },
+      "followUps": [
+        {
+          "prompt": "Stage 4 puts RB between the comparator's output and Q1's base. Why is RB there?",
+          "choices": [
+            {
+              "text": "The base–emitter junction is a diode near 0.7 V, so RB is what limits the base current",
+              "feedback": "Right: the resistor turns the voltage difference between the comparator's output and the 0.7 V base into a sensible current, plenty to saturate Q1 for a 10 mA LED.",
+              "correct": true
+            },
+            {
+              "text": "RB forms a divider that sets the base voltage to half the comparator's output",
+              "feedback": "A divider needs a second resistor to ground. There is none: the base–emitter diode holds the base near 0.7 V, whatever RB is."
+            },
+            {
+              "text": "RB limits the LED's current, so the LED doesn't burn out when Q1 turns on",
+              "feedback": "The LED current flows from +12 V through the 1k, the LED and Q1's collector. The 1k resistor above the LED sets it; RB only carries the small base current."
+            },
+            {
+              "text": "RB slows the transistor's switching down, so the LED doesn't flicker at the trip point",
+              "feedback": "RB has no capacitor to make a time constant with, and slowing the switch isn't its job. It sets how much current flows into the base."
+            }
+          ],
+          "explanation": "Seen from the base, Q1 is a diode to ground, and nothing but RB limits the current into it. RB drops the 11.3 V difference and sets I_B ≈ 1.1 mA, about a tenth of the 10 mA collector current: enough to saturate Q1 (the switch from the transistor unit). (A non-rail-to-rail op amp reaching about 10.5 V still gives ≈1 mA.)"
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "sig_alarm_node_b",
+      "topicId": "schem_signal_path",
+      "prompt": "In this over-temperature alarm, R1 = {R1} and the sensor R2 reads {R2} right now. Stage 2 has Rf = {Rf} and Rg = {Rg}. Follow the signal through the first two stages: what is the voltage at node b?",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            5,
+            5
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "Rg",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Va",
+          "formula": "12*R2/(R1+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "G",
+          "formula": "1+Rf/Rg",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "12*R2/(R1+R2)*(1+Rf/Rg)",
+        "unit": "V"
+      },
+      "estimate": true,
+      "explanation": "Stage 1 is a divider from 12 V: V_a = 12 V × {R2}/({R1} + {R2}) = {Va}. Stage 2 is a non-inverting amplifier with gain 1 + {Rf}/{Rg} = {G}, so V_b = {Va} × {G} = {answer}. Each stage multiplies what the one before hands it; X1's + input takes no current, so stage 2 doesn't disturb stage 1.",
+      "hints": [
+        "Work stage by stage: first the voltage at node a, then what X1 does to it.",
+        "V_a = 12 V × R2/(R1 + R2); stage 2 multiplies it by 1 + Rf/Rg."
+      ],
+      "misconceptions": [
+        {
+          "formula": "12*R2/(R1+R2)*Rf/Rg",
+          "feedback": "That uses Rf/Rg as the gain. For a non-inverting amplifier the gain is 1 + Rf/Rg: the output must be big enough that the Rf–Rg divider hands back all of V_a."
+        },
+        {
+          "formula": "12*R1/(R1+R2)*(1+Rf/Rg)",
+          "feedback": "That takes node a as the voltage across R1. Node a is measured to ground, across R2 (the sensor): V_a = 12 V × R2/(R1 + R2)."
+        }
+      ],
+      "simCheck": {
+        "netlist": "Temperature alarm\nVCC vcc 0 12\nR1 vcc a {R1:spice}\nR2 a 0 {R2:spice}\nX1 a inv b OA\nRF b inv {Rf:spice}\nRG inv 0 {Rg:spice}\nR3 vcc ref 10k\nR4 ref 0 10k\nX2 b ref c OA\nRB c base 10k\nQ1 k base 0 QN\nD1 l k DL\nRL vcc l 1k\n.model OA OPAMP(VPOS=12 VNEG=0)\n.model QN NPN\n.model DL D(N=2)\n",
+        "probe": "v(b)"
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              -6
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              2,
+              0
+            ],
+            "rot": 90,
+            "label": "R2 sensor\n{R2}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              13,
+              1
+            ],
+            "flip": true
+          },
+          {
+            "ref": "RG",
+            "at": [
+              12,
+              8
+            ],
+            "rot": 90,
+            "label": "Rg\n{Rg}"
+          },
+          {
+            "ref": "RF",
+            "at": [
+              19,
+              8
+            ],
+            "rot": 180,
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              22,
+              4
+            ],
+            "rot": 90,
+            "label": "R3\n10 kΩ"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              22,
+              8
+            ],
+            "rot": 90,
+            "label": "R4\n10 kΩ"
+          },
+          {
+            "ref": "X2",
+            "at": [
+              31,
+              2
+            ],
+            "flip": true
+          },
+          {
+            "ref": "RB",
+            "at": [
+              36,
+              2
+            ],
+            "label": "RB 10 kΩ"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              40,
+              2
+            ]
+          },
+          {
+            "ref": "D1",
+            "at": [
+              42,
+              -4
+            ],
+            "rot": 90,
+            "label": "LED"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              42,
+              -8
+            ],
+            "rot": 90,
+            "label": "1 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              2,
+              -2
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              2,
+              0
+            ],
+            [
+              13,
+              0
+            ]
+          ],
+          [
+            [
+              13,
+              2
+            ],
+            [
+              12,
+              2
+            ],
+            [
+              12,
+              8
+            ],
+            [
+              15,
+              8
+            ]
+          ],
+          [
+            [
+              17,
+              1
+            ],
+            [
+              31,
+              1
+            ]
+          ],
+          [
+            [
+              20,
+              1
+            ],
+            [
+              20,
+              8
+            ],
+            [
+              19,
+              8
+            ]
+          ],
+          [
+            [
+              22,
+              8
+            ],
+            [
+              30,
+              8
+            ],
+            [
+              30,
+              3
+            ],
+            [
+              31,
+              3
+            ]
+          ],
+          [
+            [
+              35,
+              2
+            ],
+            [
+              36,
+              2
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            2,
+            4
+          ],
+          [
+            12,
+            12
+          ],
+          [
+            22,
+            12
+          ],
+          [
+            42,
+            4
+          ]
+        ],
+        "hidden": [
+          "VCC"
+        ],
+        "labels": [
+          {
+            "text": "+12 V",
+            "at": [
+              2,
+              -6
+            ]
+          },
+          {
+            "text": "+12 V",
+            "at": [
+              22,
+              4
+            ]
+          },
+          {
+            "text": "+12 V",
+            "at": [
+              42,
+              -8
+            ]
+          },
+          {
+            "text": "a",
+            "at": [
+              4,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              22,
+              1
+            ]
+          },
+          {
+            "text": "ref",
+            "at": [
+              27,
+              8
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "You worked out node a from R1 and R2 alone, as if stage 2 weren't connected. Why is that allowed?",
+          "choices": [
+            {
+              "text": "X1's + input draws essentially no current, so no current leaves node a and the divider isn't loaded",
+              "feedback": "Right: a stage with a very high input resistance measures the voltage without drawing current, so the stage before it behaves as if nothing were there.",
+              "correct": true
+            },
+            {
+              "text": "Rg goes to ground too, but it is much bigger than R2, so it barely matters",
+              "feedback": "Rg isn't connected to node a at all: it sits on X1's − input. The divider would only be loaded by something that draws current from node a."
+            },
+            {
+              "text": "X1's output has a low resistance, so it can't pull node a down",
+              "feedback": "X1's low output resistance is what lets stage 2 drive stage 3 without sagging. What protects stage 1 is the other end of X1: its input."
+            },
+            {
+              "text": "It isn't really allowed; it only works because the gain is small",
+              "feedback": "The gain doesn't enter into it. Whatever Rf and Rg are, the + input takes no current, so node a stays at the unloaded divider voltage."
+            }
+          ],
+          "explanation": "A chain can be solved one stage at a time when each stage takes (almost) no current from the one before (high input resistance) and can drive the next without its voltage sagging (low output resistance). An op amp's + input and its output give both."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "sig_alarm_what_if_r1",
+      "topicId": "schem_signal_path",
+      "prompt": "In this over-temperature alarm (R1 = {R1}, Rf = {Rf}, Rg = 4.7 kΩ), the LED comes on when the sensor R2 rises to {before}. R1 in stage 1 is swapped for {new_R1}. Nothing in stages 2, 3 or 4 changes. What happens to the sensor resistance at which the LED comes on?",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the sensor resistance at which the LED comes on",
+        "formula": "R1/(2*(1+Rf/4700)-1)",
+        "unit": "Ω",
+        "change": {
+          "R1": "10*R1"
+        },
+        "feedback": {
+          "down": "That would make the alarm trip sooner. But a bigger R1 takes a bigger share of the 12 V, so for the same sensor resistance node a is lower, node b is lower, and at the old trip resistance b now falls short of the 6 V reference.",
+          "same": "The reference stays at 6 V, but stage 3 compares it with what stages 1 and 2 hand on. A bigger R1 leaves less at node a for any given R2, and node b is node a times stage 2's gain, so a given sensor resistance no longer brings b to the same voltage."
+        }
+      },
+      "explanation": "The LED comes on when node b reaches the 6 V set by R3–R4, that is when V_a × (1 + Rf/Rg) = 6 V. Stage 1 sets V_a = 12 V × R2/(R1 + R2). With a bigger R1, each value of R2 gives a smaller V_a, so R2 has to rise further (the sensor must get hotter) before b reaches 6 V: {before} → {after}. A part in the first stage moved the trip point of the last one.",
+      "hints": [
+        "For a fixed sensor resistance, does a bigger R1 make node a higher or lower?",
+        "The comparator's reference hasn't moved. What must the sensor do so that node b still reaches it?"
+      ],
+      "bridge": [
+        "circuit",
+        "signals"
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              -6
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              2,
+              0
+            ],
+            "rot": 90,
+            "label": "R2 sensor\n(rises with heat)"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              13,
+              1
+            ],
+            "flip": true
+          },
+          {
+            "ref": "RG",
+            "at": [
+              12,
+              8
+            ],
+            "rot": 90,
+            "label": "Rg\n4.7 kΩ"
+          },
+          {
+            "ref": "RF",
+            "at": [
+              19,
+              8
+            ],
+            "rot": 180,
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              22,
+              4
+            ],
+            "rot": 90,
+            "label": "R3\n10 kΩ"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              22,
+              8
+            ],
+            "rot": 90,
+            "label": "R4\n10 kΩ"
+          },
+          {
+            "ref": "X2",
+            "at": [
+              31,
+              2
+            ],
+            "flip": true
+          },
+          {
+            "ref": "RB",
+            "at": [
+              36,
+              2
+            ],
+            "label": "RB 10 kΩ"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              40,
+              2
+            ]
+          },
+          {
+            "ref": "D1",
+            "at": [
+              42,
+              -4
+            ],
+            "rot": 90,
+            "label": "LED"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              42,
+              -8
+            ],
+            "rot": 90,
+            "label": "1 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              2,
+              -2
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              2,
+              0
+            ],
+            [
+              13,
+              0
+            ]
+          ],
+          [
+            [
+              13,
+              2
+            ],
+            [
+              12,
+              2
+            ],
+            [
+              12,
+              8
+            ],
+            [
+              15,
+              8
+            ]
+          ],
+          [
+            [
+              17,
+              1
+            ],
+            [
+              31,
+              1
+            ]
+          ],
+          [
+            [
+              20,
+              1
+            ],
+            [
+              20,
+              8
+            ],
+            [
+              19,
+              8
+            ]
+          ],
+          [
+            [
+              22,
+              8
+            ],
+            [
+              30,
+              8
+            ],
+            [
+              30,
+              3
+            ],
+            [
+              31,
+              3
+            ]
+          ],
+          [
+            [
+              35,
+              2
+            ],
+            [
+              36,
+              2
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            2,
+            4
+          ],
+          [
+            12,
+            12
+          ],
+          [
+            22,
+            12
+          ],
+          [
+            42,
+            4
+          ]
+        ],
+        "hidden": [
+          "VCC"
+        ],
+        "labels": [
+          {
+            "text": "+12 V",
+            "at": [
+              2,
+              -6
+            ]
+          },
+          {
+            "text": "+12 V",
+            "at": [
+              22,
+              4
+            ]
+          },
+          {
+            "text": "+12 V",
+            "at": [
+              42,
+              -8
+            ]
+          },
+          {
+            "text": "a",
+            "at": [
+              4,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              22,
+              1
+            ]
+          },
+          {
+            "text": "ref",
+            "at": [
+              27,
+              8
+            ]
+          }
+        ],
+        "netlist": "Temperature alarm\nVCC vcc 0 12\nR1 vcc a {R1:spice}\nR2 a 0 4.7k\nX1 a inv b OA\nRF b inv {Rf:spice}\nRG inv 0 4.7k\nR3 vcc ref 10k\nR4 ref 0 10k\nX2 b ref c OA\nRB c base 10k\nQ1 k base 0 QN\nD1 l k DL\nRL vcc l 1k\n.model OA OPAMP(VPOS=12 VNEG=0)\n.model QN NPN\n.model DL D(N=2)\n"
+      },
+      "followUps": [
+        {
+          "prompt": "R3 and R4 (the comparator's reference) weren't touched. Why did the alarm's trip point move?",
+          "choices": [
+            {
+              "text": "The comparator judges node b, and b is the sensor signal after stages 1 and 2 have scaled it; changing the scale of stage 1 changes which sensor value gives b = 6 V",
+              "feedback": "Right: V_b = 12·R2/(R1 + R2) × (1 + Rf/Rg). The last stage sees the product of every stage before it.",
+              "correct": true
+            },
+            {
+              "text": "A bigger R1 draws more current from the 12 V supply, so the reference drops",
+              "feedback": "A bigger R1 draws less current, not more, and an ideal 12 V supply holds 12 V anyway. The reference stays at 6 V."
+            },
+            {
+              "text": "R1 is in the amplifier's feedback loop, so it changes the gain",
+              "feedback": "The gain is set by Rf and Rg alone. R1 is in stage 1; it changes the voltage handed to the amplifier, not the amplifier's gain."
+            },
+            {
+              "text": "It didn't really move; only the LED's brightness changes",
+              "feedback": "The LED is either on or off (Q1 is a switch). What changes is the sensor value at which it switches."
+            }
+          ],
+          "explanation": "Chained stages multiply. The comparator only ever sees node b, so any change upstream, in the sensor divider or the amplifier's gain, moves the point where the alarm trips."
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "sig_ref_stage2",
+      "topicId": "schem_signal_path",
+      "prompt": "This circuit makes a steady reference voltage from a noisy 12 V supply for a 1 kΩ load. Stage 1 (R1, R2) sets the level at node a, stage 2 (R3 = 10 kΩ, C1) filters it to node f, and stage 3 (X1, running from ±15 V supplies, not drawn) drives a 1 kΩ load through a cable. Read the wiring of R3 and C1: what does stage 2 do to the voltage from node a?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "A low-pass filter: the DC level passes, and C1 shunts fast ripple to ground",
+          "feedback": "Right: R3 is in series with the signal and C1 goes from the signal to ground. That is the RC low-pass from the filters unit. C1 sees R3 plus the divider's own R1∥R2 = 5 kΩ, so f_c = 1/(2π × 15 kΩ × 1 µF) ≈ 11 Hz.",
+          "correct": true
+        },
+        {
+          "text": "A high-pass filter: it removes the DC level and passes the fast changes on",
+          "feedback": "A high-pass puts the capacitor in series with the signal and the resistor to ground. Here it's the other way round: C1 goes to ground, so it removes the fast changes, and the DC passes."
+        },
+        {
+          "text": "A DC block: C1 stops the DC, like a coupling capacitor between two stages",
+          "feedback": "A coupling capacitor sits in the signal path, between one stage and the next. C1 sits between the signal and ground, where it can only take fast changes away."
+        },
+        {
+          "text": "A second divider: R3 and C1 cut the DC level from node a down again",
+          "feedback": "At DC, C1 carries no current and neither does X1's + input, so no current flows in R3 and it drops nothing: node f equals node a. Only changes see C1 as a path to ground."
+        }
+      ],
+      "explanation": "Stage 2 is a series R with a C to ground: a low-pass filter. At DC the capacitor is an open circuit, and X1's + input takes no current, so nothing flows through R3 and f = a. Fast changes (supply ripple at 120 Hz, noise) see C1's small reactance, and R3–C1 divide them down. The follower then copies the clean node f to the load.",
+      "hints": [
+        "Which part is in series with the signal, and which goes from the signal to ground?",
+        "What is a capacitor's reactance at DC, and at high frequency?"
+      ],
+      "bridge": [
+        "circuit",
+        "signals"
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              5,
+              -5
+            ],
+            "rot": 90,
+            "label": "R1\n10 kΩ"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              5,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n10 kΩ"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              8,
+              2
+            ],
+            "label": "R3 10 kΩ"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n1 µF"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              19,
+              3
+            ],
+            "flip": true
+          },
+          {
+            "ref": "RW",
+            "at": [
+              25,
+              3
+            ],
+            "label": "cable"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              31,
+              3
+            ],
+            "rot": 90,
+            "label": "load\n1 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              -5
+            ],
+            [
+              5,
+              -5
+            ]
+          ],
+          [
+            [
+              5,
+              -1
+            ],
+            [
+              5,
+              2
+            ]
+          ],
+          [
+            [
+              5,
+              2
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              12,
+              2
+            ],
+            [
+              19,
+              2
+            ]
+          ],
+          [
+            [
+              19,
+              4
+            ],
+            [
+              18,
+              4
+            ],
+            [
+              18,
+              8
+            ],
+            [
+              24,
+              8
+            ],
+            [
+              24,
+              3
+            ]
+          ],
+          [
+            [
+              23,
+              3
+            ],
+            [
+              25,
+              3
+            ]
+          ],
+          [
+            [
+              29,
+              3
+            ],
+            [
+              31,
+              3
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            14,
+            6
+          ],
+          [
+            31,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              6,
+              2
+            ]
+          },
+          {
+            "text": "f",
+            "at": [
+              13,
+              2
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              30,
+              3
+            ]
+          }
+        ],
+        "netlist": "Clean reference\nVCC vcc 0 12\nR1 vcc a 10k\nR2 a 0 10k\nR3 a f 10k\nC1 f 0 1u\nX1 f o o OA\nRW o out 0.1\nRL out 0 1k\n.model OA OPAMP(VPOS=15 VNEG=-15)\n"
+      },
+      "followUps": [
+        {
+          "prompt": "Why does C1 remove the fast ripple but leave the steady level at node f alone?",
+          "choices": [
+            {
+              "text": "C1's reactance is huge at DC but small for ripple, so only the ripple gets divided down",
+              "feedback": "Right: the same parts form a divider whose ratio depends on frequency. At DC the ratio is 1; at 120 Hz, about eleven times above f_c, it is roughly 1/11.",
+              "correct": true
+            },
+            {
+              "text": "C1 charges up to the ripple's peak and holds node f there, so the ripple disappears",
+              "feedback": "That is a peak detector, which needs a diode to stop the capacitor discharging. Here C1 settles at the average level, node a's DC voltage."
+            },
+            {
+              "text": "The op amp after it is too slow to follow fast signals, so it only passes the DC",
+              "feedback": "An op amp follower passes changes up to its bandwidth, far above 120 Hz. The smoothing happens at node f, before the op amp."
+            },
+            {
+              "text": "R3 burns off the ripple as heat, while the DC level passes through R3 untouched",
+              "feedback": "A resistor obeys V = IR at every frequency. What differs is C1: it offers a path to ground for fast changes only."
+            }
+          ],
+          "explanation": "A capacitor's reactance X_C = 1/(2πfC) falls as frequency rises. The resistance C1 sees includes the divider feeding it, so the ratio is X_C/√((R3 + R1∥R2)² + X_C²): near 1 at DC, small for ripple and noise. So the filter keeps the level and removes the ripple."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "sig_ref_load_v",
+      "topicId": "schem_signal_path",
+      "prompt": "This circuit makes a steady reference voltage from a noisy supply of {Vcc}: R1 = {R1}, R2 = {R2}. Stage 1 (R1, R2) sets the level at node a, stage 2 (R3 = 10 kΩ, C1) filters it to node f, and stage 3 (X1, running from ±15 V supplies, not drawn) drives a 1 kΩ load through a cable. What steady DC voltage does the 1 kΩ load get?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "range": {
+            "min": 6,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Va",
+          "formula": "Vcc*R2/(R1+R2)",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "Vcc*R2/(R1+R2)",
+        "unit": "V"
+      },
+      "estimate": true,
+      "explanation": "Stage 1: V_a = {Vcc} × {R2}/({R1} + {R2}) = {Va}. Stage 2 at DC: C1 is open and X1's + input takes no current, so R3 carries nothing and f = a. Stage 3: a follower has gain 1, and its output supplies the load's current from its own supply. So the load gets {answer}.",
+      "hints": [
+        "At DC, how much current flows through R3?",
+        "Stage 1 is a plain divider; stages 2 and 3 each have a DC gain of 1."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vcc*(R2*1000/(R2+1000))/(R1+R2*1000/(R2+1000))",
+          "feedback": "That treats the 1 kΩ load as if it hung on node a, in parallel with R2. It would, without X1. The follower takes no current from node f and feeds the load from its own supply, so the divider stays unloaded."
+        },
+        {
+          "formula": "Vcc*R2/(R1+R2)*1000/(10000+1000)",
+          "feedback": "That treats R3 and the load as a divider. They aren't in series: R3 ends at X1's + input, which takes no current, so R3 drops nothing. The load is driven by X1's output."
+        }
+      ],
+      "simCheck": {
+        "netlist": "Clean reference\nVCC vcc 0 {Vcc:spice}\nR1 vcc a {R1:spice}\nR2 a 0 {R2:spice}\nR3 a f 10k\nC1 f 0 1u\nX1 f o o OA\nRW o out 0.1\nRL out 0 1k\n.model OA OPAMP(VPOS=15 VNEG=-15)\n",
+        "probe": "v(out)"
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              5,
+              -5
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              5,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              8,
+              2
+            ],
+            "label": "R3 10 kΩ"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n1 µF"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              19,
+              3
+            ],
+            "flip": true
+          },
+          {
+            "ref": "RW",
+            "at": [
+              25,
+              3
+            ],
+            "label": "cable"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              31,
+              3
+            ],
+            "rot": 90,
+            "label": "load\n1 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              -5
+            ],
+            [
+              5,
+              -5
+            ]
+          ],
+          [
+            [
+              5,
+              -1
+            ],
+            [
+              5,
+              2
+            ]
+          ],
+          [
+            [
+              5,
+              2
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              12,
+              2
+            ],
+            [
+              19,
+              2
+            ]
+          ],
+          [
+            [
+              19,
+              4
+            ],
+            [
+              18,
+              4
+            ],
+            [
+              18,
+              8
+            ],
+            [
+              24,
+              8
+            ],
+            [
+              24,
+              3
+            ]
+          ],
+          [
+            [
+              23,
+              3
+            ],
+            [
+              25,
+              3
+            ]
+          ],
+          [
+            [
+              29,
+              3
+            ],
+            [
+              31,
+              3
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            14,
+            6
+          ],
+          [
+            31,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              6,
+              2
+            ]
+          },
+          {
+            "text": "f",
+            "at": [
+              13,
+              2
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              30,
+              3
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "The 1 kΩ load is much smaller than R1 and R2. Why doesn't it pull the divider's voltage down?",
+          "choices": [
+            {
+              "text": "The follower's input takes no current from node f, and its low-resistance output supplies the load's current from the op amp's own supply",
+              "feedback": "Right: that is the buffer's whole job. High input resistance: the divider and filter aren't loaded. Low output resistance: the load gets the voltage without it sagging.",
+              "correct": true
+            },
+            {
+              "text": "C1 blocks the load's current from reaching the divider",
+              "feedback": "C1 goes from node f to ground; it isn't between the load and the divider. At DC it simply carries nothing."
+            },
+            {
+              "text": "R3 is ten times bigger than the load, so the load barely matters",
+              "feedback": "If the load hung on node f, R3 and the 1 kΩ load would form a divider and the load would get at most 1/11 of V_a (less, counting R1∥R2). It's the op amp in between that prevents that."
+            },
+            {
+              "text": "It does pull it down, but only by the cable's 0.1 Ω",
+              "feedback": "The cable carries the load current, but that current comes from X1's output, not from the divider. Node a doesn't see the load at all."
+            }
+          ],
+          "explanation": "This is why the stages can be solved one at a time: stage 3 takes no current from stage 2, and stage 2 takes none from stage 1 at DC. Without X1, the reference would change whenever the load did."
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "sig_ref_fault",
+      "topicId": "schem_signal_path",
+      "prompt": "This reference circuit runs from {Vcc} (R1 = {R1}, R2 = {R2}); X1 runs from ±15 V supplies (not drawn). Stage 1 (R1, R2) sets the level at node a, stage 2 (R3 = 10 kΩ, C1) filters it to node f, and stage 3 (X1) drives a 1 kΩ load through a cable. Node a, node f and the load should all read {h0}. The meter readings at the stage boundaries are below. Which fault explains them?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "range": {
+            "min": 6,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "fault": {
+        "netlist": "Clean reference\nVCC vcc 0 {Vcc:spice}\nR1 vcc a {R1:spice}\nR2 a 0 {R2:spice}\nR3 a f 10k\nC1 f 0 1u\nX1 f o o OA\nRW o out 0.1\nRL out 0 1k\n.model OA OPAMP(VPOS=15 VNEG=-15)\n",
+        "probes": [
+          {
+            "label": "Node a (end of stage 1)",
+            "probe": "v(a)"
+          },
+          {
+            "label": "Node f (end of stage 2)",
+            "probe": "v(f)"
+          },
+          {
+            "label": "Load voltage (end of stage 3)",
+            "probe": "v(out)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "R1 is open (stage 1)",
+            "open": "R1",
+            "feedback": "An open R1 would cut stage 1 off from the supply: R2 would pull node a to 0 V, and every later node would pass the 0 V on.",
+            "why": "Every node reads 0 V, so the signal is already missing at node a: the fault is in stage 1. With R1 open nothing feeds the divider, and R2 pulls node a to ground."
+          },
+          {
+            "text": "R2 is open (stage 1)",
+            "open": "R2",
+            "feedback": "An open R2 would leave nothing pulling node a down: node a, node f and the load would all read nearly the full supply.",
+            "why": "Node a already reads nearly the full {Vcc} supply (the meters' 10 MΩ loads it through R1), so the fault is in stage 1. Nothing pulls node a down any more, so R1 carries almost no current and drops almost nothing; the filter and the follower pass the wrong level on unchanged."
+          },
+          {
+            "text": "C1 is shorted (stage 2)",
+            "short": "C1",
+            "feedback": "A shorted C1 would pin node f and the load at 0 V, and it would draw current through R3, pulling node a below its normal {h0}.",
+            "why": "Node a still has a voltage but node f is 0 V, so the signal dies in stage 2. A short from f to ground explains both readings: it holds f at 0 V and draws current through R3, which loads the divider and pulls node a down to {m0}."
+          },
+          {
+            "text": "The cable to the load is broken (after stage 3)",
+            "open": "RW",
+            "feedback": "A broken cable would leave nodes a and f normal, and the load, cut off from X1, would read 0 V.",
+            "why": "Nodes a and f read normal, so stages 1 and 2 work; only the load is dead. The break is after X1: with the cable open, nothing drives the load, and it reads 0 V."
+          }
+        ]
+      },
+      "explanation": "Follow the signal from the source and find the first boundary that reads wrong: the fault is in the stage just before it. Wrong already at node a points at stage 1 (0 V or the full supply tells you which leg). Beware: a short in stage 2 also pulls node a down, because it draws current back through R3.",
+      "hints": [
+        "Start at node a and move along the chain. Where is the first reading that differs from {h0}?",
+        "A short in a later stage can load the stage before it. Does node a read normal, lower, 0 V or the full supply?"
+      ],
+      "bridge": [
+        "circuit",
+        "signals"
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              5,
+              -5
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              5,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              8,
+              2
+            ],
+            "label": "R3 10 kΩ"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n1 µF"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              19,
+              3
+            ],
+            "flip": true
+          },
+          {
+            "ref": "RW",
+            "at": [
+              25,
+              3
+            ],
+            "label": "cable"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              31,
+              3
+            ],
+            "rot": 90,
+            "label": "load\n1 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              -5
+            ],
+            [
+              5,
+              -5
+            ]
+          ],
+          [
+            [
+              5,
+              -1
+            ],
+            [
+              5,
+              2
+            ]
+          ],
+          [
+            [
+              5,
+              2
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              12,
+              2
+            ],
+            [
+              19,
+              2
+            ]
+          ],
+          [
+            [
+              19,
+              4
+            ],
+            [
+              18,
+              4
+            ],
+            [
+              18,
+              8
+            ],
+            [
+              24,
+              8
+            ],
+            [
+              24,
+              3
+            ]
+          ],
+          [
+            [
+              23,
+              3
+            ],
+            [
+              25,
+              3
+            ]
+          ],
+          [
+            [
+              29,
+              3
+            ],
+            [
+              31,
+              3
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            14,
+            6
+          ],
+          [
+            31,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              6,
+              2
+            ]
+          },
+          {
+            "text": "f",
+            "at": [
+              13,
+              2
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              30,
+              3
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "sig_alarm_trip_node_a",
+      "topicId": "schem_signal_path",
+      "prompt": "In this over-temperature alarm (one 12 V supply), stage 2 has Rf = {Rf} and Rg = {Rg}, and R3 = R4 = 10 kΩ set the comparator's reference at node ref. The LED comes on when node b rises past ref. Work backwards from the comparator: what voltage at node a turns the LED on?",
+      "variables": [
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "Rg",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vref",
+          "formula": "12*10000/(10000+10000)",
+          "unit": "V"
+        },
+        {
+          "name": "G",
+          "formula": "1+Rf/Rg",
+          "unit": "",
+          "unitless": true
+        }
+      ],
+      "answer": {
+        "formula": "12*10000/(10000+10000)/(1+Rf/Rg)",
+        "unit": "V"
+      },
+      "explanation": "Start at the end of the chain. X2 has no feedback, so it is a comparator: its output switches high when node b passes ref = 12 V × 10 kΩ/(10 kΩ + 10 kΩ) = {Vref}. Step back one stage: node b is node a times the non-inverting gain 1 + {Rf}/{Rg} = {G}. So the LED comes on when V_a = {Vref}/{G} = {answer}.",
+      "hints": [
+        "What voltage does node b have to reach? Find ref from R3 and R4.",
+        "Stage 2 multiplies node a by 1 + Rf/Rg. Undo that to go from node b back to node a."
+      ],
+      "misconceptions": [
+        {
+          "formula": "12*10000/(10000+10000)",
+          "feedback": "That is the reference itself, the trip point at node b. Node a reaches the comparator only after stage 2 has multiplied it by 1 + Rf/Rg, so node a trips the alarm at a lower voltage: divide by the gain."
+        },
+        {
+          "formula": "12*10000/(10000+10000)*(1+Rf/Rg)",
+          "feedback": "That multiplies by the gain, going forward through stage 2. Working backwards from node b to node a, you undo the gain: divide by 1 + Rf/Rg."
+        },
+        {
+          "formula": "12*10000/(10000+10000)/(Rf/Rg)",
+          "feedback": "That uses Rf/Rg as the gain. X1's signal enters its + input, so it is non-inverting and its gain is 1 + Rf/Rg."
+        }
+      ],
+      "schematic": {
+        "netlist": "Temperature alarm\nVCC vcc 0 12\nR1 vcc a 100k\nR2 a 0 4.7k\nX1 a inv b OA\nRF b inv {Rf:spice}\nRG inv 0 {Rg:spice}\nR3 vcc ref 10k\nR4 ref 0 10k\nX2 b ref c OA\nRB c base 10k\nQ1 k base 0 QN\nD1 l k DL\nRL vcc l 1k\n.model OA OPAMP(VPOS=12 VNEG=0)\n.model QN NPN\n.model DL D(N=2)\n",
+        "parts": [
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              -6
+            ],
+            "rot": 90,
+            "label": "R1\n100 kΩ"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              2,
+              0
+            ],
+            "rot": 90,
+            "label": "R2 sensor\n(rises with heat)"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              13,
+              1
+            ],
+            "flip": true
+          },
+          {
+            "ref": "RG",
+            "at": [
+              12,
+              8
+            ],
+            "rot": 90,
+            "label": "Rg\n{Rg}"
+          },
+          {
+            "ref": "RF",
+            "at": [
+              19,
+              8
+            ],
+            "rot": 180,
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              22,
+              4
+            ],
+            "rot": 90,
+            "label": "R3\n10 kΩ"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              22,
+              8
+            ],
+            "rot": 90,
+            "label": "R4\n10 kΩ"
+          },
+          {
+            "ref": "X2",
+            "at": [
+              31,
+              2
+            ],
+            "flip": true
+          },
+          {
+            "ref": "RB",
+            "at": [
+              36,
+              2
+            ],
+            "label": "RB 10 kΩ"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              40,
+              2
+            ]
+          },
+          {
+            "ref": "D1",
+            "at": [
+              42,
+              -4
+            ],
+            "rot": 90,
+            "label": "LED"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              42,
+              -8
+            ],
+            "rot": 90,
+            "label": "1 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              2,
+              -2
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              2,
+              0
+            ],
+            [
+              13,
+              0
+            ]
+          ],
+          [
+            [
+              13,
+              2
+            ],
+            [
+              12,
+              2
+            ],
+            [
+              12,
+              8
+            ],
+            [
+              15,
+              8
+            ]
+          ],
+          [
+            [
+              17,
+              1
+            ],
+            [
+              31,
+              1
+            ]
+          ],
+          [
+            [
+              20,
+              1
+            ],
+            [
+              20,
+              8
+            ],
+            [
+              19,
+              8
+            ]
+          ],
+          [
+            [
+              22,
+              8
+            ],
+            [
+              30,
+              8
+            ],
+            [
+              30,
+              3
+            ],
+            [
+              31,
+              3
+            ]
+          ],
+          [
+            [
+              35,
+              2
+            ],
+            [
+              36,
+              2
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            2,
+            4
+          ],
+          [
+            12,
+            12
+          ],
+          [
+            22,
+            12
+          ],
+          [
+            42,
+            4
+          ]
+        ],
+        "hidden": [
+          "VCC"
+        ],
+        "labels": [
+          {
+            "text": "+12 V",
+            "at": [
+              2,
+              -6
+            ]
+          },
+          {
+            "text": "+12 V",
+            "at": [
+              22,
+              4
+            ]
+          },
+          {
+            "text": "+12 V",
+            "at": [
+              42,
+              -8
+            ]
+          },
+          {
+            "text": "a",
+            "at": [
+              4,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              22,
+              1
+            ]
+          },
+          {
+            "text": "ref",
+            "at": [
+              27,
+              8
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    }
+  ]
+}

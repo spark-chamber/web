@@ -1,0 +1,964 @@
+{
+  "topics": [
+    {
+      "id": "opamp_bandwidth",
+      "title": "Op-amp bandwidth and offset",
+      "summary": "Gain × bandwidth is roughly constant for a real op amp, and small input offsets get multiplied by the noise gain.",
+      "lenses": [
+        "circuit",
+        "signals"
+      ],
+      "prerequisites": [
+        "opamp_inverting",
+        "opamp_noninverting",
+        "rc_lowpass_cutoff"
+      ],
+      "lensNotes": {
+        "circuit": "A real op amp's gain falls with frequency; gain × bandwidth is roughly constant (the GBW). Ask for more gain and you get less bandwidth, and small offsets are multiplied by the noise gain too.",
+        "signals": "The closed-loop amplifier behaves like a first-order low-pass with its corner at GBW / noise gain. Splitting a big gain across two stages widens the bandwidth."
+      },
+      "formulas": [
+        {
+          "label": "Non-inverting bandwidth",
+          "tex": "f_{-3dB} = \\frac{GBW}{1 + R_f/R_g}"
+        },
+        {
+          "label": "Inverting bandwidth",
+          "tex": "f_{-3dB} = \\frac{GBW}{1 + R_f/R_{in}}"
+        },
+        {
+          "label": "Output offset",
+          "tex": "V_{os,out} = V_{os}\\left(1 + \\frac{R_f}{R_{in}}\\right)"
+        }
+      ],
+      "prerequisiteNotes": {
+        "opamp_inverting": "Closed-loop bandwidth depends on the noise gain of the inverting stage, not on its signal gain alone.",
+        "opamp_noninverting": "For a non-inverting amplifier the gain–bandwidth product gives the bandwidth directly: GBW divided by the gain.",
+        "rc_lowpass_cutoff": "A real op amp behaves like the ideal one followed by a single RC-style low-pass pole; the −3 dB idea carries straight over."
+      },
+      "goals": [
+        "Find the closed-loop bandwidth of a non-inverting or inverting stage from the gain-bandwidth product and the noise gain",
+        "Choose the minimum gain-bandwidth product an op amp needs for a given gain and bandwidth",
+        "Work out the DC offset at the output from the op amp's input offset voltage and the noise gain",
+        "Explain why splitting a large gain across two stages gives more bandwidth than one stage"
+      ],
+      "intuition": "Picture the op amp's open-loop gain as a line falling 20 dB per decade: the closed-loop gain stays flat only until that line comes down to the noise gain, 1 + Rf/Rg, which happens at about GBW divided by the noise gain (for an internally compensated op amp with one dominant pole).",
+      "why": "Inside an internally compensated op amp, a small capacitor deliberately gives the gain one dominant pole: above a low corner frequency, the open-loop gain falls as GBW/f, halving each time the frequency doubles. Feedback holds the closed-loop gain steady only while the open-loop gain has plenty to spare. What the feedback has to spare is the loop gain: the open-loop gain times the fraction of the output fed back, Rg/(Rf + Rg) (Rin in an inverting stage). That loop is the same whichever input the signal enters, so the limit is set by the noise gain 1 + Rf/Rg. Where GBW/f falls to the noise gain, the loop runs out of spare gain: that frequency is the −3 dB bandwidth.",
+      "explanation": "So far the op amp has had unlimited gain at every frequency; a real one does not. Its open-loop gain is huge at DC, but above a corner of a few hertz it is inversely proportional to frequency (half the gain at twice the frequency), so gain × frequency stays about constant: the gain-bandwidth product, GBW, in hertz. A non-inverting amplifier of gain G keeps that gain up to about f = GBW / G, where it is 3 dB down. For the inverting amplifier, divide by the noise gain, 1 + Rf/Rin, not by the signal gain Rf/Rin: the loop gain depends on the fraction of the output fed back, Rin/(Rf + Rin), which is the same whichever input the signal enters. So an inverting gain of −1 has half the bandwidth of a follower. No 2π: GBW is already in hertz. Two stages of gain 10 give 100 overall with about six times the bandwidth of one stage of 100. The noise gain multiplies DC errors too. The input offset, typically a few millivolts or less, acts like a small source at the + input, so the output offset is V_os · (1 + Rf/Rin).",
+      "workedExample": {
+        "problem": "An inverting amplifier with Rin = 10 kΩ and Rf = 100 kΩ uses an op amp with a GBW of 1 MHz and an input offset voltage of 2 mV, on ±12 V supplies. The input is a small sine of 50 mV peak. Find the closed-loop bandwidth, the gain at 20 kHz, the output offset, and the GBW a single stage would need for 100 kHz of bandwidth at this gain.",
+        "steps": [
+          "Signal gain: −Rf/Rin = −100 kΩ / 10 kΩ = −10, so the output is 10 × 50 mV = 0.5 V peak, far inside the ±12 V supplies.",
+          "Noise gain: 1 + Rf/Rin = 1 + 100 kΩ / 10 kΩ = 11, one more than the size of the signal gain.",
+          "Bandwidth: 1 MHz / 11 = 90.9 kHz. A non-inverting stage with a gain of 10 would reach 1 MHz / 10 = 100 kHz; the inverting stage has less because its noise gain is 11.",
+          "Gain at 20 kHz: the stage behaves like a first-order low-pass with its corner at 90.9 kHz, so |gain| = 10 / √(1 + (20 kHz / 90.9 kHz)²) = 10 / √1.048 = 9.77, 0.2 dB below 20 dB.",
+          "Output offset: the offset is amplified by the noise gain: 2 mV × 11 = 22 mV of DC at the output (its sign varies from one op amp to the next, even of the same type).",
+          "Required GBW: for 100 kHz at a noise gain of 11, GBW ≥ 11 × 100 kHz = 1.1 MHz, so this 1 MHz part is not enough; in practice choose a part with a few times more.",
+          "Two stages instead: split a gain of 100 into two inverting stages of −10 (overall +100). Each has noise gain 11 and a 90.9 kHz bandwidth; two equal first-order stages are 3 dB down at 0.644 × 90.9 kHz = 58.5 kHz. A single inverting stage of −100 has noise gain 101 and reaches only 1 MHz / 101 = 9.90 kHz, so splitting gives about 5.9 times the bandwidth (6.4 times for non-inverting stages: 64 kHz against 10 kHz)."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Amplifier Performance\" (last update 27 September 2026), section 2.6 \"Bandwidth\" (p. 24)",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_ampperf.pdf",
+          "note": "The gain-bandwidth product is gain times test frequency, roughly constant over a wide range and stated in hertz (unity gain at a frequency equal to the GBW), so more gain means less bandwidth."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 8 \"Operational Amplifiers\", section \"Frequency response\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_8.html#xtocid907217",
+          "note": "An internally compensated op amp such as the 741 has a built-in capacitor that makes its differential gain fall as frequency rises, and that falling open-loop gain is what limits the usable bandwidth of a feedback circuit."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 8 \"Operational Amplifiers\", section \"Offset voltage\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_8.html#xtocid907214",
+          "note": "Input offset voltage is modeled as a small source in series with one input of an otherwise perfect op amp, accounting for a nonzero output with the inputs tied together."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "bw_noninverting",
+      "topicId": "opamp_bandwidth",
+      "prompt": "An op amp with a gain-bandwidth product of {GBW} is wired as a non-inverting amplifier with a gain of {G}. What is the closed-loop bandwidth?",
+      "variables": [
+        {
+          "name": "GBW",
+          "unit": "Hz",
+          "series": "E12",
+          "decades": [
+            5,
+            6
+          ]
+        },
+        {
+          "name": "G",
+          "unit": "",
+          "range": {
+            "min": 2,
+            "max": 50,
+            "step": 1
+          }
+        }
+      ],
+      "answer": {
+        "formula": "GBW/G",
+        "unit": "Hz"
+      },
+      "explanation": "For a non-inverting amplifier, bandwidth ≈ GBW / gain = {GBW} / {G} = {answer}. More gain, less bandwidth.",
+      "hints": [
+        "The product of gain and bandwidth stays about the same.",
+        "BW = GBW / G."
+      ],
+      "misconceptions": [
+        {
+          "formula": "GBW*G",
+          "feedback": "Gain and bandwidth trade off: more gain means less bandwidth. Divide: BW = GBW / G."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does asking this op amp for more gain leave it less bandwidth?",
+          "choices": [
+            {
+              "text": "Its open-loop gain falls as GBW/f, and the closed-loop gain only holds while the open-loop gain exceeds it, so a higher gain runs out at a lower frequency",
+              "feedback": "Right: the flat closed-loop gain meets the falling open-loop curve at f = GBW/G.",
+              "correct": true
+            },
+            {
+              "text": "Higher gain needs larger feedback resistors, and the extra resistance slows the circuit down at high frequencies",
+              "feedback": "Bandwidth follows the gain, which is the resistor ratio, not the resistor sizes: 1 kΩ/10 kΩ and 10 kΩ/100 kΩ give the same gain and the same bandwidth."
+            },
+            {
+              "text": "At high gain the output runs out of supply voltage, so the fast parts of the signal get cut off first",
+              "feedback": "Running into the rails clips the peaks at any frequency; it limits amplitude, not bandwidth."
+            },
+            {
+              "text": "A higher gain makes the output bigger, and bigger signals can't change as fast, so the response falls off sooner",
+              "feedback": "That is slew-rate limiting, which depends on amplitude. The gain-bandwidth limit applies even to tiny signals."
+            }
+          ],
+          "explanation": "The op amp is compensated with one dominant internal pole, so its open-loop gain is about GBW/f: very large, often 100 000 or more, at low frequencies, falling 20 dB per decade (Decibels). Feedback holds the closed-loop gain at G only while the op amp has gain to spare. The two meet where GBW/f = G, at f = GBW/G = {answer}. So feedback trades the op amp's huge low-frequency gain for bandwidth, and gain × bandwidth stays at the GBW. The corner behaves like an RC low-pass cutoff: 3 dB down, then 20 dB per decade."
+        }
+      ],
+      "noDrawing": "a GBW ÷ gain calculation from the stated gain; no resistor values or stage details",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "bw_inverting",
+      "topicId": "opamp_bandwidth",
+      "prompt": "An op amp with a gain-bandwidth product of {GBW} is wired as an inverting amplifier with a gain of −{G}. What is the closed-loop bandwidth?",
+      "variables": [
+        {
+          "name": "GBW",
+          "unit": "Hz",
+          "series": "E12",
+          "decades": [
+            5,
+            6
+          ]
+        },
+        {
+          "name": "G",
+          "unit": "",
+          "range": {
+            "min": 1,
+            "max": 20,
+            "step": 1
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "Gn",
+          "formula": "1+G",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "GBW/(1+G)",
+        "unit": "Hz"
+      },
+      "explanation": "Bandwidth depends on the noise gain, 1 + Rf/Rin, which for an inverting gain of −{G} is {Gn}. BW ≈ {GBW} / {Gn} = {answer}.",
+      "hints": [
+        "For bandwidth, use the noise gain (the non-inverting gain of the same resistors), not the signal gain.",
+        "Noise gain = 1 + |G|, so BW = GBW / (1 + |G|)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "GBW/G",
+          "feedback": "Bandwidth follows the noise gain 1 + Rf/Rin = 1 + |G|, not the inverting gain |G|. The difference is big at low gains: a gain of −1 has only half the GBW as its bandwidth."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does the bandwidth follow the noise gain 1 + Rf/Rin rather than the signal gain Rf/Rin?",
+          "choices": [
+            {
+              "text": "The feedback loop is set by the fraction of the output fed back, Rin/(Rf + Rin); where the signal enters doesn't change that loop",
+              "feedback": "Right: the loop is the same resistors as a non-inverting amplifier, so the loop gives out at the same frequency.",
+              "correct": true
+            },
+            {
+              "text": "The inverting amplifier's gain is really 1 + Rf/Rin, so the signal gain and the noise gain are the same thing",
+              "feedback": "The signal gain really is −Rf/Rin (Inverting amplifier). The 1 + Rf/Rin belongs to the feedback loop, not to the signal."
+            },
+            {
+              "text": "The signal passes through both Rin and Rf on its way to the output, so both resistances add to slow it down",
+              "feedback": "Adding resistances isn't what happens here: the bandwidth is set by the fraction of the output fed back, Rin/(Rf + Rin), not by a total resistance."
+            },
+            {
+              "text": "It doesn't: the noise gain only matters for offsets, and the bandwidth is really GBW divided by Rf/Rin",
+              "feedback": "Offsets and bandwidth both follow the noise gain, because both depend on the feedback loop, not on where the input enters."
+            }
+          ],
+          "explanation": "The loop runs from the output through the Rf–Rin divider back to the − input, with the ideal input source counting as 0 V for this purpose. The fraction fed back is Rin/(Rf + Rin), so the closed loop gives out where the open-loop gain GBW/f falls to 1 + Rf/Rin, the Non-inverting amplifier's gain for the same resistors. Here that is {Gn}, so BW = {GBW} / {Gn} = {answer}. At a gain of −1 the bandwidth is only GBW/2."
+        }
+      ],
+      "noDrawing": "a GBW ÷ gain calculation from the stated gain; no resistor values or stage details",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "bw_required_gbw",
+      "topicId": "opamp_bandwidth",
+      "prompt": "You need a non-inverting gain of {G} with at least {f} of bandwidth. What minimum gain-bandwidth product must the op amp have?",
+      "variables": [
+        {
+          "name": "G",
+          "unit": "",
+          "range": {
+            "min": 2,
+            "max": 100,
+            "step": 1
+          }
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "G*f",
+        "unit": "Hz"
+      },
+      "explanation": "GBW = gain × bandwidth = {G} × {f} = {answer}. In practice pick a part with a few times more, since the response is already 3 dB down at the edge.",
+      "hints": [
+        "Rearrange BW = GBW / G.",
+        "GBW = G × BW."
+      ],
+      "misconceptions": [
+        {
+          "formula": "f/G",
+          "feedback": "Multiply: the op amp needs GBW = G × BW."
+        }
+      ],
+      "noDrawing": "a GBW = gain × bandwidth calculation from a specification; no circuit yet",
+      "review": "verified"
+    },
+    {
+      "id": "bw_output_offset",
+      "topicId": "opamp_bandwidth",
+      "prompt": "An inverting amplifier has Rin = {Rin} and Rf = {Rf}, and the op amp has an input offset voltage of {Vos}. With the input grounded, what DC offset appears at the output? Ignore input bias current.",
+      "variables": [
+        {
+          "name": "Vos",
+          "unit": "V",
+          "range": {
+            "min": 0.0005,
+            "max": 0.005,
+            "step": 0.0005
+          }
+        },
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "values": [
+            4700,
+            5600,
+            6800,
+            8200
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Gn",
+          "formula": "1+Rf/Rin",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "Vos*(1+Rf/Rin)",
+        "unit": "V"
+      },
+      "explanation": "The offset acts like a small source at the non-inverting input, so it is amplified by the noise gain 1 + Rf/Rin = {Gn}: {Vos} × {Gn} = {answer} (its sign depends on the part).",
+      "hints": [
+        "Model the offset as a tiny voltage source in series with the non-inverting input.",
+        "It sees the non-inverting gain: 1 + Rf / Rin."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vos*Rf/Rin",
+          "feedback": "The offset sits at the non-inverting input, so it sees the non-inverting gain 1 + Rf/Rin, not Rf/Rin."
+        }
+      ],
+      "schematic": {
+        "netlist": "inverting, input grounded\nR1 0 inv {Rin:spice}\nR2 inv out {Rf:spice}\nX1 0 inv out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "R1",
+            "at": [
+              1,
+              7
+            ],
+            "rot": 270,
+            "label": "Rin\n{Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              1,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            1,
+            7
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "bw_tradeoff_why",
+      "topicId": "opamp_bandwidth",
+      "prompt": "An amplifier built with a {GBW} op amp has too little bandwidth at a gain of 100. Which change raises the bandwidth while keeping the overall gain of 100?",
+      "variables": [
+        {
+          "name": "GBW",
+          "unit": "Hz",
+          "series": "E12",
+          "decades": [
+            5,
+            6
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "text": "Split it into two stages with a gain of 10 each",
+          "correct": true,
+          "feedback": "Yes: each stage then has about 10× more bandwidth, and the gains multiply back to 100."
+        },
+        {
+          "text": "Use larger resistor values with the same ratio",
+          "feedback": "The gain, and so the bandwidth, depends on the ratio; scaling both resistors changes neither."
+        },
+        {
+          "text": "Raise the supply voltage",
+          "feedback": "Supply voltage sets how far the output can swing, not the gain-bandwidth product."
+        },
+        {
+          "text": "Add a capacitor across the feedback resistor",
+          "feedback": "That forms a low-pass, which reduces bandwidth further."
+        }
+      ],
+      "explanation": "Bandwidth ≈ GBW / gain. One stage at gain 100 gets GBW/100; two stages at gain 10 each get about GBW/10 each (two equal stages together reach about 0.64 of one stage's bandwidth, still over six times better), a large improvement.",
+      "noDrawing": "a design choice between whole amplifier arrangements; no single circuit",
+      "review": "verified"
+    },
+    {
+      "id": "bridge_gbw_pole",
+      "topicId": "opamp_bandwidth",
+      "bridge": [
+        "signals",
+        "circuit"
+      ],
+      "prompt": "Why is an op amp's gain × bandwidth roughly constant?",
+      "choices": [
+        {
+          "text": "Its open-loop gain falls 20 dB per decade from a single dominant pole, so feedback trades gain for bandwidth along that line",
+          "correct": true,
+          "feedback": "Yes: the closed-loop response follows the open-loop curve down, meeting it where the loop gain reaches 1."
+        },
+        {
+          "text": "The supply voltage limits the product",
+          "feedback": "Supply limits the output swing, not gain-bandwidth."
+        },
+        {
+          "text": "It's a coincidence of how datasheets define bandwidth",
+          "feedback": "It follows from the op amp's internal compensation: one dominant pole."
+        },
+        {
+          "text": "The input bias current sets it",
+          "feedback": "Bias current affects DC accuracy, not the frequency response."
+        }
+      ],
+      "explanation": "Internal compensation gives the op amp one dominant pole: open-loop gain A(f) ≈ GBW/f above a few hertz. With feedback, the closed-loop gain G holds until A(f) falls to G, at f = GBW/G. So G × bandwidth ≈ GBW.",
+      "noDrawing": "about the op amp's internal compensation pole, not an external circuit",
+      "review": "verified"
+    },
+    {
+      "id": "bw_design_gain_at_f",
+      "topicId": "opamp_bandwidth",
+      "prompt": "An op amp with a gain-bandwidth product of {GBW} must amplify a {f} sine with an inverting gain of magnitude {G} (within 5%) at that frequency. Choose R_in and R_f (E24 values, 1 kΩ to 1 MΩ). Your design is checked in the simulator, so the op amp's limited bandwidth counts.",
+      "variables": [
+        {
+          "name": "G",
+          "unit": "",
+          "range": {
+            "min": 8,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "range": {
+            "min": 40000,
+            "max": 60000,
+            "step": 10000
+          }
+        },
+        {
+          "name": "GBW",
+          "unit": "Hz",
+          "value": 1000000
+        }
+      ],
+      "derived": [
+        {
+          "name": "fc0",
+          "formula": "GBW/(1+G)",
+          "unit": "Hz"
+        },
+        {
+          "name": "Gpaper",
+          "formula": "G/sqrt(1+(f/fc0)^2)",
+          "unit": ""
+        },
+        {
+          "name": "a",
+          "formula": "f/GBW",
+          "unit": ""
+        },
+        {
+          "name": "Rneed",
+          "formula": "(2*G^2*a^2 + sqrt(4*G^4*a^4 + 4*(1-G^2*a^2)*G^2*(1+a^2)))/(2*(1-G^2*a^2))",
+          "unit": ""
+        },
+        {
+          "name": "Rfex",
+          "formula": "Rneed*10000",
+          "unit": "Ω"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "Rf",
+            "label": "R_f",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 1000,
+            "max": 1000000
+          },
+          {
+            "name": "Rin",
+            "label": "R_in",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 1000,
+            "max": 1000000
+          }
+        ],
+        "result": "Rf/Rin",
+        "resultLabel": "gain magnitude",
+        "resultUnit": "",
+        "target": "G",
+        "tolerance": 0.05,
+        "sim": {
+          "netlist": "Inverting amplifier at one frequency\nV1 in 0 AC 1\nR1 in inv {Rin:spice}\nR2 inv out {Rf:spice}\nX1 0 inv out OA\n.model OA OPAMP(A=1e5 GBW={GBW:spice} VPOS=15 VNEG=-15)\n.ac lin 1 {f:spice} {f:spice}\n",
+          "measure": "mag:v(out)",
+          "note": "The formula R_f/R_in ignores the op amp's gain-bandwidth product. The closed-loop bandwidth is only GBW/(1 + R_f/R_in), and {f} is close enough to it to cut the gain. Aim R_f/R_in above {G}."
+        }
+      },
+      "explanation": "The closed-loop bandwidth of an inverting amplifier is GBW/(1 + R_f/R_in), because the op amp works at its noise gain. Designing for exactly {G} puts the corner at {fc0}, so at {f} the gain is only about {Gpaper}. The gain magnitude is about (R_f/R_in)/√(1 + (f·(1 + R_f/R_in)/GBW)²), which reaches {G} when R_f/R_in ≈ {Rneed}. For example, R_in = 10 kΩ and R_f near {Rfex}, rounded to E24; if the nearest value misses, try another R_in so that R_f/R_in lands within about 2% of {Rneed}.",
+      "hints": [
+        "At {f}, the op amp's limited gain-bandwidth product pulls the gain below R_f/R_in.",
+        "Gain magnitude ≈ (R_f/R_in)/√(1 + (f·(1 + R_f/R_in)/GBW)²). Make R_f/R_in a bit larger than {G} so the result lands on {G}."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "R_in {Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "R_f {Rf}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "bw_what_if_gain",
+      "topicId": "opamp_bandwidth",
+      "prompt": "A non-inverting amplifier built with an op amp whose GBW is {GBW} has a gain of {G}. Rf is changed to raise the gain to {new_G}. What happens to the closed-loop bandwidth?",
+      "variables": [
+        {
+          "name": "GBW",
+          "unit": "Hz",
+          "series": "E12",
+          "decades": [
+            6,
+            6
+          ]
+        },
+        {
+          "name": "G",
+          "unit": "",
+          "range": {
+            "min": 2,
+            "max": 9,
+            "step": 1
+          }
+        }
+      ],
+      "whatIf": {
+        "quantity": "the closed-loop bandwidth",
+        "formula": "GBW/G",
+        "unit": "Hz",
+        "change": {
+          "G": "10*G"
+        },
+        "askFactor": true,
+        "feedback": {
+          "up": "More gain doesn't bring more speed. The closed-loop gain only holds while the op amp's open-loop gain (about GBW/f) is bigger than it, and the open-loop gain falls with frequency, so a higher closed-loop gain runs out of open-loop gain sooner.",
+          "same": "It is gain × bandwidth that stays constant, not the bandwidth. The closed-loop gain only holds while the open-loop gain (about GBW/f) is bigger than it, so a different gain stops holding at a different frequency."
+        }
+      },
+      "explanation": "BW ≈ GBW / G for a Non-inverting amplifier, so ten times the gain gives a tenth of the bandwidth: {before} → {after}. On a Bode plot the open-loop gain falls 20 dB per decade (Decibels); a flat closed-loop line 20 dB higher meets it one decade earlier.",
+      "hints": [
+        "Which stays constant: the bandwidth, or gain × bandwidth?"
+      ],
+      "noDrawing": "a GBW ÷ gain calculation from the stated gain; no resistor values or stage details",
+      "review": "verified"
+    },
+    {
+      "id": "bw_what_if_scale",
+      "topicId": "opamp_bandwidth",
+      "prompt": "A non-inverting amplifier uses an op amp with a GBW of {GBW} with Rf = {Rf} and Rg = {Rg}. Both resistors are swapped for ten times their value: {new_Rf} and {new_Rg}. Ignoring stray capacitance, what happens to the closed-loop bandwidth?",
+      "variables": [
+        {
+          "name": "GBW",
+          "unit": "Hz",
+          "series": "E12",
+          "decades": [
+            6,
+            6
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "Rg",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the closed-loop bandwidth",
+        "formula": "GBW/(1+Rf/Rg)",
+        "unit": "Hz",
+        "change": {
+          "Rf": "10*Rf",
+          "Rg": "10*Rg"
+        },
+        "feedback": {
+          "up": "Bigger resistors don't make the op amp faster. The bandwidth depends on the gain, and the gain depends only on the ratio Rf/Rg, which hasn't changed.",
+          "down": "More resistance only slows a circuit when it charges a capacitor. The resistors don't charge any capacitor here; the op amp's internal one is set by its GBW, not by Rf and Rg. The bandwidth is GBW/(1 + Rf/Rg), and the ratio hasn't changed."
+        }
+      },
+      "explanation": "BW = GBW/(1 + Rf/Rg). Only the ratio enters, because the op amp only sees the fraction of its output fed back, Rg/(Rf + Rg). Scaling both resistors keeps it, so the bandwidth stays at {after}. In a real circuit a few picofarads of stray capacitance at the − input sit across Rg. With resistors this large, their reactance becomes comparable at a few hundred kilohertz to a few megahertz, the fraction fed back falls, and the response peaks or even oscillates. That is why designs keep these resistors in the tens of kilohms, or add a few pF across Rf.",
+      "hints": [
+        "Does the gain change when both resistors are scaled by the same factor?"
+      ],
+      "schematic": {
+        "netlist": "non-inverting\nV1 in 0 1\nX1 in inv out OA\nRF out inv {Rf:spice}\nRG inv 0 {Rg:spice}\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "flip": true,
+            "label": ""
+          },
+          {
+            "ref": "RG",
+            "at": [
+              7,
+              8
+            ],
+            "rot": 90,
+            "label": "Rg\n{Rg}"
+          },
+          {
+            "ref": "RF",
+            "at": [
+              13,
+              8
+            ],
+            "rot": 180,
+            "label": "Rf {Rf}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              8
+            ]
+          ],
+          [
+            [
+              13,
+              4
+            ],
+            [
+              13,
+              8
+            ]
+          ],
+          [
+            [
+              9,
+              8
+            ],
+            [
+              7,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    }
+  ]
+}

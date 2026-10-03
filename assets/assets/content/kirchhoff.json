@@ -1,0 +1,1211 @@
+{
+  "topics": [
+    {
+      "id": "kirchhoff",
+      "title": "Kirchhoff's current and voltage laws",
+      "summary": "Current into a node equals current out (charge is conserved); voltages around any loop sum to zero (energy is conserved).",
+      "lenses": [
+        "circuit",
+        "physics"
+      ],
+      "prerequisites": [
+        "series_parallel"
+      ],
+      "lensNotes": {
+        "circuit": "KCL at nodes and KVL around loops are enough to solve any circuit. Nodal analysis writes KCL at each unknown node; the simulator in this app does exactly that, with a matrix.",
+        "physics": "KCL is conservation of charge: a node can't store charge, so what flows in flows out. KVL is conservation of energy: a charge carried around a loop returns to the same potential."
+      },
+      "formulas": [
+        {
+          "label": "KCL",
+          "tex": "\\sum I_{in} = \\sum I_{out}"
+        },
+        {
+          "label": "KVL",
+          "tex": "\\sum_{\\text{loop}} V = 0"
+        },
+        {
+          "label": "Ohm's law",
+          "tex": "V = I R"
+        }
+      ],
+      "prerequisiteNotes": {
+        "series_parallel": "The series and parallel rules are Kirchhoff's laws in their simplest form: one current through a series chain (KCL), one voltage across parallel parts (KVL)."
+      },
+      "goals": [
+        "Find an unknown current at a node from the others, using Kirchhoff's current law (KCL)",
+        "Find an unknown voltage in a loop from the source and the other drops, using Kirchhoff's voltage law (KVL)",
+        "Write KCL at a node with Ohm's law for each branch and solve for the node voltage",
+        "Explain which conservation law each rule expresses, and use them to reason about a circuit backwards from meter readings"
+      ],
+      "intuition": "Charge cannot accumulate at a junction, so the current into a node equals the current out; and every node has one voltage, so any path that returns to its starting node has risen exactly as much as it has fallen (in a lumped circuit, where any changing magnetic field stays inside components such as inductors).",
+      "why": "KCL is conservation of charge. A node is a small piece of metal with almost no capacitance, so it cannot store charge: if more flowed in than out, the excess would raise its voltage within nanoseconds (picofarads of stray capacitance, kilohm resistors), and the higher voltage pushes more current out through the branches until in equals out. KVL is conservation of energy. The voltage between two points is the energy per coulomb gained or lost moving between them, and each point has one potential, so any closed loop sums to zero. Both assume a lumped circuit, where every changing magnetic field stays inside components such as inductors and transformers. A wire loop that itself encloses changing flux (a long scope ground lead next to a transformer, say) picks up an induced voltage that no component shows, and KVL written only over the components no longer balances.",
+      "explanation": "You already know two special cases. Series parts carry one current; parallel parts share one voltage. Kirchhoff's laws are the general rules behind both. Kirchhoff's current law (KCL): at any node, the currents flowing in add up to the currents flowing out. Kirchhoff's voltage law (KVL): going around any closed loop, the voltage rises equal the voltage drops, so the signed sum is zero. To use them, first pick a direction for each unknown current and mark it. If the answer comes out negative, the current flows the other way; the magnitude is still right. Current enters a resistor at its more positive end, so walking through it with the current is a drop. Together with Ohm's law, these two rules solve any circuit of resistors and sources. The standard method, nodal analysis, writes KCL at each node whose voltage is unknown, with each branch current written as a voltage difference divided by a resistance. The simulator in this app does the same with a matrix (modified nodal analysis, which also adds each voltage source's current as an unknown). The laws also work backwards: if two of three currents at a node are known, the third needs no meter.",
+      "workedExample": {
+        "problem": "A 12 V source drives R1 = 1 kΩ into node a. From node a, R2 = 2.2 kΩ and R3 = 3.3 kΩ both go to ground. Find the voltage at node a and the current in each resistor, then check both laws.",
+        "steps": [
+          "Call the voltage at node a Va. Ohm's law gives each current: in through R1, (12 V − Va) / 1 kΩ; out through R2, Va / 2.2 kΩ; out through R3, Va / 3.3 kΩ.",
+          "KCL at node a: (12 V − Va) / 1 kΩ = Va / 2.2 kΩ + Va / 3.3 kΩ.",
+          "Collect Va: 12 V / 1 kΩ = Va × (1/1 kΩ + 1/2.2 kΩ + 1/3.3 kΩ) = Va × 1.758 mS, so Va = 12 mA / 1.758 mS = 6.83 V.",
+          "Currents: I1 = (12 V − 6.83 V) / 1 kΩ = 5.17 mA; I2 = 6.83 V / 2.2 kΩ = 3.10 mA; I3 = 6.83 V / 3.3 kΩ = 2.07 mA.",
+          "Check KCL: 3.10 mA + 2.07 mA = 5.17 mA, equal to the current in through R1.",
+          "Check KVL around the loop through the source, R1 and R2: +12 V − 5.17 V − 6.83 V = 0 V.",
+          "Cross-check with series and parallel: R2 ∥ R3 = 1.32 kΩ, and 12 V × 1.32 kΩ / (1 kΩ + 1.32 kΩ) = 6.83 V."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 6 \"Divider Circuits and Kirchhoff's Laws\", section \"Kirchhoff's Voltage Law (KVL)\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_6.html#xtocid87521",
+          "note": "The signed sum of voltages around any closed loop is zero, whatever the starting point or direction."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 6 \"Divider Circuits and Kirchhoff's Laws\", section \"Kirchhoff's Current Law (KCL)\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_6.html#xtocid87523",
+          "note": "Current into a node equals current out, with any consistent sign choice for entering and leaving."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 10 \"DC Network Analysis\", section \"Node voltage method\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_10.html#xtocid87885",
+          "note": "Nodal analysis writes one KCL equation per unknown node voltage, with branch currents expressed through conductances."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "kcl_node",
+      "topicId": "kirchhoff",
+      "prompt": "At a node, {I1} and {I2} flow in and {I3} flows out through one wire. One more wire leaves the node. How much current flows out through it?",
+      "variables": [
+        {
+          "name": "I1",
+          "unit": "A",
+          "range": {
+            "min": 0.005,
+            "max": 0.05,
+            "step": 0.001
+          }
+        },
+        {
+          "name": "I2",
+          "unit": "A",
+          "range": {
+            "min": 0.005,
+            "max": 0.05,
+            "step": 0.001
+          }
+        },
+        {
+          "name": "f",
+          "unit": "",
+          "range": {
+            "min": 0.1,
+            "max": 0.9,
+            "step": 0.1
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "I3",
+          "formula": "f*(I1+I2)",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "I1+I2-I3",
+        "unit": "A"
+      },
+      "explanation": "KCL: total in = total out. In: {I1} + {I2}. Out: {I3} + I4. So I4 = {I1} + {I2} − {I3} = {answer}.",
+      "hints": [
+        "Charge can't accumulate at a node.",
+        "Sum of currents in = sum of currents out."
+      ],
+      "misconceptions": [
+        {
+          "formula": "I1+I2+I3",
+          "feedback": "{I3} is leaving the node, so it counts on the 'out' side: I4 = I1 + I2 − I3."
+        }
+      ],
+      "noDrawing": "a bare junction of four wires whose branches aren't described; drawing parts on them would invent a circuit",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "kvl_loop",
+      "topicId": "kirchhoff",
+      "prompt": "A single loop has a {V} source and three resistors in series. Two of them drop {V1} and {V2}. What voltage drops across the third?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 6,
+            "max": 24,
+            "step": 1
+          }
+        },
+        {
+          "name": "a",
+          "unit": "",
+          "range": {
+            "min": 0.1,
+            "max": 0.2,
+            "step": 0.05
+          }
+        },
+        {
+          "name": "b",
+          "unit": "",
+          "values": [
+            0.1,
+            0.15,
+            0.2,
+            0.45,
+            0.5
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "V1",
+          "formula": "a*V",
+          "unit": "V"
+        },
+        {
+          "name": "V2",
+          "formula": "b*V",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "V-V1-V2",
+        "unit": "V"
+      },
+      "explanation": "KVL: going around the loop, the source's rise equals the sum of the drops. {V} = {V1} + {V2} + V3, so V3 = {answer}.",
+      "hints": [
+        "Around a closed loop, the voltage rises equal the voltage drops.",
+        "V3 = V − V1 − V2."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V1+V2",
+          "feedback": "That's the sum of the two known drops. The third drop is whatever is left of the source voltage: V − V1 − V2."
+        }
+      ],
+      "schematic": {
+        "netlist": "series loop\nVS a 0 {V:spice}\nR1 a b 1k\nR3 b c 1k\nR2 c 0 1k\n",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1 drops {V1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n?"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              6,
+              8
+            ],
+            "rot": 180,
+            "label": "R2 drops {V2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              6
+            ],
+            [
+              8,
+              8
+            ],
+            [
+              6,
+              8
+            ]
+          ],
+          [
+            [
+              2,
+              8
+            ],
+            [
+              0,
+              8
+            ],
+            [
+              0,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            1,
+            8
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "kvl_series_current",
+      "topicId": "kirchhoff",
+      "prompt": "A {V} source drives {R1} and {R2} in series. What current flows around the loop?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 3,
+            "max": 10,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            3
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "V/(R1+R2)",
+        "unit": "A"
+      },
+      "explanation": "KVL: V = I·R1 + I·R2 = I(R1 + R2), so I = {V} / ({R1} + {R2}) = {answer}.",
+      "hints": [
+        "Write KVL with the unknown current I.",
+        "I = V / (R1 + R2)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V/R1+V/R2",
+          "feedback": "Adding V/R1 and V/R2 treats the resistors as parallel. In series the same current flows through both: I = V / (R1 + R2)."
+        }
+      ],
+      "simCheck": {
+        "netlist": "series loop\nV1 a 0 {V:spice}\nR1 a b {R1:spice}\nR2 b 0 {R2:spice}\n",
+        "probe": "i(R1)"
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "followUps": [
+        {
+          "prompt": "Why does the same current flow through R1 and R2?",
+          "choices": [
+            {
+              "text": "They meet at a node nothing else connects to, and charge can't accumulate there, so what leaves R1 must enter R2",
+              "feedback": "Right: that's KCL at the node between them.",
+              "correct": true
+            },
+            {
+              "text": "R1 uses up some of the current, and R2 gets what's left",
+              "feedback": "Resistors don't use up current; they convert energy to heat. The same current comes out as went in."
+            },
+            {
+              "text": "The larger resistor gets less current",
+              "feedback": "That's true of parallel branches. In series there's only one path, so both carry the same current."
+            },
+            {
+              "text": "The full source voltage is across each of them",
+              "feedback": "The source voltage is split between them (KVL), not repeated across each. What they share is the current."
+            }
+          ],
+          "explanation": "KCL at the node between R1 and R2: one wire in, one wire out, so the currents are equal. KVL then gives V = I·R1 + I·R2, which is why series resistances add (from Series and parallel)."
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "kcl_concept",
+      "topicId": "kirchhoff",
+      "prompt": "Which physical principle does Kirchhoff's current law express?",
+      "choices": [
+        {
+          "text": "Conservation of charge",
+          "correct": true,
+          "feedback": "Yes: charge can't be created or accumulate at a node, so what flows in must flow out."
+        },
+        {
+          "text": "Conservation of energy",
+          "feedback": "That's behind the voltage law (KVL): the potential at a point has one value, so the rises and drops around any closed loop sum to zero."
+        },
+        {
+          "text": "Ohm's law",
+          "feedback": "Ohm's law relates V, I and R for one component. KCL holds for any components at all."
+        },
+        {
+          "text": "Current is used up by resistors",
+          "feedback": "Current isn't used up: the same current leaves a resistor as enters it. Energy is what gets converted."
+        }
+      ],
+      "explanation": "KCL says the currents into a node sum to the currents out, because charge is conserved and a wire junction can't store it.",
+      "noDrawing": "about the principle behind the law, not a particular circuit",
+      "level": "recall",
+      "review": "verified"
+    },
+    {
+      "id": "kvl_two_sources",
+      "topicId": "kirchhoff",
+      "prompt": "Two batteries, {V1} and {V2}, are connected in series so their voltages add, and together drive a {R} resistor. What current flows?",
+      "variables": [
+        {
+          "name": "V1",
+          "unit": "V",
+          "values": [
+            1.5,
+            3,
+            4.5,
+            6,
+            9
+          ]
+        },
+        {
+          "name": "V2",
+          "unit": "V",
+          "values": [
+            1.5,
+            3,
+            4.5,
+            6,
+            9
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            1500,
+            1800,
+            2200,
+            2700,
+            3300,
+            3900,
+            4700,
+            5600,
+            6800,
+            8200,
+            10000,
+            12000,
+            15000,
+            18000,
+            22000,
+            27000,
+            33000,
+            39000,
+            47000,
+            56000,
+            68000,
+            82000
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "(V1+V2)/R",
+        "unit": "A",
+        "tolerance": 0.02
+      },
+      "explanation": "Around the loop, KVL gives {V1} + {V2} − I·R = 0, so I = ({V1} + {V2})/{R} = {answer}.",
+      "hints": [
+        "Walk around the loop adding the rises and drops.",
+        "I = (V1 + V2)/R when the sources aid each other."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(V1-V2)/R",
+          "feedback": "The batteries aid each other here, so their voltages add."
+        }
+      ],
+      "schematic": {
+        "netlist": "two batteries in series\nV1 a b {V1:spice}\nV2 b 0 {V2:spice}\nR1 a 0 {R:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "{V1}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "{V2}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              2
+            ],
+            "rot": 90,
+            "label": "{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          [
+            [
+              6,
+              6
+            ],
+            [
+              6,
+              8
+            ],
+            [
+              0,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            3,
+            8
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "kcl_parallel_total",
+      "topicId": "kirchhoff",
+      "prompt": "A {V} source feeds three resistors in parallel: R1 = {R1}, R2 = {R2} and R3 = {R3}. What total current does the source supply?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "V/R1+V/R2+V/R3",
+        "unit": "A",
+        "tolerance": 0.02
+      },
+      "explanation": "Each resistor has the full {V} across it; KCL adds the branch currents: I = {V}/{R1} + {V}/{R2} + {V}/{R3} = {answer}.",
+      "hints": [
+        "Every branch sees the full source voltage.",
+        "Add the branch currents: I = V/R1 + V/R2 + V/R3."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V/(R1+R2+R3)",
+          "feedback": "That treats the resistors as series. In parallel each gets the full voltage; add the currents."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does each resistor get the full {V}, whatever the others are?",
+          "choices": [
+            {
+              "text": "Each resistor connects straight across the source, so KVL around its own loop gives it the source voltage",
+              "feedback": "Right: every branch forms a loop with the source, and the wires drop nothing.",
+              "correct": true
+            },
+            {
+              "text": "The source splits its voltage evenly between the branches",
+              "feedback": "Splitting a voltage happens in series. Parallel branches all span the same two nodes."
+            },
+            {
+              "text": "The largest resistor takes the most voltage",
+              "feedback": "That's the series (divider) rule. In parallel each branch spans the same two nodes, so the voltages are equal and the currents differ."
+            },
+            {
+              "text": "The current is the same in each branch, so the voltage is too",
+              "feedback": "The currents differ: V / R1, V / R2 and V / R3. It's the voltage that's shared."
+            }
+          ],
+          "explanation": "Each branch and the source form a closed loop. KVL around it: the source's rise equals the resistor's drop, so every branch has {V} across it and draws its own current V / R. KCL at the top node then adds the branch currents to give the supply current."
+        }
+      ],
+      "schematic": {
+        "netlist": "three in parallel\nV1 a 0 {V:spice}\nR1 a 0 {R1:spice}\nR2 a 0 {R2:spice}\nR3 a 0 {R3:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              5,
+              2
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              9,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              13,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              2
+            ]
+          ],
+          [
+            [
+              5,
+              0
+            ],
+            [
+              5,
+              2
+            ]
+          ],
+          [
+            [
+              9,
+              0
+            ],
+            [
+              9,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              13,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            2,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "kcl_what_if_branch",
+      "topicId": "kirchhoff",
+      "prompt": "An ideal source of {V} feeds three resistors in parallel: R1 = {R1}, R2 = {R2} and R3 = {R3}. R3 is swapped for {new_R3}, ten times smaller, which draws more current. What happens to the current through R1?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the current through R1",
+        "formula": "V/R1",
+        "unit": "A",
+        "change": {
+          "R3": "R3/10"
+        },
+        "feedback": {
+          "down": "R3 does draw more, but it doesn't take it from R1. An ideal source holds {V} across every branch, so R1's current stays {V} / R1; the source simply supplies more in total.",
+          "up": "Nothing in R1's loop has changed: the same {V} across the same resistor gives the same current. Only the source's total goes up."
+        }
+      },
+      "explanation": "KVL around R1's loop puts {V} across R1, so its current is {V} / {R1} = {before}, before and after. KCL at the top node: the source's total is the sum of the branches, so only the total rises. A real supply has some internal resistance and would sag a little; that's the Thevenin topic next.",
+      "hints": [
+        "What sets the voltage across R1? Did that change?"
+      ],
+      "followUps": [
+        {
+          "prompt": "Then where does R3's extra current come from?",
+          "choices": [
+            {
+              "text": "The source supplies more current in total",
+              "feedback": "Right: KCL at the top node, I_total = I1 + I2 + I3, and only I3 grew.",
+              "correct": true
+            },
+            {
+              "text": "From R1 and R2, which each give up a little",
+              "feedback": "Their currents are set by {V} / R1 and {V} / R2, which haven't changed. The branches don't share a fixed supply of current."
+            },
+            {
+              "text": "Nowhere: the total current is fixed by the source",
+              "feedback": "An ideal voltage source fixes the voltage, not the current. It delivers whatever current the branches draw."
+            },
+            {
+              "text": "From R3 storing charge",
+              "feedback": "A resistor stores no charge. The extra current flows in from the source and back to it."
+            }
+          ],
+          "explanation": "An ideal voltage source holds its voltage and supplies whatever current is drawn. Each branch draws V / R on its own, and KCL adds them at the node: a smaller R3 raises only I3 and the total."
+        }
+      ],
+      "schematic": {
+        "netlist": "three in parallel\nV1 a 0 {V:spice}\nR1 a 0 {R1:spice}\nR2 a 0 {R2:spice}\nR3 a 0 {R3:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              5,
+              2
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              9,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              13,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              2
+            ]
+          ],
+          [
+            [
+              5,
+              0
+            ],
+            [
+              5,
+              2
+            ]
+          ],
+          [
+            [
+              9,
+              0
+            ],
+            [
+              9,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              13,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            2,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "kcl_fault",
+      "topicId": "kirchhoff",
+      "prompt": "A source of {V} drives R1 = {R1} into node a, and R2 = {R2} and R3 = {R3} both go from node a to ground. Healthy, node a should sit at {h0}. There is no meter on R3. The readings are below. Which fault explains them?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 6,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "fault": {
+        "netlist": "kcl fault\nV1 in 0 {V:spice}\nR1 in a {R1:spice}\nR2 a 0 {R2:spice}\nR3 a 0 {R3:spice}\n",
+        "probes": [
+          {
+            "label": "Voltage at node a",
+            "probe": "v(a)"
+          },
+          {
+            "label": "Current from the supply (ammeter in the supply lead)",
+            "probe": "i(R1)"
+          },
+          {
+            "label": "Current through R2",
+            "probe": "i(R2)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "R1 is open",
+            "open": "R1",
+            "feedback": "An open R1 would cut off everything: 0 A from the supply and through R2, and node a at 0 V.",
+            "why": "Nothing flows anywhere and node a has fallen to 0 V. Only a break in the path every current shares, R1, does that."
+          },
+          {
+            "text": "R2 is open",
+            "open": "R2",
+            "feedback": "An open R2 would read 0 A through R2 while the supply still delivers current, and node a would rise.",
+            "why": "R2 reads 0 A, yet the supply still delivers current through R1. By KCL that current must leave node a somewhere, so all of it flows through R3. With one path gone, node a rises."
+          },
+          {
+            "text": "R3 is open",
+            "open": "R3",
+            "feedback": "An open R3 would make the supply current and R2's current read the same, with node a higher than normal.",
+            "why": "The supply current and R2's current read the same, so by KCL R3 carries I_supply − I_R2 = 0. With one path gone, node a rises."
+          },
+          {
+            "text": "R3 is shorted to ground",
+            "short": "R3",
+            "feedback": "A shorted R3 would pull node a to 0 V, so R2 would read 0 A while the supply current rises to {V} / R1.",
+            "why": "Node a is at 0 V, so R2 has nothing across it and reads 0 A, yet the supply delivers more than normal through R1. By KCL that current leaves node a through R3, and only a short carries current with no voltage across it."
+          },
+          {
+            "text": "R1 is shorted",
+            "short": "R1",
+            "feedback": "A shorted R1 would put the full {V} on node a, so the supply current and R2's current would both rise.",
+            "why": "Node a sits at the full {V}, so R1 drops nothing: it must be shorted. Both branches now see the whole supply and draw more current."
+          }
+        ]
+      },
+      "explanation": "KCL at node a: the supply current, which flows in through R1, equals the currents out through R2 and R3, so I_R3 = I_supply − I_R2 even without a meter on R3. KVL puts node a somewhere between 0 V and {V}; where it moves shows which side of the node changed. This is the series-parallel network from Series and parallel, read backwards.",
+      "hints": [
+        "Work out the current in R3 from the other two: KCL at node a.",
+        "Zero current everywhere means the shared path is broken; 0 V at a node with current still flowing means a short to ground."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "a",
+            "at": [
+              10,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    }
+  ]
+}

@@ -1,0 +1,2505 @@
+{
+  "topics": [
+    {
+      "id": "active_filters",
+      "title": "First-order active filters",
+      "summary": "Put a capacitor in an op amp's feedback or input path to get a filter with gain and a low output impedance.",
+      "lenses": [
+        "circuit",
+        "signals"
+      ],
+      "prerequisites": [
+        "opamp_inverting",
+        "rc_lowpass_cutoff"
+      ],
+      "lensNotes": {
+        "circuit": "Put a capacitor across R_f for a low-pass or in series with R_in for a high-pass. The op amp adds gain and a low output impedance, so the next stage can't shift the corner.",
+        "signals": "First-order filters roll off at 20 dB per decade; steeper filters (Sallen-Key, multiple feedback) stack more poles. The corner is still where a reactance equals a resistance."
+      },
+      "formulas": [
+        {
+          "label": "Low-pass cutoff",
+          "tex": "f_c = \\frac{1}{2\\pi R_f C}"
+        },
+        {
+          "label": "Pass-band gain",
+          "tex": "A = -\\frac{R_f}{R_{in}}"
+        },
+        {
+          "label": "High-pass cutoff",
+          "tex": "f_c = \\frac{1}{2\\pi R_{in} C}"
+        },
+        {
+          "label": "Gain in dB",
+          "tex": "G_{dB} = 20\\log_{10}\\lvert A\\rvert,\\quad \\lvert A(f_c)\\rvert = \\frac{\\lvert A\\rvert}{\\sqrt{2}}\\ \\ (-3\\ \\text{dB})"
+        }
+      ],
+      "prerequisiteNotes": {
+        "opamp_inverting": "An active filter is an inverting amplifier whose feedback or input resistor is replaced by an RC network.",
+        "rc_lowpass_cutoff": "The filter's corner frequency is still 1/(2πRC); the op amp adds gain and a low output impedance."
+      },
+      "goals": [
+        "Find the cutoff frequency of an inverting active low-pass or high-pass from the resistor and capacitor that set it",
+        "Find the passband gain from Rf/Rin, and the gain at any frequency, including the −3 dB point",
+        "Choose the capacitor for a required cutoff and recheck the corner with the nearest standard value",
+        "Explain what the op amp adds over a passive RC filter (gain, and a corner that the load cannot move) and what it does not (a steeper roll-off)"
+      ],
+      "intuition": "An active filter is an inverting amplifier whose feedback or input impedance changes with frequency: the corner sits where the capacitor's reactance equals the resistor it works with, and the op amp's low output impedance stops the load from moving that corner (for an op amp well within its own speed limits).",
+      "why": "In an inverting amplifier the − input is a virtual ground, so the input current is Vin divided by the input impedance, and all of it flows through the feedback path: gain = −Zf/Zin. Put C across Rf and the feedback impedance falls with frequency. Well below the corner C carries little current and the gain is −Rf/Rin. Where C's reactance 1/(2πfC) equals Rf, the gain is 1/√2 of that; above it, C takes over and the gain falls 20 dB per decade. Rin sets the current, not the corner, and the op amp drives the load from a near-zero output impedance.",
+      "explanation": "From the RC low-pass you know the corner f_c = 1/(2πRC) and the 20 dB per decade roll-off. You also know that a load on a passive RC filter moves its corner and lowers its output. An active filter avoids that by building the RC into an inverting amplifier. For a low-pass, put a capacitor C across the feedback resistor Rf. Well below the corner, C is almost an open circuit and the circuit is an ordinary inverting amplifier with gain −Rf/Rin. As the frequency rises, C's reactance falls and it shorts out Rf, so the gain falls. The corner is where the reactance equals Rf: f_c = 1/(2π·Rf·C), in hertz (1/(Rf·C) is the same corner in rad/s). Rin does not appear, so gain and corner can be set separately. At f_c the gain is 1/√2 of the passband gain, 3 dB down. For a high-pass, put C in series with Rin instead: f_c = 1/(2π·Rin·C), and the gain well above the corner is −Rf/Rin. The op amp adds gain and a low output impedance; it does not add steepness. One capacitor still gives 20 dB per decade; a steeper filter needs more capacitors.",
+      "workedExample": {
+        "problem": "Design an inverting active low-pass with a passband gain of −10 and a cutoff near 1.5 kHz, using Rin = 10 kΩ, on ±12 V supplies with an op amp whose GBW is 1 MHz. The input is a 0.5 V peak sine. Find Rf and C, the real corner, and the output at 100 Hz, at the corner and at ten times the corner.",
+        "steps": [
+          "Passband gain: |A| = Rf/Rin = 10, so Rf = 10 × 10 kΩ = 100 kΩ.",
+          "Capacitor: C = 1 / (2π × Rf × f_c) = 1 / (2π × 100 kΩ × 1.5 kHz) = 1.06 nF. The nearest E12 value is 1.0 nF.",
+          "Real corner: f_c = 1 / (2π × 100 kΩ × 1.0 nF) = 1.59 kHz, in hertz; 1 / (100 kΩ × 1.0 nF) = 10 000 rad/s is the same corner in rad/s.",
+          "At 100 Hz: |A| = 10 / √(1 + (100 Hz / 1.59 kHz)²) = 9.98, so the output is 0.5 V × 9.98 = 4.99 V peak, inside the ±12 V supplies.",
+          "At the corner, 1.59 kHz: |A| = 10 / √2 = 7.07, which is 20 dB − 3.01 dB = 16.99 dB; the output is 0.5 V × 7.07 = 3.54 V peak.",
+          "At 15.9 kHz, ten times the corner: |A| = 10 / √(1 + 10²) = 0.995, about 20 dB below the passband gain; the output is 0.50 V peak.",
+          "Op-amp check (previewing Op-amp bandwidth): a real op amp's own gain runs out at high frequency; with a 1 MHz GBW, this stage's limit is about 1 MHz / (1 + 100 kΩ / 10 kΩ) = 90.9 kHz, far above the 1.59 kHz corner. The corner is set by Rf and C, not by the op amp."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Advanced Filter Circuits\", ch. 3 \"Tutorial\", section 3.2 \"Basic filter networks\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_advfilters.pdf",
+          "note": "An RC filter's cutoff is where the capacitor's reactance equals the resistance, f_c = 1/(2πRC), and at that frequency the output is √2/2 of the passband signal."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Advanced Filter Circuits\", ch. 3 \"Tutorial\", section 3.10 \"Active filters\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_advfilters.pdf",
+          "note": "An active filter can have gain, the amplifier drives the load so the load no longer shifts the cutoff, it works only while the amplifier's bandwidth is well above the signal's, and the topologies with one capacitor are first order."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Operational Amplifiers\", ch. 3 \"Tutorial\", section 3.10 \"Inverting and noninverting amplification\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_opamp.pdf",
+          "note": "Negative feedback holds the inverting input at virtual ground, the input current set by the input resistor flows entirely through the feedback resistor, and the closed-loop gain is the negative ratio of feedback to input resistance."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "af_lowpass_fc",
+      "topicId": "active_filters",
+      "prompt": "An inverting active low-pass filter has Rin = {Rin}, Rf = {Rf}, and a capacitor C = {C} across Rf. What is its cutoff frequency?",
+      "variables": [
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -9,
+            -8
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "1/(2*pi*Rf*C)",
+        "unit": "Hz"
+      },
+      "explanation": "The capacitor across Rf shorts it out at high frequencies. The corner is where C's reactance equals Rf: f_c = 1 / (2π × {Rf} × {C}) = {answer}. Rin sets the gain, not the corner.",
+      "hints": [
+        "Which resistor is the capacitor in parallel with?",
+        "f_c = 1 / (2π·Rf·C)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "1/(2*pi*Rin*C)",
+          "feedback": "The capacitor is across Rf, so Rf sets the corner: f_c = 1 / (2π·Rf·C)."
+        }
+      ],
+      "schematic": {
+        "netlist": "LP\nV1 in 0 1\nR1 in inv {Rin:spice}\nR2 inv out {Rf:spice}\nC1 inv out {C:spice}\nX1 0 inv out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rin {Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              -3
+            ],
+            "label": "C {C}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              -3
+            ],
+            [
+              8,
+              -3
+            ]
+          ],
+          [
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              -3
+            ],
+            [
+              13,
+              -3
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "Why does a capacitor across Rf turn the inverting amplifier into a low-pass filter?",
+          "choices": [
+            {
+              "text": "The gain is (Rf ∥ Z_C)/Rin, and above the corner C's reactance falls below Rf, so the feedback impedance and the gain shrink",
+              "feedback": "Right: the capacitor gradually shorts out Rf as the frequency rises.",
+              "correct": true
+            },
+            {
+              "text": "The capacitor stores the high frequencies as charge, so they never make it through to the output",
+              "feedback": "A capacitor stores charge, not frequencies. What changes with frequency is its reactance, X_C = 1/(2πfC)."
+            },
+            {
+              "text": "The capacitor blocks high frequencies in the feedback path, so less of the output gets back to the input",
+              "feedback": "It's the other way round: a capacitor passes high frequencies more easily. Across Rf, that shorts the feedback path and lowers the gain."
+            },
+            {
+              "text": "The capacitor sets the gain at DC, and the gain then falls as the frequency moves away from DC",
+              "feedback": "At DC the capacitor is open, so it does nothing: the DC gain is −Rf/Rin. C only acts near and above the corner."
+            }
+          ],
+          "explanation": "An inverting amplifier's gain is −Z_f/Z_in (Inverting amplifier). With C across Rf, Z_f = Rf ∥ X_C. Well below the corner X_C is huge and the gain is −Rf/Rin; well above it X_C takes over and the gain falls 20 dB per decade. The corner is where X_C = Rf, the same rule as the RC low-pass cutoff: f_c = 1/(2π·Rf·C) = {answer}."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "af_lowpass_gain",
+      "topicId": "active_filters",
+      "prompt": "An inverting active low-pass filter has Rin = {Rin} and Rf = {Rf} with a capacitor across Rf. What is its gain at DC (well below the cutoff)?",
+      "variables": [
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "-Rf/Rin",
+        "unit": "",
+        "unitless": true
+      },
+      "explanation": "At DC the capacitor is an open circuit, so the circuit is a plain inverting amplifier: gain = −{Rf} / {Rin} = {answer}.",
+      "hints": [
+        "What is a capacitor at DC?",
+        "Open circuit, so gain = −Rf / Rin."
+      ],
+      "misconceptions": [
+        {
+          "formula": "0",
+          "feedback": "At DC the capacitor is open, not a short, so it has no effect: the gain is −Rf/Rin."
+        },
+        {
+          "formula": "Rf/Rin",
+          "feedback": "Right size, but the signal enters the − input: an inverting stage's gain is negative, −Rf/Rin."
+        }
+      ],
+      "schematic": {
+        "netlist": "active low-pass\nV1 in 0 1\nR1 in inv {Rin:spice}\nR2 inv out {Rf:spice}\nC1 inv out 1n\nX1 0 inv out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rin {Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              -3
+            ],
+            "label": "C"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              -3
+            ],
+            [
+              8,
+              -3
+            ]
+          ],
+          [
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              -3
+            ],
+            [
+              13,
+              -3
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "af_highpass_fc",
+      "topicId": "active_filters",
+      "prompt": "An inverting active high-pass filter has a capacitor C = {C} in series with Rin = {Rin}, and Rf = {Rf}. What is its cutoff frequency?",
+      "variables": [
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -7,
+            -6
+          ]
+        },
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "1/(2*pi*Rin*C)",
+        "unit": "Hz"
+      },
+      "explanation": "The series capacitor blocks low frequencies. The corner is where its reactance equals Rin: f_c = 1 / (2π × {Rin} × {C}) = {answer}.",
+      "hints": [
+        "Which resistor is in series with the capacitor?",
+        "f_c = 1 / (2π·Rin·C)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "1/(2*pi*Rf*C)",
+          "feedback": "The capacitor is in series with Rin, so Rin sets the corner."
+        }
+      ],
+      "schematic": {
+        "netlist": "HP\nV1 in 0 AC 1\nC1 in m {C:spice}\nR1 m inv {Rin:spice}\nR2 inv out {Rf:spice}\nX1 0 inv out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              -4,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              -2,
+              3
+            ],
+            "label": "C {C}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rin {Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              -4,
+              5
+            ],
+            [
+              -4,
+              3
+            ],
+            [
+              -2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            -4,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "Why does Rin, not Rf, set the corner of this high-pass filter?",
+          "choices": [
+            {
+              "text": "The − input is a virtual ground, so C and Rin in series set the input current, which falls once X_C grows past Rin",
+              "feedback": "Right: C works against Rin, so the corner is where X_C = Rin.",
+              "correct": true
+            },
+            {
+              "text": "Rf is on the far side of the virtual ground, so it has no effect on this filter at all",
+              "feedback": "Rf does matter: it sets the passband gain, −Rf/Rin. It just isn't in series with C, so it doesn't set the corner."
+            },
+            {
+              "text": "In every active filter the input resistor sets the corner, and the feedback resistor sets the gain",
+              "feedback": "Not in the low-pass: there the capacitor sits across Rf, so Rf sets the corner. It depends on which resistor the capacitor works with."
+            },
+            {
+              "text": "Current through Rin flows into the op amp's input, so Rin is the resistance the op amp responds to",
+              "feedback": "The op amp input draws no current; all of Rin's current carries on through Rf."
+            }
+          ],
+          "explanation": "The − input is a virtual ground (Inverting amplifier), so the input current is Vin/(Rin + Z_C) and the gain is −Rf/(Rin + Z_C). At high frequencies Z_C is tiny and the gain is −Rf/Rin; once X_C exceeds Rin the current, and the gain, falls. The corner is where X_C = Rin: f_c = 1/(2π·Rin·C) = {answer}, the RC low-pass cutoff rule applied to the series C–Rin."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "af_design_c",
+      "topicId": "active_filters",
+      "prompt": "You want an inverting active low-pass (ideal op amp) with a cutoff of {fc} and Rf = {Rf}. What capacitor goes across Rf?",
+      "variables": [
+        {
+          "name": "fc",
+          "unit": "Hz",
+          "series": "E12",
+          "decades": [
+            2,
+            4
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "1/(2*pi*Rf*fc)",
+        "unit": "F"
+      },
+      "explanation": "C = 1 / (2π·Rf·f_c) = 1 / (2π × {Rf} × {fc}) = {answer}. Choose the nearest standard value and recheck f_c.",
+      "hints": [
+        "Rearrange f_c = 1 / (2π·Rf·C).",
+        "C = 1 / (2π·Rf·f_c)."
+      ],
+      "misconceptions": [],
+      "schematic": {
+        "netlist": "active low-pass\nV1 in 0 1\nR1 in inv 1k\nR2 inv out {Rf:spice}\nC1 inv out 1n\nX1 0 inv out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rin"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              -3
+            ],
+            "label": "C = ?"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              -3
+            ],
+            [
+              8,
+              -3
+            ]
+          ],
+          [
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              -3
+            ],
+            [
+              13,
+              -3
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "af_why_active",
+      "topicId": "active_filters",
+      "prompt": "Compared with a passive RC low-pass, what does an active op-amp low-pass add?",
+      "choices": [
+        {
+          "text": "Gain in the passband and a low output impedance, so the next stage doesn't shift the cutoff",
+          "correct": true,
+          "feedback": "Yes: the op amp buffers the filter and can amplify, while the RC still sets the corner."
+        },
+        {
+          "text": "A steeper roll-off than 20 dB/decade from the same single RC",
+          "feedback": "A single RC gives first-order, 20 dB/decade roll-off whether or not there's an op amp. Steeper needs more poles."
+        },
+        {
+          "text": "It works without any power supply",
+          "feedback": "Active filters need power for the op amp; that's what 'active' means."
+        },
+        {
+          "text": "Unlimited bandwidth",
+          "feedback": "The op amp's own gain-bandwidth limits it at high frequencies."
+        }
+      ],
+      "explanation": "The op amp gives passband gain (−Rf/Rin) and a near-zero output impedance, so loading doesn't move the corner. The roll-off order still comes from the number of reactive elements.",
+      "noDrawing": "compares active and passive filters in general; no particular circuit",
+      "review": "verified"
+    },
+    {
+      "id": "rolloff_concept",
+      "topicId": "active_filters",
+      "level": "recall",
+      "prompt": "Well above its cutoff, how fast does the gain of a first-order low-pass filter fall?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "20 dB per decade (6 dB per octave)",
+          "feedback": "Right: one capacitor gives one pole, and the gain halves with each doubling of frequency.",
+          "correct": true
+        },
+        {
+          "text": "40 dB per decade",
+          "feedback": "That's a second-order filter (two poles)."
+        },
+        {
+          "text": "It falls to zero immediately above the cutoff",
+          "feedback": "Real filters roll off gradually; there is no brick wall."
+        },
+        {
+          "text": "3 dB per decade",
+          "feedback": "3 dB is the drop at the cutoff itself, not the slope."
+        }
+      ],
+      "explanation": "Above f_c the gain is about f_c/f: ten times the frequency, a tenth of the gain, which is −20 dB. Steeper roll-off needs more poles.",
+      "hints": [
+        "How does the capacitor's impedance change with frequency?"
+      ],
+      "noDrawing": "the roll-off of any first-order low-pass; no particular circuit",
+      "review": "verified"
+    },
+    {
+      "id": "af_what_if_c",
+      "topicId": "active_filters",
+      "prompt": "An inverting active low-pass has Rin = {Rin}, Rf = {Rf} and C = {C} across Rf. C is swapped for {new_C}. What happens to the cutoff frequency?",
+      "variables": [
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -9,
+            -8
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the cutoff frequency",
+        "formula": "1/(2*pi*Rf*C)",
+        "unit": "Hz",
+        "change": {
+          "C": "10*C"
+        },
+        "askFactor": true,
+        "feedback": {
+          "up": "A bigger capacitor has less reactance at every frequency (X_C = 1/(2πfC)). The corner is where X_C has fallen to Rf, and the bigger capacitor's reactance is already down there at frequencies where the old one's was still above Rf.",
+          "same": "The corner is where C's reactance, 1/(2πfC), has fallen to Rf, so C carries as much of the feedback current as Rf and the gain is about 3 dB down. A bigger C has a smaller reactance at every frequency, so it reaches Rf at a different frequency."
+        }
+      },
+      "explanation": "f_c = 1/(2π·Rf·C), the RC low-pass cutoff with Rf as the R, so f_c goes as 1/C: {before} → {after}. The passband gain −Rf/Rin doesn't change.",
+      "hints": [
+        "Is a bigger capacitor's reactance larger or smaller at a given frequency?"
+      ],
+      "schematic": {
+        "netlist": "active low-pass\nV1 in 0 1\nR1 in inv {Rin:spice}\nR2 inv out {Rf:spice}\nC1 inv out {C:spice}\nX1 0 inv out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rin {Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              -3
+            ],
+            "label": "C {C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              -3
+            ],
+            [
+              8,
+              -3
+            ]
+          ],
+          [
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              -3
+            ],
+            [
+              13,
+              -3
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "af_what_if_rin",
+      "topicId": "active_filters",
+      "prompt": "An inverting active low-pass (ideal op amp) has Rin = {Rin}, Rf = {Rf} and C = {C} across Rf. Rin is swapped for {new_Rin} to lower the passband gain. What happens to the cutoff frequency?",
+      "variables": [
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -9,
+            -8
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the cutoff frequency",
+        "formula": "1/(2*pi*Rf*C)",
+        "unit": "Hz",
+        "change": {
+          "Rin": "10*Rin"
+        },
+        "feedback": {
+          "up": "Rin sets how much current the input drives into the virtual ground, so it scales the gain. It isn't part of the Rf–C network that sets the corner.",
+          "down": "More resistance only slows things down when it's the resistance the capacitor works with. C sits across Rf, on the far side of the virtual ground, so only Rf·C sets the corner."
+        }
+      },
+      "explanation": "The gain −Rf/Rin falls tenfold (Inverting amplifier), but the corner is where C's reactance equals Rf: f_c = 1/(2π·Rf·C), so it stays at {after}. The virtual ground separates the input side from the feedback side, which is why an active filter lets you set gain and corner independently.",
+      "hints": [
+        "Which resistor does the capacitor sit across?"
+      ],
+      "schematic": {
+        "netlist": "active low-pass\nV1 in 0 1\nR1 in inv {Rin:spice}\nR2 inv out {Rf:spice}\nC1 inv out {C:spice}\nX1 0 inv out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rin {Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              -3
+            ],
+            "label": "C {C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              -3
+            ],
+            [
+              8,
+              -3
+            ]
+          ],
+          [
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              -3
+            ],
+            [
+              13,
+              -3
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "af_what_if_load",
+      "topicId": "active_filters",
+      "prompt": "An inverting active low-pass (ideal op amp; Rf = {Rf} with C = {C} across it) drives a load of {RL}. The load is swapped for a heavier one, {new_RL}. What happens to the cutoff frequency?",
+      "variables": [
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -9,
+            -8
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the cutoff frequency",
+        "formula": "1/(2*pi*Rf*C)",
+        "unit": "Hz",
+        "change": {
+          "RL": "RL/10"
+        },
+        "feedback": {
+          "up": "That's what would happen to a passive RC low-pass, where the load sits across C and C charges through R ∥ RL. Here the op amp drives the load from a near-zero output impedance, outside the Rf–C network, so the corner stays put.",
+          "down": "The load doesn't take charge from C here. The op amp's output holds its voltage whatever the load draws, so the Rf–C feedback network sees exactly the same thing."
+        }
+      },
+      "explanation": "An ideal op amp's output impedance is zero, so it delivers the same voltage into {RL} or {new_RL}, and the corner still depends only on Rf and C and stays at {after}. In a passive RC low-pass (RC low-pass cutoff), a load across C would pull the corner up (C charges through R ∥ RL, the Thévenin resistance) and cut the passband level. This buffering, plus gain, is what the op amp adds.",
+      "hints": [
+        "What does the load connect to: the RC network, or the op amp's output?"
+      ],
+      "schematic": {
+        "netlist": "active low-pass\nV1 in 0 1\nR1 in inv 1k\nR2 inv out {Rf:spice}\nC1 inv out {C:spice}\nRL out 0 {RL:spice}\nX1 0 inv out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rin"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              -3
+            ],
+            "label": "C {C}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              16,
+              4
+            ],
+            "rot": 90,
+            "label": "RL\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              -3
+            ],
+            [
+              8,
+              -3
+            ]
+          ],
+          [
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              -3
+            ],
+            [
+              13,
+              -3
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              16,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ],
+          [
+            16,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "af_fault_dc",
+      "topicId": "active_filters",
+      "prompt": "This inverting active low-pass has Rin = {Rin}, Rf = {Rf} and C1 = {C} across Rf. X1, with a rail-to-rail output, runs from ±12 V supplies (not drawn). You test it with a DC input of {Vin} and a multimeter. Healthy, the output should read {h0}. The readings are below. Which fault explains them?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 0.5,
+            "max": 1,
+            "step": 0.1
+          }
+        },
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "value": 1000
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -8,
+            -8
+          ]
+        }
+      ],
+      "fault": {
+        "netlist": "active low-pass at DC\nV1 in 0 {Vin:spice}\nRIN in inv {Rin:spice}\nRF inv out {Rf:spice}\nC1 inv out {C:spice}\nX1 0 inv out OA\n.model OA OPAMP(VPOS=12 VNEG=-12)\n",
+        "probes": [
+          {
+            "label": "Output voltage",
+            "probe": "v(out)"
+          },
+          {
+            "label": "Voltage at the − input",
+            "probe": "v(inv)"
+          },
+          {
+            "label": "Current through Rin",
+            "probe": "i(RIN)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "Rin is open",
+            "open": "RIN",
+            "feedback": "An open Rin would cut the input off: no current in Rin, while the feedback still held the − input and the output at 0 V.",
+            "why": "No current flows in Rin, yet the − input is still at 0 V and the output at 0 V: the op amp and its feedback work, but no signal reaches them. The input path, Rin, is open."
+          },
+          {
+            "text": "Rf is open",
+            "open": "RF",
+            "feedback": "With Rf open, and C1 open at DC anyway, nothing would feed the output back: no current would flow in Rin, the − input would sit at {Vin}, and the output would swing to the −12 V rail.",
+            "why": "The − input reads the input voltage instead of 0 V, so the virtual ground has gone: there is no feedback at DC. C1 can't provide any (a capacitor is open at DC), so Rf must be open, and with its − input above its + input the op amp drives its output to the −12 V rail."
+          },
+          {
+            "text": "C1 is shorted",
+            "short": "C1",
+            "feedback": "A shorted C1 would tie the output to the − input, which the op amp keeps at 0 V: the output would read 0 V while the normal current still flowed in Rin.",
+            "why": "The − input is at 0 V and Rin carries its normal current, so the input side is fine, but the output reads 0 V: the feedback path has no resistance left. C1 has failed short, bridging Rf."
+          },
+          {
+            "text": "C1 is leaky (cracked, conducting about 2.2 kΩ)",
+            "add": "RLEAK inv out 2.2k",
+            "feedback": "A leaky C1 would put about 2.2 kΩ in parallel with Rf: the − input and the Rin current would be normal, but the output would be smaller than normal, not zero.",
+            "why": "The virtual ground and the Rin current are normal, but the output is only {m0} instead of {h0}: the feedback resistance has dropped. A leak across Rf (2.2 kΩ ∥ Rf) lowers the DC gain."
+          }
+        ]
+      },
+      "explanation": "At DC a healthy capacitor is open, so the filter is just the Inverting amplifier it is built on: the − input is a virtual ground at 0 V, the current Vin/Rin flows in Rin, and the output is −Vin·Rf/Rin = {h0}. Read the − input first: if it has left 0 V, the feedback is gone and the output sits at a rail. The Rin current tells you whether the input path works, and the output then shows how much feedback resistance is left. An open C1 would read healthy here; you would find it with a sine well above the corner, which would come through at full gain instead of being cut.",
+      "hints": [
+        "At DC, what does a healthy capacitor look like? What is left is an inverting amplifier.",
+        "Check the − input: a working loop holds it at 0 V."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "RIN",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rin {Rin}"
+          },
+          {
+            "ref": "RF",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              -3
+            ],
+            "label": "C1 {C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              -3
+            ],
+            [
+              8,
+              -3
+            ]
+          ],
+          [
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              -3
+            ],
+            [
+              13,
+              -3
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "af_syn_output_at_f",
+      "topicId": "active_filters",
+      "connects": [
+        "opamp_inverting",
+        "rc_lowpass_cutoff",
+        "active_filters"
+      ],
+      "prompt": "An inverting active low-pass (ideal op amp on ±15 V) has Rin = {Rin}, Rf = {Rf} and C = {C} across Rf. A {Vi} peak sine at {f} drives the input. What is the peak amplitude of the output?",
+      "variables": [
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500,
+            2200,
+            3300
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            3.3e-09,
+            4.7e-09,
+            6.8e-09,
+            8.2e-09
+          ]
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "values": [
+            2000,
+            5000
+          ]
+        },
+        {
+          "name": "Vi",
+          "unit": "V",
+          "value": 0.1
+        }
+      ],
+      "derived": [
+        {
+          "name": "G",
+          "formula": "Rf/Rin",
+          "unit": ""
+        },
+        {
+          "name": "fc",
+          "formula": "1/(2*pi*Rf*C)",
+          "unit": "Hz"
+        },
+        {
+          "name": "Gf",
+          "formula": "G/sqrt(1+(f/fc)^2)",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "Vi*Gf",
+        "unit": "V"
+      },
+      "explanation": "Inverting amplifier: well below the corner the capacitor does nothing and the gain is Rf/Rin = {G} (inverted). RC low-pass cutoff frequency: the capacitor sits across Rf, so the corner is f_c = 1/(2π × {Rf} × {C}) = {fc}; Rin plays no part in it. First-order active filters: the gain follows the low-pass shape, |gain| = {G} / √(1 + (f/f_c)²) = {G} / √(1 + ({f}/{fc})²) = {Gf}. The output peak is {Vi} × {Gf} = {answer} (its phase is shifted too, but only its size is asked).",
+      "hints": [
+        "Find the passband gain and the corner separately, then combine them at {f}.",
+        "Gain = (Rf/Rin) / √(1 + (f/f_c)²) with f_c = 1/(2π·Rf·C)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vi*G",
+          "feedback": "That's {Vi} times the passband gain Rf/Rin = {G}, the gain well below the corner. At {f} the capacitor across Rf already lowers the feedback impedance: divide by √(1 + (f/f_c)²) with f_c = 1/(2π·Rf·C) = {fc}."
+        },
+        {
+          "formula": "Vi*G/sqrt(1+(2*pi*f*Rin*C)^2)",
+          "feedback": "The corner uses Rf, not Rin: the capacitor is across Rf, so f_c = 1/(2π·Rf·C) = {fc}."
+        },
+        {
+          "formula": "Vi/sqrt(1+(f/fc)^2)",
+          "feedback": "That's a passive RC filter's output. Here the op amp also multiplies by Rf/Rin = {G}."
+        }
+      ],
+      "schematic": {
+        "netlist": "LP\nV1 in 0 1\nR1 in inv {Rin:spice}\nR2 inv out {Rf:spice}\nC1 inv out {C:spice}\nX1 0 inv out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rin {Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              -3
+            ],
+            "label": "C {C}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              -3
+            ],
+            [
+              8,
+              -3
+            ]
+          ],
+          [
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              -3
+            ],
+            [
+              13,
+              -3
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "Why doesn't Rin appear in the cutoff frequency, even though the signal passes through it?",
+          "choices": [
+            {
+              "text": "The − input is a virtual ground, so Rin only sets the input current; C is in parallel with Rf alone",
+              "feedback": "Right: the gain is −Z_f/Rin, and only Z_f = Rf ∥ C changes with frequency.",
+              "correct": true
+            },
+            {
+              "text": "Rin is in series with the signal, and resistors in series with a signal cancel out of any cutoff frequency",
+              "feedback": "Series resistance often does set a corner (a passive RC is one). Here it doesn't because Rin ends at a virtual ground, not at the capacitor."
+            },
+            {
+              "text": "Rin is much smaller than Rf in this circuit, so its effect on the corner is too small to notice",
+              "feedback": "Even with Rin = Rf it would have no effect. The corner depends only on Rf and C, whatever Rin is."
+            },
+            {
+              "text": "Rin does set a second corner at 1/(2π·Rin·C), but it's so high above f_c that it can be ignored",
+              "feedback": "No such corner exists: C isn't connected across Rin, and Rin ends at the virtual ground. The only corner is 1/(2π·Rf·C) = {fc}."
+            }
+          ],
+          "explanation": "The inverting input sits at virtual ground (Ideal op-amp rules), so the input current is Vin/Rin whatever the frequency. All of it flows into Rf ∥ C, and the output is that current times Z_f. So the gain is −Z_f/Rin (Inverting amplifier): Rin just scales it, while Z_f carries all the frequency dependence, turning over where X_C = Rf, at f_c = {fc}."
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "af_syn_gain_db_at_fc",
+      "topicId": "active_filters",
+      "connects": [
+        "decibels",
+        "opamp_inverting",
+        "active_filters"
+      ],
+      "prompt": "An inverting active low-pass (ideal op amp) has Rin = {Rin}, Rf = {Rf} and C = {C} across Rf. What is the size of its gain, in dB, at its cutoff frequency?",
+      "variables": [
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500,
+            2200
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -9,
+            -8
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "G",
+          "formula": "Rf/Rin",
+          "unit": ""
+        },
+        {
+          "name": "GdB",
+          "formula": "20*log10(G)",
+          "unit": "dB"
+        },
+        {
+          "name": "fc",
+          "formula": "1/(2*pi*Rf*C)",
+          "unit": "Hz"
+        }
+      ],
+      "answer": {
+        "formula": "20*log10(G/sqrt(2))",
+        "unit": "dB"
+      },
+      "explanation": "Inverting amplifier: well below the corner the gain is Rf/Rin = {G}. Decibels for voltage and power: a voltage ratio in dB is 20·log₁₀, so that is 20·log₁₀({G}) = {GdB}. First-order active filters: at the cutoff (here 1/(2π × {Rf} × {C}) = {fc}) the gain has fallen to 1/√2 of its passband value, which is −3.01 dB. Gains multiply, so their dB values add: {GdB} − 3.01 dB = {answer}. C only decides where the cutoff is, not how far down it is.",
+      "hints": [
+        "Find the passband gain in dB, then ask what the cutoff does to it.",
+        "20·log₁₀(Rf/Rin), then 3 dB less at the cutoff."
+      ],
+      "misconceptions": [
+        {
+          "formula": "GdB",
+          "feedback": "That's the passband gain. At the cutoff the gain is 1/√2 of that, 3 dB lower."
+        },
+        {
+          "formula": "10*log10(G)-10*log10(2)",
+          "feedback": "Rf/Rin is a voltage ratio, so it takes 20·log₁₀, not 10·log₁₀ (that's for power ratios)."
+        },
+        {
+          "formula": "GdB-20*log10(2)",
+          "feedback": "At the cutoff the gain falls to 1/√2 of the passband value, not to half: that's −3 dB, not −6 dB."
+        },
+        {
+          "formula": "GdB/sqrt(2)",
+          "feedback": "The 1/√2 multiplies the gain as a ratio, not its dB value. Multiplying a ratio by 1/√2 subtracts 3.01 dB: {GdB} − 3.01 dB."
+        }
+      ],
+      "schematic": {
+        "netlist": "LP\nV1 in 0 1\nR1 in inv {Rin:spice}\nR2 inv out {Rf:spice}\nC1 inv out {C:spice}\nX1 0 inv out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rin {Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              -3
+            ],
+            "label": "C {C}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              -3
+            ],
+            [
+              8,
+              -3
+            ]
+          ],
+          [
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              -3
+            ],
+            [
+              13,
+              -3
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "Why can you take 3 dB off the amplifier's gain in dB, instead of working the gain out again at the cutoff?",
+          "choices": [
+            {
+              "text": "The gain Rf/Rin and the filter's 1/√2 multiply, and multiplying ratios means adding dB",
+              "feedback": "Right: 20·log₁₀(G × 1/√2) = 20·log₁₀ G + 20·log₁₀(1/√2) = 20·log₁₀ G − 3.01 dB.",
+              "correct": true
+            },
+            {
+              "text": "Because 3 dB is small next to the amplifier's gain, so subtracting it is a close enough shortcut",
+              "feedback": "It's exact, not an approximation: the dB of a product is the sum of the dBs, however big or small each is."
+            },
+            {
+              "text": "Because at the cutoff the capacitor takes half of the output voltage, which is always 3 dB",
+              "feedback": "At the cutoff the gain is 1/√2 (0.707) of the passband value, not half. Half would be −6 dB."
+            },
+            {
+              "text": "Because dB values always subtract when two stages are connected one after the other",
+              "feedback": "They add. A stage that loses signal just has a negative dB value, like −3.01 dB here, so adding it lowers the total."
+            }
+          ],
+          "explanation": "The gain at any frequency is (Rf/Rin) × 1/√(1 + (f/f_c)²): an amplifier part times a filter part. In dB a product becomes a sum, so the total is 20·log₁₀({G}) plus the filter's dB. At f = f_c the filter part is 1/√2, which is −3.01 dB, giving {answer}."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    }
+  ]
+}

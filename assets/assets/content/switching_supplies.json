@@ -1,0 +1,1809 @@
+{
+  "topics": [
+    {
+      "id": "switching_supplies",
+      "title": "Switching power supplies (buck and boost)",
+      "summary": "Chop the input with a fast switch and filter it with an inductor: the duty cycle sets the output, and almost no power is wasted.",
+      "lenses": [
+        "circuit",
+        "signals"
+      ],
+      "prerequisites": [
+        "mosfet_switching"
+      ],
+      "lensNotes": {
+        "circuit": "A switch and an inductor trade voltage for current efficiently: a buck gives V_in·D, a boost V_in/(1 − D). The switch is never half-on, so little power is wasted.",
+        "signals": "The switch node is a square wave; the LC filter is a low-pass that keeps its average (the DC output) and leaves a small ripple at the switching frequency."
+      },
+      "formulas": [
+        {
+          "label": "Buck",
+          "tex": "V_{out} = D\\,V_{in}"
+        },
+        {
+          "label": "Boost",
+          "tex": "V_{out} = \\frac{V_{in}}{1 - D}"
+        },
+        {
+          "label": "Inductor ripple (buck)",
+          "tex": "\\Delta I_L = \\frac{(V_{in} - V_{out}) D}{f L}"
+        }
+      ],
+      "prerequisiteNotes": {
+        "mosfet_switching": "A buck or boost converter chops the input with a MOSFET switch; its duty cycle sets the output and its losses set the efficiency."
+      },
+      "goals": [
+        "Find a buck's duty cycle or output (D = V_out/V_in) and a boost's output (V_out = V_in/(1 − D)) for an ideal converter in continuous conduction",
+        "Find a buck's inductor ripple current, ΔI = (V_in − V_out)·D/(f·L), and predict how the switching frequency and the inductance change it",
+        "Compare a switching converter's losses with a linear regulator's (V_in − V_out)·I, and name where the switcher's remaining losses come from",
+        "Explain why a buck's average inductor current equals the load current, and why an ideal buck in continuous conduction holds its output as the load changes"
+      ],
+      "intuition": "A buck converter chops its input into a square wave that sits at V_in for a fraction D of each cycle, and its inductor and capacitor pass on only the average: in continuous conduction V_out = D·V_in, set by timing, not by burning off the difference.",
+      "why": "An inductor's current changes at a rate set by its voltage: di/dt = v/L. In steady state the current must end each cycle where it began, so its rise and fall are equal (volt-second balance). In a buck the inductor sees V_in − V_out for the on-time and −V_out for the off-time; balance gives V_out = D·V_in. In a boost it sees V_in during D and −(V_out − V_in) during 1 − D, giving V_out = V_in/(1 − D). The output capacitor passes no steady current, so a buck's average inductor current is the load current.",
+      "explanation": "A MOSFET wastes little power fully on or fully off. A linear regulator uses a transistor as an adjustable resistance: from 12 V to 5 V at 1 A it drops 7 V and burns 7 W. A buck converter uses the MOSFET as a switch instead, connecting the input to the switch node for a fraction D of each cycle, the duty cycle; a diode connects the node to ground for the rest. The node is a square wave averaging D·V_in. A new part filters it: an inductor, which resists changes in its current (v = L·di/dt). With an output capacitor it keeps the average, leaving a small ripple, so V_out = D·V_in (ideal, in continuous conduction: the inductor current never falls to zero). The load current does not appear in V_out = D·V_in: timing alone sets the switch node's average, so an ideal buck holds its output as the load changes. The inductor current ramps up while the switch is on and down while it is off, a ripple ΔI = (V_in − V_out)·D/(f·L) around the load current; a higher frequency or a larger inductor shrinks it. V_out = D·V_in holds while the load current is more than half the peak-to-peak ripple ΔI. At a lighter load the inductor current falls to zero before each cycle ends (discontinuous conduction), and at the same D the output rises above D·V_in; a regulating converter's feedback then shortens D. A boost rearranges the same parts so the inductor's voltage adds to the input: V_out = V_in/(1 − D). Real converters still lose some power: conduction and switching loss in the MOSFET, the diode's forward drop, the inductor's winding resistance and core, and the gate drive. 85–95% efficiency is typical.",
+      "workedExample": {
+        "problem": "A buck converter makes 5.0 V at 1.0 A from a 12 V supply, switching at 220 kHz with a 33 µH inductor. Find the duty cycle, the inductor's ripple and peak current, and estimate the efficiency. Assume a MOSFET with R_DS(on) = 33 mΩ and 20 ns transitions, and a Schottky diode (a type with a lower forward drop) at V_F = 0.4 V. Compare a linear regulator, and find the duty cycle a boost would need to make 12 V from 5.0 V.",
+        "steps": [
+          "Duty cycle (ideal buck, continuous conduction): D = V_out / V_in = 5.0 V / 12 V = 0.417. The period is 1 / 220 kHz = 4.55 µs, so the switch is on for t_on = D / f = 0.417 / 220 kHz = 1.89 µs.",
+          "Ripple: while the switch is on, the inductor has 12 V − 5.0 V = 7.0 V across it, so its current ramps at 7.0 V / 33 µH = 0.212 A/µs. ΔI = (V_in − V_out)·D / (f·L) = 7.0 V × 0.417 / (220 kHz × 33 µH) = 0.40 A peak to peak.",
+          "The inductor's average current is the 1.0 A load current, so it swings between 1.0 A − 0.20 A = 0.80 A and 1.0 A + 0.20 A = 1.20 A. It never reaches zero, so the continuous-conduction assumption holds. The MOSFET must carry the 1.20 A peak.",
+          "MOSFET conduction loss (ignoring the ripple, which adds about 1%): it carries 1.0 A for 0.417 of each cycle, so P = (1.0 A)² × 33 mΩ × 0.417 = 13.8 mW.",
+          "MOSFET switching loss: the inductor holds the current steady during each transition, 0.80 A at turn-on and 1.20 A at turn-off, 1.0 A on average, so P ≈ ½ × 12 V × 1.0 A × (20 ns + 20 ns) × 220 kHz = 52.8 mW.",
+          "Diode loss: it carries 1.0 A for the rest of the cycle, 1 − 0.417 = 0.583: P = 0.4 V × 1.0 A × 0.583 = 0.233 W. (The controller raises D slightly to make up for this drop; that is ignored here.)",
+          "Total loss 13.8 mW + 52.8 mW + 233 mW = 0.300 W, so the efficiency is 5.0 W / (5.0 W + 0.300 W) = 94%. The input current is 5.30 W / 12 V = 0.44 A, less than the 1.0 A output: the converter trades voltage for current.",
+          "A linear regulator would drop 12 V − 5.0 V = 7.0 V at 1.0 A: 7.0 W lost, and 5.0 V / 12 V = 42% efficient, with the full 1.0 A drawn from the input.",
+          "Boost from 5.0 V to 12 V (ideal): 1 − D = V_in / V_out = 5.0 V / 12 V = 0.417, so D = 0.583."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"DC-DC Power Conversion\" (last update 17 September 2026), section 3.1 \"Matching source and load voltages\" (p. 20)",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_dc2dc.pdf",
+          "note": "A linear regulator passes nearly the same current in and out, so its efficiency is about V_out/V_in, while a switching converter steps current the opposite way to voltage and routinely exceeds 90% efficiency."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"DC-DC Power Conversion\" (last update 17 September 2026), sections 3.5 \"Buck converter\" and 3.6 \"Boost converter\" (pp. 35-40)",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_dc2dc.pdf",
+          "note": "Ideal output relations V_out = D V_in for the buck and V_out = V_in/(1 - D) for the boost, the diode carrying the inductor current while the switch is off, and a Schottky diode or synchronous switch reducing loss."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"DC-DC Power Conversion\" (last update 17 September 2026), section 3.11 \"Continuous and discontinuous converter operation\" (p. 51)",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_dc2dc.pdf",
+          "note": "The standard converter voltage equations assume continuous mode, where the inductor current never falls to zero, and a larger inductance or higher switching frequency keeps a converter out of discontinuous mode."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "buck_vout",
+      "topicId": "switching_supplies",
+      "prompt": "An ideal buck converter runs from {Vin} at a duty cycle of {D}. What is the output voltage?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "values": [
+            5,
+            9,
+            12,
+            15,
+            19,
+            24,
+            36,
+            48
+          ]
+        },
+        {
+          "name": "D",
+          "unit": "",
+          "range": {
+            "min": 0.1,
+            "max": 0.9,
+            "step": 0.05
+          }
+        }
+      ],
+      "answer": {
+        "formula": "D*Vin",
+        "unit": "V"
+      },
+      "explanation": "The inductor averages the switched waveform, which is at V_in for a fraction D of the time: V_out = D·V_in = {D} × {Vin} = {answer}.",
+      "hints": [
+        "The output is the average of a square wave that's at V_in for a fraction D of each cycle.",
+        "V_out = D · V_in."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vin/(1-D)",
+          "feedback": "That's the boost converter. A buck steps down: V_out = D·V_in."
+        }
+      ],
+      "schematic": {
+        "netlist": "Buck\nVIN in 0 {Vin:spice}\nMP sw g in PM\nVG in g PULSE(0 10 0 1n 1n 1u 2u)\nD1 0 sw DS\nL1 sw out 1m\nC1 out 0 1u\nRL out 0 10\n.model PM PMOS\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              -9,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "MP",
+            "at": [
+              4,
+              4
+            ],
+            "label": "switch"
+          },
+          {
+            "ref": "VG",
+            "at": [
+              -4,
+              0
+            ],
+            "rot": 90,
+            "label": "drive, duty {D}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              6,
+              12
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              8
+            ],
+            "label": "L"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              14,
+              8
+            ],
+            "rot": 90,
+            "label": "C"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              19,
+              8
+            ],
+            "rot": 90,
+            "label": "load"
+          }
+        ],
+        "wires": [
+          [
+            [
+              -9,
+              2
+            ],
+            [
+              -9,
+              0
+            ],
+            [
+              -4,
+              0
+            ]
+          ],
+          [
+            [
+              -4,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          [
+            [
+              6,
+              6
+            ],
+            [
+              6,
+              8
+            ],
+            [
+              8,
+              8
+            ]
+          ],
+          [
+            [
+              4,
+              4
+            ],
+            [
+              -4,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              8
+            ],
+            [
+              19,
+              8
+            ]
+          ],
+          [
+            [
+              6,
+              12
+            ],
+            [
+              19,
+              12
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            -9,
+            6
+          ],
+          [
+            10,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "sw",
+            "at": [
+              7,
+              8
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              16,
+              8
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "Why does an ideal buck's output depend on the duty cycle but not on the load current?",
+          "choices": [
+            {
+              "text": "The switch node is at V_in for a fraction D of each cycle and at 0 V for the rest whatever the load draws, and the LC filter passes on just that average",
+              "feedback": "Right: the switch node's average, D·V_in, is fixed by timing alone, and the filter keeps the average.",
+              "correct": true
+            },
+            {
+              "text": "A heavier load pulls the output down, but the inductor stores more energy to make up for it",
+              "feedback": "In an ideal buck the output doesn't dip to begin with: the inductor's average voltage over a cycle is zero, so V_out equals the switch node's average, D·V_in."
+            },
+            {
+              "text": "The duty cycle sets the load current too, so the two cancel",
+              "feedback": "The load sets its own current: I = V_out/R_load. The duty cycle sets the voltage."
+            },
+            {
+              "text": "The output capacitor holds the voltage at D·V_in on its own",
+              "feedback": "The capacitor only smooths the ripple; over many cycles a load would drain it. The switch node's average is what sets V_out."
+            }
+          ],
+          "explanation": "In steady state the inductor's average voltage over a cycle must be zero, or its current would keep growing. So V_out equals the average of the switch node's square wave: D·V_in. It is the low-pass idea from 'RC low-pass cutoff frequency' with an LC filter: keep the DC average, reject the switching frequency. This holds while the inductor current never falls to zero (continuous conduction); in a real buck, losses make the output sag a little under load and the feedback loop trims D."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "buck_duty",
+      "topicId": "switching_supplies",
+      "prompt": "A buck converter must make {Vout} from {Vin}. What duty cycle does it need (ideal converter)?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 9,
+            "max": 24,
+            "step": 1
+          }
+        },
+        {
+          "name": "Vout",
+          "unit": "V",
+          "range": {
+            "min": 3.3,
+            "max": 5,
+            "step": 1.7
+          }
+        }
+      ],
+      "answer": {
+        "formula": "Vout/Vin",
+        "unit": "",
+        "unitless": true
+      },
+      "schematic": {
+        "netlist": "Buck\nVIN in 0 {Vin:spice}\nRS1 in sw 1e9\nD1 0 sw DS\nL1 sw out 100u\nC1 out 0 10u\nRL out 0 10\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "S1",
+            "symbol": "switch"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              7,
+              4
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "L1",
+            "at": [
+              9,
+              0
+            ],
+            "label": "L"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              15,
+              0
+            ],
+            "rot": 90,
+            "label": "C"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              18,
+              0
+            ],
+            "rot": 90,
+            "label": "load\n{Vout}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              9,
+              0
+            ]
+          ],
+          [
+            [
+              13,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              18,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            4
+          ]
+        ],
+        "labels": []
+      },
+      "explanation": "D = V_out / V_in = {Vout} / {Vin} = {answer}, i.e. the switch is on {answer} of the time.",
+      "hints": [
+        "Rearrange V_out = D·V_in.",
+        "D = V_out / V_in."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vin/Vout",
+          "feedback": "The duty cycle is a fraction below 1: D = V_out / V_in."
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "boost_vout",
+      "topicId": "switching_supplies",
+      "prompt": "An ideal boost converter runs from {Vin} at a duty cycle of {D}. What is the output voltage?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 3,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "D",
+          "unit": "",
+          "values": [
+            0.1,
+            0.15,
+            0.2,
+            0.25,
+            0.3,
+            0.35,
+            0.4,
+            0.45,
+            0.55,
+            0.6,
+            0.65,
+            0.7,
+            0.75,
+            0.8
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "Vin/(1-D)",
+        "unit": "V"
+      },
+      "schematic": {
+        "netlist": "Boost\nVIN in 0 {Vin:spice}\nL1 in sw 100u\nRS1 sw 0 1e9\nD1 sw out DS\nC1 out 0 10u\nRL out 0 10\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "L"
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              7,
+              0
+            ],
+            "rot": 90,
+            "label": "S1\nduty {D}",
+            "symbol": "switch"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              9,
+              0
+            ],
+            "label": ""
+          },
+          {
+            "ref": "C1",
+            "at": [
+              15,
+              0
+            ],
+            "rot": 90,
+            "label": "C"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              18,
+              0
+            ],
+            "rot": 90,
+            "label": "load"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              9,
+              0
+            ]
+          ],
+          [
+            [
+              13,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              18,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            11,
+            4
+          ]
+        ],
+        "labels": []
+      },
+      "explanation": "Volt-second balance on the inductor: V_in·D = (V_out − V_in)(1 − D), so V_out = V_in / (1 − D) = {Vin} / (1 − {D}) = {answer}.",
+      "hints": [
+        "The inductor's average voltage over a cycle must be zero.",
+        "V_out = V_in / (1 − D)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "D*Vin",
+          "feedback": "That's the buck converter. A boost steps up: V_out = V_in / (1 − D)."
+        },
+        {
+          "formula": "Vin/D",
+          "feedback": "Use the off-time fraction: V_out = V_in / (1 − D)."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why must a boost converter running at a fixed duty cycle never be left without a load?",
+          "choices": [
+            {
+              "text": "Each cycle the input stores energy in the inductor during the on-time, and during the off-time the inductor and the input together deliver energy to the output capacitor; with no load to take it away, the capacitor voltage keeps climbing until something breaks down",
+              "feedback": "Right: the energy keeps arriving and has nowhere to go but the capacitor.",
+              "correct": true
+            },
+            {
+              "text": "With no load no current flows, so the output falls to zero",
+              "feedback": "The inductor still stores energy from the input during every on-time and has to give it up during the off-time: into the output capacitor."
+            },
+            {
+              "text": "The output settles at V_in, which is safe",
+              "feedback": "V_in less one diode drop is where the output sits with the switch stopped. Switching on and pushing energy in with nowhere to go drives it far above V_in."
+            },
+            {
+              "text": "V_out = V_in/(1 − D) still holds, so the output stays put",
+              "feedback": "That formula assumes the energy delivered each cycle is taken away by a load. With no load the energy piles up in the capacitor."
+            }
+          ],
+          "explanation": "Energy is conserved: each on-time stores energy in the inductor, and each off-time the inductor and the input together pass energy through the diode to the output capacitor. With a load, the load uses it and the output settles at V_in/(1 − D). With none, ½CV² keeps growing, so V keeps rising until the capacitor, the diode or the MOSFET's drain–source rating gives way. Real boost controllers add over-voltage protection, and their feedback loop cuts the duty cycle."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "buck_ripple_current",
+      "topicId": "switching_supplies",
+      "prompt": "A buck converter from {Vin} runs at duty cycle {D} and {f} with an inductor of {L}. What is the peak-to-peak inductor ripple current?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 12,
+            "max": 24,
+            "step": 1
+          }
+        },
+        {
+          "name": "D",
+          "unit": "",
+          "range": {
+            "min": 0.2,
+            "max": 0.8,
+            "step": 0.05
+          }
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "series": "E12",
+          "decades": [
+            5,
+            5
+          ]
+        },
+        {
+          "name": "L",
+          "unit": "H",
+          "series": "E12",
+          "decades": [
+            -5,
+            -5
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vout",
+          "formula": "D*Vin",
+          "unit": "V"
+        },
+        {
+          "name": "ton",
+          "formula": "D/f",
+          "unit": "s"
+        }
+      ],
+      "answer": {
+        "formula": "(Vin-D*Vin)*D/(f*L)",
+        "unit": "A"
+      },
+      "schematic": {
+        "netlist": "Buck\nVIN in 0 {Vin:spice}\nRS1 in sw 1e9\nD1 0 sw DS\nL1 sw out {L:spice}\nC1 out 0 10u\nRL out 0 10\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "S1\nduty {D}, {f}",
+            "symbol": "switch"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              7,
+              4
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "L1",
+            "at": [
+              9,
+              0
+            ],
+            "label": "{L}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              15,
+              0
+            ],
+            "rot": 90,
+            "label": "C"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              18,
+              0
+            ],
+            "rot": 90,
+            "label": "load"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              9,
+              0
+            ]
+          ],
+          [
+            [
+              13,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              18,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            4
+          ]
+        ],
+        "labels": []
+      },
+      "explanation": "While the switch is on (t_on = D/f = {ton}), the inductor has V_in − V_out = {Vin} − {Vout} across it, so its current rises by ΔI = (V_in − V_out)·t_on / L = {answer}.",
+      "hints": [
+        "During the on-time, what voltage is across the inductor?",
+        "ΔI = (V_in − V_out) · D / (f · L)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vin*D/(f*L)",
+          "feedback": "The inductor sees V_in − V_out during the on-time, not V_in."
+        }
+      ],
+      "steps": [
+        "The output sits at D·V_in = {Vout}.",
+        "While the switch is on (for D/f = {ton}), the inductor sees V_in − V_out.",
+        "ΔI = (V_in − V_out)·t_on/L = ({Vin} − {Vout}) × {ton}/{L} = {answer}."
+      ],
+      "followUps": [
+        {
+          "prompt": "When the switch turns off, the inductor current keeps flowing. Why, and why does a buck need a diode (or a second switch) for it?",
+          "choices": [
+            {
+              "text": "An inductor resists changes in its current (V = L·dI/dt); the diode gives that current a path from ground to the output while the switch is off, instead of a huge voltage spike",
+              "feedback": "Right: the diode is the inductor's freewheeling path during the off-time.",
+              "correct": true
+            },
+            {
+              "text": "It doesn't keep flowing: the current stops the instant the switch opens",
+              "feedback": "Stopping it instantly would need dI/dt to be enormous, so V = L·dI/dt would be enormous too. That is the spike that destroys a switch when no diode is fitted."
+            },
+            {
+              "text": "The diode stops the output capacitor discharging back into the input",
+              "feedback": "In a buck the diode runs from ground to the switch node and conducts only while the switch is off. It carries the inductor's current; it isn't a reverse-current guard."
+            },
+            {
+              "text": "The output capacitor pushes the current around",
+              "feedback": "The capacitor supplies the load's ripple, but it isn't what keeps the inductor current going; the inductor itself does, by reversing its voltage."
+            }
+          ],
+          "explanation": "During the on-time the inductor current ramps up by ΔI; during the off-time it ramps back down by the same amount, flowing through the diode. The inductor's voltage flips to about −V_out to keep that current going. It is the flyback diode from 'LEDs, Zener regulators and flyback diodes' put to work: there the diode protects a relay driver, here it passes the inductor's stored energy on to the load."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "sw_vs_linear",
+      "topicId": "switching_supplies",
+      "prompt": "A linear regulator and a buck converter both make 5 V from 12 V at 1 A. Why is the buck converter so much more efficient?",
+      "choices": [
+        {
+          "text": "Its switch is either fully on (tiny voltage) or off (no current), so it wastes little power",
+          "correct": true,
+          "feedback": "Yes: the linear regulator must drop 7 V at 1 A, burning 7 W; the buck only has small switching and conduction losses."
+        },
+        {
+          "text": "It uses a higher-quality transistor",
+          "feedback": "The difference is how the transistor is used, not its quality."
+        },
+        {
+          "text": "It draws less current from the output",
+          "feedback": "Both deliver 1 A to the load."
+        },
+        {
+          "text": "Inductors store energy for free",
+          "feedback": "Inductors store and release energy, but the gain comes from never running the switch half-on."
+        }
+      ],
+      "noDrawing": "compares linear and switching regulators in general; no particular circuit",
+      "explanation": "A linear regulator drops the difference across a transistor in its active region: (12 − 5) V × 1 A = 7 W lost, about 42% efficient. A buck switches fully on and off, so the switch loses little, and efficiencies above 90% are common.",
+      "review": "verified",
+      "level": "recall"
+    },
+    {
+      "id": "bridge_ripple_frequency",
+      "topicId": "switching_supplies",
+      "bridge": [
+        "signals",
+        "circuit"
+      ],
+      "prompt": "Why does raising a buck converter's switching frequency (same L and C) reduce the output ripple?",
+      "choices": [
+        {
+          "text": "The LC filter attenuates higher frequencies more, and less charge flows in and out each cycle",
+          "correct": true,
+          "feedback": "Yes: a second-order LC low-pass falls 40 dB per decade above its resonance."
+        },
+        {
+          "text": "The duty cycle changes",
+          "feedback": "The duty cycle is set by V_out/V_in, not by the frequency."
+        },
+        {
+          "text": "The MOSFET gets more efficient",
+          "feedback": "Efficiency usually drops at higher frequency (more switching loss); ripple still falls."
+        },
+        {
+          "text": "It doesn't: ripple depends only on the load",
+          "feedback": "Ripple depends strongly on frequency: ΔI = (V_in − V_out)D/(fL)."
+        }
+      ],
+      "noDrawing": "about output ripple in any buck converter; no particular circuit",
+      "explanation": "The switch node is a square wave; the LC filter keeps its average and attenuates the switching frequency and its harmonics. Higher f moves those further above the LC resonance (more attenuation), and each cycle moves less charge through the inductor.",
+      "review": "verified"
+    },
+    {
+      "id": "buck_vs_linear_concept",
+      "topicId": "switching_supplies",
+      "prompt": "Why can a buck converter be far more efficient than a linear regulator making the same output?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "Its switch is either fully on (little voltage) or off (no current), so it wastes little power",
+          "feedback": "Right: an inductor then smooths the chopped voltage, storing and releasing energy rather than burning it.",
+          "correct": true
+        },
+        {
+          "text": "It uses a bigger transistor",
+          "feedback": "Transistor size isn't the reason; how it's operated is."
+        },
+        {
+          "text": "It needs no output capacitor",
+          "feedback": "Buck converters do use output capacitors."
+        },
+        {
+          "text": "Its output voltage is always higher than its input",
+          "feedback": "That's a boost converter; a buck steps down."
+        }
+      ],
+      "noDrawing": "compares buck converters and linear regulators in general; no particular circuit",
+      "explanation": "A linear regulator drops the voltage difference across a transistor carrying the full current: P = (V_in − V_out)·I. A buck switch has either small voltage or no current, and the inductor passes energy on instead of dissipating it. Remaining losses come from the brief switching transitions, the switch's on-resistance and the diode, which is why real bucks reach about 85–95%, not 100%.",
+      "hints": [
+        "In a switch that is fully on or fully off, what is V × I?"
+      ],
+      "review": "verified",
+      "level": "recall"
+    },
+    {
+      "id": "buck_input_current",
+      "topicId": "switching_supplies",
+      "level": "reason",
+      "prompt": "A buck converter makes {Vout} at {Iout} from a {Vin} supply, at {eff} efficiency. What current does it draw from the {Vin} supply?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "values": [
+            9,
+            12,
+            15,
+            24
+          ]
+        },
+        {
+          "name": "Vout",
+          "unit": "V",
+          "values": [
+            3.3,
+            5
+          ]
+        },
+        {
+          "name": "Iout",
+          "unit": "A",
+          "values": [
+            0.5,
+            1,
+            2
+          ]
+        },
+        {
+          "name": "eff",
+          "unit": "%",
+          "values": [
+            85,
+            90,
+            95
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Pout",
+          "formula": "Vout*Iout",
+          "unit": "W"
+        },
+        {
+          "name": "Pin",
+          "formula": "Vout*Iout/(eff/100)",
+          "unit": "W"
+        },
+        {
+          "name": "Iideal",
+          "formula": "Vout*Iout/Vin",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "Vout*Iout/(eff/100*Vin)",
+        "unit": "A"
+      },
+      "noDrawing": "a power balance that holds for any buck converter; the circuit's details don't enter",
+      "explanation": "A switching converter conserves power, not current. The load takes P_out = {Vout} × {Iout} = {Pout}. At {eff} efficiency the input must supply that plus the losses: P_in = P_out/η = {Pin}. From {Vin}, that is I_in = {Pin}/{Vin} = {answer}, less than the {Iout} delivered: the buck trades voltage for current. A lossless converter would draw {Iideal}; a linear regulator would draw the full {Iout}.",
+      "hints": [
+        "Which quantity balances between the input and the output of a converter: current or power?",
+        "P_in = P_out/η, then I_in = P_in/V_in."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Iout",
+          "feedback": "That is a linear regulator's input current: it passes the load current straight through. A switcher trades voltage for current, so power, not current, is what balances: P_in = P_out/η."
+        },
+        {
+          "formula": "Vout*Iout/Vin",
+          "feedback": "That is the ideal, lossless converter. At {eff} efficiency the input also supplies the losses: P_in = P_out/η = {Pin}, not {Pout}."
+        },
+        {
+          "formula": "Vout*Iout*(eff/100)/Vin",
+          "feedback": "You multiplied by the efficiency. Losses mean the input supplies more power than the load gets, not less: divide P_out by η."
+        },
+        {
+          "formula": "Iout*Vin/(Vout*eff/100)",
+          "feedback": "The voltage ratio is upside down. A buck steps the voltage down, so it delivers more current than it draws: I_in = I_out × V_out/(η·V_in)."
+        }
+      ],
+      "steps": [
+        "Output power: {Vout} × {Iout} = {Pout}.",
+        "Input power: P_out/η = {Pout}/{eff} = {Pin}.",
+        "Input current: {Pin}/{Vin} = {answer}."
+      ],
+      "followUps": [
+        {
+          "prompt": "The buck delivers {Iout} but draws less than that from its input. Where does the rest of the load current come from?",
+          "choices": [
+            {
+              "text": "The input is connected only during the on-time; during the off-time the inductor's current flows up from ground through the diode (or the low-side MOSFET in a synchronous buck), not from the input",
+              "correct": true,
+              "feedback": "Right: the inductor carries the load current all cycle, but the input supplies it only for the fraction D of each cycle that the switch is on."
+            },
+            {
+              "text": "The output capacitor supplies the rest of the load current on every cycle, and the input recharges it later",
+              "feedback": "In steady state the output capacitor's average current is zero: what it gives in one part of the cycle it takes back in another. It only smooths the ripple."
+            },
+            {
+              "text": "The inductor stores charge during the on-time and releases it as extra current during the off-time",
+              "feedback": "An inductor stores energy in its magnetic field, not charge, and its current is the same at both of its ends. The extra path is the diode, which connects the inductor to ground during the off-time."
+            },
+            {
+              "text": "None: Kirchhoff's current law means the input current must equal the load current, so the meter is wrong",
+              "feedback": "KCL holds at every node, but the input and the load are not in series: during the off-time the load current loops through the diode and ground without passing through the input."
+            }
+          ],
+          "explanation": "Averaged over a cycle, the input supplies the inductor's current only while the switch is on: I_in ≈ D·I_out. For an ideal buck D = V_out/V_in, so I_in = I_out·V_out/V_in, the same result as the power balance. Losses raise the input current above that, to I_in = I_out·V_out/(η·V_in): 5–18 % more for η = 95–85 %. Part comes from a longer on-time (the controller stretches D to make up for the drops in the switch, diode and inductor); the rest, such as switching loss and gate drive, is drawn from the input as well."
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "buck_what_if_load",
+      "topicId": "switching_supplies",
+      "prompt": "An ideal buck converter (rated 5 A) runs from {Vin} at a fixed duty cycle of {D}, feeding a {RL} load. A second, identical {RL} load is connected in parallel, so the converter now drives {new_RL} and delivers twice the current. The inductor current stays continuous. What happens to the output voltage?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 12,
+            "max": 24,
+            "step": 1
+          }
+        },
+        {
+          "name": "D",
+          "unit": "",
+          "range": {
+            "min": 0.2,
+            "max": 0.5,
+            "step": 0.05
+          }
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            6.8,
+            10,
+            15,
+            22
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the output voltage",
+        "formula": "D*Vin",
+        "unit": "V",
+        "change": {
+          "RL": "RL/2"
+        },
+        "feedback": {
+          "up": "More load current doesn't push the output up: the switch node still spends the same fraction D of each cycle at V_in.",
+          "down": "An output that sags under load is what a source with internal resistance does, like a divider. An ideal buck's switch node still averages D·V_in, so the output doesn't sag."
+        }
+      },
+      "schematic": {
+        "netlist": "Buck\nVIN in 0 {Vin:spice}\nRS1 in sw 1e9\nD1 0 sw DS\nL1 sw out 100u\nC1 out 0 10u\nRL out 0 {RL:spice}\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "S1\nduty {D}",
+            "symbol": "switch"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              7,
+              4
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "L1",
+            "at": [
+              9,
+              0
+            ],
+            "label": "L"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              15,
+              0
+            ],
+            "rot": 90,
+            "label": "C"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              18,
+              0
+            ],
+            "rot": 90,
+            "label": "{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              9,
+              0
+            ]
+          ],
+          [
+            [
+              13,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              18,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            4
+          ]
+        ],
+        "labels": []
+      },
+      "explanation": "V_out = D·V_in = {before} whatever the load: the inductor's average voltage over a cycle is zero, so the output equals the switch node's average. The extra current raises the inductor's average current (the ripple rides on a higher level), not the output voltage. Compare a divider from Foundations, whose output does sag under load: the buck behaves like a stiff source. At light load a real buck can drop into discontinuous conduction, where V_out rises above D·V_in; that's why the prompt says the current stays continuous.",
+      "hints": [
+        "What is the switch node's average voltage, and does the load change it?"
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "boost_what_if_duty",
+      "topicId": "switching_supplies",
+      "prompt": "An ideal boost converter runs from {Vin} at a duty cycle of {D}. The duty cycle is raised to {new_D}. What happens to the output voltage?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 3,
+            "max": 5,
+            "step": 1
+          }
+        },
+        {
+          "name": "D",
+          "unit": "",
+          "values": [
+            0.2,
+            0.3,
+            0.4,
+            0.5,
+            0.6
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "off",
+          "formula": "1-D",
+          "unit": ""
+        },
+        {
+          "name": "new_off",
+          "formula": "0.8-D",
+          "unit": ""
+        },
+        {
+          "name": "rise",
+          "formula": "(1-D)/(0.8-D)",
+          "unit": ""
+        }
+      ],
+      "whatIf": {
+        "quantity": "the output voltage",
+        "formula": "Vin/(1-D)",
+        "unit": "V",
+        "change": {
+          "D": "D+0.2"
+        },
+        "askFactor": true,
+        "feedback": {
+          "down": "A longer on-time stores more energy in the inductor each cycle and leaves less of the cycle to deliver it. In steady state the inductor's volt-seconds balance, V_in·D during the on-time against (V_out − V_in)·(1 − D) during the off-time, so a shorter off-time needs a larger V_out − V_in across the inductor.",
+          "same": "The output isn't set by V_in alone: the inductor's volt-seconds must balance every cycle, V_in·D during the on-time against (V_out − V_in)·(1 − D) during the off-time, so a change in D changes the voltage the off-time needs."
+        },
+        "factorHint": "V_out depends on the off-time fraction 1 − D, not on D itself. Compare 1 − D before and after."
+      },
+      "schematic": {
+        "netlist": "Boost\nVIN in 0 {Vin:spice}\nL1 in sw 100u\nRS1 sw 0 1e9\nD1 sw out DS\nC1 out 0 10u\nRL out 0 10\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "L"
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              7,
+              0
+            ],
+            "rot": 90,
+            "label": "S1\nduty {D}",
+            "symbol": "switch"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              9,
+              0
+            ],
+            "label": ""
+          },
+          {
+            "ref": "C1",
+            "at": [
+              15,
+              0
+            ],
+            "rot": 90,
+            "label": "C"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              18,
+              0
+            ],
+            "rot": 90,
+            "label": "load"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              9,
+              0
+            ]
+          ],
+          [
+            [
+              13,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              18,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            11,
+            4
+          ]
+        ],
+        "labels": []
+      },
+      "explanation": "V_out = V_in/(1 − D). The off-time fraction falls from {off} to {new_off}, so the output rises by {off}/{new_off} = {rise}: {before} → {after}. The output depends on 1 − D in the denominator, so equal steps up in D give bigger and bigger rises as 1 − D heads toward zero. That is why a boost is so touchy at high duty cycles, and why real ones stop around D ≈ 0.8–0.9, where losses take over.",
+      "hints": [
+        "Work out 1 − D before and after."
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "buck_what_if_ripple_freq",
+      "topicId": "switching_supplies",
+      "prompt": "A buck converter from {Vin} runs at duty cycle {D} and {f} with an inductor of {L} (continuous conduction, so V_out = D·V_in). The switching frequency is doubled to {new_f}, with the same duty cycle and inductor. What happens to the inductor's peak-to-peak ripple current?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 12,
+            "max": 24,
+            "step": 1
+          }
+        },
+        {
+          "name": "D",
+          "unit": "",
+          "range": {
+            "min": 0.2,
+            "max": 0.8,
+            "step": 0.05
+          }
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "series": "E12",
+          "decades": [
+            5,
+            5
+          ]
+        },
+        {
+          "name": "L",
+          "unit": "H",
+          "series": "E12",
+          "decades": [
+            -5,
+            -5
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "ton",
+          "formula": "D/f",
+          "unit": "s"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the ripple current",
+        "formula": "(Vin-D*Vin)*D/(f*L)",
+        "unit": "A",
+        "change": {
+          "f": "2*f"
+        },
+        "askFactor": true,
+        "feedback": {
+          "up": "A higher frequency means shorter on-times. The inductor sees the same voltage but for less time, so its current can't ramp as far.",
+          "same": "ΔI = (V_in − V_out)·t_on/L, and t_on = D/f gets shorter as f rises."
+        },
+        "factorHint": "ΔI = (V_in − V_out)·t_on/L. The inductor sees the same V_in − V_out during the on-time; work out what doubling f does to t_on = D/f."
+      },
+      "schematic": {
+        "netlist": "Buck\nVIN in 0 {Vin:spice}\nRS1 in sw 1e9\nD1 0 sw DS\nL1 sw out {L:spice}\nC1 out 0 10u\nRL out 0 10\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "S1\nduty {D}, {f}",
+            "symbol": "switch"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              7,
+              4
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "L1",
+            "at": [
+              9,
+              0
+            ],
+            "label": "{L}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              15,
+              0
+            ],
+            "rot": 90,
+            "label": "C"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              18,
+              0
+            ],
+            "rot": 90,
+            "label": "load"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              9,
+              0
+            ]
+          ],
+          [
+            [
+              13,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              18,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            4
+          ]
+        ],
+        "labels": []
+      },
+      "explanation": "ΔI = (V_in − V_out)·t_on/L with t_on = D/f = {ton} before. Doubling f halves t_on, and the current ramps at the same rate (V/L) for half the time: {before} → {after}. That is why faster switching allows a smaller inductor for the same ripple, at the cost of more switching loss in the MOSFET (MOSFET switches and losses).",
+      "hints": [
+        "How long does the current ramp up each cycle?"
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "buck_design_inductor",
+      "topicId": "switching_supplies",
+      "prompt": "A buck converter makes {Vout} from {Vin}, switching at {f}, for a load of up to {Iout}. Treat it as ideal and in continuous conduction. A common rule sizes the inductor for a peak-to-peak ripple current of 20–40% of the full load current. Choose L from the E12 series so the ripple lies between {dIlo} and {dImax}.",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "values": [
+            12,
+            24
+          ]
+        },
+        {
+          "name": "Vout",
+          "unit": "V",
+          "values": [
+            3.3,
+            5
+          ]
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "values": [
+            100000,
+            200000,
+            500000
+          ]
+        },
+        {
+          "name": "Iout",
+          "unit": "A",
+          "values": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "D",
+          "formula": "Vout/Vin",
+          "unit": ""
+        },
+        {
+          "name": "VL",
+          "formula": "Vin-Vout",
+          "unit": "V"
+        },
+        {
+          "name": "dImax",
+          "formula": "0.4*Iout",
+          "unit": "A"
+        },
+        {
+          "name": "dIlo",
+          "formula": "0.2*Iout",
+          "unit": "A"
+        },
+        {
+          "name": "Lmin",
+          "formula": "(Vin-Vout)*(Vout/Vin)/(f*0.4*Iout)",
+          "unit": "H"
+        },
+        {
+          "name": "Lmax",
+          "formula": "(Vin-Vout)*(Vout/Vin)/(f*0.2*Iout)",
+          "unit": "H"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "L",
+            "label": "L",
+            "unit": "H",
+            "series": "E12",
+            "min": 1e-06,
+            "max": 0.001
+          }
+        ],
+        "result": "(Vin-Vout)*(Vout/Vin)/(f*L)",
+        "resultLabel": "ripple current (peak to peak)",
+        "resultUnit": "A",
+        "target": "0.4*Iout",
+        "tolerance": 0.5,
+        "mode": "atMost"
+      },
+      "explanation": "The duty cycle is D = V_out/V_in = {D}. While the switch is on, for D/f, the inductor has V_in − V_out = {VL} across it, so its current rises by ΔI = (V_in − V_out)·D/(f·L): the larger L, the smaller the ripple. For ΔI ≤ {dImax}, L ≥ (V_in − V_out)·D/(f·{dImax}) = {Lmin}; for ΔI ≥ {dIlo}, L ≤ {Lmax}. Any E12 value between those works; check its ripple with the formula.",
+      "hints": [
+        "During the on-time, what voltage is across the inductor, and for how long?",
+        "ΔI = (V_in − V_out)·D/(f·L); solve for L at each end of the ripple band."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why aim for a ripple of 20–40% of the load current, rather than making it as small as possible with a much larger inductor?",
+          "choices": [
+            {
+              "text": "A smaller ripple needs a proportionally larger inductance: a bigger, costlier inductor with more winding resistance, whose current also changes more slowly when the load steps",
+              "correct": true,
+              "feedback": "Right: halving the ripple doubles L. The rule of thumb balances the inductor's size, loss and speed against the ripple the output capacitor must then smooth."
+            },
+            {
+              "text": "A smaller ripple would lower the output voltage, since the ripple is part of what sets V_out",
+              "feedback": "V_out = D·V_in contains neither L nor the ripple: timing sets the switch node's average, whatever the inductor. The inductor only decides how far the current swings above and below its average."
+            },
+            {
+              "text": "The ripple current is what carries power to the load, so too little ripple would starve it",
+              "feedback": "The load gets the inductor's average current; the ripple swings equally above and below it and averages to zero. Power flows with or without much ripple."
+            },
+            {
+              "text": "A larger inductor would force a higher switching frequency",
+              "feedback": "The frequency is chosen on its own. At the same frequency, a larger L simply gives a smaller ripple; a higher frequency is another way to shrink it with a smaller L."
+            }
+          ],
+          "explanation": "From v = L·di/dt, the on-time's voltage (V_in − V_out) ramps the current by (V_in − V_out)·D/(f·L), so ripple and inductance trade one for one. Too much ripple means high peak currents in the switch and inductor and more output ripple; too little means a large, slow, lossy inductor. About 20–40% of full load is the usual starting compromise."
+        }
+      ],
+      "schematic": {
+        "netlist": "Buck\nVIN in 0 {Vin:spice}\nRS1 in sw 1e9\nD1 0 sw DS\nL1 sw out {L:spice}\nC1 out 0 10u\nRL out 0 10\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "S1\n{f}",
+            "symbol": "switch"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              7,
+              4
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "L1",
+            "at": [
+              9,
+              0
+            ],
+            "label": "L = ?"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              15,
+              0
+            ],
+            "rot": 90,
+            "label": "C"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              18,
+              0
+            ],
+            "rot": 90,
+            "label": "load\n{Iout}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              9,
+              0
+            ]
+          ],
+          [
+            [
+              13,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              18,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            4
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    }
+  ]
+}

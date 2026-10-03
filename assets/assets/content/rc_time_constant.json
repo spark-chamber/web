@@ -1,0 +1,1460 @@
+{
+  "topics": [
+    {
+      "id": "rc_time_constant",
+      "title": "RC time constant",
+      "summary": "How fast a capacitor charges through a resistor: τ = RC, 63% after one τ, nearly full after 5τ.",
+      "lenses": [
+        "circuit",
+        "physics"
+      ],
+      "prerequisites": [
+        "si_prefixes",
+        "capacitors",
+        "kirchhoff"
+      ],
+      "lensNotes": {
+        "circuit": "τ = RC sets the speed of every RC circuit: timers, debouncing, reset delays, filters. After one τ a capacitor is 63% of the way to its final voltage; after 5τ it's effectively there.",
+        "physics": "A capacitor stores charge on its plates in an electric field. The charging current is proportional to how far the capacitor still has to go, which is exactly the condition that produces an exponential; the stored energy is ½CV²."
+      },
+      "formulas": [
+        {
+          "label": "Time constant",
+          "tex": "\\tau = R C"
+        },
+        {
+          "label": "Charging",
+          "tex": "v(t) = V\\left(1 - e^{-t/\\tau}\\right)"
+        },
+        {
+          "label": "Stored energy",
+          "tex": "E = \\tfrac{1}{2} C V^2"
+        },
+        {
+          "label": "Time to reach a level",
+          "tex": "t = \\tau \\ln\\frac{V}{V - v}\\ \\ (\\text{charging from 0 toward } V;\\ \\text{halfway: } 0.69\\tau)"
+        }
+      ],
+      "prerequisiteNotes": {
+        "si_prefixes": "τ = RC multiplies kilohms by microfarads; getting milliseconds out of that is prefix arithmetic.",
+        "capacitors": "V = Q/C and ½CV² come from the capacitor topic.",
+        "kirchhoff": "The charging current is (V − Vc)/R by KVL around the loop."
+      },
+      "goals": [
+        "Find the time constant τ = RC of a resistor charging a capacitor, with the prefixes handled (kΩ × µF = ms)",
+        "Find the capacitor voltage at any moment while it charges, and the time it takes to reach a given fraction of the supply",
+        "Explain why R and C set how fast a capacitor charges while the supply sets only the voltage it ends at",
+        "Find the energy a charged capacitor stores, and explain why charging it through a resistor turns as much energy again into heat"
+      ],
+      "intuition": "When a fixed voltage charges a capacitor through a resistor, the current is set by the gap still left to close, so the capacitor slows as it fills and each time constant τ = RC closes 63% of whatever gap remains.",
+      "why": "A capacitor's voltage is the charge on its plates divided by its capacitance, V = Q/C, so it changes only as fast as current delivers charge. Through a resistor that current is (V_supply − V_C)/R: largest at the start, with the whole supply across R, and shrinking as the capacitor fills. A rate of change proportional to the remaining gap is what produces an exponential. Charging from 0 V, every coulomb leaves the supply at the full V but lands on the capacitor at whatever voltage it has reached, V/2 on average; the difference is dropped across R. So the supply delivers QV = CV², the capacitor keeps ½CV², and R turns the other ½CV² into heat, whatever its value: a smaller R carries a larger current for a shorter time. A larger R gives less current; a larger C needs more charge per volt; both slow the charging by the same factor, so only the product RC matters. The stored energy, ½CV², sits in the electric field between the plates.",
+      "explanation": "Connect an empty capacitor C through a resistor R to a supply V. At the first instant the capacitor is at 0 V, so the whole supply is across R, and Ohm's law gives the current: V/R. That current carries charge onto the capacitor, and its voltage rises by one volt for every C coulombs it receives. As the capacitor voltage rises, less voltage is left across R, so the current falls and the charging slows. The result is an exponential: v(t) = V(1 − e^(−t/τ)), where τ = RC is the time constant. Ohms times farads gives seconds; kilohms times microfarads gives milliseconds. After one τ the capacitor has reached 63% of the supply, after 2τ 86%, after 3τ 95%, and after 5τ over 99%, which engineers treat as fully charged. Half the supply is reached at τ·ln 2 ≈ 0.69τ. R and C set the timing; the supply only scales the curve and sets where it ends. A charged capacitor stores energy E = ½CV², so doubling the voltage stores four times the energy. The same τ, seen in the frequency domain, sets the cutoff of the RC low-pass filter (a later topic).",
+      "workedExample": {
+        "problem": "A power-on delay charges a 10 µF capacitor from 0 V through a 47 kΩ resistor from a 3.3 V supply. Find the time constant, the starting current, the voltage after one time constant, the time to reach half the supply, the voltage after 5τ, and the energy stored when it is full.",
+        "steps": [
+          "τ = RC = 47 kΩ × 10 µF = 47 × 10³ Ω × 10 × 10⁻⁶ F = 0.47 s = 470 ms.",
+          "At the first instant the capacitor is at 0 V, so all 3.3 V is across R: i = 3.3 V / 47 kΩ = 70.2 µA.",
+          "After one τ (470 ms): v = 3.3 V × (1 − e^(−1)) = 3.3 V × 0.632 = 2.09 V.",
+          "Half the supply (1.65 V): 1 − e^(−t/τ) = 0.5, so e^(−t/τ) = 0.5 and t = τ·ln 2 = 470 ms × 0.693 = 326 ms. The 3.3 V cancels: a 5 V supply would reach its own half-way point at the same 326 ms.",
+          "After 5τ (2.35 s): v = 3.3 V × (1 − e^(−5)) = 3.3 V × 0.9933 = 3.28 V, within 0.7% of the supply.",
+          "Energy when full: E = ½CV² = ½ × 10 µF × (3.3 V)² = ½ × 10 × 10⁻⁶ F × 10.89 V² = 54.5 µJ. Once fully charged, the supply has delivered Q·V = CV² = 10 µF × 10.89 V² = 109 µJ; the other 54.5 µJ became heat in the 47 kΩ resistor."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 16 \"RC and L/R Time Constants\", section \"Voltage and current calculations\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_16.html#xtocid88423",
+          "note": "In a series RC circuit τ = RC in seconds, each τ moves the capacitor voltage about 63% of the way still left, an empty capacitor first draws the supply voltage over R, and the current at any moment is the supply minus capacitor voltage over R."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Capacitors and Capacitive Circuits\", ch. 3 \"Tutorial\", section 3.4 \"Inverse exponential growth/decay\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_capacitor.pdf",
+          "note": "A rising quantity follows 1 − e^(−t/τ) with τ = RC, giving about 63%, 86%, 95% and 99.3% of the final value after 1, 2, 3 and 5 time constants."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Capacitors and Capacitive Circuits\", ch. 3 \"Tutorial\", section 3.1 \"Electric fields and energy storage\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_capacitor.pdf",
+          "note": "A capacitor stores its energy in the electric field between the plates, E = ½CV², so the stored energy goes with the square of the voltage."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "rc_tau",
+      "topicId": "rc_time_constant",
+      "prompt": "A {R} resistor charges a {C} capacitor. What is the time constant τ?",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            4
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -9,
+            -6
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "R*C",
+        "unit": "s",
+        "tolerance": 0.02
+      },
+      "explanation": "τ = R·C = {R} × {C} = {answer}. Ohms × farads = seconds; kΩ × µF = ms is a handy shortcut.",
+      "hints": [
+        "Which two components set how fast the capacitor charges?",
+        "τ = R·C, with R in ohms and C in farads."
+      ],
+      "misconceptions": [
+        {
+          "formula": "1/(R*C)",
+          "feedback": "That's 1/τ (a rate in s⁻¹), not τ. The time constant itself is τ = R·C."
+        },
+        {
+          "formula": "R/C",
+          "feedback": "τ is the product R·C, not R/C: more resistance or more capacitance both make charging slower."
+        }
+      ],
+      "schematic": {
+        "netlist": "RC\nV1 in 0 PULSE(0 1 0 1n 1n 1 2)\nR1 in out {R:spice}\nC1 out 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "step"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "Why does a bigger resistor make the capacitor charge more slowly?",
+          "choices": [
+            {
+              "text": "It lets less current flow, and the charging current is what fills the capacitor",
+              "feedback": "Right: the capacitor voltage rises at dV/dt = I/C, and a bigger R means a smaller I.",
+              "correct": true
+            },
+            {
+              "text": "It stores some of the charge itself",
+              "feedback": "Resistors don't store charge; they turn energy into heat."
+            },
+            {
+              "text": "It lowers the final voltage the capacitor reaches",
+              "feedback": "The capacitor still reaches the full supply voltage; it just takes longer."
+            },
+            {
+              "text": "It increases the capacitance",
+              "feedback": "Capacitance depends only on the capacitor's construction."
+            }
+          ],
+          "explanation": "Charge flows in at I = (Vs − Vc)/R, and the voltage rises at dVc/dt = I/C. Bigger R means less current; bigger C means each coulomb raises the voltage less. Both slow the charge, which is why the time scale is the product τ = RC."
+        }
+      ],
+      "estimate": true,
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "rc_half_time",
+      "topicId": "rc_time_constant",
+      "prompt": "A capacitor of {C} charges from 0 V through {R} toward a fixed supply. How long until it reaches half of the supply voltage?",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -8,
+            -6
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "tau",
+          "formula": "R*C",
+          "unit": "s"
+        }
+      ],
+      "answer": {
+        "formula": "R*C*ln(2)",
+        "unit": "s",
+        "tolerance": 0.02
+      },
+      "explanation": "The capacitor voltage is V(1 − e^(−t/τ)) with τ = RC = {tau}. Set it to V/2: e^(−t/τ) = ½, so t = τ·ln 2 ≈ 0.693τ = {answer}.",
+      "hints": [
+        "Write the charging curve V(1 − e^(−t/τ)) and set it equal to half the supply.",
+        "Solve e^(−t/τ) = 1/2 for t: t = τ·ln 2."
+      ],
+      "misconceptions": [
+        {
+          "formula": "R*C",
+          "feedback": "One time constant takes the capacitor to 63%, not 50%. Half-way comes sooner, at τ·ln 2 ≈ 0.69τ."
+        },
+        {
+          "formula": "R*C/2",
+          "feedback": "Charging isn't linear, so half the voltage doesn't take half of τ. Solve e^(−t/τ) = 1/2 instead."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Half the supply arrives at 0.69τ, but 99 % takes about 5τ. Why does the first half come so much faster than the rest?",
+          "choices": [
+            {
+              "text": "It charges fastest at the start, when the gap to the supply, and so the current, is largest",
+              "feedback": "Right: the current is (Vs − Vc)/R. It is biggest at 0 V, so the first half comes quickly and the rest ever more slowly.",
+              "correct": true
+            },
+            {
+              "text": "Charging is linear, so half the voltage takes half of τ",
+              "feedback": "If it were linear it would reach the full supply in finite time. It slows down because the current (Vs − Vc)/R shrinks as Vc rises."
+            },
+            {
+              "text": "The resistor drops more voltage as the capacitor fills",
+              "feedback": "It's the reverse: V_R = Vs − Vc is biggest at the start and shrinks as the capacitor fills."
+            },
+            {
+              "text": "The capacitance shrinks as the capacitor fills",
+              "feedback": "C is fixed by the part's construction. What shrinks is the charging current."
+            }
+          ],
+          "explanation": "The charging current is (Vs − Vc)/R. At first the whole supply is across R, so the current is large and Vc rises fast. As Vc climbs, the gap closes and the current falls. So half-way comes at 0.69τ, 63 % at τ, and 99 % only after about 5τ."
+        }
+      ],
+      "schematic": {
+        "netlist": "RC charging\nV1 in 0 PULSE(0 1 0 1n 1n 1 2)\nR1 in out {R:spice}\nC1 out 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "supply\n(step)"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "rc_voltage_after_n_tau",
+      "topicId": "rc_time_constant",
+      "prompt": "An uncharged capacitor is connected through a resistor to a {V} supply at t = 0. What is the capacitor voltage at t = {n}τ, where τ = RC?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 12,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "range": {
+            "min": 1,
+            "max": 5,
+            "step": 1
+          }
+        }
+      ],
+      "answer": {
+        "formula": "V*(1-exp(-n))",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "Charging from zero: v(t) = V(1 − e^(−t/τ)). At t = {n}τ, v = {V} × (1 − e^(−{n})) = {answer}. Rule of thumb: 63% after 1τ, 86% after 2τ, 95% after 3τ, over 99% after 5τ.",
+      "hints": [
+        "The capacitor voltage rises as V(1 − e^(−t/τ)).",
+        "Substitute t/τ = {n}: v = V(1 − e^(−{n}))."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V*exp(-n)",
+          "feedback": "V·e^(−n) is how far the capacitor still has to go (the voltage across the resistor). The capacitor itself has V(1 − e^(−n))."
+        }
+      ],
+      "schematic": {
+        "netlist": "RC charging\nV1 in 0 PULSE(0 {V:spice} 0 1n 1n 1 2)\nR1 in out 1k\nC1 out 0 1u\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}\n(step)"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "rc_energy",
+      "topicId": "rc_time_constant",
+      "prompt": "A {C} capacitor is charged to {V}. How much energy does it store?",
+      "variables": [
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -6,
+            -4
+          ]
+        },
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 25,
+            "step": 5
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "Q",
+          "formula": "C*V",
+          "unit": "C"
+        }
+      ],
+      "answer": {
+        "formula": "0.5*C*V^2",
+        "unit": "J",
+        "tolerance": 0.02
+      },
+      "explanation": "E = ½CV² = ½ × {C} × ({V})² = {answer}. The ½ appears because the plate voltage rises from 0 to {V} as the charge {Q} goes in, so the work per coulomb averages V/2: E = Q × V/2 = ½CV².",
+      "hints": [
+        "Energy in a capacitor depends on C and the square of V.",
+        "E = ½·C·V²."
+      ],
+      "misconceptions": [
+        {
+          "factor": 2,
+          "feedback": "You're missing the ½. E = ½CV²: the plate voltage rises from 0 to V as charge goes in, so the work per coulomb averages V/2, not V."
+        },
+        {
+          "formula": "C*V",
+          "feedback": "C·V is the charge Q in coulombs, not the energy. Energy is ½CV²."
+        }
+      ],
+      "estimate": true,
+      "noDrawing": "energy stored in one charged capacitor; no circuit around it",
+      "review": "verified"
+    },
+    {
+      "id": "bridge_charging_energy",
+      "topicId": "rc_time_constant",
+      "bridge": [
+        "physics",
+        "circuit"
+      ],
+      "prompt": "A capacitor charges from a {V} battery through a resistor until it's full, storing ½CV². How much energy did the resistor turn into heat?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 12,
+            "step": 1
+          }
+        }
+      ],
+      "choices": [
+        {
+          "text": "Also ½CV², whatever the resistance",
+          "correct": true,
+          "feedback": "Yes: the battery supplies Q·V = CV², half is stored, half is lost, for any R."
+        },
+        {
+          "text": "Almost nothing if the resistor is small",
+          "feedback": "A small R gives a big, short current pulse. I²R × time works out to the same ½CV²."
+        },
+        {
+          "text": "It depends on the time constant",
+          "feedback": "τ sets how fast it happens, not how much energy is lost."
+        },
+        {
+          "text": "None: resistors only waste energy with AC",
+          "feedback": "Any current through a resistance dissipates I²R, DC included."
+        }
+      ],
+      "explanation": "The battery moves charge Q = CV at a constant {V}, so it supplies QV = CV². The capacitor ends with ½CV². The other half is always lost in the resistance (or radiated), no matter how small it is: a surprising but general result.",
+      "schematic": {
+        "netlist": "RC charging\nV1 in 0 {V:spice}\nR1 in out 1k\nC1 out 0 1u\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "bridge_scale_rc",
+      "topicId": "rc_time_constant",
+      "bridge": [
+        "circuit",
+        "physics"
+      ],
+      "prompt": "You double R and halve C in an RC circuit charged to the same voltage. What happens?",
+      "choices": [
+        {
+          "text": "τ stays the same; the stored energy halves",
+          "correct": true,
+          "feedback": "Yes: τ = RC is unchanged, but E = ½CV² goes down with C."
+        },
+        {
+          "text": "Both τ and the stored energy stay the same",
+          "feedback": "τ = (2R)(C/2) = RC, but energy depends on C alone: E = ½CV²."
+        },
+        {
+          "text": "τ doubles; the energy stays the same",
+          "feedback": "R doubles but C halves, so their product is unchanged."
+        },
+        {
+          "text": "τ halves; the energy doubles",
+          "feedback": "τ = (2R)(C/2) = RC, unchanged; with C halved, E = ½CV² halves, not doubles."
+        }
+      ],
+      "explanation": "Timing (circuit lens) depends only on the product RC; stored energy (physics lens) depends on C and V. Two designs with the same τ can store very different energy.",
+      "schematic": {
+        "netlist": "RC charging\nV1 in 0 PULSE(0 1 0 1n 1n 1 2)\nR1 in out 1k\nC1 out 0 1u\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "supply\n(step)"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R → 2R"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C → C/2"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "rc_what_if_r_time",
+      "topicId": "rc_time_constant",
+      "prompt": "A {C} capacitor charges through {R}. A second {R} resistor is added in series with the first. What happens to the time the capacitor takes to reach 63 % of the supply?",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -7,
+            -6
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the charging time",
+        "formula": "R*C",
+        "unit": "s",
+        "change": {
+          "R": "2*R"
+        },
+        "askFactor": true,
+        "feedback": {
+          "down": "More resistance in series lets less current through, and the capacitor still needs the same charge to reach the same voltage.",
+          "same": "The capacitor still needs the same charge to reach 63 %, but the resistor limits how fast that charge can flow in: at every capacitor voltage the current is (V − Vc)/R."
+        }
+      },
+      "explanation": "The time to 63 % is one time constant, τ = RC. Two {R} resistors in series make 2R, which halves the charging current at every capacitor voltage, so everything takes twice as long: {before} → {after}.",
+      "schematic": {
+        "netlist": "RC charging\nV1 in 0 PULSE(0 1 0 1n 1n 1 2)\nR1 in out {R:spice}\nC1 out 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "supply\n(step)"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "rc_what_if_r_final",
+      "topicId": "rc_time_constant",
+      "prompt": "A capacitor charges from a {V} supply through {R}. The resistor is swapped for {new_R}. What happens to the voltage the capacitor finally settles at?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 3,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the final capacitor voltage",
+        "formula": "V",
+        "unit": "V",
+        "change": {
+          "R": "10*R"
+        },
+        "feedback": {
+          "down": "A bigger resistor slows the charging, but charging only stops when no current flows, and that happens when Vc = V.",
+          "up": "A bigger resistor can't carry the capacitor past the supply. Charging current flows only while the supply is above the capacitor, (V − Vc)/R; when Vc reaches V that current is zero, whatever R is, and the charging stops."
+        }
+      },
+      "explanation": "Charging stops only when the current is zero, which means no voltage across the resistor, so Vc = V ({after}) whatever R is. R changes how long it takes, not where it ends.",
+      "followUps": [
+        {
+          "prompt": "Why does the capacitor end at the supply voltage whatever the resistor is?",
+          "choices": [
+            {
+              "text": "At the end no current flows, so the resistor drops no voltage and the capacitor sees the whole supply",
+              "feedback": "Right: with I = 0, V_R = I·R = 0, and KVL leaves all of V across C.",
+              "correct": true
+            },
+            {
+              "text": "The resistor is removed from the circuit once the capacitor is full",
+              "feedback": "The resistor is still there; it just carries no current."
+            },
+            {
+              "text": "Capacitors always charge to their rated voltage",
+              "feedback": "The rated voltage is a limit, not a target."
+            },
+            {
+              "text": "A bigger resistor stores the missing voltage",
+              "feedback": "Resistors don't store energy or voltage."
+            }
+          ],
+          "explanation": "In steady state a capacitor carries no DC current. With no current, Ohm's law gives zero volts across the resistor, and Kirchhoff's voltage law puts the whole supply across the capacitor."
+        }
+      ],
+      "schematic": {
+        "netlist": "RC charging\nV1 in 0 PULSE(0 {V:spice} 0 1n 1n 1 2)\nR1 in out {R:spice}\nC1 out 0 1u\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}\n(step)"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C1"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "rc_what_if_v_energy",
+      "topicId": "rc_time_constant",
+      "prompt": "A {C} capacitor is charged to {V}. It is charged instead to {new_V}. What happens to the energy it stores?",
+      "variables": [
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -6,
+            -5
+          ]
+        },
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 2,
+            "max": 12,
+            "step": 1
+          }
+        }
+      ],
+      "whatIf": {
+        "quantity": "the stored energy",
+        "formula": "0.5*C*V^2",
+        "unit": "J",
+        "change": {
+          "V": "2*V"
+        },
+        "askFactor": true,
+        "feedback": {
+          "down": "More voltage puts more charge on the plates (Q = CV), and the work to add each coulomb is the plate voltage at that moment, now higher: the energy can only rise.",
+          "same": "C is fixed, but charging to a higher voltage puts more charge on the plates (Q = CV), and the coulombs added past the old voltage are pushed in against a plate voltage the old charge never reached. The stored energy is that work, E = ½CV²."
+        }
+      },
+      "explanation": "E = ½CV². Twice the voltage means twice the charge (Q = CV) pushed in against twice the voltage, so the energy grows by 2 × 2 = 4: {before} → {after}.",
+      "noDrawing": "energy stored in one charged capacitor; no circuit around it",
+      "review": "verified"
+    },
+    {
+      "id": "rc_what_if_v_time",
+      "topicId": "rc_time_constant",
+      "prompt": "A {C} capacitor charges from 0 V through {R} toward a {V} supply. The supply is raised to {new_V}. What happens to the time it takes to reach half of the supply voltage?",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -7,
+            -6
+          ]
+        },
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 3,
+            "max": 6,
+            "step": 1
+          }
+        }
+      ],
+      "whatIf": {
+        "quantity": "the time to reach half the supply",
+        "formula": "R*C*ln(2)",
+        "unit": "s",
+        "change": {
+          "V": "2*V"
+        },
+        "feedback": {
+          "up": "The capacitor does need more charge to reach a higher voltage. But the bigger supply pushes proportionally more current at every moment, so it arrives just as soon.",
+          "down": "The bigger supply does push more current, but the target, half the supply, is higher by the same factor. The two cancel."
+        }
+      },
+      "explanation": "Charging follows Vc = V(1 − e^(−t/RC)). The supply only scales the curve; its shape and timing are set by τ = RC alone. Half-way is always at τ·ln 2 = {after}, whatever the supply.",
+      "hints": [
+        "Does the supply voltage appear in the time constant?"
+      ],
+      "schematic": {
+        "netlist": "RC charging\nV1 in 0 PULSE(0 {V:spice} 0 1n 1n 1 2)\nR1 in out {R:spice}\nC1 out 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}\n(step)"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "rc_design_half_delay",
+      "topicId": "rc_time_constant",
+      "prompt": "A chip's enable input switches on when its voltage passes half of the 5 V supply. An RC network delays power-up: R runs from the supply to the enable pin, and C from the pin to ground. The pin must cross half the supply {T} after power is applied (within 10%; assume the 5 V rail rises much faster than that). Take the pin as drawing no current. Choose R (1 kΩ to 1 MΩ) and C (1 nF to 100 µF), both standard E12 values.",
+      "variables": [
+        {
+          "name": "T",
+          "unit": "s",
+          "series": "E12",
+          "decades": [
+            -3,
+            -2
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "RCneed",
+          "formula": "T/ln(2)",
+          "unit": "s"
+        },
+        {
+          "name": "Cex",
+          "formula": "T/(ln(2)*100000)",
+          "unit": "F"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "R",
+            "label": "R",
+            "unit": "Ω",
+            "series": "E12",
+            "min": 1000,
+            "max": 1000000
+          },
+          {
+            "name": "C",
+            "label": "C",
+            "unit": "F",
+            "series": "E12",
+            "min": 1e-09,
+            "max": 0.0001
+          }
+        ],
+        "result": "R*C*ln(2)",
+        "resultLabel": "time to reach half the supply",
+        "resultUnit": "s",
+        "target": "T",
+        "tolerance": 0.1
+      },
+      "explanation": "The pin charges as V(1 − e^(−t/RC)), so it passes half the supply at t = RC·ln 2 ≈ 0.69·RC, sooner than one time constant. You need RC = {T}/ln 2 = {RCneed}, about 1.44 times the delay. One way: take R = 100 kΩ, then C = {RCneed}/100 kΩ = {Cex}; round to the nearest E12 value and check t = 0.69·R·C. If it misses, move R one E12 step and try again. Any pair with the right product works: R sets the charging current, C how much charge each volt takes, and only their product sets the timing.",
+      "hints": [
+        "Does the pin reach half the supply at one time constant, or sooner?",
+        "t = RC·ln 2, so RC = t/0.693. Fix R, solve for C, and round to E12."
+      ],
+      "followUps": [
+        {
+          "prompt": "A classmate chooses R and C so that RC equals the wanted delay itself. What happens?",
+          "choices": [
+            {
+              "text": "The pin crosses half the supply early, at about 0.69 of the wanted delay, because one time constant already takes it to 63%",
+              "feedback": "Right: half-way comes at RC·ln 2 ≈ 0.69·RC, so with RC equal to the delay the chip enables about 30% early.",
+              "correct": true
+            },
+            {
+              "text": "The delay comes out right: one time constant is the time to reach half the supply",
+              "feedback": "One time constant takes the pin to 63% of the supply, not 50%. Half-way comes sooner, at 0.69τ, so this delay is about 30% short."
+            },
+            {
+              "text": "The pin crosses late, at about 1.44 times the wanted delay",
+              "feedback": "That would need half-way to take longer than τ. It comes sooner: the capacitor charges fastest at the start, while the whole supply is across R."
+            },
+            {
+              "text": "The pin never reaches half the supply unless RC is at least five times the delay",
+              "feedback": "Any RC charges the pin all the way to the supply in the end. 5τ is when it is essentially full, not when it passes half."
+            }
+          ],
+          "explanation": "v = V(1 − e^(−t/RC)) passes V/2 when e^(−t/RC) = ½, at t = RC·ln 2 ≈ 0.69·RC. With RC set equal to the delay, the pin crosses at 0.69 of it. To hit the delay, RC must be 1/ln 2 ≈ 1.44 times it."
+        }
+      ],
+      "schematic": {
+        "netlist": "RC power-up delay\nV1 in 0 PULSE(0 5 0 1n 1n 1 2)\nR1 in out {R:spice}\nC1 out 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "5 V\n(switched on)"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R\n{R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              11,
+              2
+            ],
+            "rot": 90,
+            "label": "C\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              11,
+              0
+            ],
+            [
+              11,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              11,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "enable",
+            "at": [
+              11,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    }
+  ]
+}

@@ -1,0 +1,605 @@
+{
+  "topics": [
+    {
+      "id": "pn_junction",
+      "title": "Semiconductors and the PN junction",
+      "summary": "Doping makes n-type and p-type silicon; where they meet, a depletion region forms and sets how a diode behaves.",
+      "lenses": [
+        "physics"
+      ],
+      "prerequisites": [
+        "si_prefixes"
+      ],
+      "lensNotes": {
+        "physics": "Doping silicon with donors (n-type) or acceptors (p-type) sets which carriers are in charge. Where n meets p, carriers diffuse across and leave a depletion region with a built-in field; bias either weakens that barrier (forward) or strengthens it (reverse)."
+      },
+      "formulas": [
+        {
+          "label": "Built-in voltage",
+          "tex": "V_{bi} = V_T \\ln\\frac{N_A N_D}{n_i^2}"
+        },
+        {
+          "label": "Thermal voltage",
+          "tex": "V_T = \\frac{kT}{q} \\approx 25.9\\ \\text{mV at } 300\\ \\text{K}"
+        },
+        {
+          "label": "Photon voltage",
+          "tex": "V \\approx \\frac{hc}{q\\lambda} \\approx \\frac{1240\\ \\text{V}\\cdot\\text{nm}}{\\lambda}"
+        },
+        {
+          "label": "Constants",
+          "tex": "k = 1.381\\times10^{-23}\\ \\text{J/K},\\quad q = 1.602\\times10^{-19}\\ \\text{C}"
+        },
+        {
+          "label": "Depletion width",
+          "tex": "W \\propto \\sqrt{V_{bi} + V_R}"
+        },
+        {
+          "label": "Varactor capacitance (abrupt junction)",
+          "tex": "C = C_0\\sqrt{\\frac{V_{bi}}{V_{bi} + V_R}}\\ \\ (C_0 \\text{ at } V_R = 0)"
+        }
+      ],
+      "prerequisiteNotes": {
+        "si_prefixes": "Doping levels, currents and carrier numbers span many decades, so the physics is written in powers of ten."
+      },
+      "goals": [
+        "Say which dopant makes silicon n-type or p-type, and which carriers are then in the majority",
+        "Explain how the depletion region and its built-in voltage form where p meets n, naming what actually moves",
+        "Predict what forward and reverse bias do to the depletion region and to the current",
+        "Calculate the thermal voltage kT/q and a junction's built-in voltage, and estimate an LED's turn-on voltage from its color"
+      ],
+      "intuition": "Where p-type meets n-type silicon, a thin layer with no free carriers holds a voltage barrier: making the p side more positive lowers it and the current rises steeply; making it more negative raises it and only a tiny leakage flows, until breakdown.",
+      "why": "Electrons diffuse from the n side into the p side, and holes from the p side into the n side, and where they meet they recombine. Each electron that leaves uncovers a fixed positive donor ion; each hole that leaves or is filled uncovers a fixed negative acceptor ion. These ions set up a field that drives carriers back, and net flow stops when this drift cancels the diffusion: the built-in voltage. It is not a battery: an idle diode has no energy source, so the contact potentials where the metal leads meet the silicon exactly cancel it, and a voltmeter across it reads 0 V. Forward bias opposes the field, so far more carriers have the thermal energy to cross; reverse bias adds to it and widens the region.",
+      "explanation": "Pure silicon has few free electrons: its outer electrons are held in bonds. Doping adds a trace of another element. Phosphorus has five outer electrons; the fifth is free, so phosphorus-doped silicon is n-type, with free electrons as majority carriers. Boron has three, leaving a gap in one bond: a hole. A neighboring bound electron can hop into it, so the hole moves the other way and carries current as a positive charge would. Boron-doped silicon is p-type, with holes as majority carriers. Where p meets n, electrons and holes diffuse across and recombine, leaving the depletion region: fixed ions, no free carriers, and a built-in voltage V_bi, typically about 0.7 V. Forward bias lowers that barrier: every V_T = kT/q ≈ 26 mV of lowering multiplies the current by e ≈ 2.7 in an ideal junction. A conducting diode's forward voltage stays a little below V_bi: the barrier is lowered, never removed. Reverse bias widens the region; only a tiny leakage flows until breakdown. An LED uses a compound with a wider gap than silicon, where an electron falling into a hole can emit a photon, so its turn-on voltage is roughly 1240 V·nm / λ.",
+      "workedExample": {
+        "problem": "A silicon rectifier diode has N_A = 1.0 × 10¹⁷ cm⁻³ on the p side and N_D = 1.0 × 10¹⁵ cm⁻³ on the n side (n_i = 1.0 × 10¹⁰ cm⁻³, permittivity ε = 11.7 ε₀) at 300 K. Find the thermal voltage, the built-in voltage, and the width of the depletion region with no bias and with 10 V of reverse bias. Use the depletion approximation: the region is treated as completely empty of free carriers, with sharp edges.",
+        "steps": [
+          "Thermal voltage: V_T = kT/q = 1.3806 × 10⁻²³ J/K × 300 K / 1.6022 × 10⁻¹⁹ C = 25.85 mV.",
+          "Built-in voltage: N_A·N_D/n_i² = (1.0 × 10¹⁷ cm⁻³ × 1.0 × 10¹⁵ cm⁻³) / (1.0 × 10¹⁰ cm⁻³)² = 1.0 × 10¹² (the units cancel), so V_bi = V_T·ln(1.0 × 10¹²) = 25.85 mV × 27.63 = 0.714 V.",
+          "Width with no bias, in SI units: N_A = 1.0 × 10²³ m⁻³, N_D = 1.0 × 10²¹ m⁻³, ε = 11.7 × 8.854 × 10⁻¹² F/m = 1.036 × 10⁻¹⁰ F/m, and 1/N_A + 1/N_D = 1.01 × 10⁻²¹ m³. W = √(2ε·V_bi/q · (1/N_A + 1/N_D)) = √(2 × 1.036 × 10⁻¹⁰ F/m × 0.714 V / 1.602 × 10⁻¹⁹ C × 1.01 × 10⁻²¹ m³) = 0.966 µm.",
+          "Where the region lies: the uncovered ion charge on the two sides must balance, N_A·x_p = N_D·x_n, so it reaches 100 times further into the lightly doped n side: x_n = 0.966 µm × 100/101 = 0.956 µm and x_p = 0.966 µm / 101 = 0.0096 µm.",
+          "With 10 V reverse bias the voltage across the region is V_bi + V_R = 0.714 V + 10 V = 10.714 V, 15 times as much: W = 0.966 µm × √(10.714 V / 0.714 V) = 0.966 µm × 3.874 = 3.74 µm. Fifteen times the voltage gives only about 3.9 times the width, because W grows as the square root.",
+          "The raised barrier turns back the majority carriers, so almost nothing crosses: only the few electron–hole pairs that heat creates in or near the region are swept over, a tiny leakage current. Only at a far larger reverse voltage (well above 100 V for this lightly doped n side) does the field become strong enough for breakdown: carriers accelerated by it knock further electrons out of their bonds, and the current rises sharply."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 2 \"Solid-state Device Theory\", section \"Electrons and “holes”\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_2.html#xtocid90184",
+          "note": "Pure silicon's outer electrons are tied up in bonds; five-electron phosphorus gives n-type silicon with free electrons as majority carriers, three-electron boron gives p-type with holes as majority carriers, and a hole moves opposite to the electrons that fill it."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 2 \"Solid-state Device Theory\", section \"The P-N junction\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_2.html#xtocid90185",
+          "note": "Carriers diffuse across and recombine to leave a carrier-free depletion region and a barrier of about 0.6 to 0.7 V in silicon; reverse bias widens the region and passes only a small, temperature-dependent leakage from heat-generated pairs until breakdown."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"PN Junctions and Diodes\", ch. 2 \"Tutorial\", section 2.2 \"Electrical conduction in semiconductors\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_pn.pdf",
+          "note": "The depletion region's own electric field turns back further carriers so it stays thin, and an external voltage aiding that field widens it while one opposing the field thins it."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "pn_thermal_voltage",
+      "topicId": "pn_junction",
+      "prompt": "What is the thermal voltage V_T = kT/q at {TC}? Use k = 1.381×10⁻²³ J/K and q = 1.602×10⁻¹⁹ C.",
+      "variables": [
+        {
+          "name": "TC",
+          "unit": "°C",
+          "range": {
+            "min": -20,
+            "max": 100,
+            "step": 5
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "TK",
+          "formula": "TC+273.15",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "1.380649e-23*(TC+273.15)/1.602176634e-19",
+        "unit": "V"
+      },
+      "explanation": "Convert to kelvin: T = {TC} + 273.15 = {TK} K. V_T = kT/q = 1.381×10⁻²³ × {TK} / 1.602×10⁻¹⁹ = {answer}. At 25 °C (298 K) it is 25.7 mV; at 300 K it is 25.85 mV, the value the other problems use. Both round to 26 mV.",
+      "hints": [
+        "k is in J/K, so T must be an absolute temperature.",
+        "Use T in kelvin: T = °C + 273.15."
+      ],
+      "misconceptions": [
+        {
+          "formula": "1.380649e-23*TC/1.602176634e-19",
+          "feedback": "Temperature must be in kelvin: add 273.15 to the Celsius value."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does the thermal voltage V_T = kT/q keep turning up in how a diode behaves?",
+          "choices": [
+            {
+              "text": "It is kT per unit charge: the thermal energy scale that sets how many carriers clear the barrier",
+              "correct": true,
+              "feedback": "Right: lowering the barrier by one extra V_T lets e ≈ 2.7 times as many carriers over it, which is why the diode current goes as e^(V/V_T)."
+            },
+            {
+              "text": "It is the forward voltage a silicon diode drops once it conducts a useful current in a circuit",
+              "feedback": "A conducting silicon diode drops about 0.6–0.7 V, roughly 25 times V_T. V_T sets how steeply the current changes with voltage, not the drop itself."
+            },
+            {
+              "text": "It is the voltage needed to break a covalent bond and free an electron in a silicon crystal",
+              "feedback": "Freeing an electron from a bond takes the bandgap, about 1.1 eV in silicon, more than 40 times kT at room temperature."
+            },
+            {
+              "text": "It is the junction's built-in voltage, the barrier that the carriers from each side have to cross",
+              "feedback": "The built-in voltage is about 0.7 V: V_T multiplied by the logarithm of the doping ratio, ln(N_A·N_D/n_i²), which is around 28."
+            }
+          ],
+          "explanation": "Carriers are held back by the junction's barrier and get over it only with their random thermal energy, which is about kT. Divided by the electron charge, that energy is the voltage V_T. The share of carriers with enough energy to get over follows e^(−barrier/V_T), so V_T is the voltage scale for everything a diode does. Hotter silicon means a bigger V_T."
+        }
+      ],
+      "noDrawing": "V_T = kT/q arithmetic, no circuit",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "pn_led_voltage",
+      "topicId": "pn_junction",
+      "prompt": "An LED emits light of wavelength {lam} nm. Estimate its turn-on voltage from the photon energy (E = hc/λ, V ≈ E/q, with hc/q ≈ 1240 V·nm).",
+      "variables": [
+        {
+          "name": "lam",
+          "unit": "",
+          "range": {
+            "min": 450,
+            "max": 650,
+            "step": 10
+          }
+        }
+      ],
+      "answer": {
+        "formula": "1239.84/lam",
+        "unit": "V"
+      },
+      "explanation": "Each photon carries E = hc/λ. An electron crossing the junction must supply that energy, so V ≈ E/q = hc/(qλ) = 1239.84 / {lam} = {answer}. Blue LEDs need more voltage than red ones for exactly this reason. This is the minimum. At its rated current a real LED drops more; a 450 nm blue LED is typically about 3 V, against 2.76 V here.",
+      "hints": [
+        "Photon energy E = hc/λ; the voltage is that energy per unit charge.",
+        "So V ≈ (hc/q)/λ, with λ in nm to match the V·nm of hc/q."
+      ],
+      "misconceptions": [
+        {
+          "formula": "lam/1239.84",
+          "feedback": "Shorter wavelength means more energy, so the voltage goes as 1/λ: V ≈ 1240 / λ(nm)."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does a blue LED need a higher voltage than a red one?",
+          "choices": [
+            {
+              "text": "One electron makes one photon, and a blue photon carries more energy than a red one",
+              "correct": true,
+              "feedback": "Right: a volt is a joule per coulomb, so a bigger energy per electron means a bigger voltage. Blue LEDs use a material with a wider bandgap."
+            },
+            {
+              "text": "Blue light has a longer wavelength, so each of its photons carries more energy",
+              "feedback": "Blue light has the shorter wavelength (about 450 nm against about 630 nm for red). Photon energy goes as 1/λ, so the shorter wavelength carries more."
+            },
+            {
+              "text": "Blue light travels faster, so the electrons must be pushed harder across the junction",
+              "feedback": "All light travels at the same speed in a vacuum. The difference is the energy of each photon, E = hc/λ."
+            },
+            {
+              "text": "Blue LEDs have more internal resistance, and that resistance drops the extra voltage",
+              "feedback": "The extra volts are set mainly by the photon energy (the bandgap), not by a resistance: a blue LED needs them even at a tiny current."
+            }
+          ],
+          "explanation": "Energy is conserved: one electron falling across the junction's energy gap makes one photon. The electron's energy is q·V, the photon's is hc/λ, so V ≈ hc/(qλ). A shorter wavelength needs a bigger voltage. This is the same energy-gap idea behind every PN junction, with the energy leaving as light instead of heat."
+        }
+      ],
+      "noDrawing": "photon energy to turn-on voltage, no circuit",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "pn_ntype",
+      "topicId": "pn_junction",
+      "level": "recall",
+      "prompt": "Silicon is doped with phosphorus, which has five valence electrons. What does this make?",
+      "choices": [
+        {
+          "text": "n-type silicon: free electrons are the majority carriers",
+          "correct": true,
+          "feedback": "Yes: the fifth electron isn't needed for bonding and is free to move. Phosphorus is a donor."
+        },
+        {
+          "text": "p-type silicon: holes are the majority carriers",
+          "feedback": "p-type needs an acceptor with three valence electrons, such as boron."
+        },
+        {
+          "text": "An insulator",
+          "feedback": "Doping makes silicon conduct better, not worse."
+        },
+        {
+          "text": "Intrinsic silicon with no change",
+          "feedback": "Even tiny amounts of dopant change the carrier concentration by many orders of magnitude."
+        }
+      ],
+      "explanation": "Silicon has four valence electrons. A five-electron donor such as phosphorus leaves one electron free, giving n-type silicon with electrons as majority carriers.",
+      "noDrawing": "about doping the crystal, no circuit",
+      "review": "verified"
+    },
+    {
+      "id": "pn_forward_bias",
+      "topicId": "pn_junction",
+      "level": "recall",
+      "prompt": "What does forward bias (p side more positive than n side) do to the depletion region of a PN junction?",
+      "choices": [
+        {
+          "text": "Narrows it, so carriers can cross and current flows",
+          "correct": true,
+          "feedback": "Yes: the applied voltage opposes the built-in field, the barrier drops, and current rises exponentially."
+        },
+        {
+          "text": "Widens it, blocking current",
+          "feedback": "That's reverse bias."
+        },
+        {
+          "text": "Leaves it unchanged; only the current changes",
+          "feedback": "The current changes because the barrier (and the depletion width) changes."
+        },
+        {
+          "text": "Removes the junction permanently",
+          "feedback": "Nothing permanent happens; remove the bias and the depletion region returns."
+        }
+      ],
+      "explanation": "The depletion region's built-in field keeps majority carriers apart. Forward bias opposes that field, narrowing the region and lowering the barrier, so current flows. Reverse bias widens it.",
+      "noDrawing": "about the junction's physics, no circuit",
+      "review": "verified"
+    },
+    {
+      "id": "pn_ptype_carriers",
+      "topicId": "pn_junction",
+      "level": "recall",
+      "prompt": "In p-type silicon (doped with boron), what are the majority carriers?",
+      "choices": [
+        {
+          "text": "Holes",
+          "correct": true,
+          "feedback": "Yes: each boron atom has only three valence electrons, leaving a hole that moves and carries current as a positive charge would."
+        },
+        {
+          "text": "Electrons",
+          "feedback": "Electrons are the minority carriers in p-type silicon."
+        },
+        {
+          "text": "Boron ions",
+          "feedback": "The ionized dopant atoms are fixed in the crystal; they can't carry current."
+        },
+        {
+          "text": "Protons",
+          "feedback": "Protons stay in nuclei. The mobile positive carrier is the hole."
+        }
+      ],
+      "explanation": "Boron is an acceptor: it grabs an electron from a neighboring bond and leaves a hole. Holes are the majority carriers in p-type material.",
+      "noDrawing": "about doping the crystal, no circuit",
+      "review": "verified"
+    },
+    {
+      "id": "pn_what_if_doping",
+      "topicId": "pn_junction",
+      "prompt": "A silicon PN junction at room temperature (V_T = 25.85 mV, n_i = 1.0 × 10¹⁰ cm⁻³) has N_A = {a} × 10¹⁶ cm⁻³ on the p side and N_D = {b} × 10¹⁵ cm⁻³ on the n side. The p side is made with ten times as much boron: N_A = {a} × 10¹⁷ cm⁻³. What happens to the built-in voltage?",
+      "variables": [
+        {
+          "name": "a",
+          "unit": "",
+          "series": "E12",
+          "decades": [
+            0,
+            0
+          ]
+        },
+        {
+          "name": "b",
+          "unit": "",
+          "series": "E12",
+          "decades": [
+            0,
+            0
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the built-in voltage",
+        "formula": "0.02585*ln(a*1e16*b*1e15/1e20)",
+        "unit": "V",
+        "change": {
+          "a": "10*a"
+        },
+        "feedback": {
+          "down": "More holes on the p side don't make it easier to cross. The barrier exists to hold back diffusion, and a steeper step in hole concentration (ten times more on one side) needs a bigger barrier to balance it.",
+          "same": "The built-in voltage depends on the doping through a logarithm, V_bi = V_T·ln(N_A·N_D/n_i²). A logarithm grows slowly, but ten times the doping still adds V_T·ln 10 ≈ 60 mV."
+        }
+      },
+      "explanation": "V_bi = V_T·ln(N_A·N_D/n_i²). Ten times the acceptors makes the step in hole concentration across the junction ten times steeper, so diffusion pushes harder and the field that balances it must be stronger. Because of the logarithm the rise is small: V_T·ln 10 ≈ 60 mV, {before} → {after}. It's the same '60 mV per factor of ten' you will meet in the diode equation.",
+      "hints": [
+        "The built-in voltage balances diffusion, which is driven by the difference in concentration across the junction.",
+        "V_bi = V_T·ln(N_A·N_D/n_i²): what does a factor of 10 inside a logarithm add?"
+      ],
+      "bridge": [
+        "physics",
+        "math"
+      ],
+      "noDrawing": "about the junction's physics, no circuit",
+      "review": "verified"
+    },
+    {
+      "id": "pn_what_if_reverse_width",
+      "topicId": "pn_junction",
+      "prompt": "A silicon rectifier diode (N_A = 10¹⁷ cm⁻³, N_D = 10¹⁵ cm⁻³, built-in voltage 0.7 V, breakdown well above 100 V) is reverse biased at {VR}. The reverse voltage is raised to {new_VR}. What happens to the width of the depletion region?",
+      "variables": [
+        {
+          "name": "VR",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 10,
+            "step": 1
+          }
+        }
+      ],
+      "whatIf": {
+        "quantity": "the depletion width",
+        "formula": "sqrt(2*11.7*8.854e-12*(0.7+VR)/1.602e-19*(1/1e23+1/1e21))",
+        "unit": "m",
+        "change": {
+          "VR": "10*VR"
+        },
+        "askFactor": true,
+        "factorHint": "The voltage across the region grows as W², so W grows as √(V_bi + V_R). Only the V_R part of that sum is multiplied; the 0.7 V built-in part stays.",
+        "feedback": {
+          "down": "Reverse bias adds to the built-in field instead of opposing it. It pulls holes and electrons further away from the junction, uncovering more fixed dopant ions, so the region grows.",
+          "same": "The depletion region isn't a fixed layer. The extra reverse voltage has to be held by uncovered dopant charge, and the only way to uncover more is for the region to widen."
+        }
+      },
+      "explanation": "The depletion width is W = √(2ε(V_bi + V_R)/q · (1/N_A + 1/N_D)). The field in the region grows in step with its width, and the voltage across it is the area under the field, so the voltage grows as W². Ten times the reverse voltage therefore widens the region by less than √10 ≈ 3.2: {before} → {after}. It falls short of √10 because the 0.7 V built-in part doesn't grow. A wider region with no free carriers is why a reverse-biased junction blocks, and why its capacitance falls as the reverse voltage rises.",
+      "hints": [
+        "Reverse bias adds to the built-in voltage. Which way does that push the carriers?",
+        "W grows as the square root of (V_bi + V_R)."
+      ],
+      "bridge": [
+        "physics",
+        "math"
+      ],
+      "noDrawing": "about the junction's physics, no circuit",
+      "review": "verified"
+    },
+    {
+      "id": "pn_built_in_voltage",
+      "topicId": "pn_junction",
+      "prompt": "A silicon PN junction at room temperature (V_T = 25.85 mV, n_i = 1.0 × 10¹⁰ cm⁻³) has N_A = {a} × 10¹⁷ cm⁻³ of boron on the p side and N_D = {b} × 10¹⁵ cm⁻³ of phosphorus on the n side. What is its built-in voltage?",
+      "variables": [
+        {
+          "name": "a",
+          "unit": "",
+          "series": "E12",
+          "decades": [
+            0,
+            0
+          ]
+        },
+        {
+          "name": "b",
+          "unit": "",
+          "series": "E12",
+          "decades": [
+            0,
+            0
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "lnv",
+          "formula": "ln(a*b*1e12)",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "0.02585*ln(a*b*1e12)",
+        "unit": "V"
+      },
+      "explanation": "V_bi = V_T·ln(N_A·N_D/n_i²). The ratio is ({a} × 10¹⁷ cm⁻³ × {b} × 10¹⁵ cm⁻³)/(1.0 × 10¹⁰ cm⁻³)² = {a} × {b} × 10¹²; the units cancel. Its natural logarithm is {lnv}, so V_bi = 25.85 mV × {lnv} = {answer}. The doping enters only through a logarithm, so a hundredfold change in either doping moves V_bi by only V_T·ln 100 ≈ 0.12 V.",
+      "hints": [
+        "The built-in voltage is where drift balances diffusion: V_bi = V_T·ln(N_A·N_D/n_i²).",
+        "Work out N_A·N_D/n_i² first. The cm⁻³ units cancel and the ratio is around 10¹²–10¹⁴."
+      ],
+      "misconceptions": [
+        {
+          "formula": "0.02585*ln(a*b*1e22)",
+          "feedback": "n_i is squared in the formula: N_A·N_D/n_i². Dividing by n_i once gives more than silicon's 1.1 V bandgap, which a built-in voltage can't exceed."
+        },
+        {
+          "formula": "0.02585*log10(a*b*1e12)",
+          "feedback": "The formula uses the natural logarithm, ln, not log₁₀. It comes from the Boltzmann factor e^(−qV/kT), so the base is e."
+        }
+      ],
+      "noDrawing": "about the junction's physics, no circuit",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "pn_design_varactor",
+      "topicId": "pn_junction",
+      "prompt": "A silicon varactor (a diode made to be used as a voltage-controlled capacitor) has an abrupt junction with a built-in voltage of 0.7 V and a capacitance of {C0} at 0 V bias. The depletion region acts like a parallel-plate capacitor whose gap is its width W. The varactor is reverse biased through a 100 kΩ resistor, which carries only the tiny leakage, so the whole bias V_R appears across the junction. Choose V_R (0.5 V to 12 V) so the capacitance is {Ct}, within 5%.",
+      "variables": [
+        {
+          "name": "C0",
+          "unit": "F",
+          "values": [
+            2.2e-11,
+            3.3e-11,
+            4.7e-11
+          ]
+        },
+        {
+          "name": "Vset",
+          "unit": "V",
+          "range": {
+            "min": 2,
+            "max": 10,
+            "step": 1
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "Ct",
+          "formula": "C0*sqrt(0.7/(0.7+Vset))",
+          "unit": "F"
+        },
+        {
+          "name": "ratio",
+          "formula": "sqrt((0.7+Vset)/0.7)",
+          "unit": ""
+        },
+        {
+          "name": "VRex",
+          "formula": "0.7*((0.7+Vset)/0.7-1)",
+          "unit": "V"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "VR",
+            "label": "V_R",
+            "unit": "V",
+            "min": 0.5,
+            "max": 12
+          }
+        ],
+        "result": "C0*sqrt(0.7/(0.7+VR))",
+        "resultLabel": "junction capacitance",
+        "resultUnit": "F",
+        "target": "Ct",
+        "tolerance": 0.05
+      },
+      "explanation": "A parallel-plate capacitor has C = εA/W, and the depletion width grows as W ∝ √(V_bi + V_R). So C = C₀·√(V_bi/(V_bi + V_R)). Going from {C0} to {Ct} is a ratio of {ratio}, so (0.7 V + V_R)/0.7 V must be {ratio}² and V_R = 0.7 V × ({ratio}² − 1) = {VRex}. Because C changes only as 1/√(V_bi + V_R), anything within about ±10% of this meets the 5% window. Tuning diodes in oscillators and radio front ends are set exactly this way: a DC voltage moves the depletion edge, and with it the capacitance. (Many commercial tuning diodes are hyperabrupt, with a steeper law; this one is stated as abrupt.)",
+      "hints": [
+        "More reverse bias widens the depletion region. What does a wider gap do to a capacitor?",
+        "C₀/C = √((0.7 V + V_R)/0.7 V). Square the ratio and solve for V_R."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does more reverse voltage give the varactor less capacitance?",
+          "choices": [
+            {
+              "text": "The depletion region widens, so the charge layers on its two sides sit further apart, so it is a capacitor whose gap has grown",
+              "correct": true,
+              "feedback": "Right: the uncovered donor and acceptor ions are the two 'plates', and reverse bias pushes them apart, so C = εA/W falls."
+            },
+            {
+              "text": "The higher voltage pushes charge off the junction, so it stores less charge",
+              "feedback": "The junction actually stores more charge at a higher reverse voltage: more ions are uncovered. Capacitance is how much extra charge each extra volt uncovers, and that shrinks as W grows."
+            },
+            {
+              "text": "More leakage current flows at a higher voltage and bleeds the stored charge away",
+              "feedback": "Leakage stays tiny (nA or less) below breakdown and doesn't set the capacitance; the width of the depletion region does."
+            },
+            {
+              "text": "Reverse bias lowers the built-in voltage, so there is less barrier to store energy in",
+              "feedback": "The built-in voltage is set by the doping, not by the bias. Reverse bias adds to the voltage across the region; it doesn't lower V_bi."
+            }
+          ],
+          "explanation": "The depletion region holds fixed positive ions on the n side and fixed negative ions on the p side, with no free carriers between: the geometry of a capacitor. Its width grows as √(V_bi + V_R), so the capacitance falls as 1/√(V_bi + V_R). An ordinary diode shows the same effect; a varactor is just doped and sized to make it large and repeatable."
+        }
+      ],
+      "schematic": {
+        "netlist": "Varactor bias (drawing)\nVB in 0 5\nR1 in k 100k\nD1 0 k DV\n.model DV D\n",
+        "parts": [
+          {
+            "ref": "VB",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V_R = ?"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "100 kΩ"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              6
+            ],
+            "rot": 270,
+            "label": "varactor\n{C0} at 0 V"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    }
+  ]
+}

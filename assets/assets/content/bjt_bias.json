@@ -1,0 +1,1423 @@
+{
+  "topics": [
+    {
+      "id": "bjt_bias",
+      "title": "Biasing a bipolar transistor",
+      "summary": "Set a steady operating point: a base resistor is simple but depends on β; divider bias with an emitter resistor doesn't.",
+      "lenses": [
+        "circuit"
+      ],
+      "prerequisites": [
+        "bjt_intro",
+        "dividers"
+      ],
+      "lensNotes": {
+        "circuit": "Bias sets the transistor's resting point so a signal can swing around it. Divider bias with an emitter resistor sets I_C by voltages and R_E, not by β, which varies widely between parts."
+      },
+      "formulas": [
+        {
+          "label": "Divider bias",
+          "tex": "V_B \\approx V_{CC}\\,\\frac{R_2}{R_1 + R_2},\\quad V_E = V_B - 0.7\\ \\text{V}"
+        },
+        {
+          "label": "Collector current",
+          "tex": "I_C \\approx I_E = \\frac{V_E}{R_E}"
+        },
+        {
+          "label": "Collector-emitter voltage",
+          "tex": "V_{CE} = V_{CC} - I_C R_C - I_E R_E\\ \\ (\\text{no } R_E\\text{: } V_{CC} - I_C R_C)"
+        },
+        {
+          "label": "Base-resistor bias",
+          "tex": "I_B = \\frac{V_{CC} - 0.7\\ \\text{V}}{R_B}"
+        }
+      ],
+      "prerequisiteNotes": {
+        "bjt_intro": "Biasing uses I_C = β·I_B and V_BE ≈ 0.7 V to put the transistor at a chosen operating point.",
+        "dividers": "The standard bias network is a voltage divider on the base, stiff enough that the base current barely loads it."
+      },
+      "goals": [
+        "Find the operating point (I_C and V_CE) of a stage biased by a single base resistor, or by a divider with an emitter resistor",
+        "Check that a bias divider is stiff (its current at least ten times the base current) and that V_CE leaves the transistor well inside the active region",
+        "Explain why an emitter resistor makes the collector current nearly independent of β, while a single base resistor makes it proportional to β",
+        "Predict how the operating point moves when the transistor is swapped for one with a different β, or when it warms up"
+      ],
+      "intuition": "With a stiff divider holding the base voltage and a resistor R_E in the emitter, the emitter sits one V_BE (about 0.7 V) below the base, so in the active region R_E sets the collector current, I_C ≈ (V_B − 0.7 V)/R_E, and β hardly matters.",
+      "why": "Biasing sets the operating point (Q-point): the resting collector current and voltage a signal will swing around. A single base resistor fixes I_B, so I_C = β·I_B follows β, which differs two or three times between parts and rises with temperature. A divider fixes the base voltage instead. V_BE barely changes, so V_E = V_B − V_BE is fixed, and so is I_E = V_E/R_E. If I_C tries to rise, the drop across R_E rises, V_BE shrinks and the base current falls back: negative feedback. β only decides how much base current flows, and a stiff divider supplies it without sagging much.",
+      "explanation": "A transistor amplifies only while it is in its active region, so a circuit must first set its resting state: a steady collector current and collector–emitter voltage, called the operating point. The simplest bias is one resistor R_B from the supply to the base. It fixes I_B = (V_CC − 0.7 V)/R_B, and I_C = β·I_B. But β differs two or three times between transistors of the same type, so a part with twice the β runs at twice the current, perhaps into saturation. Divider bias fixes the base voltage instead: R1 from the supply and R2 to ground give V_B = V_CC·R2/(R1 + R2). The emitter sits one V_BE lower, V_E = V_B − 0.7 V, and a resistor R_E turns that into a current: I_E = V_E/R_E, with I_C ≈ I_E. β has dropped out. This is accurate when the base current barely loads the divider; the usual rule of thumb is a divider current at least ten times I_B at the lowest β (a stiff divider). Otherwise use the divider's Thevenin equivalent. Finally, find V_CE = V_CC − I_C·R_C − V_E and check it is well above 0.2 V, so the transistor really is active.",
+      "workedExample": {
+        "problem": "A 12 V stage uses divider bias: R1 = 47 kΩ from the supply to the base, R2 = 10 kΩ from the base to ground, R_E = 1.0 kΩ in the emitter and R_C = 3.9 kΩ in the collector. The transistor is a small-signal NPN such as a 2N3904; assume β = 100 and V_BE = 0.7 V. Find I_C and V_CE and check that the divider is stiff. Then see what a β = 300 part does, here and in the same stage biased by a single base resistor, and what warming the transistor by 50 °C does.",
+        "steps": [
+          "Base voltage (stiff-divider model: base current ignored): V_B = 12 V × 10 kΩ / (47 kΩ + 10 kΩ) = 2.105 V.",
+          "Emitter (V_BE = 0.7 V): V_E = 2.105 V − 0.7 V = 1.405 V, so I_E = 1.405 V / 1.0 kΩ = 1.405 mA, and I_C ≈ I_E = 1.405 mA.",
+          "Collector: R_C drops 1.405 mA × 3.9 kΩ = 5.481 V, so V_C = 12 V − 5.481 V = 6.519 V and V_CE = 6.519 V − 1.405 V = 5.11 V. That is far above 0.2 V: the transistor is in the active region, as the model assumed.",
+          "Stiffness: the divider carries 12 V / (47 kΩ + 10 kΩ) = 0.211 mA. The base needs I_B = I_E/(β + 1) = 1.405 mA / 101 = 13.9 µA, so the divider current is 15 times I_B: stiff. The stiff model ignores the base current's pull on V_B. Counting it (the divider looks like 2.105 V behind R1∥R2 = 8.25 kΩ): I_E = 1.405 V / (1.0 kΩ + 8.25 kΩ/101) = 1.30 mA, 7.5 % lower. A β = 300 part draws less base current and gets 1.37 mA.",
+          "A β = 300 part: nothing in the first three steps contains β, so I_C stays at about 1.405 mA and V_CE at about 5.11 V. The new part just draws a third of the base current, 1.405 mA / 301 = 4.67 µA.",
+          "For comparison, bias the same transistor with a single base resistor (R_E removed, emitter grounded, same R_C). For about 1.4 mA at β = 100 it needs I_B = 14 µA, so R_B = (12 V − 0.7 V) / 14 µA ≈ 810 kΩ; use 820 kΩ (E12). Then I_B = 11.3 V / 820 kΩ = 13.78 µA, I_C = 100 × 13.78 µA = 1.378 mA and V_CE = 12 V − 1.378 mA × 3.9 kΩ = 6.63 V.",
+          "Swap in the β = 300 part: the active-region model asks for I_C = 300 × 13.78 µA = 4.13 mA, which would need 4.13 mA × 3.9 kΩ = 16.1 V across R_C, more than the 12 V supply. The transistor saturates instead, at I_C = (12 V − 0.2 V) / 3.9 kΩ = 3.03 mA with V_CE ≈ 0.2 V: it can no longer amplify.",
+          "Temperature, divider bias (−2 mV/°C at a fixed current): 50 °C warmer, V_BE ≈ 0.7 V − 2 mV/°C × 50 °C = 0.6 V, so V_E = 2.105 V − 0.6 V = 1.505 V and I_C ≈ 1.505 mA, 7 % more; V_CE falls to 12 V − 1.505 mA × 3.9 kΩ − 1.505 V = 4.63 V, still active. The 0.1 V shift is 7 % of V_E; a larger V_E would make the drift a smaller fraction."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 4 \"Bipolar Junction Transistors\", section \"Biasing calculations\", subsection \"Base Bias\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_4.html#xtocid903610",
+          "note": "With one resistor from the supply to the base, KVL with V_BE ≈ 0.7 V sets the base current, so the emitter current follows β, roughly tripling when a β = 100 part is swapped for β = 300, and the bias is not temperature stable."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 4 \"Bipolar Junction Transistors\", section \"Biasing calculations\", subsection \"Emitter-bias\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_4.html#xtocid903612",
+          "note": "An emitter resistor gives negative feedback: a rise in emitter current raises its drop, which reduces the base drive and pulls the current back, so the bias depends much less on β, temperature and tolerances."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Transistor biasing\" (last update 27 September 2025), ch. 2 \"Tutorial\", section 2.4 \"Biasing networks\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_qbias.pdf",
+          "note": "A divider R1/R2 sets the base bias at V_CC·R2/(R1 + R2); the base current sags it slightly, mostly through R_E seen as about (β + 1)·R_E from the base, which is usually much larger than R2 so the simple divider formula holds."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "bias_base_resistor",
+      "topicId": "bjt_bias",
+      "prompt": "An NPN transistor (β = {beta}) has its base fed from {Vcc} through R_B = {Rb}, and its emitter grounded. What is the collector current (assume the active region)?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "Rb",
+          "unit": "Ω",
+          "values": [
+            330000,
+            470000,
+            560000,
+            680000,
+            820000
+          ]
+        },
+        {
+          "name": "beta",
+          "unit": "",
+          "range": {
+            "min": 100,
+            "max": 300,
+            "step": 50
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "Ib",
+          "formula": "(Vcc-0.7)/Rb",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "beta*(Vcc-0.7)/Rb",
+        "unit": "A"
+      },
+      "explanation": "I_B = (V_CC − 0.7) / R_B = ({Vcc} − 0.7) / {Rb} = {Ib}. Then I_C = β I_B = {beta} × {Ib} = {answer}. Because this depends directly on β, which varies a lot between parts, it's a fragile bias method.",
+      "hints": [
+        "Find the base current first: R_B has V_CC − V_BE across it.",
+        "I_C = β (V_CC − 0.7) / R_B."
+      ],
+      "misconceptions": [
+        {
+          "formula": "beta*Vcc/Rb",
+          "feedback": "The base sits 0.7 V above ground, so R_B has V_CC − 0.7 across it."
+        },
+        {
+          "formula": "(Vcc-0.7)/Rb",
+          "feedback": "That's the base current. Multiply by β for the collector current."
+        }
+      ],
+      "schematic": {
+        "netlist": "Bias\nVCC vcc 0 {Vcc:spice}\nRB vcc b {Rb:spice}\nRC vcc c 1k\nQ1 c b 0 QN\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          },
+          {
+            "ref": "RB",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R_B\n{Rb}"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "β = {beta}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              6,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            10,
+            8
+          ]
+        ],
+        "labels": []
+      },
+      "followUps": [
+        {
+          "prompt": "In this circuit, what sets the collector current?",
+          "choices": [
+            {
+              "text": "R_B fixes the base current, and the transistor multiplies it by its own β, so a different part gives a different I_C",
+              "feedback": "Right: nothing in the circuit pushes back if β is different.",
+              "correct": true
+            },
+            {
+              "text": "R_C, by Ohm's law",
+              "feedback": "In the active region R_C doesn't set the current; it just takes whatever drop β·I_B·R_C produces. R_C only limits the current once the transistor saturates."
+            },
+            {
+              "text": "The supply voltage divided by R_B",
+              "feedback": "That (less 0.7 V) is the base current, not the collector current; the transistor then multiplies it by β."
+            },
+            {
+              "text": "The 0.7 V base–emitter drop",
+              "feedback": "V_BE is almost fixed and only trims the voltage across R_B; it doesn't set the ratio of the currents."
+            }
+          ],
+          "explanation": "Here I_B = (V_CC − 0.7 V)/R_B is set by the resistor alone, and I_C = β·I_B (Transistor basics). The circuit has no way to notice or correct the collector current, so a part with twice the β runs at twice the current, perhaps into saturation. Divider bias with an emitter resistor fixes exactly this."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "bias_vce",
+      "topicId": "bjt_bias",
+      "prompt": "A transistor with its emitter grounded carries I_C = {Ic} through a collector resistor R_C = {Rc} from {Vcc}. What is V_CE?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "values": [
+            9,
+            12
+          ]
+        },
+        {
+          "name": "Ic",
+          "unit": "A",
+          "values": [
+            0.001,
+            0.0012,
+            0.0015
+          ]
+        },
+        {
+          "name": "Rc",
+          "unit": "Ω",
+          "values": [
+            2200,
+            2700,
+            3300,
+            3900,
+            4700
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "VRc",
+          "formula": "Ic*Rc",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "Vcc-Ic*Rc",
+        "unit": "V"
+      },
+      "explanation": "R_C drops I_C·R_C = {Ic} × {Rc} = {VRc}. The rest of the supply is across the transistor: V_CE = {Vcc} − {VRc} = {answer}. That is well above the 0.2 V or so of saturation, so the transistor is in the active region, as the given I_C assumes.",
+      "hints": [
+        "KVL from V_CC through R_C and the transistor to ground.",
+        "V_CE = V_CC − I_C · R_C."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Ic*Rc",
+          "feedback": "That's the drop across R_C. V_CE is what's left: V_CC − I_C R_C."
+        }
+      ],
+      "schematic": {
+        "netlist": "V_CE (drawing)\nVCC vcc 0 {Vcc:spice}\nRC vcc c {Rc:spice}\nQ1 c b 0 QN\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C\n{Rc}"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "I_C = {Ic}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            10,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "bias",
+            "at": [
+              6,
+              6
+            ],
+            "left": true
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "bias_divider_ic",
+      "topicId": "bjt_bias",
+      "prompt": "A transistor is biased by a stiff divider from {Vcc}: R1 = {R1} (to Vcc) and R2 = {R2} (to ground), with R_E = {Re} in the emitter and R_C = 1 kΩ in the collector. Estimate the collector current (I_C ≈ I_E).",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "range": {
+            "min": 9,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            27000,
+            33000,
+            39000,
+            47000
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "value": 10000
+        },
+        {
+          "name": "Re",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500,
+            2200
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vb",
+          "formula": "Vcc*R2/(R1+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "Ve",
+          "formula": "Vcc*R2/(R1+R2)-0.7",
+          "unit": "V"
+        },
+        {
+          "name": "Vce",
+          "formula": "Vcc-(Vcc*R2/(R1+R2)-0.7)/Re*1000-(Vcc*R2/(R1+R2)-0.7)",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "(Vcc*R2/(R1+R2)-0.7)/Re",
+        "unit": "A"
+      },
+      "explanation": "A stiff divider sets V_B = {Vcc} × {R2} / ({R1} + {R2}) = {Vb}. The emitter is one drop lower, V_E = {Ve}, so I_E = V_E / R_E = {Ve} / {Re} = {answer} ≈ I_C. β doesn't appear, which is why this bias is stable. Check the region: V_CE = {Vcc} − I_C × 1 kΩ − V_E = {Vce}, well above 0.2 V, so the transistor is active and the model holds.",
+      "hints": [
+        "Find the base voltage from the divider, then the emitter voltage.",
+        "I_C ≈ (V_B − 0.7) / R_E."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vcc*R2/(R1+R2)/Re",
+          "feedback": "The emitter is 0.7 V below the base; subtract V_BE before dividing by R_E."
+        }
+      ],
+      "schematic": {
+        "netlist": "Bias\nVCC vcc 0 {Vcc:spice}\nR1 vcc b {R1:spice}\nR2 b 0 {R2:spice}\nRC vcc c 1k\nQ1 c b e QN\nRE e 0 {Re:spice}\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              2,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              8
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "RC",
+            "at": [
+              12,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C\n1 kΩ"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              10,
+              8
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "RE",
+            "at": [
+              12,
+              10
+            ],
+            "rot": 90,
+            "label": "R_E\n{Re}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              12,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              4
+            ],
+            [
+              8,
+              8
+            ],
+            [
+              10,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              12,
+              6
+            ]
+          ],
+          [
+            [
+              2,
+              6
+            ],
+            [
+              2,
+              14
+            ],
+            [
+              12,
+              14
+            ]
+          ],
+          [
+            [
+              8,
+              12
+            ],
+            [
+              8,
+              14
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            14
+          ]
+        ],
+        "labels": []
+      },
+      "steps": [
+        "A stiff divider sets the base: V_B = {Vcc} × {R2}/({R1} + {R2}) = {Vb}.",
+        "The emitter sits one diode drop lower: V_E = V_B − 0.7 V = {Ve}.",
+        "The emitter current is V_E/R_E, and I_C ≈ I_E: {Ve}/{Re} = {answer}."
+      ],
+      "followUps": [
+        {
+          "prompt": "The answer doesn't contain β. Why does R_E hold the collector current so steady?",
+          "choices": [
+            {
+              "text": "If I_C tried to rise, the drop across R_E would rise too, leaving less of the fixed base voltage across the base–emitter junction; that reduces V_BE and so reduces the base current: negative feedback",
+              "feedback": "Right: the emitter voltage is fed back against the fixed base voltage.",
+              "correct": true
+            },
+            {
+              "text": "R_E limits the current like a fuse",
+              "feedback": "A fuse acts only on a fault, by breaking the circuit. R_E acts all the time, by raising the emitter voltage whenever the current rises."
+            },
+            {
+              "text": "R_E makes every transistor's β the same",
+              "feedback": "β still varies from part to part; R_E makes the collector current insensitive to it."
+            },
+            {
+              "text": "The divider supplies the collector current, so β can't affect it",
+              "feedback": "The collector current comes from the supply through R_C. The divider only fixes the base voltage."
+            }
+          ],
+          "explanation": "The divider fixes V_B (Dividers topic). The emitter must sit one diode drop below it, so V_E, and therefore I_E = V_E/R_E, is fixed too. Anything that tries to raise I_C (a higher-β part, or a warmer transistor) raises V_E, which reduces V_BE and so reduces the base current: negative feedback. β only decides how much base current is needed, and a stiff divider supplies that without its voltage moving much."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "bias_why_divider",
+      "topicId": "bjt_bias",
+      "prompt": "Why is voltage-divider bias with an emitter resistor preferred over a single base resistor?",
+      "choices": [
+        {
+          "text": "The collector current hardly depends on β, which varies widely between transistors and with temperature",
+          "correct": true,
+          "feedback": "Yes: I_C ≈ (V_B − 0.7)/R_E, and β drops out."
+        },
+        {
+          "text": "It gives more voltage gain",
+          "feedback": "An unbypassed R_E actually lowers the gain; its job is stability."
+        },
+        {
+          "text": "It uses fewer components",
+          "feedback": "It uses more (two divider resistors plus R_E)."
+        },
+        {
+          "text": "It removes the 0.7 V base-emitter drop",
+          "feedback": "V_BE is still there. Its drift (about −2 mV/°C) moves V_E, so designers make V_E a volt or more, where that drift is a small fraction."
+        }
+      ],
+      "explanation": "With a single base resistor, I_C = β I_B follows β directly. With divider bias, R_E sets I_C ≈ (V_B − 0.7)/R_E, independent of β. The emitter resistor's negative feedback also counters temperature drift.",
+      "noDrawing": "compares two bias schemes in general; no single circuit or values",
+      "level": "recall",
+      "review": "verified"
+    },
+    {
+      "id": "beta_spread_concept",
+      "topicId": "bjt_bias",
+      "prompt": "Why is a bias circuit whose collector current depends directly on β considered fragile?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "β varies widely between parts and with temperature, so I_C would too",
+          "feedback": "Right: β can vary 2–3× between transistors of the same type. Divider bias with an emitter resistor makes I_C depend on resistors instead.",
+          "correct": true
+        },
+        {
+          "text": "β is always exactly 100, so it doesn't matter",
+          "feedback": "Datasheets give a wide range, like 100–300, and it shifts with temperature and current."
+        },
+        {
+          "text": "β only matters for PNP transistors",
+          "feedback": "β spread affects NPN and PNP alike."
+        },
+        {
+          "text": "β changes the supply voltage",
+          "feedback": "β affects currents, not the supply."
+        }
+      ],
+      "explanation": "Base-resistor bias gives I_C = β·I_B, so a transistor with twice the β runs at twice the current, perhaps into saturation. A stiff divider plus R_E sets V_E and so I_E ≈ V_E/R_E, almost independent of β.",
+      "hints": [
+        "Look up how much β varies on a typical datasheet."
+      ],
+      "noDrawing": "a general question about β spread; no particular circuit is described",
+      "level": "recall",
+      "review": "verified"
+    },
+    {
+      "id": "bias_two_boards",
+      "topicId": "bjt_bias",
+      "prompt": "Two boards are built from the same parts list: a 12 V supply, R_B = 680 kΩ from the supply to the base, R_C = 2.7 kΩ from the supply to the collector, the emitter grounded, and an NPN transistor of one type whose datasheet gives β from 100 to 300 at this current. Every resistor measures within 5 % of its marked value, and both bases read about 0.7 V. On board A the collector reads 7 V; on board B it reads 0.2 V. What is the most likely cause of the difference?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "Board B's transistor has a higher β, so with the same I_B, β·I_B asks for more than R_C can pass",
+          "correct": true,
+          "feedback": "Right: R_B fixes I_B the same on both boards, so I_C = β·I_B follows each part's β, and nothing in the circuit pulls it back."
+        },
+        {
+          "text": "Board B's transistor has a lower β, so it can't hold its collector up and the collector sinks to 0.2 V",
+          "feedback": "A lower β means less collector current, so R_C drops less and the collector sits higher, toward 12 V. A collector pulled down to 0.2 V means R_C is carrying more current, not less."
+        },
+        {
+          "text": "Board B's base–emitter junction drops 0.6 V instead of 0.7 V, so its base current is much larger",
+          "feedback": "R_B would then have 11.4 V across it instead of 11.3 V: under 1 % more base current. Board B carries more than twice board A's collector current, which a 0.1 V shift in V_BE can't explain."
+        },
+        {
+          "text": "Board A's transistor is faulty, because a working one in this circuit sits fully on, with V_CE about 0.2 V",
+          "feedback": "Board A is in the active region, which is what this bias is for: I_C = (12 V − 7 V)/2.7 kΩ = 1.85 mA from about 17 µA of base current, a β near 111, inside the datasheet's range. Board B is the one that has left the active region."
+        }
+      ],
+      "explanation": "Both boards have the same base current: I_B = (12 V − 0.7 V)/680 kΩ = 16.6 µA, set by R_B alone. Board A: R_C drops 12 V − 7 V = 5 V, so I_C = 5 V/2.7 kΩ = 1.85 mA and β = 1.85 mA/16.6 µA ≈ 111. Board B: R_C can pass at most (12 V − 0.2 V)/2.7 kΩ = 4.37 mA, and a part saturates once β·I_B reaches that, at β = 4.37 mA/16.6 µA ≈ 263, still inside the 100–300 spread. Base-resistor bias passes the β spread straight into I_C, so the same parts list gives one board in the active region and another saturated. Divider bias with an emitter resistor sets I_C from V_E/R_E instead.",
+      "hints": [
+        "What sets the base current, and does it depend on the transistor?",
+        "I_C = β·I_B until R_C runs out of voltage at (V_CC − 0.2 V)/R_C."
+      ],
+      "followUps": [
+        {
+          "prompt": "Which change to the circuit would make both boards run at nearly the same collector current?",
+          "choices": [
+            {
+              "text": "Bias the base from a stiff divider and add an emitter resistor, so V_E/R_E sets I_C",
+              "correct": true,
+              "feedback": "Right: V_B is fixed by the divider, V_E sits one V_BE below it, and I_E = V_E/R_E contains no β."
+            },
+            {
+              "text": "Use a smaller R_C on both boards, so board B's collector has room to stay out of saturation",
+              "feedback": "That could keep board B out of saturation, but I_C = β·I_B still follows β: board B would run at at least about 2.4 times board A's current."
+            },
+            {
+              "text": "Use a larger R_B on both boards, so board B's higher β has less base current to multiply",
+              "feedback": "That lowers both base currents by the same factor, so both collector currents fall, but their ratio is still β_B/β_A."
+            },
+            {
+              "text": "Fit a higher-voltage supply to both boards, so board B's collector has more room above 0.2 V",
+              "feedback": "More supply raises I_B on both boards in the same proportion; the collector currents still differ by the ratio of the two βs."
+            }
+          ],
+          "explanation": "Any bias that fixes I_B leaves I_C = β·I_B, so the part-to-part β spread goes straight into I_C. A stiff divider fixes V_B instead, and the emitter resistor turns V_E = V_B − 0.7 V into I_E = V_E/R_E. β then only decides how much base current the divider must supply."
+        }
+      ],
+      "schematic": {
+        "netlist": "Two boards (drawing)\nVCC vcc 0 12\nRB vcc b 680k\nRC vcc c 2.7k\nQ1 c b 0 QN\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "RB",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R_B\n680 kΩ"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C\n2.7 kΩ"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "β 100–300"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              6,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            10,
+            8
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "bias_what_if_beta_base_resistor",
+      "topicId": "bjt_bias",
+      "prompt": "An NPN transistor is biased by a single base resistor R_B = {Rb} from {Vcc}, with R_C = {Rc} in the collector and the emitter grounded. It runs in the active region. The transistor (β = {beta}) is replaced by another of the same type with β = {new_beta}, within the datasheet's spread. What happens to the collector current?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "range": {
+            "min": 9,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "Rb",
+          "unit": "Ω",
+          "values": [
+            470000,
+            560000,
+            680000
+          ]
+        },
+        {
+          "name": "Rc",
+          "unit": "Ω",
+          "value": 1000
+        },
+        {
+          "name": "beta",
+          "unit": "",
+          "values": [
+            100,
+            150
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Ib",
+          "formula": "(Vcc-0.7)/Rb",
+          "unit": "A"
+        },
+        {
+          "name": "VceAfter",
+          "formula": "Vcc-2*beta*(Vcc-0.7)/Rb*Rc",
+          "unit": "V"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the collector current",
+        "formula": "beta*(Vcc-0.7)/Rb",
+        "unit": "A",
+        "change": {
+          "beta": "2*beta"
+        },
+        "askFactor": true,
+        "factorHint": "R_B fixes I_B = (V_CC − 0.7 V)/R_B whatever the transistor, so the new part sees the same base current. Look at how β enters I_C = β·I_B.",
+        "feedback": {
+          "down": "A higher β never chokes the collector: R_B still sets the base current at (V_CC − 0.7 V)/R_B whatever the transistor, and I_C is that base current times the part's own β.",
+          "same": "Nothing holds I_C steady here: R_B fixes the base current whatever the transistor, and the transistor multiplies that same base current by its own β. Nothing in the circuit feeds back to pull I_B down when β is high."
+        }
+      },
+      "explanation": "The base current I_B = ({Vcc} − 0.7 V)/{Rb} = {Ib} is set by R_B alone and doesn't depend on the transistor, so I_C = β·I_B follows β: {before} → {after}. The stage stays in the active region (V_CE is still {VceAfter}), but its operating point has moved a long way, and a wider β spread could push it into saturation. With divider bias and an emitter resistor, β drops out instead.",
+      "hints": [
+        "Does the new transistor change the base current?",
+        "I_C = β·(V_CC − 0.7 V)/R_B."
+      ],
+      "schematic": {
+        "netlist": "Bias\nVCC vcc 0 {Vcc:spice}\nRB vcc b {Rb:spice}\nRC vcc c {Rc:spice}\nQ1 c b 0 QN\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          },
+          {
+            "ref": "RB",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R_B\n{Rb}"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C\n{Rc}"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "β = {beta}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              6,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            10,
+            8
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "bias_what_if_beta_divider",
+      "topicId": "bjt_bias",
+      "prompt": "A transistor stage runs from {Vcc} with a divider on its base (R1 = {R1} to the supply, R2 = {R2} to ground), R_E = {Re} in the emitter and R_C = {Rc} in the collector. The divider is stiff: its current is more than ten times the base current, so treat V_B as the unloaded divider voltage. The transistor (β = {beta}) is replaced by one with β = {new_beta}. What happens to the collector current, to within 5 %?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "values": [
+            9,
+            12,
+            15
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            33000,
+            39000,
+            47000
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "value": 10000
+        },
+        {
+          "name": "Re",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500
+          ]
+        },
+        {
+          "name": "Rc",
+          "unit": "Ω",
+          "value": 2200
+        },
+        {
+          "name": "beta",
+          "unit": "",
+          "values": [
+            100,
+            150
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vb",
+          "formula": "Vcc*R2/(R1+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "Ve",
+          "formula": "Vcc*R2/(R1+R2)-0.7",
+          "unit": "V"
+        },
+        {
+          "name": "Rth",
+          "formula": "R1*R2/(R1+R2)",
+          "unit": "Ω"
+        },
+        {
+          "name": "IcTh",
+          "formula": "(Vcc*R2/(R1+R2)-0.7)/(Re+R1*R2/(R1+R2)/(beta+1))*beta/(beta+1)",
+          "unit": "A"
+        },
+        {
+          "name": "IcTh2",
+          "formula": "(Vcc*R2/(R1+R2)-0.7)/(Re+R1*R2/(R1+R2)/(2*beta+1))*2*beta/(2*beta+1)",
+          "unit": "A"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the collector current",
+        "formula": "(Vcc*R2/(R1+R2)-0.7)/Re",
+        "unit": "A",
+        "change": {
+          "beta": "2*beta"
+        },
+        "feedback": {
+          "up": "A single base resistor would double it (I_C = β·I_B). Here V_B, V_E and R_E set I_E, and none of them depends on β. The only effect is the smaller base-current drop in R1∥R2, a rise of under 5 % (see the explanation).",
+          "down": "A higher β never lowers the current by itself, and V_B, V_E and R_E, which set the current here, haven't changed."
+        }
+      },
+      "explanation": "The divider fixes V_B = {Vb} (Dividers topic), the emitter sits at V_E = V_B − 0.7 V = {Ve}, and R_E turns that into I_E = {Ve}/{Re} = {before} ≈ I_C. β isn't in that chain, so in the stiff-divider model the current stays at {after}; the higher-β part just draws half the base current. Treating the divider as a Thevenin source (R_th = R1∥R2 = {Rth}) shows the small leftover effect: counting the base current's drop across R_th, I_C really moves from about {IcTh} to {IcTh2}: under 5 %, where a single base resistor would double it. This is R_E's negative feedback at work.",
+      "hints": [
+        "Which of V_B, V_E and R_E depends on β?",
+        "I_C ≈ (V_B − 0.7 V)/R_E."
+      ],
+      "schematic": {
+        "netlist": "Bias\nVCC vcc 0 {Vcc:spice}\nR1 vcc b {R1:spice}\nR2 b 0 {R2:spice}\nRC vcc c {Rc:spice}\nQ1 c b e QN\nRE e 0 {Re:spice}\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              2,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              8
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "RC",
+            "at": [
+              12,
+              0
+            ],
+            "rot": 90,
+            "label": "RC\n{Rc}"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              10,
+              8
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "RE",
+            "at": [
+              12,
+              10
+            ],
+            "rot": 90,
+            "label": "RE\n{Re}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              12,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              4
+            ],
+            [
+              8,
+              8
+            ],
+            [
+              10,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              12,
+              6
+            ]
+          ],
+          [
+            [
+              2,
+              6
+            ],
+            [
+              2,
+              14
+            ],
+            [
+              12,
+              14
+            ]
+          ],
+          [
+            [
+              8,
+              12
+            ],
+            [
+              8,
+              14
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            14
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "bias_design_re",
+      "topicId": "bjt_bias",
+      "prompt": "A transistor stage runs from 12 V. A divider sets its base: R1 = {R1} to the supply and R2 = 10 kΩ to ground. Assume β is high enough that the base current doesn't load the divider, so treat V_B as the unloaded divider voltage. R_C = 2.2 kΩ is in the collector. Choose the emitter resistor R_E (an E24 value) so the collector current is {Ic}, within 8 % (take V_BE = 0.7 V and I_C ≈ I_E).",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            27000,
+            33000,
+            39000,
+            47000
+          ]
+        },
+        {
+          "name": "Ic",
+          "unit": "A",
+          "values": [
+            0.0005,
+            0.00075,
+            0.001,
+            0.00125,
+            0.0015
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vb",
+          "formula": "12*10000/(R1+10000)",
+          "unit": "V"
+        },
+        {
+          "name": "Ve",
+          "formula": "12*10000/(R1+10000)-0.7",
+          "unit": "V"
+        },
+        {
+          "name": "Rex",
+          "formula": "(12*10000/(R1+10000)-0.7)/Ic",
+          "unit": "Ω"
+        },
+        {
+          "name": "Vce",
+          "formula": "12-Ic*2200-(12*10000/(R1+10000)-0.7)",
+          "unit": "V"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "RE",
+            "label": "R_E",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 100,
+            "max": 10000
+          }
+        ],
+        "result": "(12*10000/(R1+10000)-0.7)/RE",
+        "resultLabel": "collector current",
+        "resultUnit": "A",
+        "target": "Ic",
+        "tolerance": 0.08
+      },
+      "explanation": "The divider sets V_B = 12 V × 10 kΩ/({R1} + 10 kΩ) = {Vb} (Dividers). The emitter sits one V_BE lower, V_E = {Ve}, and that voltage is across R_E, so I_E = V_E/R_E. For I_C ≈ I_E = {Ic}: R_E = {Ve}/{Ic} = {Rex}; pick the nearest E24 value. β doesn't enter, which is the point of this bias. R_C doesn't either: it only sets V_CE = 12 V − I_C·R_C − V_E = {Vce}, which keeps the transistor well out of saturation.",
+      "hints": [
+        "What voltage does the divider put on the base, and where does that leave the emitter?",
+        "R_E = (V_B − 0.7 V)/I_C."
+      ],
+      "followUps": [
+        {
+          "prompt": "R_C = 2.2 kΩ didn't appear anywhere in your calculation of I_C. Why not?",
+          "choices": [
+            {
+              "text": "In the active region the collector passes whatever current the base–emitter loop sets; R_C only decides how far the collector voltage falls",
+              "correct": true,
+              "feedback": "Right: V_B, V_BE and R_E fix I_E, and the collector collects nearly all of it. R_C turns that current into a voltage drop."
+            },
+            {
+              "text": "It does matter: a larger R_C would cut the current, by Ohm's law",
+              "feedback": "Only once R_C is so large that the collector falls to about 0.2 V and the transistor saturates. Until then a larger R_C just lowers the collector voltage; I_C stays at V_E/R_E."
+            },
+            {
+              "text": "The collector current doesn't flow through R_C",
+              "feedback": "It does: it comes from the supply through R_C into the collector. R_C carries it; it just doesn't set its size."
+            },
+            {
+              "text": "R_C is small next to R1, so it can be neglected",
+              "feedback": "Size isn't the reason: R_C is in a different loop from the divider. Even a much larger R_C leaves I_C unchanged as long as the transistor stays out of saturation."
+            }
+          ],
+          "explanation": "The loop that sets the current is the divider, the base–emitter junction and R_E: V_E = V_B − 0.7 V, so I_E = V_E/R_E. The reverse-biased collector junction collects almost all of I_E whatever its voltage, so the collector behaves like a current source. R_C is on the other side of that current source: it sets V_C = 12 V − I_C·R_C, which is how a later amplifier turns a current change into a voltage change."
+        }
+      ],
+      "schematic": {
+        "netlist": "Bias (drawing)\nVCC vcc 0 12\nR1 vcc b {R1:spice}\nR2 b 0 10k\nRC vcc c 2.2k\nQ1 c b e QN\nRE e 0 1k\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              -2,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              5,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              5,
+              8
+            ],
+            "rot": 90,
+            "label": "R2\n10 kΩ"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              12,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C\n2.2 kΩ"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              10,
+              8
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "RE",
+            "at": [
+              12,
+              10
+            ],
+            "rot": 90,
+            "label": "R_E = ?"
+          }
+        ],
+        "wires": [
+          [
+            [
+              -2,
+              2
+            ],
+            [
+              -2,
+              0
+            ],
+            [
+              12,
+              0
+            ]
+          ],
+          [
+            [
+              5,
+              4
+            ],
+            [
+              5,
+              8
+            ],
+            [
+              10,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              12,
+              6
+            ]
+          ],
+          [
+            [
+              -2,
+              6
+            ],
+            [
+              -2,
+              14
+            ],
+            [
+              12,
+              14
+            ]
+          ],
+          [
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              14
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            2,
+            14
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    }
+  ]
+}

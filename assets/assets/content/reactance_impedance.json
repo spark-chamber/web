@@ -1,0 +1,1124 @@
+{
+  "topics": [
+    {
+      "id": "reactance_impedance",
+      "title": "Reactance and impedance",
+      "summary": "Capacitors and inductors resist AC by an amount that depends on frequency; combine that with resistance as phasors, not plain numbers.",
+      "lenses": [
+        "circuit",
+        "math",
+        "signals"
+      ],
+      "prerequisites": [
+        "series_parallel",
+        "rc_time_constant",
+        "inductors"
+      ],
+      "lensNotes": {
+        "circuit": "X_C = 1/(2πfC) falls with frequency, so capacitors pass high frequencies; X_L = 2πfL rises, so inductors block them. Impedance extends Ohm's law to AC: V = I·Z.",
+        "math": "Impedance is a complex number: Z = R + jX, where the reactance X is +X_L for an inductor and −X_C for a capacitor. Magnitudes combine like the sides of a right triangle, |Z| = √(R² + X²), and the phase angle is atan(X/R): positive for an inductor, negative for a capacitor.",
+        "signals": "Because X depends on frequency, every RC or RL network treats different frequencies differently, which is what makes filters. The phase shift between current and voltage is the signal lens on the same fact."
+      },
+      "formulas": [
+        {
+          "label": "Capacitor",
+          "tex": "X_C = \\frac{1}{2\\pi f C}"
+        },
+        {
+          "label": "Inductor",
+          "tex": "X_L = 2\\pi f L"
+        },
+        {
+          "label": "Series RC",
+          "tex": "|Z| = \\sqrt{R^2 + X_C^2},\\ \\ \\varphi = -\\arctan\\frac{X_C}{R}"
+        },
+        {
+          "label": "Series RL",
+          "tex": "|Z| = \\sqrt{R^2 + X_L^2}"
+        },
+        {
+          "label": "AC Ohm's law",
+          "tex": "I = \\frac{V}{|Z|}"
+        }
+      ],
+      "prerequisiteNotes": {
+        "series_parallel": "Impedances combine in series and parallel with the same rules as resistances, just with complex numbers.",
+        "rc_time_constant": "A capacitor's reactance, 1/(2πfC), is why an RC circuit behaves differently at different speeds.",
+        "inductors": "X_L = 2πfL follows from v = L·di/dt."
+      },
+      "goals": [
+        "Find the reactance of a capacitor or an inductor at a given frequency, and say which way it moves when the frequency changes",
+        "Combine a resistance and a reactance in series into an impedance magnitude and phase angle, and use I = V/|Z| to find the current",
+        "Explain why a capacitor's current leads its voltage by 90° and an inductor's current lags by 90°",
+        "Predict how a series RC or RL circuit behaves at DC, at very high frequency, and in between"
+      ],
+      "intuition": "For a steady sine wave, a capacitor opposes current less as the frequency rises and an inductor more, and because a reactance's current and voltage peak a quarter cycle apart, in series it combines with resistance like the sides of a right triangle, not like plain numbers.",
+      "why": "A capacitor's current is i = C·dv/dt: it flows only while the voltage is changing. At twice the frequency and the same amplitude, the voltage changes twice as fast, twice the current flows, and X_C = 1/(2πfC) halves. An inductor's voltage is v = L·di/dt, so the same current at a higher frequency takes more voltage: X_L = 2πfL rises. For a sine, the rate of change is largest at the zero crossings, so a capacitor's current peaks a quarter cycle before its voltage and an inductor's a quarter cycle after. That 90° offset is why reactance and resistance cannot simply be added.",
+      "explanation": "In a resistor, Ohm's law sets the current: I = V/R. With a sine wave, a capacitor or an inductor also limits the current, by an amount that depends on frequency: its reactance, X, in ohms. A capacitor's is X_C = 1/(2πfC): infinite at DC (an open circuit) and falling toward zero as the frequency rises. An inductor's is X_L = 2πfL: zero at DC (just a wire) and rising with frequency. With ω in rad/s instead of f in hertz, they are 1/(ωC) and ωL. Reactance differs from resistance in timing. In a resistor, current and voltage peak together. In a capacitor the current peaks a quarter cycle (90°) before the voltage; in an inductor, 90° after. So a resistance and a reactance in series add like the sides of a right triangle: |Z| = √(R² + X²). This is the impedance, and Ohm's law carries over as I = V/|Z|. The phase angle of a series RL is +atan(X_L/R), the voltage leading the current; of a series RC, −atan(X_C/R), the voltage lagging. As complex numbers, Z = R + jX_L or R − jX_C, and impedances combine by the same rules as resistances.",
+      "workedExample": {
+        "problem": "A 5 V (amplitude) sine at 1 kHz drives a 1 kΩ resistor in series with a 100 nF capacitor. Find the capacitor's reactance, the impedance and its phase angle, the current, and the voltage across each part. Then find the current at 10 kHz.",
+        "steps": [
+          "X_C = 1/(2πfC) = 1/(2π × 1 kHz × 100 nF) = 1/(2π × 10³ Hz × 10⁻⁷ F) = 1.59 kΩ.",
+          "|Z| = √(R² + X_C²) = √((1 kΩ)² + (1.59 kΩ)²) = 1.88 kΩ, not 1 kΩ + 1.59 kΩ = 2.59 kΩ.",
+          "φ = −atan(X_C/R) = −atan(1.59 kΩ / 1 kΩ) = −57.9°: the voltage across the pair lags the current by 57.9°.",
+          "I = V/|Z| = 5 V / 1.88 kΩ = 2.66 mA (amplitude).",
+          "V_R = I·R = 2.66 mA × 1 kΩ = 2.66 V and V_C = I·X_C = 2.66 mA × 1.59 kΩ = 4.23 V. They add to 6.89 V as plain numbers, more than the 5 V supply, but they peak 90° apart: √((2.66 V)² + (4.23 V)²) = 5.00 V.",
+          "At 10 kHz: X_C = 1/(2π × 10 kHz × 100 nF) = 159 Ω, |Z| = √((1 kΩ)² + (159 Ω)²) = 1.01 kΩ, and I = 5 V / 1.01 kΩ = 4.94 mA. Ten times the frequency raised the current by less than 2×, because the resistor now sets most of the impedance."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. II (AC), ch. 4 \"Reactance and Impedance -- Capacitive\", section \"AC capacitor circuits\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/AC/AC_4.html#xtocid88941",
+          "note": "A capacitor passes current in proportion to dv/dt, so its current leads its voltage by 90° and X_C = 1/(2πfC) = 1/(ωC) falls as frequency rises."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. II (AC), ch. 3 \"Reactance and Impedance -- Inductive\", section \"AC inductor circuits\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/AC/AC_3.html#xtocid88851",
+          "note": "An inductor drops voltage in proportion to di/dt, so its current lags its voltage by 90° and X_L = 2πfL = ωL rises with frequency."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. II (AC), ch. 4 \"Reactance and Impedance -- Capacitive\", section \"Series resistor-capacitor circuits\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/AC/AC_4.html#xtocid88942",
+          "note": "In a series RC circuit Z = R − jX_C, so |Z| = √(R² + X_C²) at a negative angle of arctan(X_C/R), with the source voltage lagging the current, and I = V/Z."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "z_xc",
+      "topicId": "reactance_impedance",
+      "prompt": "What is the reactance of a {C} capacitor at {f}?",
+      "variables": [
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -8,
+            -6
+          ]
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "series": "E12",
+          "decades": [
+            2,
+            4
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "1/(2*pi*f*C)",
+        "unit": "Ω"
+      },
+      "explanation": "X_C = 1/(2πfC) = 1/(2π × {f} × {C}) = {answer}. Double the frequency and the reactance halves.",
+      "hints": [
+        "Capacitive reactance falls as frequency rises.",
+        "X_C = 1/(2πfC)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "2*pi*f*C",
+          "feedback": "That's 2πfC (the susceptance, in siemens). Reactance is its inverse: X_C = 1/(2πfC)."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does a capacitor's reactance fall as the frequency rises?",
+          "choices": [
+            {
+              "text": "Its current is set by how fast its voltage changes (i = C·dv/dt), and a higher frequency changes it faster",
+              "feedback": "Right: each half cycle moves the same charge, C times the voltage swing, but in less time, so more current flows for the same voltage.",
+              "correct": true
+            },
+            {
+              "text": "The capacitance grows at high frequency",
+              "feedback": "C is fixed by the plates and the dielectric. What changes is how often that charge is moved."
+            },
+            {
+              "text": "Charge leaks straight through the dielectric at high frequency",
+              "feedback": "No charge crosses an ideal dielectric at any frequency. Current flows in the wires as the plates fill and empty; the faster they alternate, the more current."
+            },
+            {
+              "text": "The capacitor stays fully charged, so it stops opposing the current",
+              "feedback": "The opposite: at high frequency it never has time to charge much, so it builds up little voltage to oppose the current."
+            }
+          ],
+          "explanation": "Every half cycle the plates take on a charge Q = C·V and give it back. At twice the frequency the same charge moves in half the time: twice the current for the same voltage, so half the reactance. At DC nothing moves once the capacitor is charged, so X_C is infinite. This is why a capacitor 'passes' high frequencies and blocks DC."
+        }
+      ],
+      "noDrawing": "the reactance of a single capacitor at a frequency; no circuit",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "z_xl",
+      "topicId": "reactance_impedance",
+      "prompt": "What is the reactance of a {L} inductor at {f}?",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "H",
+          "series": "E12",
+          "decades": [
+            -4,
+            -2
+          ]
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "series": "E12",
+          "decades": [
+            2,
+            4
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "2*pi*f*L",
+        "unit": "Ω"
+      },
+      "explanation": "X_L = 2πfL = 2π × {f} × {L} = {answer}. Inductive reactance grows with frequency.",
+      "hints": [
+        "Inductive reactance rises with frequency.",
+        "X_L = 2πfL."
+      ],
+      "misconceptions": [
+        {
+          "formula": "1/(2*pi*f*L)",
+          "feedback": "That's the capacitor's form. For an inductor, X_L = 2πfL: more frequency, more reactance."
+        }
+      ],
+      "noDrawing": "the reactance of a single inductor at a frequency; no circuit",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "z_series_rc",
+      "topicId": "reactance_impedance",
+      "prompt": "A {R} resistor is in series with a {C} capacitor. What is the magnitude of their impedance at {f}?",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            2.2e-08,
+            2.7e-08,
+            3.3e-08,
+            3.9e-08,
+            4.7e-08,
+            5.6e-08,
+            6.8e-08,
+            8.2e-08,
+            1e-07
+          ]
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "values": [
+            500,
+            1000,
+            2000
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Xc",
+          "formula": "1/(2*pi*f*C)",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "sqrt(R^2+(1/(2*pi*f*C))^2)",
+        "unit": "Ω"
+      },
+      "explanation": "X_C = 1/(2πfC) = {Xc}. Resistance and reactance are 90° apart, so they combine like a right triangle: |Z| = √(R² + X_C²) = √({R}² + {Xc}²) = {answer}.",
+      "hints": [
+        "Find X_C first.",
+        "|Z| = √(R² + X²), not R + X."
+      ],
+      "misconceptions": [
+        {
+          "formula": "R+1/(2*pi*f*C)",
+          "feedback": "R and X_C are 90° out of phase, so they don't add directly. Use |Z| = √(R² + X_C²)."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why is |Z| = √(R² + X_C²) and not simply R + X_C?",
+          "choices": [
+            {
+              "text": "The voltages across R and C peak a quarter cycle apart, so their peaks never add",
+              "feedback": "Right: V_R is in step with the current and V_C lags it by 90°. The total is their phasor sum, the long side of a right triangle.",
+              "correct": true
+            },
+            {
+              "text": "X_C isn't in ohms, so it can't be added to R",
+              "feedback": "X_C is in ohms: I·X_C gives the capacitor's voltage amplitude. The problem is timing, not units."
+            },
+            {
+              "text": "The capacitor's reactance is negative, so it partly cancels R",
+              "feedback": "In complex form the capacitor's part is indeed −jX_C, but the j puts it at right angles to R, so it can't cancel it. Opposite reactances cancel (a capacitor against an inductor); R and X_C add at right angles, like the two short sides of a right triangle. |Z| is bigger than either, smaller than their sum."
+            },
+            {
+              "text": "The capacitor wastes some energy, which makes the total smaller",
+              "feedback": "An ideal capacitor wastes nothing; it stores energy and gives it back. The smaller total comes from timing."
+            }
+          ],
+          "explanation": "The same current flows through both parts. v_R peaks with the current; v_C peaks a quarter cycle later. Their amplitudes are I·R and I·X_C, and two sines 90° apart add to a sine whose amplitude is √(V_R² + V_C²), not V_R + V_C. Divide by I and you get |Z| = √(R² + X_C²). It's the series rule from Series and parallel resistance, with phase included."
+        }
+      ],
+      "schematic": {
+        "netlist": "Series RC\nR1 a m {R:spice}\nC1 m b {C:spice}\n",
+        "parts": [
+          {
+            "ref": "R1",
+            "at": [
+              0,
+              0
+            ],
+            "label": "R\n{R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              4,
+              0
+            ],
+            "label": "C\n{C}"
+          }
+        ],
+        "wires": [],
+        "grounds": [],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              0,
+              0
+            ],
+            "left": true
+          },
+          {
+            "text": "b",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "z_rc_phase",
+      "topicId": "reactance_impedance",
+      "prompt": "A {R} resistor in series with a {C} capacitor is driven at {f}. What is the phase of the voltage across the pair relative to the current, in degrees? Give the sign: negative means the voltage lags (a capacitor alone would be −90°).",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            1200,
+            1800,
+            2700,
+            3900,
+            5600,
+            8200
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            1.2e-08,
+            1.5e-08,
+            1.8e-08,
+            2.2e-08,
+            3.3e-08,
+            4.7e-08,
+            6.8e-08,
+            8.2e-08,
+            1e-07,
+            1.2e-07,
+            1.5e-07,
+            1.8e-07,
+            2.2e-07
+          ]
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "value": 1000
+        }
+      ],
+      "derived": [
+        {
+          "name": "Xc",
+          "formula": "1/(2*pi*f*C)",
+          "unit": "Ω"
+        },
+        {
+          "name": "ratio",
+          "formula": "1/(2*pi*f*C*R)",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "-atan(1/(2*pi*f*C*R))*180/pi",
+        "unit": "°"
+      },
+      "explanation": "φ = −atan(X_C/R) = −atan({Xc}/{R}) = −atan({ratio}) = {answer}. The capacitor makes the voltage lag the current (by 90° for a capacitor alone, 0° for a resistor alone).",
+      "hints": [
+        "The phase is the angle of Z = R − jX_C.",
+        "φ = −atan(X_C/R), converted to degrees."
+      ],
+      "misconceptions": [
+        {
+          "formula": "-atan(1/(2*pi*f*C*R))",
+          "feedback": "That's in radians. Multiply by 180/π for degrees."
+        },
+        {
+          "formula": "-atan(2*pi*f*C*R)*180/pi",
+          "feedback": "The ratio is upside down: use atan(X_C/R), with X_C = 1/(2πfC)."
+        }
+      ],
+      "schematic": {
+        "netlist": "Series RC driven by a sine\nV1 in 0 SIN(0 1 {f:spice})\nR1 in m {R:spice}\nC1 m 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "sine\n{f}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R\n{R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "z_rl_current",
+      "topicId": "reactance_impedance",
+      "prompt": "A {V} (amplitude) sine at {f} drives a {R} resistor in series with a {L} inductor. What is the current amplitude?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 10,
+            "step": 1
+          }
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            100,
+            120,
+            150,
+            180,
+            220,
+            270,
+            330
+          ]
+        },
+        {
+          "name": "L",
+          "unit": "H",
+          "values": [
+            0.039,
+            0.047,
+            0.056,
+            0.068
+          ]
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "values": [
+            500,
+            1000,
+            2000
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "XL",
+          "formula": "2*pi*f*L",
+          "unit": "Ω"
+        },
+        {
+          "name": "Z",
+          "formula": "sqrt(R^2+(2*pi*f*L)^2)",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "V/sqrt(R^2+(2*pi*f*L)^2)",
+        "unit": "A"
+      },
+      "explanation": "X_L = 2πfL = {XL}. |Z| = √(R² + X_L²) = {Z}. Ohm's law for AC: I = V/|Z| = {V}/{Z} = {answer}.",
+      "hints": [
+        "Work out |Z| first.",
+        "I = V/√(R² + X_L²)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V/R",
+          "feedback": "The inductor adds reactance at AC: divide by |Z| = √(R² + X_L²), not by R alone."
+        },
+        {
+          "formula": "V/(R+2*pi*f*L)",
+          "feedback": "R and X_L are 90° apart, so combine them as √(R² + X_L²), not R + X_L."
+        }
+      ],
+      "schematic": {
+        "netlist": "Series RL driven by a sine\nV1 in 0 SIN(0 {V:spice} {f:spice})\nR1 in m {R:spice}\nL1 m 0 {L:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V} peak\n{f}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R\n{R}"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "L\n{L}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "z_extremes",
+      "topicId": "reactance_impedance",
+      "prompt": "How does an ideal capacitor behave at DC and at very high frequency?",
+      "choices": [
+        {
+          "text": "Open circuit at DC, nearly a short at very high frequency",
+          "correct": true,
+          "feedback": "Yes: X_C = 1/(2πfC) is infinite at f = 0 and tends to 0 as f grows."
+        },
+        {
+          "text": "Short at DC, open at very high frequency",
+          "feedback": "That's the inductor. A capacitor blocks DC (once charged, no current flows)."
+        },
+        {
+          "text": "The same at all frequencies",
+          "feedback": "Only a resistor is frequency-independent. X_C falls as frequency rises."
+        },
+        {
+          "text": "Open at both",
+          "feedback": "At high frequency the plates charge and discharge so fast that current flows almost freely: X_C → 0."
+        }
+      ],
+      "explanation": "X_C = 1/(2πfC): infinite at DC (open circuit), and tiny at high frequency (nearly a short). Inductors do the opposite, X_L = 2πfL.",
+      "noDrawing": "a conceptual question about any capacitor; no specific circuit",
+      "level": "recall",
+      "review": "verified"
+    },
+    {
+      "id": "z_leads_lags",
+      "topicId": "reactance_impedance",
+      "prompt": "In a capacitor driven by a sine wave, how are the current and voltage related in time?",
+      "choices": [
+        {
+          "text": "The current leads the voltage by 90°",
+          "correct": true,
+          "feedback": "Yes: i = C·dv/dt, and the derivative of a sine is a cosine, a quarter period ahead."
+        },
+        {
+          "text": "The voltage leads the current by 90°",
+          "feedback": "That's the inductor: v = L·di/dt, so its voltage peaks when the current changes fastest, a quarter period before the current peaks."
+        },
+        {
+          "text": "They're in phase",
+          "feedback": "That's a resistor. A capacitor's current follows the rate of change of voltage."
+        },
+        {
+          "text": "They're 180° apart",
+          "feedback": "180° would be an inverted copy. A capacitor shifts by a quarter period."
+        }
+      ],
+      "explanation": "i = C·dv/dt: the current is largest when the voltage is changing fastest (at its zero crossings), so the current peaks a quarter period before the voltage.",
+      "noDrawing": "a conceptual question about any capacitor; no specific circuit",
+      "level": "recall",
+      "review": "verified"
+    },
+    {
+      "id": "z_what_if_f_xc",
+      "topicId": "reactance_impedance",
+      "prompt": "A {C} capacitor is driven at {f}. The frequency is raised to {new_f}. What happens to its reactance?",
+      "variables": [
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -8,
+            -6
+          ]
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "series": "E12",
+          "decades": [
+            2,
+            3
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the reactance",
+        "formula": "1/(2*pi*f*C)",
+        "unit": "Ω",
+        "change": {
+          "f": "2*f"
+        },
+        "askFactor": true,
+        "feedback": {
+          "up": "That's an inductor (X_L = 2πfL). A capacitor's current follows how fast its voltage changes, so a faster signal drives more current: less reactance.",
+          "same": "Only a resistor ignores frequency. A capacitor's current follows how fast its voltage changes, i = C·dv/dt, and the same amplitude at a higher frequency changes faster, so the ratio of voltage amplitude to current amplitude, X_C = 1/(2πfC), depends on f."
+        }
+      },
+      "explanation": "X_C = 1/(2πfC), so X_C goes as 1/f. Twice the frequency moves the same charge in half the time, twice the current for the same voltage: {before} → {after}.",
+      "hints": [
+        "Does a capacitor pass high frequencies or block them?"
+      ],
+      "schematic": {
+        "netlist": "Capacitor driven by a sine\nV1 in 0 SIN(0 1 {f:spice})\nC1 in 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "sine\n{f}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              6,
+              2
+            ],
+            "rot": 90,
+            "label": "C\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            3,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "z_what_if_f_current",
+      "topicId": "reactance_impedance",
+      "prompt": "A {V} (amplitude) sine at {f} drives a {R} resistor in series with a {C} capacitor. The frequency is raised to {new_f}, with the same amplitude. What happens to the current?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 10,
+            "step": 1
+          }
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "value": 1e-07
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "range": {
+            "min": 100,
+            "max": 200,
+            "step": 50
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "Xc",
+          "formula": "1/(2*pi*f*C)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Xc2",
+          "formula": "1/(2*pi*10*f*C)",
+          "unit": "Ω"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the current",
+        "formula": "V/sqrt(R^2+(1/(2*pi*f*C))^2)",
+        "unit": "A",
+        "change": {
+          "f": "10*f"
+        },
+        "askFactor": true,
+        "feedback": {
+          "down": "A higher frequency doesn't make a capacitor oppose the current more: X_C = 1/(2πfC) shrinks as f rises, and |Z| = √(R² + X_C²) follows it.",
+          "same": "R doesn't change, but X_C = 1/(2πfC) does, and |Z| = √(R² + X_C²) includes it."
+        },
+        "factorHint": "X_C = 1/(2πfC) follows 1/f, but R doesn't change with frequency, and |Z| = √(R² + X_C²) includes both. Work out |Z| before and after; the current is V/|Z|."
+      },
+      "explanation": "X_C falls from {Xc} to {Xc2}, so |Z| = √(R² + X_C²) falls and I = V/|Z| rises: {before} → {after}. It rises by less than ×10, because R doesn't shrink: as X_C gets small, R alone limits the current.",
+      "hints": [
+        "What happens to X_C? Then to |Z| = √(R² + X_C²)?",
+        "Does R change with frequency?"
+      ],
+      "schematic": {
+        "netlist": "Series RC driven by a sine\nV1 in 0 SIN(0 {V:spice} {f:spice})\nR1 in m {R:spice}\nC1 m 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V} peak\n{f}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R\n{R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "z_design_phase",
+      "topicId": "reactance_impedance",
+      "prompt": "A series RC network is driven by a {f} sine. The voltage across the pair must lag the current by {phi}° (within 5% of {phi}°). Choose R (1 kΩ to 100 kΩ) and C (1 nF to 10 µF), both standard E12 values.",
+      "variables": [
+        {
+          "name": "phi",
+          "unit": "",
+          "values": [
+            30,
+            45,
+            60
+          ]
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "values": [
+            500,
+            1000
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "ratio",
+          "formula": "tan(phi*pi/180)",
+          "unit": ""
+        },
+        {
+          "name": "Xc1",
+          "formula": "10000*tan(phi*pi/180)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Cex",
+          "formula": "1/(2*pi*f*10000*tan(phi*pi/180))",
+          "unit": "F"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "R",
+            "label": "R",
+            "unit": "Ω",
+            "series": "E12",
+            "min": 1000,
+            "max": 100000
+          },
+          {
+            "name": "C",
+            "label": "C",
+            "unit": "F",
+            "series": "E12",
+            "min": 1e-09,
+            "max": 1e-05
+          }
+        ],
+        "result": "atan(1/(2*pi*f*R*C))*180/pi",
+        "resultLabel": "phase lag of the voltage",
+        "resultUnit": "°",
+        "target": "phi",
+        "tolerance": 0.05
+      },
+      "explanation": "The angle of Z = R − jX_C is set by the ratio of its sides: the voltage lags by atan(X_C/R). For {phi}° you need X_C/R = tan {phi}° = {ratio}. With R = 10 kΩ, X_C must be {Xc1}, so C = 1/(2π × {f} × X_C) = {Cex}. Round C to E12 and check the angle; if it is outside 5%, try a neighboring R. Scaling R up and C down by the same factor multiplies X_C and R alike, so the ratio, and the angle, stay put: many pairs work.",
+      "hints": [
+        "What sets the angle: the sizes of R and X_C, or their ratio?",
+        "tan φ = X_C/R. Pick R, find the X_C you need, then C = 1/(2πf·X_C)."
+      ],
+      "followUps": [
+        {
+          "prompt": "A 1 kΩ design and a 100 kΩ design can give the same phase angle at {f}. Why?",
+          "choices": [
+            {
+              "text": "The angle depends only on the ratio X_C/R, so scaling R up and C down by the same factor leaves it unchanged",
+              "feedback": "Right: a hundred times the R with a hundredth of the C gives a hundred times the X_C too, so X_C/R and the angle stay the same.",
+              "correct": true
+            },
+            {
+              "text": "The angle depends only on the capacitor, so R can be anything",
+              "feedback": "Change R alone and X_C/R changes, and so does the angle: a bigger R lets the resistor dominate and pulls the angle toward 0°."
+            },
+            {
+              "text": "Both designs have the same impedance magnitude |Z|",
+              "feedback": "|Z| = √(R² + X_C²) is a hundred times bigger in the 100 kΩ design. Only the shape of the R–X_C triangle is the same, not its size."
+            },
+            {
+              "text": "The angle depends only on the frequency",
+              "feedback": "The frequency sets X_C for a given C, but the angle comes from X_C compared with R. At the same frequency, a different X_C/R gives a different angle."
+            }
+          ],
+          "explanation": "R and X_C are the two short sides of a right triangle, and the phase is its angle, set by the ratio of the sides. Multiply R by 100 and divide C by 100: X_C = 1/(2πfC) also grows 100 times, so the triangle is the same shape, only bigger. The current is a hundred times smaller; its timing against the voltage is unchanged."
+        }
+      ],
+      "schematic": {
+        "netlist": "Series RC driven by a sine\nV1 in 0 SIN(0 1 {f:spice})\nR1 in m {R:spice}\nC1 m 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "sine\n{f}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R\n{R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    }
+  ]
+}

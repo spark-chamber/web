@@ -1,0 +1,1026 @@
+{
+  "topics": [
+    {
+      "id": "diode_models",
+      "title": "Practical diodes: equation, 0.7 V model, temperature",
+      "summary": "Real diodes follow the exponential Shockley equation; for quick work use a 0.7 V drop that falls about 2 mV per °C.",
+      "lenses": [
+        "circuit",
+        "physics"
+      ],
+      "prerequisites": [
+        "ideal_diode"
+      ],
+      "lensNotes": {
+        "circuit": "Pick the simplest model that answers the question: ideal (0 V), constant drop (0.7 V for silicon), or the full exponential when currents span decades or temperature matters.",
+        "physics": "Current grows as e^(V/V_T) because carriers must climb an energy barrier, and the fraction that make it follows a Boltzmann distribution. That's why V_T = kT/q appears, and why hotter diodes conduct at lower voltage."
+      },
+      "formulas": [
+        {
+          "label": "Diode equation",
+          "tex": "I = I_S\\left(e^{V_D/(n V_T)} - 1\\right)"
+        },
+        {
+          "label": "Voltage for a current",
+          "tex": "V_D = n V_T \\ln\\frac{I}{I_S}"
+        },
+        {
+          "label": "Temperature",
+          "tex": "\\frac{dV_D}{dT} \\approx -2\\ \\text{mV/}^{\\circ}\\text{C}"
+        },
+        {
+          "label": "Constant-drop model",
+          "tex": "I = \\frac{V_S - 0.7\\ \\text{V}}{R}"
+        },
+        {
+          "label": "Voltage per current ratio",
+          "tex": "\\Delta V_D = n V_T \\ln\\frac{I_2}{I_1}\\ \\ (n = 1:\\ \\approx 60\\ \\text{mV per decade})"
+        }
+      ],
+      "prerequisiteNotes": {
+        "ideal_diode": "The 0.7 V and exponential models refine the on/off picture: a real diode needs some forward voltage, and its current grows exponentially with it."
+      },
+      "goals": [
+        "Choose the simplest model that answers the question: ideal switch, constant 0.7 V drop, or the exponential diode equation",
+        "Find a diode circuit's current with the 0.7 V model, and a diode's current or voltage from I = I_S(e^(V/(nV_T)) − 1)",
+        "Use the 60 mV-per-decade rule (n = 1) to say how far the forward voltage moves when the current changes tenfold",
+        "Predict how a silicon diode's forward voltage shifts with temperature (about −2 mV/°C at a fixed current) and explain why"
+      ],
+      "intuition": "In a forward-biased silicon diode at room temperature, every extra 60 mV or so multiplies the current by ten (for n = 1), so across the milliamp currents most circuits use, its voltage stays near 0.6–0.7 V.",
+      "why": "Forward current is carried by carriers with enough thermal energy to get over the junction's barrier. Their number falls exponentially with the barrier's height, so each V_T = kT/q (about 26 mV) of extra forward voltage lets e ≈ 2.7 times as many across when n = 1: I = I_S(e^(V/(nV_T)) − 1), where n is 1 to about 2. Tenfold current needs n·V_T·ln 10, about 60 mV at n = 1. I_S is proportional to n_i², the square of the density of heat-freed carriers, so it roughly doubles every 5 °C, far faster than V_T grows; at a fixed current the drop falls about 2 mV/°C.",
+      "explanation": "Unlike the ideal diode, a real silicon diode needs a few tenths of a volt before it passes a useful current. Three models of increasing detail describe it. The ideal model, a short or an open, is good enough when 0.7 V is a small part of the supply. The constant-drop model, a fixed 0.7 V when on, suits most circuit work: I = (V − 0.7 V)/R. The exponential (Shockley) equation, I = I_S(e^(V/(nV_T)) − 1), is the full picture. I_S, the reverse saturation current, is a tiny current set by the junction's size, doping and temperature; n, the ideality factor, lies between 1 and 2. Use it when the supply is only a volt or two, when currents span decades, or when temperature matters. Two rules come from it. Ten times the current adds about 60 mV at n = 1 (120 mV at n = 2). Warming the diode lowers its drop about 2 mV per °C at a fixed current. Reverse biased, all three models give almost no current. Real diodes leak a little, and beyond the breakdown voltage the current rises sharply, which none of the three models show.",
+      "workedExample": {
+        "problem": "A silicon diode, modeled with I_S = 1.0 × 10⁻¹³ A and n = 1 at 300 K (V_T = 25.85 mV), is in series with R = 1.0 kΩ across a 5.0 V supply. Find the current with each of the three models, then repeat with a 1.5 V supply. Finally, estimate the diode's voltage at ten times the current, and after warming it by 50 °C.",
+        "steps": [
+          "Ideal model (0 V drop): I = 5.0 V / 1.0 kΩ = 5.00 mA.",
+          "Constant-drop model (0.7 V): I = (5.0 V − 0.7 V) / 1.0 kΩ = 4.30 mA.",
+          "Exponential model: the diode voltage and the current depend on each other, so iterate (the −1 is negligible when I is so far above I_S). Start from 4.30 mA: V_D = n·V_T·ln(I/I_S) = 25.85 mV × ln(4.30 mA / 1.0 × 10⁻¹³ A) = 25.85 mV × 24.48 = 0.633 V. Then I = (5.0 V − 0.633 V) / 1.0 kΩ = 4.37 mA. Repeating at 4.37 mA gives V_D = 25.85 mV × 24.50 = 0.633 V again, so I = 4.37 mA.",
+          "Compare at 5 V: the 0.7 V model (4.30 mA) is 1.6% low and the ideal model (5.00 mA) is 14% high. Here the 0.7 V model is good enough.",
+          "At 1.5 V. Ideal: 1.5 V / 1.0 kΩ = 1.50 mA. Constant drop: (1.5 V − 0.7 V) / 1.0 kΩ = 0.80 mA. Exponential: from 0.80 mA, V_D = 25.85 mV × ln(0.80 mA / 1.0 × 10⁻¹³ A) = 25.85 mV × 22.80 = 0.589 V, so I = (1.5 V − 0.589 V) / 1.0 kΩ = 0.911 mA. Again: V_D = 25.85 mV × ln(0.911 mA / 1.0 × 10⁻¹³ A) = 25.85 mV × 22.93 = 0.593 V, so I = 0.907 mA, where it settles.",
+          "Compare at 1.5 V: the 0.7 V model is now 12% low and the ideal model 65% high. With only a volt or two of supply the diode's exact drop matters, and only the exponential model will do.",
+          "Ten times the current (exponential model, n = 1): V_D rises by V_T·ln 10 = 25.85 mV × 2.303 = 59.5 mV, so at 43.7 mA (with a smaller resistor or a larger supply) the diode drops about 0.633 V + 0.060 V = 0.693 V. A real diode drops a little more at tens of milliamps, across the resistance of its silicon and leads, which the equation leaves out.",
+          "Temperature (rule of thumb, −2 mV/°C at a fixed current): 50 °C warmer, V_D ≈ 0.633 V − 2 mV/°C × 50 °C = 0.533 V. In the 5.0 V circuit the current rises only to about (5.0 V − 0.533 V) / 1.0 kΩ = 4.47 mA, 2% more: the drop moved by 100 mV, but the resistor, with over 4 V across it, still sets the current. The 2% rise in current puts back only V_T·ln 1.02 ≈ 0.5 mV, so treating the current as fixed was fair."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 3 \"Diodes and Rectifiers\", section \"Introduction\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_3.html#xtocid90270",
+          "note": "The diode equation I = I_S(e^(V/(nV_T)) − 1) with V_T = kT/q of about 26 mV at room temperature and an ideality factor of 1 to 2, the constant 0.7 V drop as the usual simplification because the drop changes little over a wide current range, and small reverse leakage up to breakdown."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"PN Junctions and Diodes\", ch. 2 \"Tutorial\", section 2.3 \"PN junction diode behavior\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_pn.pdf",
+          "note": "The Shockley equation with n = 1 for a perfect junction, I_S as a tiny reverse saturation current that changes strongly with temperature, a forward drop that falls as the junction warms, and simulated currents at 0.6 V and 0.7 V that work out to about 60 mV per decade."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "dm_cvd_current",
+      "topicId": "diode_models",
+      "prompt": "Using the constant-voltage-drop model (0.7 V), how much current flows when a {V} source drives a silicon diode and a {R} resistor in series?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 3,
+            "max": 12,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "VR",
+          "formula": "V-0.7",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "(V-0.7)/R",
+        "unit": "A"
+      },
+      "explanation": "The diode takes 0.7 V, leaving {VR} across the resistor: I = {VR} / {R} = {answer}.",
+      "hints": [
+        "Subtract the diode drop before applying Ohm's law.",
+        "I = (V − 0.7) / R."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V/R",
+          "feedback": "That ignores the diode's 0.7 V drop (the ideal model). Subtract it first: I = (V − 0.7) / R."
+        },
+        {
+          "formula": "(V+0.7)/R",
+          "feedback": "The diode drops voltage, so subtract 0.7 V."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "The model uses 0.7 V for the diode whatever the current. Why is that fair?",
+          "choices": [
+            {
+              "text": "The diode's current grows exponentially with its voltage, so even ten times the current raises the drop by only about 60 mV (n = 1; about 120 mV for n = 2)",
+              "correct": true,
+              "feedback": "Right: V = V_T·ln(I/I_S), and a logarithm barely moves. Currents from 0.1 mA to 100 mA all fit within about 0.5–0.8 V."
+            },
+            {
+              "text": "The diode contains a fixed 0.7 V barrier that acts like a small battery",
+              "feedback": "A battery could push current around the loop by itself; a diode never does. The barrier is lowered by the applied voltage, and how far it is lowered sets the current exponentially."
+            },
+            {
+              "text": "The series resistor holds the diode's voltage at 0.7 V",
+              "feedback": "The resistor sets the current, through Ohm's law on the voltage left over. The diode's own exponential law is what keeps its voltage near 0.7 V."
+            },
+            {
+              "text": "The diode's drop grows in proportion to the current, but the current here hardly varies",
+              "feedback": "If the drop were proportional to current, the diode would be a resistor. Across these problems the current varies more than tenfold, yet the drop stays near 0.7 V."
+            }
+          ],
+          "explanation": "From the Shockley equation, V_D = V_T·ln(I/I_S): each tenfold rise in current adds only V_T·ln 10 ≈ 60 mV. So once a silicon diode conducts a useful current, its voltage sits in a narrow band around 0.6–0.7 V, and a fixed 0.7 V is a good stand-in. Kirchhoff's voltage law then leaves V − 0.7 V for the resistor, and Ohm's law gives the current."
+        }
+      ],
+      "schematic": {
+        "netlist": "Diode and resistor\nV1 a 0 {V:spice}\nD1 a b DS\nR1 b 0 {R:spice}\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "Si"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "dm_shockley_current",
+      "topicId": "diode_models",
+      "prompt": "A diode has saturation current I_S = {Is} and ideality factor n = 1, at a thermal voltage of 25.85 mV. What current flows with {Vd} across it?",
+      "variables": [
+        {
+          "name": "Is",
+          "unit": "A",
+          "series": "E12",
+          "decades": [
+            -15,
+            -14
+          ]
+        },
+        {
+          "name": "Vd",
+          "unit": "V",
+          "range": {
+            "min": 0.55,
+            "max": 0.7,
+            "step": 0.01
+          }
+        },
+        {
+          "name": "VT",
+          "unit": "V",
+          "value": 0.02585
+        }
+      ],
+      "answer": {
+        "formula": "Is*(exp(Vd/VT)-1)",
+        "unit": "A"
+      },
+      "explanation": "Shockley: I = I_S (e^(V/(nV_T)) − 1) = {Is} × (e^({Vd}/25.85 mV) − 1) = {answer}. The exponential is why the voltage hardly changes over a wide range of currents.",
+      "hints": [
+        "Use I = I_S (e^(V/(n·V_T)) − 1).",
+        "Compute V/V_T first; the −1 hardly matters in forward bias."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Is*exp(Vd)",
+          "feedback": "Divide the voltage by the thermal voltage inside the exponent: e^(V / V_T)."
+        }
+      ],
+      "noDrawing": "the Shockley equation for one diode, no circuit",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "dm_shockley_voltage",
+      "topicId": "diode_models",
+      "prompt": "A diode with I_S = {Is} and n = 1 carries {I} at a thermal voltage of 25.85 mV. What is its forward voltage?",
+      "variables": [
+        {
+          "name": "Is",
+          "unit": "A",
+          "series": "E12",
+          "decades": [
+            -15,
+            -14
+          ]
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "series": "E12",
+          "decades": [
+            -4,
+            -2
+          ]
+        },
+        {
+          "name": "VT",
+          "unit": "V",
+          "value": 0.02585
+        }
+      ],
+      "answer": {
+        "formula": "VT*ln(I/Is+1)",
+        "unit": "V"
+      },
+      "explanation": "Invert the Shockley equation: V = n·V_T·ln(I/I_S + 1) = 25.85 mV × ln({I} / {Is} + 1) = {answer}.",
+      "hints": [
+        "Solve I = I_S (e^(V/V_T) − 1) for V.",
+        "V = V_T · ln(I / I_S + 1)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "VT*log10(I/Is+1)",
+          "feedback": "Use the natural log (ln), not log₁₀: the exponential is base e."
+        }
+      ],
+      "noDrawing": "the Shockley equation for one diode, no circuit",
+      "review": "verified"
+    },
+    {
+      "id": "dm_decade_shift",
+      "topicId": "diode_models",
+      "prompt": "A diode's current rises by a factor of {k} (n = 1, V_T = 25.85 mV). By how much does its forward voltage rise?",
+      "variables": [
+        {
+          "name": "k",
+          "unit": "",
+          "series": "E12",
+          "decades": [
+            1,
+            1
+          ]
+        },
+        {
+          "name": "VT",
+          "unit": "V",
+          "value": 0.02585
+        }
+      ],
+      "answer": {
+        "formula": "VT*ln(k)",
+        "unit": "V"
+      },
+      "explanation": "Taking the ratio of two Shockley equations: ΔV = n·V_T·ln(I₂/I₁), and with n = 1 that is 25.85 mV × ln({k}) = {answer}. For a factor of 10 that's about 60 mV: the famous '60 mV per decade'.",
+      "hints": [
+        "Write V = V_T ln(I/I_S) for both currents and subtract.",
+        "ΔV = V_T · ln(ratio)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "0.7*(k-1)",
+          "feedback": "That assumes the diode voltage grows in proportion to the current. It grows only logarithmically: ΔV = V_T · ln(ratio)."
+        },
+        {
+          "formula": "VT*log10(k)",
+          "feedback": "The exponential is base e, so use ln: ΔV = V_T·ln(ratio) = 2.303·V_T·log₁₀(ratio), about 60 mV per decade, not 26 mV."
+        }
+      ],
+      "noDrawing": "the Shockley equation for one diode, no circuit",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "dm_temperature",
+      "topicId": "diode_models",
+      "prompt": "A silicon diode carrying a fixed current drops {Vf} at 25 °C. Using a temperature coefficient of −2 mV/°C, what is its forward voltage at {T2}?",
+      "variables": [
+        {
+          "name": "Vf",
+          "unit": "V",
+          "range": {
+            "min": 0.6,
+            "max": 0.7,
+            "step": 0.01
+          }
+        },
+        {
+          "name": "T2",
+          "unit": "°C",
+          "range": {
+            "min": 30,
+            "max": 100,
+            "step": 5
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "dT",
+          "formula": "T2-25",
+          "unit": "°C"
+        }
+      ],
+      "answer": {
+        "formula": "Vf-0.002*(T2-25)",
+        "unit": "V"
+      },
+      "explanation": "ΔT = {dT}. The forward voltage changes by −2 mV/°C × {dT}, so V = {Vf} − 0.002 × ({dT}) = {answer}. Hotter diodes drop less voltage, which is why diodes make simple temperature sensors.",
+      "hints": [
+        "Find the temperature change from 25 °C.",
+        "V = V_f − 2 mV × ΔT: hotter means lower voltage."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vf+0.002*(T2-25)",
+          "feedback": "The coefficient is negative: forward voltage falls as temperature rises."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "At a fixed current, why does a hotter diode need less forward voltage?",
+          "choices": [
+            {
+              "text": "Heat gives more carriers enough energy to get over the barrier (I_S rises steeply), so the barrier needn't be pulled down as far: less forward voltage passes the same current",
+              "correct": true,
+              "feedback": "Right: I_S roughly doubles every 5 °C or so. In V = V_T·ln(I/I_S) that wins over the slow rise of V_T, and V falls about 2 mV/°C."
+            },
+            {
+              "text": "The thermal voltage V_T = kT/q rises with temperature, which lowers the drop",
+              "feedback": "V_T rising on its own would raise V = V_T·ln(I/I_S), not lower it. The drop falls because I_S rises much faster than V_T."
+            },
+            {
+              "text": "Silicon's resistance rises with temperature, so the diode needs less voltage",
+              "feedback": "A higher resistance would need more voltage for the same current, not less. The effect comes from the junction's barrier, not from a resistance."
+            },
+            {
+              "text": "The diode's leakage current rises and bypasses the junction",
+              "feedback": "Leakage is nA against mA forward; the drop falls because I_S rises steeply."
+            }
+          ],
+          "explanation": "V_F = V_T·ln(I/I_S). Warming the diode makes many more thermally generated carriers, and I_S goes as n_i², the square of their density, so I_S climbs steeply, far faster than V_T = kT/q. At the same current the ratio I/I_S shrinks, and V_F drops by about 2 mV per °C. This is the thermal voltage from the PN junction topic at work."
+        }
+      ],
+      "noDrawing": "one diode's temperature coefficient, no circuit",
+      "review": "verified"
+    },
+    {
+      "id": "bridge_diode_thermometer",
+      "topicId": "diode_models",
+      "level": "recall",
+      "bridge": [
+        "physics",
+        "circuit"
+      ],
+      "prompt": "Why can a silicon diode carrying a constant forward current be used as a thermometer?",
+      "choices": [
+        {
+          "text": "Its forward voltage falls about 2 mV per °C, because hotter carriers cross the junction more easily",
+          "correct": true,
+          "feedback": "Yes: the Shockley equation's I_S rises steeply with temperature, so less voltage gives the same current."
+        },
+        {
+          "text": "Its resistance rises with temperature like a metal wire",
+          "feedback": "A diode's voltage actually falls with temperature, the opposite of a metal's resistance."
+        },
+        {
+          "text": "Its current rises with temperature, which the meter reads",
+          "feedback": "The circuit holds the current constant; what changes is the voltage needed to pass it."
+        },
+        {
+          "text": "Its breakdown voltage changes",
+          "feedback": "Breakdown needs a reverse voltage beyond the rating, and its temperature coefficient depends on the mechanism (negative below about 5 V, positive above); a forward-biased silicon junction at a fixed current gives about −2 mV/°C in any diode."
+        }
+      ],
+      "explanation": "At a fixed current, V_F ≈ V_T·ln(I/I_S). I_S grows very fast with temperature (more thermally generated carriers), which outweighs V_T's slow rise, so V_F drops by about 2 mV/°C: a clean, nearly linear sensor.",
+      "noDrawing": "a conceptual question about the junction, no circuit",
+      "review": "verified"
+    },
+    {
+      "id": "dm_design_bias",
+      "topicId": "diode_models",
+      "prompt": "A silicon diode with I_S = {Is} (n = 1, room temperature, V_T = 25.85 mV) is fed from {Vs} through a series resistor. Choose R (an E24 value, 100 Ω to 100 kΩ) so the diode current is {I} within 5%. The simulator checks your design with the full diode equation.",
+      "variables": [
+        {
+          "name": "Vs",
+          "unit": "V",
+          "range": {
+            "min": 1.0,
+            "max": 1.5,
+            "step": 0.1
+          }
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "range": {
+            "min": 0.0005,
+            "max": 0.002,
+            "step": 0.0005
+          }
+        },
+        {
+          "name": "Is",
+          "unit": "A",
+          "value": 1e-13
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vd",
+          "formula": "0.025852*ln(I/Is)",
+          "unit": "V"
+        },
+        {
+          "name": "Rex",
+          "formula": "(Vs-Vd)/I",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rcv",
+          "formula": "(Vs-0.7)/I",
+          "unit": "Ω"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "R",
+            "label": "R",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 100,
+            "max": 100000
+          }
+        ],
+        "result": "(Vs-0.7)/R",
+        "resultLabel": "diode current",
+        "resultUnit": "A",
+        "target": "I",
+        "tolerance": 0.05,
+        "sim": {
+          "netlist": "Diode biased through a resistor\nV1 in 0 DC {Vs:spice}\nR1 in a {R:spice}\nD1 a 0 DX\n.model DX D(IS={Is:spice} N=1)\n",
+          "measure": "mag:i(V1)",
+          "note": "The 0.7 V model is too rough here: at {I} this diode drops only about {Vd}, and with just {Vs} of supply that difference changes the current a lot. Use V_D = V_T·ln(I/I_S)."
+        }
+      },
+      "explanation": "From the diode equation, V_D = V_T·ln(I/I_S) = 25.85 mV × ln({I} / {Is}) = {Vd}. Then R = ({Vs} − V_D)/I = {Rex}; pick the nearest E24 value. The 0.7 V model would give {Rcv}, which lets too much current flow because the real drop is lower.",
+      "hints": [
+        "With a supply this small, a 0.1 V error in the diode drop matters.",
+        "V_D = V_T·ln(I/I_S), then R = (V_s − V_D)/I."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vs}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R = ?"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "D1"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "dm_what_if_vd_60mv",
+      "topicId": "diode_models",
+      "prompt": "A silicon diode (I_S = {Is}, n = 1, room temperature, V_T = 25.85 mV) has {Vd} across it. The voltage is raised to {new_Vd}, just 60 mV more. What happens to the current through it?",
+      "variables": [
+        {
+          "name": "Is",
+          "unit": "A",
+          "series": "E12",
+          "decades": [
+            -15,
+            -14
+          ]
+        },
+        {
+          "name": "Vd",
+          "unit": "V",
+          "range": {
+            "min": 0.55,
+            "max": 0.65,
+            "step": 0.01
+          }
+        },
+        {
+          "name": "VT",
+          "unit": "V",
+          "value": 0.02585
+        }
+      ],
+      "whatIf": {
+        "quantity": "the diode current",
+        "formula": "Is*(exp(Vd/VT)-1)",
+        "unit": "A",
+        "change": {
+          "Vd": "Vd+0.06"
+        },
+        "askFactor": true,
+        "factorHint": "The current isn't a power of the voltage: it goes as e^(V/V_T), so a step ΔV multiplies it by e^(ΔV/V_T), whatever voltage you start from. Work out ΔV/V_T for 60 mV.",
+        "feedback": {
+          "down": "More forward voltage lowers the junction's barrier further, so more carriers have the energy to get over it.",
+          "same": "60 mV looks small next to {Vd}, but the forward voltage lowers the junction's barrier, and the number of carriers with enough energy to cross it grows exponentially as the barrier falls: I follows e^(V/V_T), with V_T about 26 mV."
+        }
+      },
+      "explanation": "Shockley: I = I_S(e^(V/V_T) − 1). Raising V by ΔV multiplies the current by e^(ΔV/V_T) = e^(0.06/0.02585) ≈ 10: {before} → {after}. Read the other way, that's the '60 mV per decade' rule: ten times the current costs only about 60 mV more. It is why a conducting diode's voltage barely changes with current, and why you should never connect a diode straight across a supply: a little too much voltage means far too much current.",
+      "hints": [
+        "The current depends on e^(V/V_T), not on V in proportion.",
+        "e^(0.06/0.02585) = ?"
+      ],
+      "bridge": [
+        "physics",
+        "math"
+      ],
+      "followUps": [
+        {
+          "prompt": "A classmate says 660 mV is only 10 % more than 600 mV, so the current rises about 10 %. What's wrong?",
+          "choices": [
+            {
+              "text": "The current depends on e^(V/V_T), so what matters is the 60 mV step compared with V_T ≈ 26 mV, not compared with 600 mV: e^(60/25.85) ≈ 10.",
+              "correct": true,
+              "feedback": "Right: in an exponential, equal steps in voltage multiply the current by equal factors. 60 mV is about 2.3 V_T, and e^2.3 ≈ 10, whatever voltage you start from."
+            },
+            {
+              "text": "Nothing: a diode obeys Ohm's law once it conducts, so 10 % more voltage gives 10 % more current.",
+              "feedback": "A diode never follows Ohm's law. If it did, its voltage would rise in proportion to its current; instead a conducting diode stays near 0.6–0.7 V while its current changes a thousandfold."
+            },
+            {
+              "text": "The current rises by 60 mV/V_T ≈ 2.3 times, in proportion to the step measured in V_T.",
+              "feedback": "2.3 is the exponent, not the factor. The current goes as e^(V/V_T): every V_T of extra voltage multiplies it by e ≈ 2.7, so a step of 2.3 V_T multiplies it by e^2.3."
+            }
+          ],
+          "explanation": "Shockley's law, I = I_S(e^(V/V_T) − 1), is exponential: a step ΔV multiplies the current by e^(ΔV/V_T), however large V already is. So the size of the step is judged against V_T ≈ 26 mV, the thermal voltage, not against the 600 mV already there. 60 mV is about 2.3 V_T, and e^2.3 ≈ 10: the '60 mV per decade' rule."
+        }
+      ],
+      "noDrawing": "the Shockley equation for one diode, no circuit",
+      "review": "verified"
+    },
+    {
+      "id": "dm_what_if_supply_double",
+      "topicId": "diode_models",
+      "prompt": "A {V} battery drives a silicon diode and a resistor R = {R} in series (use the 0.7 V model). A second, identical battery is added in series, so the supply is now {new_V}. What happens to the current?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            1.5,
+            3,
+            3.7,
+            4.5,
+            6
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the current",
+        "formula": "(V-0.7)/R",
+        "unit": "A",
+        "change": {
+          "V": "2*V"
+        },
+        "askFactor": true,
+        "factorHint": "The current is the resistor's voltage over R, (V − 0.7 V)/R, and the diode's 0.7 V stays put: compare V − 0.7 V with 2V − 0.7 V. A fixed drop, not a square or a root.",
+        "feedback": {
+          "down": "The diode still drops about 0.7 V, so the extra supply voltage all lands on the resistor, and more voltage across the same resistor means more current.",
+          "same": "The diode holds its own voltage near 0.7 V; it doesn't hold the current. The resistor takes everything else, so all of the added battery voltage lands across it, and I = (V − 0.7 V)/R."
+        }
+      },
+      "explanation": "By Kirchhoff's voltage law the resistor gets V − 0.7 V, and by Ohm's law I = (V − 0.7 V)/R: {before} → {after}. The current more than doubles, because doubling V more than doubles V − 0.7 V: the diode's share stays at 0.7 V while all the extra goes to the resistor. A plain resistor circuit would exactly double; the diode's fixed drop breaks the proportion, most of all at low supply voltages.",
+      "hints": [
+        "What voltage does the resistor get before and after?",
+        "Compare (2V − 0.7) with 2 × (V − 0.7)."
+      ],
+      "schematic": {
+        "netlist": "Diode and resistor\nV1 a 0 {V:spice}\nD1 a b DS\nR1 b 0 {R:spice}\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "Si"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "dm_fault_led",
+      "topicId": "diode_models",
+      "prompt": "A {V} supply lights an LED (D2) through resistor R1 = {R} and a protection diode D1, which blocks current if the supply is ever connected backwards (an LED survives only about 5 V in reverse). Healthy, the meters should read {h0} at node b (D1's cathode), {h1} at node c (the LED's anode) and {h2} through R1. The readings are below. Which fault explains them?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 9,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "fault": {
+        "netlist": "LED with protection diode\nV1 a 0 {V:spice}\nD1 a b DN\nR1 b c {R:spice}\nD2 c 0 DL\n.model DN D\n.model DL D(IS=1e-18 N=2)\n",
+        "probes": [
+          {
+            "label": "Voltage at node b (D1's cathode)",
+            "probe": "v(b)"
+          },
+          {
+            "label": "Voltage at node c (the LED's anode)",
+            "probe": "v(c)"
+          },
+          {
+            "label": "Current through R1",
+            "probe": "i(R1)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "D1 is open",
+            "open": "D1",
+            "feedback": "An open D1 would cut the whole chain off from the supply: no current, and node b would fall to about 0 V instead of sitting near the supply.",
+            "why": "No current flows and nothing connects b to the supply any more, so b and c both read about 0 V ({m0}): the break is before b."
+          },
+          {
+            "text": "D1 is shorted",
+            "short": "D1",
+            "feedback": "A shorted D1 would put b at the full {V} and let a little more current flow (the 0.7 V it used to take now goes to R1), with the LED still lit.",
+            "why": "Node b reads the full supply, {m0}, instead of about 0.7 V below it. The resistor now gets 0.7 V more, so the current rises a little, to {m2}. The LED still works, but the circuit has lost its protection."
+          },
+          {
+            "text": "R1 is open",
+            "open": "R1",
+            "feedback": "An open R1 would stop the current. With no current D1 would drop only a few tenths of a volt, so b would rise close to the supply, while c, past the break, would read about 0 V.",
+            "why": "No current flows, so D1 drops only a few tenths of a volt: b reads {m0}, close to the supply. Past the break, c reads about 0 V ({m1}). The voltage jumps across R1 with no current through it, so R1 is the break."
+          },
+          {
+            "text": "The LED (D2) is open",
+            "open": "D2",
+            "feedback": "An open LED would stop the current, and with no current neither D1 nor R1 would drop much, so both b and c would read close to the supply.",
+            "why": "No current, and both b ({m0}) and c ({m1}) sit near the supply: without current a resistor drops nothing and a diode only a few tenths of a volt, so the break is at the LED."
+          },
+          {
+            "text": "The LED (D2) is shorted",
+            "short": "D2",
+            "feedback": "A shorted LED would pull c to 0 V and let more current flow, because R1 then gets the LED's {h1} as well.",
+            "why": "Node c reads 0 V, so c is tied to ground. The current rises to {m2} because R1 now gets everything but D1's 0.7 V."
+          }
+        ]
+      },
+      "explanation": "Follow the current first: zero means something in the chain is open; more than normal means something is shorted. Then use the node voltages. With no current, a resistor drops nothing and a diode only a few tenths of a volt (Ohm's law, and the diode equation at a tiny current), so the voltage stays high up to the break and reads about 0 V after it. A short shows up as two points that read the same voltage.",
+      "hints": [
+        "Is the current zero, normal or higher than normal?",
+        "With no current, where does the voltage jump from high to low?"
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "D1"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              0
+            ],
+            "label": "{R}"
+          },
+          {
+            "ref": "D2",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "LED",
+            "symbol": "led"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              14,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            7,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "b",
+            "at": [
+              7,
+              0
+            ]
+          },
+          {
+            "text": "c",
+            "at": [
+              13,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    }
+  ]
+}

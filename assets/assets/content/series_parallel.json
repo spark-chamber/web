@@ -1,0 +1,1652 @@
+{
+  "topics": [
+    {
+      "id": "series_parallel",
+      "title": "Series and parallel resistance",
+      "summary": "Resistors in series add; in parallel the total is smaller than the smallest one.",
+      "lenses": [
+        "circuit",
+        "math"
+      ],
+      "prerequisites": [
+        "ohms_law",
+        "si_prefixes"
+      ],
+      "lensNotes": {
+        "circuit": "Series parts share a current; parallel parts share a voltage. Most resistor networks reduce to a single resistance by combining pairs from the inside out.",
+        "math": "Series resistances add; parallel conductances (1/R) add. Product-over-sum is just 1/(1/R₁ + 1/R₂) for two resistors, and a parallel pair is always smaller than either one."
+      },
+      "formulas": [
+        {
+          "label": "Series",
+          "tex": "R = R_1 + R_2 + \\cdots"
+        },
+        {
+          "label": "Parallel",
+          "tex": "\\frac{1}{R} = \\frac{1}{R_1} + \\frac{1}{R_2} + \\cdots"
+        },
+        {
+          "label": "Two in parallel",
+          "tex": "R_1 \\parallel R_2 = \\frac{R_1 R_2}{R_1 + R_2}"
+        }
+      ],
+      "prerequisiteNotes": {
+        "ohms_law": "Each series and parallel rule comes from applying V = IR to every resistor: in series the voltages add at one current, in parallel the currents add at one voltage.",
+        "si_prefixes": "Resistances come as 4.7 kΩ or 220 Ω; adding and combining them means working comfortably across prefixes."
+      },
+      "goals": [
+        "Find the total resistance of resistors in series, and of resistors in parallel",
+        "Reduce a series-parallel network to one resistance by combining pairs from the inside out",
+        "Tell from a schematic which parts are in series and which are in parallel, by tracing the nodes their ends connect to",
+        "Explain why adding a resistor in parallel always lowers the total resistance, whatever its value"
+      ],
+      "intuition": "A resistor added in series is one more part the same current must pass through, so resistance goes up; a resistor added in parallel is one more path for current between the same two nodes, so resistance goes down, below the smallest branch.",
+      "why": "In a series chain there is only one path, so the same current flows through every part (charge cannot leave the chain between them). Each part drops I·R, and the drops add: V = I·(R1 + R2). In parallel, both ends of every branch sit on the same two nodes, so every branch has the same voltage across it and carries its own current, V / R. The currents add, so the conductances 1/R add. An extra branch only adds current at the same voltage, so the combination's resistance is below the smallest branch.",
+      "explanation": "Ohm's law, V = I·R, relates one resistor's voltage and current. Circuits with several resistors start by finding the single resistance they add up to. Two parts are in series when they are joined end to end at a node with nothing else connected to that node. They carry the same current, and their resistances add: 1 kΩ + 2.2 kΩ = 3.2 kΩ. Two parts are in parallel when both their ends connect to the same two nodes. A node is one piece of metal: every wire joined together, however it is drawn. Parallel parts have the same voltage across them, and for two of them R = R1·R2 / (R1 + R2), product over sum. For more, add the reciprocals: 1/R = 1/R1 + 1/R2 + 1/R3. Two useful checks: a parallel combination is always smaller than its smallest resistor, and n equal resistors in parallel give R / n. A mixed network reduces from the inside out: combine one series or parallel pair, redraw it as a single resistor, and repeat until one is left. Judge series or parallel by where the ends connect, never by how the parts are laid out on the page.",
+      "workedExample": {
+        "problem": "R1 = 1 kΩ is in series with the parallel pair R2 = 2.2 kΩ and R3 = 4.7 kΩ. Find the total resistance, and the current a 5 V supply drives through the network.",
+        "steps": [
+          "Start inside, with the parallel pair: R2 ∥ R3 = (2.2 kΩ × 4.7 kΩ) / (2.2 kΩ + 4.7 kΩ) = 10.34 kΩ² / 6.9 kΩ = 1.50 kΩ.",
+          "Check with conductances: 1 / 2.2 kΩ = 0.455 mS and 1 / 4.7 kΩ = 0.213 mS; 0.455 mS + 0.213 mS = 0.667 mS, and 1 / 0.667 mS = 1.50 kΩ. It is smaller than 2.2 kΩ, the smaller branch, as it must be.",
+          "Now R1 is in series with that 1.50 kΩ: R = 1 kΩ + 1.50 kΩ = 2.50 kΩ.",
+          "Current from the supply: I = 5 V / 2.50 kΩ = 2.00 mA.",
+          "The pair shares one voltage: 2.00 mA × 1.50 kΩ = 3.00 V across both R2 and R3. So I2 = 3.00 V / 2.2 kΩ = 1.36 mA and I3 = 3.00 V / 4.7 kΩ = 0.64 mA. The smaller resistor takes the larger current, and 1.36 mA + 0.64 mA = 2.00 mA, the whole supply current.",
+          "R1 carries the full 2.00 mA and drops 2.00 mA × 1 kΩ = 2.00 V; 2.00 V + 3.00 V = 5 V, the supply."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 5 \"Series and Parallel Circuits\", section \"Simple series circuits\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_5.html#xtocid87431",
+          "note": "A series chain has one path, so it shares one current, and its resistances and voltage drops add."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 5 \"Series and Parallel Circuits\", section \"Simple parallel circuits\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_5.html#xtocid87432",
+          "note": "Parallel branches share one voltage, branch currents add, and the reciprocal formula gives a total below the smallest branch."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 7 \"Series-Parallel Combination Circuits\", section \"Analysis technique\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_7.html#xtocid87611",
+          "note": "Reducing a mixed network one series or parallel group at a time, redrawing after each step."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "sp_series_two",
+      "topicId": "series_parallel",
+      "prompt": "Resistors of {R1} and {R2} are connected in series. What is the total resistance?",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            4
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            4
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "R1+R2",
+        "unit": "Ω"
+      },
+      "explanation": "In series the same current flows through both, so their voltages add and so do their resistances: R = {R1} + {R2} = {answer}.",
+      "hints": [
+        "In series, the same current flows through every resistor.",
+        "Series resistances simply add: R = R1 + R2."
+      ],
+      "misconceptions": [
+        {
+          "formula": "R1*R2/(R1+R2)",
+          "feedback": "That's the parallel formula. Resistors in series simply add."
+        }
+      ],
+      "schematic": {
+        "netlist": "two in series\nR1 a b {R1:spice}\nR2 b c {R2:spice}\n",
+        "parts": [
+          {
+            "ref": "R1",
+            "at": [
+              0,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              6,
+              0
+            ],
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              4,
+              0
+            ],
+            [
+              6,
+              0
+            ]
+          ]
+        ],
+        "grounds": [],
+        "labels": [
+          {
+            "text": "A",
+            "at": [
+              0,
+              0
+            ],
+            "left": true
+          },
+          {
+            "text": "B",
+            "at": [
+              10,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "sp_parallel_two",
+      "topicId": "series_parallel",
+      "prompt": "Resistors of {R1} and {R2} are connected in parallel. What is the equivalent resistance?",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            4
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            4
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "R1*R2/(R1+R2)",
+        "unit": "Ω"
+      },
+      "explanation": "In parallel the conductances add: 1/R = 1/{R1} + 1/{R2}, so R = R1·R2 / (R1 + R2) = {answer}. It is always smaller than the smaller resistor.",
+      "hints": [
+        "Parallel resistors share the same voltage; their currents add.",
+        "Use R = R1·R2 / (R1 + R2) (product over sum)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "R1+R2",
+          "feedback": "That's the series total. In parallel the current has two paths, so the total resistance goes down, not up."
+        },
+        {
+          "formula": "R1*R2",
+          "feedback": "You have the product; divide it by the sum: R = R1·R2 / (R1 + R2)."
+        },
+        {
+          "formula": "(R1+R2)/2",
+          "feedback": "The average is too big: a parallel pair is always below the smaller resistor. Use product over sum, R1·R2 / (R1 + R2)."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why is a parallel pair always less than the smaller resistor alone?",
+          "choices": [
+            {
+              "text": "The second resistor adds another path, so at the same voltage more current flows than through the smaller one alone",
+              "feedback": "Right: more current for the same voltage means less resistance, R = V / I.",
+              "correct": true
+            },
+            {
+              "text": "The bigger resistor blocks current, which pulls the total down",
+              "feedback": "The bigger resistor doesn't block anything; it carries its own extra current. That extra current is what lowers the total."
+            },
+            {
+              "text": "The current splits, so each resistor has less voltage across it",
+              "feedback": "Parallel parts share the same voltage. The current splits, and the total is more than either branch."
+            },
+            {
+              "text": "Parallel resistance is the average of the two",
+              "feedback": "The average would sit between them. Adding a path can only add current, so the total must be below the smaller value."
+            }
+          ],
+          "explanation": "Put a voltage V across the pair. The smaller resistor alone would draw V / R_small; the second one draws extra current on top. More current at the same voltage means less resistance, so V / I_total is below R_small. That's why conductances (1/R) add in parallel."
+        }
+      ],
+      "schematic": {
+        "netlist": "two in parallel\nR1 a b {R1:spice}\nR2 a b {R2:spice}\n",
+        "parts": [
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              7,
+              0
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              7,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              7,
+              4
+            ]
+          ]
+        ],
+        "grounds": [],
+        "labels": [
+          {
+            "text": "A",
+            "at": [
+              0,
+              0
+            ],
+            "left": true
+          },
+          {
+            "text": "B",
+            "at": [
+              0,
+              4
+            ],
+            "left": true
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "sp_series_parallel_mix",
+      "topicId": "series_parallel",
+      "prompt": "{R1} is in series with the parallel combination of {R2} and {R3}. What is the total resistance?",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rp",
+          "formula": "R2*R3/(R2+R3)",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "R1+R2*R3/(R2+R3)",
+        "unit": "Ω"
+      },
+      "explanation": "Reduce the parallel pair first: {R2} || {R3} = {Rp}. Then add the series resistor: {R1} + {Rp} = {answer}.",
+      "hints": [
+        "Work from the inside out: combine the parallel pair first.",
+        "R2 || R3 = R2·R3 / (R2 + R3), then add R1."
+      ],
+      "misconceptions": [
+        {
+          "formula": "R1+R2+R3",
+          "feedback": "R2 and R3 are in parallel, not series. Combine them with product over sum before adding R1."
+        }
+      ],
+      "schematic": {
+        "netlist": "Mix\nV1 a 0 1\nR1 a b {R1:spice}\nR2 b 0 {R2:spice}\nR3 b 0 {R3:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "source"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1 {R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "followUps": [
+        {
+          "prompt": "Why do you combine R2 and R3 before adding R1?",
+          "choices": [
+            {
+              "text": "R2 and R3 share both ends, so together they act as one resistor, and only that pair carries all of R1's current",
+              "feedback": "Right: R1's current reaches the junction and splits between R2 and R3, so R1 is in series with the pair.",
+              "correct": true
+            },
+            {
+              "text": "You always combine from right to left",
+              "feedback": "Position on the page doesn't matter; connections do. You can add R1 in series only with something that carries all of R1's current."
+            },
+            {
+              "text": "R1 is in series with R2 alone, so you could add those first",
+              "feedback": "R1 and R2 meet at a node that R3 also connects to, so R1's current splits there: R1 isn't in series with R2 alone."
+            },
+            {
+              "text": "Parallel resistors must always be combined last",
+              "feedback": "There's no fixed order. Find groups that carry one current (series) or share both ends (parallel), innermost first."
+            }
+          ],
+          "explanation": "Two parts are in series only when all of one's current goes through the other. R1's current splits between R2 and R3, so R1 is in series with the pair, not with either one. Reduce the pair to one resistor, then add R1. It's the same reading skill as the schematic problems in this topic."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "sp_parallel_concept",
+      "topicId": "series_parallel",
+      "prompt": "A {R1} resistor is connected across a supply. You add a second resistor of {R2} in parallel with it. What happens to the total resistance the supply sees?",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            2
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "text": "It goes down, below {R1}",
+          "correct": true,
+          "feedback": "Right: a parallel path always gives the current another way through, so the total falls below the smallest resistor."
+        },
+        {
+          "text": "It goes up to {R1} + {R2}",
+          "feedback": "That would be series. In parallel you add a second path for current, which lowers the resistance."
+        },
+        {
+          "text": "It stays at {R1}, because the larger resistor barely matters",
+          "feedback": "A large parallel resistor changes the total only a little, but it always lowers it."
+        },
+        {
+          "text": "It becomes the average of the two",
+          "feedback": "Parallel resistance is product over sum, which is always below the smaller value, not the average."
+        }
+      ],
+      "explanation": "Adding any resistor in parallel adds a path for current, so the supply delivers more current at the same voltage: the total resistance drops below {R1}.",
+      "hints": [
+        "Does a parallel resistor add a new path for current, or make the existing path longer?"
+      ],
+      "schematic": {
+        "netlist": "added in parallel\nV1 a 0 5\nR1 a 0 {R1:spice}\nR2 a 0 {R2:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "supply"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              2
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              10,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            2,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "sp_parallel_three",
+      "topicId": "series_parallel",
+      "prompt": "Resistors of {R1}, {R2} and {R3} are connected in parallel. What is the equivalent resistance?",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            3
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "1/(1/R1+1/R2+1/R3)",
+        "unit": "Ω",
+        "tolerance": 0.02
+      },
+      "explanation": "Conductances add in parallel: 1/R = 1/{R1} + 1/{R2} + 1/{R3}, so R = {answer}. It is smaller than the smallest resistor.",
+      "hints": [
+        "In parallel, add the conductances (1/R).",
+        "R = 1/(1/R1 + 1/R2 + 1/R3)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "R1+R2+R3",
+          "feedback": "That's the series total. In parallel the result is smaller than the smallest resistor."
+        }
+      ],
+      "schematic": {
+        "netlist": "three in parallel\nR1 a b {R1:spice}\nR2 a b {R2:spice}\nR3 a b {R3:spice}\n",
+        "parts": [
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              7,
+              0
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              12,
+              0
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              12,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              12,
+              4
+            ]
+          ]
+        ],
+        "grounds": [],
+        "labels": [
+          {
+            "text": "A",
+            "at": [
+              0,
+              0
+            ],
+            "left": true
+          },
+          {
+            "text": "B",
+            "at": [
+              0,
+              4
+            ],
+            "left": true
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "sp_equal_parallel",
+      "topicId": "series_parallel",
+      "prompt": "{n} identical {R} resistors are connected in parallel. What is the equivalent resistance?",
+      "variables": [
+        {
+          "name": "n",
+          "unit": "",
+          "range": {
+            "min": 2,
+            "max": 6,
+            "step": 1
+          }
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            4
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "R/n",
+        "unit": "Ω",
+        "tolerance": 0.02
+      },
+      "explanation": "n equal resistors in parallel give R/n = {R}/{n} = {answer}.",
+      "hints": [
+        "Each extra path carries the same current.",
+        "R_total = R/n."
+      ],
+      "misconceptions": [
+        {
+          "formula": "R*n",
+          "feedback": "That's n resistors in series. In parallel it's R/n."
+        }
+      ],
+      "noDrawing": "the number of resistors changes from problem to problem, so no single drawing fits",
+      "review": "verified"
+    },
+    {
+      "id": "sp_read_series",
+      "topicId": "series_parallel",
+      "prompt": "Look at where each part's ends connect, not at how the drawing is laid out.",
+      "variables": [],
+      "reading": {
+        "netlist": "chain\nV1 in 0 10\nR1 in a 1k\nR2 a b 1k\nR3 b c 1k\nR4 c 0 1k\nR5 b 0 1k\n",
+        "ask": "series",
+        "targets": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "names": {
+          "in": "node in",
+          "a": "node a",
+          "b": "node b",
+          "c": "node c"
+        }
+      },
+      "explanation": "Two parts are in series when they meet at a point that nothing else connects to: then every charge that flows through one must flow through the other.",
+      "hints": [
+        "Follow each end of the part to the next junction. Does anything else connect there?"
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              6,
+              0
+            ],
+            "label": "R2"
+          },
+          {
+            "ref": "R5",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "R5"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              12,
+              0
+            ],
+            "label": "R3"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R4"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              10,
+              0
+            ],
+            [
+              12,
+              0
+            ]
+          ],
+          [
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              10,
+              6
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              16,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "a",
+            "at": [
+              6,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              10,
+              0
+            ]
+          },
+          {
+            "text": "c",
+            "at": [
+              16,
+              0
+            ]
+          }
+        ],
+        "netlist": "chain\nV1 in 0 10\nR1 in a 1k\nR2 a b 1k\nR3 b c 1k\nR4 c 0 1k\nR5 b 0 1k\n"
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "sp_read_parallel",
+      "topicId": "series_parallel",
+      "prompt": "Look at where each part's ends connect, not at how the drawing is laid out.",
+      "variables": [],
+      "reading": {
+        "netlist": "ladder\nV1 in 0 10\nR1 in a 1k\nR2 a b 2.2k\nR3 b 0 4.7k\nC1 b 0 1u\nR4 a 0 3.3k\nR6 a 0 6.8k\n",
+        "ask": "parallel",
+        "targets": [
+          "R3",
+          "C1"
+        ],
+        "names": {
+          "in": "node in",
+          "a": "node a",
+          "b": "node b"
+        }
+      },
+      "explanation": "Two parts are in parallel when both of their ends connect to the same two nodes; they then share one voltage, whatever else is in the circuit.",
+      "hints": [
+        "Parallel parts share both ends. Trace each end to its node."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              4,
+              6
+            ],
+            "rot": 90,
+            "label": "V1"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              4
+            ],
+            "label": "R1"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              12,
+              6
+            ],
+            "rot": 90,
+            "label": "R4"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              14,
+              4
+            ],
+            "label": "R2"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              20,
+              6
+            ],
+            "rot": 90,
+            "label": "R3"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              30,
+              6
+            ],
+            "rot": 90,
+            "label": "C1"
+          },
+          {
+            "ref": "R6",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 90,
+            "label": "R6"
+          }
+        ],
+        "wires": [
+          [
+            [
+              4,
+              6
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              6,
+              4
+            ]
+          ],
+          [
+            [
+              10,
+              4
+            ],
+            [
+              12,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              14,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              12,
+              6
+            ]
+          ],
+          [
+            [
+              18,
+              4
+            ],
+            [
+              20,
+              4
+            ]
+          ],
+          [
+            [
+              20,
+              4
+            ],
+            [
+              30,
+              4
+            ]
+          ],
+          [
+            [
+              20,
+              4
+            ],
+            [
+              20,
+              6
+            ]
+          ],
+          [
+            [
+              30,
+              4
+            ],
+            [
+              30,
+              6
+            ]
+          ],
+          [
+            [
+              11,
+              4
+            ],
+            [
+              11,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              6
+            ]
+          ],
+          [
+            [
+              0,
+              10
+            ],
+            [
+              4,
+              10
+            ]
+          ],
+          [
+            [
+              4,
+              10
+            ],
+            [
+              12,
+              10
+            ]
+          ],
+          [
+            [
+              12,
+              10
+            ],
+            [
+              20,
+              10
+            ]
+          ],
+          [
+            [
+              20,
+              10
+            ],
+            [
+              30,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            8,
+            10
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              4,
+              4
+            ]
+          },
+          {
+            "text": "a",
+            "at": [
+              12,
+              4
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              20,
+              4
+            ]
+          }
+        ],
+        "netlist": "ladder\nV1 in 0 10\nR1 in a 1k\nR2 a b 2.2k\nR3 b 0 4.7k\nC1 b 0 1u\nR4 a 0 3.3k\nR6 a 0 6.8k\n"
+      },
+      "review": "verified"
+    },
+    {
+      "id": "sp_read_node",
+      "topicId": "series_parallel",
+      "prompt": "A node is one piece of metal: every wire joined together, however long it is drawn.",
+      "variables": [],
+      "reading": {
+        "netlist": "ladder\nV1 in 0 10\nR1 in a 1k\nR2 a b 2.2k\nR3 b 0 4.7k\nC1 b 0 1u\nR4 a 0 3.3k\n",
+        "ask": "node",
+        "targets": [
+          "a",
+          "b"
+        ],
+        "names": {
+          "in": "node in",
+          "a": "node a",
+          "b": "node b"
+        }
+      },
+      "explanation": "Everything joined by wire is one node, at one voltage. Reading a schematic starts with finding the nodes, then asking which parts sit between them.",
+      "hints": [
+        "Put your finger on the node and follow every wire out of it until you reach a part."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R4"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R2"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R3"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              20,
+              2
+            ],
+            "rot": 90,
+            "label": "C1"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              16,
+              0
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              20,
+              0
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              20,
+              0
+            ],
+            [
+              20,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              8,
+              6
+            ],
+            [
+              16,
+              6
+            ]
+          ],
+          [
+            [
+              16,
+              6
+            ],
+            [
+              20,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "a",
+            "at": [
+              8,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              16,
+              0
+            ]
+          }
+        ],
+        "netlist": "ladder\nV1 in 0 10\nR1 in a 1k\nR2 a b 2.2k\nR3 b 0 4.7k\nC1 b 0 1u\nR4 a 0 3.3k\n"
+      },
+      "review": "verified"
+    },
+    {
+      "id": "sp_what_if_add_parallel",
+      "topicId": "series_parallel",
+      "prompt": "{n} identical {R} resistors are connected in parallel. You add one more {R} resistor in parallel with them. What happens to the total resistance?",
+      "variables": [
+        {
+          "name": "n",
+          "unit": "",
+          "range": {
+            "min": 2,
+            "max": 5,
+            "step": 1
+          }
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            4
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the total resistance",
+        "formula": "R/n",
+        "unit": "Ω",
+        "change": {
+          "n": "n+1"
+        },
+        "feedback": {
+          "up": "More resistors means more resistance only in series, where the current must pass through every one. In parallel each one is another path between the same two nodes, so the same voltage now drives current through one more path at once.",
+          "same": "Every resistor in parallel has the full voltage across it and carries its own current, however many are already there. The total resistance is that voltage divided by the total current, R = V/I_total, and the new path adds its current to I_total."
+        }
+      },
+      "explanation": "n equal resistors in parallel give R / n: {before} → {after}. Each extra path adds current at the same voltage, so the total falls. That's why a supply delivers more current as more lamps are switched on in parallel.",
+      "hints": [
+        "Does the new resistor make the current's path longer, or give it another path?"
+      ],
+      "noDrawing": "the number of resistors changes from problem to problem, so no single drawing fits",
+      "review": "verified"
+    },
+    {
+      "id": "sp_design_parallel_pair",
+      "topicId": "series_parallel",
+      "prompt": "A circuit calls for {Rt} (within 2%), which is not a standard E12 value. Make it from two E12 resistors, each between 100 Ω and 1 MΩ, connected in parallel between A and B.",
+      "variables": [
+        {
+          "name": "Rt",
+          "unit": "Ω",
+          "values": [
+            1100,
+            1300,
+            1400,
+            1600,
+            1750,
+            2000,
+            2400,
+            2500,
+            3000,
+            3500,
+            3600,
+            4000,
+            4300,
+            5000,
+            6000,
+            6200,
+            7500,
+            9100
+          ]
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "R1",
+            "label": "R1",
+            "unit": "Ω",
+            "series": "E12",
+            "min": 100,
+            "max": 1000000
+          },
+          {
+            "name": "R2",
+            "label": "R2",
+            "unit": "Ω",
+            "series": "E12",
+            "min": 100,
+            "max": 1000000
+          }
+        ],
+        "result": "R1*R2/(R1+R2)",
+        "resultLabel": "R1 ∥ R2",
+        "resultUnit": "Ω",
+        "target": "Rt",
+        "tolerance": 0.02
+      },
+      "explanation": "A parallel pair is always below its smaller resistor, so both must be above {Rt}. Start with R1 a little above the target, say the next E12 value up, and solve 1/R2 = 1/{Rt} − 1/R1, that is R2 = R1·{Rt}/(R1 − {Rt}). Round R2 to E12 and check R1·R2/(R1 + R2). If it misses by more than 2%, move R1 up one step and try again. For example, 3.0 kΩ = 3.3 kΩ ∥ 33 kΩ: the large resistor trims the smaller one down a little. The closer R1 is to the target, the larger R2 must be.",
+      "hints": [
+        "Can a parallel pair ever come out larger than either of its resistors?",
+        "Pick R1 just above the target, then R2 = R1·Rt/(R1 − Rt); round to E12 and check."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why must both resistors be larger than {Rt}?",
+          "choices": [
+            {
+              "text": "Each resistor adds a path for current, so the pair is always below the smaller of the two",
+              "feedback": "Right: at the same voltage the two currents add, so the pair passes more current than either alone and its resistance is lower than both.",
+              "correct": true
+            },
+            {
+              "text": "Parallel resistances add, so each one must be a part of the total",
+              "feedback": "In parallel the conductances (1/R) add, not the resistances. Each extra path lowers the total."
+            },
+            {
+              "text": "One can be below {Rt} if the other is large enough to make up the difference",
+              "feedback": "No second resistor can raise the total: it only adds another path. With one resistor below {Rt}, the pair is below {Rt} too."
+            },
+            {
+              "text": "The larger resistor carries more of the current, so it must be above the target",
+              "feedback": "Both see the same voltage, so the larger resistor carries less current (I = V/R), not more."
+            }
+          ],
+          "explanation": "Both resistors have the same voltage across them, and each carries its own current. The currents add, so at that voltage the pair passes more current than either resistor alone: its resistance is below both. To land on {Rt}, both parts have to start above it."
+        }
+      ],
+      "schematic": {
+        "netlist": "two in parallel\nR1 a b {R1:spice}\nR2 a b {R2:spice}\n",
+        "parts": [
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              7,
+              0
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              7,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              7,
+              4
+            ]
+          ]
+        ],
+        "grounds": [],
+        "labels": [
+          {
+            "text": "A",
+            "at": [
+              0,
+              0
+            ],
+            "left": true
+          },
+          {
+            "text": "B",
+            "at": [
+              0,
+              4
+            ],
+            "left": true
+          }
+        ]
+      },
+      "review": "verified"
+    }
+  ]
+}

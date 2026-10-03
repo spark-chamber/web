@@ -1,0 +1,2297 @@
+{
+  "topics": [
+    {
+      "id": "power_heat",
+      "title": "Power and heat",
+      "summary": "Power is the rate of energy transfer, P = V·I. A resistor turns all of it into heat (P = I²R = V²/R), and its power rating is the most heat it can lose to its surroundings without running too hot.",
+      "lenses": [
+        "physics",
+        "circuit",
+        "math"
+      ],
+      "prerequisites": [
+        "voltage_energy",
+        "ohms_law"
+      ],
+      "prerequisiteNotes": {
+        "voltage_energy": "P = V·I comes straight from voltage as energy per coulomb (V = W/Q) and current as coulombs per second; the energy a part receives is the energy each coulomb gives up crossing it.",
+        "ohms_law": "P = I²R and P = V²/R are P = V·I with Ohm's law put in, and every resistor problem here finds a current or voltage from V = I·R first."
+      },
+      "lensNotes": {
+        "physics": "Inside a conductor the electric field accelerates the free electrons between collisions, and each collision with a vibrating atom, an impurity or a lattice defect hands the energy gained to the material (Joule heating). The average drift does not grow along the resistor, so the current out equals the current in; only energy is transferred. The part then loses heat by conduction through its leads and the board, by convection to the air and by radiation, at a rate that grows with its temperature above the surroundings. It settles where heat lost per second equals the power going in: ΔT ≈ P·θ.",
+        "circuit": "Power in any part is the voltage across that part times the current through it; the supply delivers the sum over all parts. Through-hole film or carbon-composition resistors commonly come in 1/8, 1/4, 1/2, 1 and 2 W ratings; above that, wirewound and metal-clad parts bolt to a heat sink. Designers keep the dissipation well below the rating (half is a common rule), and below it again in a hot enclosure, following the derating curve in the datasheet. An overloaded resistor discolors, changes value and can fail open.",
+        "math": "With V = I·R, P = V·I becomes I²R or V²/R. Both are square laws: doubling the voltage across a resistor, or the current through it, multiplies its power by four. Which form shows the effect of R depends on what is held fixed: at fixed V, P falls as 1/R; at fixed I, P grows with R. The thermal model ΔT = P·θ and a linear derating curve are straight lines in P."
+      },
+      "formulas": [
+        {
+          "label": "Power",
+          "tex": "P = \\frac{W}{t}\\quad (1\\ \\text{W} = 1\\ \\text{J/s})"
+        },
+        {
+          "label": "Power in a part",
+          "tex": "P = V\\,I"
+        },
+        {
+          "label": "Power in a resistor",
+          "tex": "P = I^2 R = \\frac{V^2}{R}"
+        },
+        {
+          "label": "Temperature rise",
+          "tex": "\\Delta T = P\\,\\theta\\quad (\\theta\\ \\text{in}\\ ^\\circ\\text{C/W})"
+        },
+        {
+          "label": "Efficiency",
+          "tex": "\\eta = \\frac{P_\\text{out}}{P_\\text{in}}"
+        },
+        {
+          "label": "Watt-hour",
+          "tex": "1\\ \\text{Wh} = 3600\\ \\text{J}"
+        }
+      ],
+      "goals": [
+        "Find the power in a part from the voltage across it and the current through it, and in a resistor from I²R or V²/R",
+        "Explain where a resistor's energy goes, and predict how its power changes when the voltage, the current or the resistance changes",
+        "Choose a resistor's power rating with margin, and estimate its temperature from its thermal resistance",
+        "Convert between watts, joules and watt-hours to find a battery's energy, an average power and an efficiency"
+      ],
+      "intuition": "A resistor turns every joule it receives into heat at the rate V·I, and its temperature climbs until it loses heat to its surroundings as fast as that; a power rating is the rate it can sustain without its body getting too hot.",
+      "why": "Inside a resistor the electric field accelerates the free electrons, and each one keeps losing the energy it gains in collisions with the vibrating atoms, impurities and defects of the material. The atoms vibrate harder: the material gets hotter. The electrons' average drift does not grow along the resistor, so the current leaving equals the current entering; what the charge gives up is energy, V joules for every coulomb that crosses a voltage V. Since I coulombs cross each second, the energy given up per second, the power, is V·I. The hot body then loses heat to its surroundings, through its leads into the board, to the air and by radiation, faster the hotter it is. Its temperature settles where heat lost per second equals the power going in, about P·θ above the air, where θ is its thermal resistance in °C/W. A power rating is the power that brings the hottest spot to the highest temperature its materials tolerate, at a stated ambient temperature.",
+      "explanation": "Power is the rate at which energy is transferred: P = W/t, measured in watts (1 W = 1 J/s). In a circuit it follows from two definitions you already know. A voltage is joules per coulomb and a current is coulombs per second, so their product is joules per second: P = V·I. Use the voltage across the part and the current through it.\n\nFor a resistor, Ohm's law gives two more forms: P = I²R, handy when the current is known, and P = V²/R, handy when the voltage is fixed. Neither says a bigger resistance is always hotter. At a fixed voltage a bigger R dissipates less; at a fixed current it dissipates more.\n\nAll the power a resistor takes becomes heat. Its temperature rises until it loses heat as fast as it receives it, about P·θ above the air. A power rating is not what the part uses: it is the most it may dissipate continuously at a stated ambient temperature (a short overload can be survived, because the body takes time to heat up). Designers keep well below it, often to half.\n\nEnergy is power times time. Batteries are rated in watt-hours: 1 Wh = 3600 J. Efficiency is output power over input power; the rest becomes heat.",
+      "workedExample": {
+        "problem": "A 330 Ω resistor sits directly across a 12 V supply. How much power does it dissipate, which standard power rating should it have, and how much energy does it turn into heat in an hour?",
+        "steps": [
+          "Current from Ohm's law: I = V/R = 12 V / 330 Ω = 36.4 mA.",
+          "Power: P = V·I = 12 V × 0.0364 A = 0.436 W. Check with V²/R: (12 V)² / 330 Ω = 144 V² / 330 Ω = 0.436 W.",
+          "A 1/4 W resistor would be asked for 0.436 W / 0.25 W = 1.7 times its rating: its body would run far above its maximum temperature, discolor, drift in value and could fail open.",
+          "With the common rule of dissipating at most half the rating, the part needs a rating of at least 2 × 0.436 W = 0.87 W: choose a 1 W resistor.",
+          "Energy in one hour: W = P·t = 0.436 W × 3600 s = 1570 J, which is 0.436 Wh. All of it becomes heat in the resistor and passes to the air and the board around it."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 2 \"Ohm's Law\", section \"Calculating electric power\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_2.html#xtocid87163",
+          "note": "Checked P = IV and its resistor forms I²R and V²/R, and that doubling the voltage on a fixed resistance doubles the current and multiplies the power by four (the book writes E for voltage)."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Ohm's and Joule's Laws, Resistor Ratings, and Electrical Safety\", sections 4.4 \"Joule's Law\" and 4.5 \"Resistor power ratings\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_ohm.pdf",
+          "note": "Checked the joules-per-coulomb times coulombs-per-second derivation of P = IV, that a resistor's lost energy becomes heat, the 1/8 to 2 W ratings of small leaded resistors, and that a rating is the continuous power the part sheds safely under stated mounting and ambient conditions."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Thermal Management\", sections 3.2 \"Energy, power, and efficiency\", 3.3 \"Heat transfer and thermal resistance\", 3.4 \"Thermal calculations\" and 3.6 \"Thermal de-rating\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_thermal.pdf",
+          "note": "Checked 1 W = 1 J/s, efficiency as useful output over input with the rest becoming heat, heat leaving by conduction, convection and radiation at a rate that grows with the temperature difference, ΔT = P·R_th with R_th in °C/W, and that a hotter ambient lowers the power a part may dissipate."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "ph_power_wrong_v",
+      "topicId": "power_heat",
+      "prompt": "A {Vs} battery feeds a heater element through a series resistor R1 (a 1 W part). A voltmeter across the heater reads {VL}, and an ammeter in the loop reads {I}. How much power does R1 dissipate?",
+      "variables": [
+        {
+          "name": "Vs",
+          "unit": "V",
+          "value": 12
+        },
+        {
+          "name": "VL",
+          "unit": "V",
+          "values": [
+            5,
+            5.5,
+            6.5,
+            7,
+            7.5,
+            8,
+            8.5,
+            9
+          ]
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "range": {
+            "min": 0.02,
+            "max": 0.06,
+            "step": 0.005
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "VR",
+          "formula": "Vs-VL",
+          "unit": "V"
+        },
+        {
+          "name": "Ptot",
+          "formula": "Vs*I",
+          "unit": "W"
+        },
+        {
+          "name": "R1v",
+          "formula": "(Vs-VL)/I",
+          "unit": "Ω"
+        },
+        {
+          "name": "RLv",
+          "formula": "VL/I",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "(Vs-VL)*I",
+        "unit": "W"
+      },
+      "explanation": "Power in a part is the voltage across that part times the current through it. R1 has what the heater leaves of the supply (every joule a coulomb gains in the battery is given up around the loop, so the two voltages add to {Vs}): V_R1 = {Vs} − {VL} = {VR}. The same current flows through every part of the single loop, so P_R1 = V_R1 · I = {VR} × {I} = {answer}. Each coulomb crossing R1 gives up as many joules as R1 has volts across it (1 V = 1 J/C), and the current says how many coulombs cross each second.",
+      "hints": [
+        "Power in a part is the voltage across that part times the current through it.",
+        "R1 and the heater share the supply's {Vs}: subtract the heater's reading to get R1's voltage, then multiply by the current."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vs*I",
+          "feedback": "{Vs} × {I} is the power the battery delivers to the whole loop, R1 and heater together. R1 receives only the energy each coulomb gives up crossing R1, so use the voltage across R1 itself."
+        },
+        {
+          "formula": "VL*I",
+          "feedback": "That is the heater's power: the voltmeter is across the heater, not across R1. R1 has the rest of the supply across it."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why must P = V·I use the voltage across R1, not the battery voltage?",
+          "choices": [
+            {
+              "text": "V·I counts the joules each coulomb gives up between R1's two ends, times the coulombs per second; the energy given up in the heater is the heater's, not R1's",
+              "feedback": "Right: the battery's {Ptot} is the sum of R1's power and the heater's.",
+              "correct": true
+            },
+            {
+              "text": "The battery voltage is used up in the heater first, so R1 gets only what is left over",
+              "feedback": "Order in a series loop doesn't matter: swap R1 and the heater and each keeps its voltage. Each part's share is set by its resistance, and its power uses the voltage across it."
+            },
+            {
+              "text": "The current through R1 is smaller than the current in the rest of the loop",
+              "feedback": "In a single loop the current is the same everywhere: the ammeter would read {I} at any point. What differs between the parts is the voltage across each."
+            },
+            {
+              "text": "The battery voltage would be right if R1 were the larger of the two resistances",
+              "feedback": "Whatever the sizes, R1's power uses R1's voltage. The battery voltage times the current is always the total for the whole loop."
+            }
+          ],
+          "explanation": "Power in a part = (energy per coulomb across that part) × (coulombs per second through it). The battery's {Vs} × {I} = {Ptot} is shared: R1 takes {answer}, the heater the rest."
+        }
+      ],
+      "schematic": {
+        "netlist": "heater with series resistor\nV1 in 0 {Vs:spice}\nR1 in a {R1v:spice}\nR2 a 0 {RLv:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vs}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "heater"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "ph_cable_loss",
+      "topicId": "power_heat",
+      "prompt": "A phone charges from a {Vs} USB charger through a cable whose two conductors together have {Rc} of resistance. The cable carries {I}. How much power is turned into heat in the cable?",
+      "variables": [
+        {
+          "name": "Vs",
+          "unit": "V",
+          "value": 5
+        },
+        {
+          "name": "Rc",
+          "unit": "Ω",
+          "values": [
+            0.1,
+            0.15,
+            0.2
+          ]
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "values": [
+            0.5,
+            1.5,
+            2,
+            2.5,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vc",
+          "formula": "I*Rc",
+          "unit": "V"
+        },
+        {
+          "name": "RLd",
+          "formula": "Vs/I-Rc",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "I^2*Rc",
+        "unit": "W"
+      },
+      "estimate": true,
+      "explanation": "The voltage across the cable is V = I·R = {I} × {Rc} = {Vc}, and the current through it is {I}, so P = V·I = I²R = ({I})² × {Rc} = {answer}. The heat goes with the square of the current: this is why cables rated for fast charging at high current use thicker conductors.",
+      "hints": [
+        "Which voltage is across the cable itself: the charger's, or the small drop along the cable?",
+        "P = I²R, with R the cable's resistance."
+      ],
+      "misconceptions": [
+        {
+          "formula": "I*Rc",
+          "feedback": "That is the voltage lost along the cable, I·R, in volts. Power is that voltage times the current: P = I·(I·R) = I²R."
+        },
+        {
+          "formula": "Vs*I",
+          "feedback": "{Vs} × {I} is the power the charger puts out, most of which reaches the phone. The voltage across the cable is only the drop along it, I·R = {Vc}."
+        }
+      ],
+      "schematic": {
+        "netlist": "charger, cable and phone\nV1 in 0 {Vs:spice}\nR1 in a {Rc:spice}\nR2 a 0 {RLd:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "USB {Vs}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "cable\n{Rc}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "phone"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "ph_battery_energy",
+      "topicId": "power_heat",
+      "prompt": "A lithium-ion cell is rated {Vc} nominal and {cap}. How much energy does it store when full, in joules? Treat its voltage as constant at the nominal value throughout the discharge.",
+      "variables": [
+        {
+          "name": "Vc",
+          "unit": "V",
+          "values": [
+            3.6,
+            3.7
+          ]
+        },
+        {
+          "name": "cap",
+          "unit": "Ah",
+          "values": [
+            1,
+            2,
+            2.5,
+            3,
+            3.4
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Wh",
+          "formula": "Vc*cap",
+          "unit": "Wh"
+        }
+      ],
+      "answer": {
+        "formula": "Vc*cap*3600",
+        "unit": "J"
+      },
+      "estimate": true,
+      "explanation": "The rating {cap} is a charge: one ampere for one hour is 3600 C, so the cell moves {cap} × 3600 C/Ah of charge. Every coulomb that passes through the load gives up as many joules as the cell has volts (1 V = 1 J/C), so W = {cap} × 3600 C/Ah × {Vc} = {answer}. In watt-hours: {Vc} × {cap} = {Wh}, and 1 Wh = 3600 J. Watt-hours, not amp-hours, are what compare cells of different voltages.",
+      "hints": [
+        "An amp-hour rating is a charge. How many coulombs is it?",
+        "W = Q·V, with Q = (rating in Ah) × 3600 s/h."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vc*cap",
+          "feedback": "That is the energy in watt-hours, {Wh}. A watt-hour is 3600 J, so multiply by 3600."
+        },
+        {
+          "formula": "cap*3600",
+          "feedback": "That is the charge in coulombs ({cap} × 3600 C/Ah). Energy is charge times voltage (1 V = 1 J/C), so multiply by the cell voltage, {Vc}."
+        },
+        {
+          "formula": "Vc*cap*1000",
+          "feedback": "That is the energy in milliwatt-hours (mAh × V). Convert to joules: 1 mWh = 3.6 J."
+        }
+      ],
+      "noDrawing": "converting a cell's rating into stored energy; no circuit to solve",
+      "review": "verified"
+    },
+    {
+      "id": "ph_power_from_energy",
+      "topicId": "power_heat",
+      "prompt": "A USB power meter sits between a charger and a power bank. Its energy counter rises by {E} in {t}. What is the average power flowing into the power bank?",
+      "variables": [
+        {
+          "name": "E",
+          "unit": "Wh",
+          "values": [
+            1,
+            1.5,
+            2,
+            2.5,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "name": "t",
+          "unit": "min",
+          "values": [
+            20,
+            30,
+            40,
+            60
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "EJ",
+          "formula": "E*3600",
+          "unit": "J"
+        }
+      ],
+      "answer": {
+        "formula": "E*60/t",
+        "unit": "W"
+      },
+      "explanation": "Power is energy per time, P = W/t, in joules per second. Energy: {E} × 3600 J/Wh = {EJ}. Time: {t} × 60 s/min. P = {EJ} / ({t} × 60 s/min) = {answer}. The shortcut is the same thing: 1 Wh in 1 h is 1 W, so P = (watt-hours) / (hours) = {E} / ({t} / 60 min/h).",
+      "hints": [
+        "A watt is a joule per second. Put the energy in joules and the time in seconds.",
+        "P = W/t, with 1 Wh = 3600 J and 1 min = 60 s."
+      ],
+      "misconceptions": [
+        {
+          "formula": "E/t",
+          "feedback": "Watt-hours divided by minutes isn't watts. Turn the time into hours first (divide the minutes by 60), or work in joules and seconds."
+        },
+        {
+          "formula": "E*3600/t",
+          "feedback": "You turned the watt-hours into joules but left the time in minutes, which gives joules per minute. A watt is a joule per second: multiply the minutes by 60."
+        }
+      ],
+      "noDrawing": "reading a USB meter's energy counter; no circuit to solve",
+      "review": "verified"
+    },
+    {
+      "id": "ph_efficiency",
+      "topicId": "power_heat",
+      "prompt": "A power bank's converter raises its cell voltage to 5 V for USB. On the cell side, meters read {Vb} and {Iin}; on the USB output they read {Vo} and {Io}. What is the converter's efficiency, as a fraction (not a percentage)?",
+      "variables": [
+        {
+          "name": "Vb",
+          "unit": "V",
+          "value": 3.7
+        },
+        {
+          "name": "Vo",
+          "unit": "V",
+          "value": 5
+        },
+        {
+          "name": "Io",
+          "unit": "A",
+          "values": [
+            0.5,
+            1,
+            1.5,
+            2
+          ]
+        },
+        {
+          "name": "eta",
+          "unit": "",
+          "range": {
+            "min": 0.8,
+            "max": 0.92,
+            "step": 0.01
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "Iin",
+          "formula": "Vo*Io/(Vb*eta)",
+          "unit": "A"
+        },
+        {
+          "name": "Pout",
+          "formula": "Vo*Io",
+          "unit": "W"
+        },
+        {
+          "name": "Pin",
+          "formula": "Vo*Io/eta",
+          "unit": "W"
+        },
+        {
+          "name": "Ploss",
+          "formula": "Vo*Io/eta-Vo*Io",
+          "unit": "W"
+        }
+      ],
+      "answer": {
+        "formula": "Vo*Io/(Vb*Iin)",
+        "unit": "",
+        "unitless": true
+      },
+      "explanation": "Efficiency compares powers, not currents: η = P_out / P_in. Output: {Vo} × {Io} = {Pout}. Input: {Vb} × {Iin} = {Pin}. η = {Pout} / {Pin} = {answer}. The missing {Ploss} becomes heat in the converter.",
+      "hints": [
+        "Work out the power on each side first: P = V·I.",
+        "η = (V_out · I_out) / (V_in · I_in)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Io/Iin",
+          "feedback": "The current ratio ignores the voltages. The output current is smaller than the input current because the output voltage is higher; compare powers, V·I on each side."
+        },
+        {
+          "formula": "Vb*Iin/(Vo*Io)",
+          "feedback": "That is input over output, which is more than 1: it would mean the converter gives out more energy than it takes in. Efficiency is output power over input power."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Where does the input power that doesn't reach the USB output go?",
+          "choices": [
+            {
+              "text": "It becomes heat in the converter's parts, which is why the power bank gets warm while it charges something",
+              "feedback": "Right: the difference, P_in − P_out = {Ploss}, heats the converter.",
+              "correct": true
+            },
+            {
+              "text": "It is stored inside the converter and released later",
+              "feedback": "In steady operation nothing keeps building up inside the converter: if it did, some voltage or current in it would keep rising. The difference leaves as heat."
+            },
+            {
+              "text": "It is lost as charge leaking out of the circuit",
+              "feedback": "Charge is conserved, and the meters account for the current at each terminal. What goes missing is energy, and it becomes heat."
+            },
+            {
+              "text": "It flows back into the cell",
+              "feedback": "The cell-side meters show power flowing out of the cell, at {Pin}. Nothing returns to it; the shortfall becomes heat."
+            }
+          ],
+          "explanation": "Energy is conserved: P_in = P_out + P_heat. Efficiency only says what fraction reaches the output; the rest heats the converter's switches (or diode), inductor, capacitors and wiring."
+        }
+      ],
+      "noDrawing": "the converter is measured only at its terminals; its circuit belongs to the switching-supply topic",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "ph_body_temp",
+      "topicId": "power_heat",
+      "prompt": "A {R} film resistor (a 1/4 W part) sits directly across a {V} supply, in still air at {Ta}. Its thermal resistance from body to surrounding air is about {th}. In steady state, how hot is its body?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            5,
+            9
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            680,
+            820,
+            1000,
+            1500
+          ]
+        },
+        {
+          "name": "Ta",
+          "unit": "°C",
+          "values": [
+            25,
+            40
+          ]
+        },
+        {
+          "name": "th",
+          "unit": "°C/W",
+          "value": 340
+        }
+      ],
+      "derived": [
+        {
+          "name": "P",
+          "formula": "V^2/R",
+          "unit": "W"
+        },
+        {
+          "name": "dT",
+          "formula": "V^2/R*th",
+          "unit": "°C"
+        }
+      ],
+      "answer": {
+        "formula": "Ta+V^2/R*th",
+        "unit": "°C"
+      },
+      "explanation": "The resistor turns P = V²/R = ({V})² / {R} = {P} into heat. Its temperature rises until it loses heat to the air and the board as fast as it receives it; with thermal resistance θ the rise is ΔT = P·θ = {P} × {th} = {dT}. So the body sits at {Ta} + {dT} = {answer}. On a crowded board in a closed box, θ is larger and the body hotter.",
+      "hints": [
+        "First find the power the resistor turns into heat.",
+        "Temperature rise = P × θ; add it to the air temperature."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V^2/R*th",
+          "feedback": "That is the temperature rise, {dT}: how far the body sits above the air. Add the air temperature, {Ta}."
+        },
+        {
+          "formula": "Ta+V/R*th",
+          "feedback": "You multiplied θ by the current. θ is in degrees per watt, so it needs the power, V²/R = {P}."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does the body temperature level off instead of rising for as long as the current flows?",
+          "choices": [
+            {
+              "text": "The hotter the body is than the air, the faster it loses heat; it levels off where the heat lost per second equals the power going in",
+              "feedback": "Right: in steady state, heat out = {P}, and that takes a rise of {dT}.",
+              "correct": true
+            },
+            {
+              "text": "Once the resistor is full of heat it can't take any more",
+              "feedback": "A body has no fixed maximum of heat. If it couldn't lose heat, its temperature would keep rising until it failed. It levels off because it loses heat faster as it gets hotter."
+            },
+            {
+              "text": "As it warms, its resistance rises until the current stops",
+              "feedback": "A film resistor changes by a few percent at most over this rise (well under 1 % for metal film; a few percent for carbon film, and downward, since carbon film's resistance falls as it warms), so the power barely changes. The temperature settles because heat loss grows with the temperature difference."
+            },
+            {
+              "text": "The electrons stop colliding once the material is warm",
+              "feedback": "A warmer lattice vibrates more, so the electrons collide at least as often. The power stays at about {P}; what changes is the rate of heat loss."
+            }
+          ],
+          "explanation": "Heat flows from the body to the air at a rate of about ΔT/θ. Steady state is the temperature where that equals P, so ΔT = P·θ."
+        }
+      ],
+      "schematic": {
+        "netlist": "resistor across a supply\nV1 a 0 {V:spice}\nR1 a 0 {R:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ph_derated_power",
+      "topicId": "power_heat",
+      "prompt": "A resistor's datasheet allows its full {Pr} rating up to {Tk} ambient, then a straight-line derating to 0 W at {Tmax}. Inside an enclosure beside a hot heat sink, the air around it is at {Ta}. What is the most power it may dissipate there?",
+      "variables": [
+        {
+          "name": "Pr",
+          "unit": "W",
+          "value": 0.25
+        },
+        {
+          "name": "Tk",
+          "unit": "°C",
+          "value": 70
+        },
+        {
+          "name": "Tmax",
+          "unit": "°C",
+          "value": 155
+        },
+        {
+          "name": "Ta",
+          "unit": "°C",
+          "range": {
+            "min": 75,
+            "max": 125,
+            "step": 5
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "room",
+          "formula": "Tmax-Ta",
+          "unit": "°C"
+        },
+        {
+          "name": "span",
+          "formula": "Tmax-Tk",
+          "unit": "°C"
+        },
+        {
+          "name": "thc",
+          "formula": "(Tmax-Tk)/Pr",
+          "unit": "°C/W"
+        }
+      ],
+      "answer": {
+        "formula": "Pr*(Tmax-Ta)/(Tmax-Tk)",
+        "unit": "W"
+      },
+      "explanation": "Between {Tk} and {Tmax} ({span}) the allowed power falls in a straight line from {Pr} to zero. At {Ta} there are {room} left before the limit, so P_max = {Pr} × {room} / {span} = {answer}. The curve is the thermal resistance at work: the body may reach {Tmax}, and each watt raises it about {span} / {Pr} = {thc} above the air. Hotter air leaves less temperature rise, so less power.",
+      "hints": [
+        "Full rating at the knee, zero at the top: where does {Ta} fall between them?",
+        "P_max = {Pr} × ({Tmax} − T_ambient) / ({Tmax} − {Tk})."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Pr",
+          "feedback": "{Pr} holds only up to {Tk}. Above that, the allowed power falls in a straight line to zero at {Tmax}."
+        },
+        {
+          "formula": "Pr*(Ta-Tk)/(Tmax-Tk)",
+          "feedback": "That is how far the allowed power has fallen below {Pr}, not what is left. Use the distance still to go to {Tmax}: {Tmax} − {Ta}."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does the allowed power fall as the surrounding air gets hotter?",
+          "choices": [
+            {
+              "text": "The limit is the body's temperature. The body runs about P·θ above the air, so hotter air leaves a smaller rise available, and only a smaller power gives that rise",
+              "feedback": "Right: θ stays about the same; the room to rise shrinks.",
+              "correct": true
+            },
+            {
+              "text": "Above {Tk} the resistor uses more power than its rating, so the rating must be lowered to compensate",
+              "feedback": "A rating is a limit, not what the part uses. The power it dissipates is set by the circuit, V·I; the derating lowers the limit."
+            },
+            {
+              "text": "Hot air conducts electricity, so some current leaks around the resistor",
+              "feedback": "Air at these temperatures is an excellent insulator. The derating is about heat: the body must stay below {Tmax}."
+            },
+            {
+              "text": "The resistance falls at high temperature, so the part draws more current",
+              "feedback": "The curve is drawn before the part is in any circuit: it depends only on the air temperature and the body's maximum, {Tmax}. (The resistance does shift a little with temperature, by under 1 % for metal film and up to about 10 % for carbon film at {Tmax}, but that doesn't set the limit.)"
+            }
+          ],
+          "explanation": "Body temperature ≈ T_air + P·θ, and it must stay at or below {Tmax}. So P_max = ({Tmax} − T_air)/θ: a straight line that reaches zero when the air itself is at {Tmax}."
+        }
+      ],
+      "noDrawing": "reading a datasheet derating curve; no circuit to solve",
+      "review": "verified"
+    },
+    {
+      "id": "ph_design_heater",
+      "topicId": "power_heat",
+      "prompt": "Design a small heater from one resistor directly across a {Vs} supply. It must turn {P} into heat, within 5%. Choose its resistance from the E24 series.",
+      "variables": [
+        {
+          "name": "Vs",
+          "unit": "V",
+          "value": 12
+        },
+        {
+          "name": "P",
+          "unit": "W",
+          "values": [
+            1,
+            1.5,
+            2,
+            3,
+            5
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rx",
+          "formula": "Vs^2/P",
+          "unit": "Ω"
+        },
+        {
+          "name": "P2",
+          "formula": "2*P",
+          "unit": "W"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "R",
+            "label": "R (heater)",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 10,
+            "max": 1000
+          }
+        ],
+        "result": "Vs^2/R",
+        "resultLabel": "P",
+        "resultUnit": "W",
+        "target": "P",
+        "tolerance": 0.05
+      },
+      "explanation": "The voltage is fixed, so P = V²/R and R = V²/P = ({Vs})² / {P} = {Rx}. Pick a nearby E24 value and check P = V²/R. A smaller resistance gives more heat here: the voltage stays at {Vs}, so less resistance lets more current through. The part must also be rated well above {P}; at half its rating that is at least {P2}: a power resistor (a 2 W film part at the smallest, wirewound or metal-clad above that), not a 1/4 W film part.",
+      "hints": [
+        "At a fixed voltage, does more resistance give more heat or less?",
+        "R = V²/P; then pick the nearest E24 value and check the power."
+      ],
+      "schematic": {
+        "netlist": "resistor heater\nV1 a 0 {Vs:spice}\nR1 a 0 {Rx:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vs}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "heater R"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ph_what_if_double_v",
+      "topicId": "power_heat",
+      "prompt": "A {R} wirewound resistor (a 5 W part) is used as a heater on a {V} battery. The battery is replaced with a {new_V} one. What happens to the power turned into heat?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            3,
+            4.5,
+            6
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            68,
+            100,
+            150
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the heating power",
+        "formula": "V^2/R",
+        "unit": "W",
+        "change": {
+          "V": "2*V"
+        },
+        "askFactor": true,
+        "factorHint": "By Ohm's law the current through the same resistance follows the voltage, and P = V·I: both factors change, so multiply their changes.",
+        "feedback": {
+          "down": "A higher voltage doesn't deliver less heat to the same resistance. It drives more current through it, and each coulomb gives up more energy crossing it: in P = V·I both factors grow.",
+          "same": "The resistance is the same, but the power is not set by the resistance alone. The higher voltage drives more coulombs through it each second, and each one gives up more energy on the way: P = V·I."
+        }
+      },
+      "explanation": "P = V²/R. Doubling V across the same {R} doubles the current as well, and P = V·I, so the power goes up four times: {before} → {after}.",
+      "hints": [
+        "What happens to the current when the voltage doubles? And then to V·I?"
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does doubling the voltage give four times the power, not twice?",
+          "choices": [
+            {
+              "text": "Each coulomb now gives up twice the energy, and twice as many coulombs cross each second, because the current doubles too",
+              "feedback": "Right: P = V·I, and both factors doubled.",
+              "correct": true
+            },
+            {
+              "text": "The resistance halves when the voltage doubles",
+              "feedback": "A resistor keeps its resistance (apart from a small change as it warms): that is what V = I·R with a constant R says. The current doubles because the voltage does."
+            },
+            {
+              "text": "Power always goes as the square of whatever is changed",
+              "feedback": "Not so: at a fixed voltage, doubling R halves the power, in inverse proportion, not as a square."
+            },
+            {
+              "text": "The battery supplies extra current to make up for the heat produced",
+              "feedback": "The current is set by V/R, nothing else. It doubles because the voltage across the same resistance doubled."
+            }
+          ],
+          "explanation": "P = V·I and I = V/R, so P = V²/R: a square law in V. The same holds for current: double the current through a resistor and its power goes up four times (P = I²R)."
+        }
+      ],
+      "schematic": {
+        "netlist": "battery and heater\nV1 a 0 {V:spice}\nR1 a 0 {R:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "heater\n{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ph_what_if_r_fixed_v",
+      "topicId": "power_heat",
+      "prompt": "A {R} resistor sits directly across a {V} supply. A second {R} resistor is added in series with it, and the supply stays at {V}. What happens to the total power the resistors turn into heat?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            5,
+            9,
+            12
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            680,
+            1000,
+            1500
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the total power",
+        "formula": "V^2/R",
+        "unit": "W",
+        "change": {
+          "R": "2*R"
+        },
+        "askFactor": true,
+        "feedback": {
+          "up": "More resistance doesn't mean more heat here. The supply holds the voltage at {V}, so the larger total resistance lets less current through, and with the voltage fixed, P = V·I falls with the current.",
+          "same": "The voltage is fixed, but the current is not: the larger total resistance lets less current through. Each coulomb still gives up the same energy crossing the fixed {V}, and fewer of them pass each second: P = V·I."
+        },
+        "factorHint": "At a fixed voltage, P = V²/R_total: look at where R_total sits and whether it is squared. (Through I²R instead: the current falls, but the R in I²R has grown, so the two effects partly cancel.)"
+      },
+      "explanation": "With the voltage fixed, P = V²/R_total. The total resistance doubles, so the current halves and P = V·I halves: {before} → {after}. Each resistor now has half of {V} across it and half the current through it, so each dissipates a quarter of what the single resistor did.",
+      "hints": [
+        "The supply voltage is fixed. What does doubling the resistance do to the current?"
+      ],
+      "followUps": [
+        {
+          "prompt": "How much power does each of the two resistors now dissipate, compared with the single resistor before?",
+          "choices": [
+            {
+              "text": "A quarter: each has half the voltage across it and half the current through it",
+              "feedback": "Right: ½ × ½ = ¼, and the two quarters add to the half found above.",
+              "correct": true
+            },
+            {
+              "text": "Half: the power is shared equally between two resistors",
+              "feedback": "The total is half the old power, so each of the two equal resistors has half of that half: a quarter."
+            },
+            {
+              "text": "The same as before: each is still a {R} resistor",
+              "feedback": "The resistance is the same, but each has only half of {V} across it. P = V²/R with half the voltage is a quarter."
+            },
+            {
+              "text": "Twice as much: there is now twice the resistance to heat up",
+              "feedback": "At a fixed supply voltage, more resistance means less current. Each resistor gets half the current and half the voltage: a quarter of the power."
+            }
+          ],
+          "explanation": "Equal resistors in series split the voltage equally. With V/2 across R: P = (V/2)²/R = V²/(4R), a quarter of the original."
+        }
+      ],
+      "schematic": {
+        "netlist": "resistor across a supply\nV1 a 0 {V:spice}\nR1 a 0 {R:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ph_what_if_r_fixed_i",
+      "topicId": "power_heat",
+      "prompt": "A bench supply in constant-current mode drives {I} through a {R} resistor. A second {R} resistor is added in series; the supply raises its output voltage to keep the current at {I}. What happens to the total power the resistors turn into heat?",
+      "variables": [
+        {
+          "name": "I",
+          "unit": "A",
+          "values": [
+            0.02,
+            0.03,
+            0.04
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            33,
+            47,
+            68,
+            100
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the total power",
+        "formula": "I^2*R",
+        "unit": "W",
+        "change": {
+          "R": "2*R"
+        },
+        "askFactor": true,
+        "feedback": {
+          "down": "At a fixed voltage more resistance would mean less power, but here the current is held at {I}. Pushing the same current through more resistance takes more voltage (V = I·R), so each of the same coulombs per second gives up more energy on its way through: P = I²R with I held.",
+          "same": "The current is the same, but it now crosses more resistance, so more voltage: each coulomb gives up more energy on the way through."
+        }
+      },
+      "explanation": "The current is fixed, so P = I²R_total. Doubling the resistance doubles the voltage the supply must give (V = I·R) and doubles the power: {before} → {after}. Each resistor dissipates exactly what the single one did. With a fixed voltage the same change halves the power instead: whether more resistance means more heat depends on what is held fixed.",
+      "hints": [
+        "Here the current is the fixed quantity. Which form of the power formula keeps it fixed?"
+      ],
+      "followUps": [
+        {
+          "prompt": "Which statement about \"more resistance, more heat\" is right?",
+          "choices": [
+            {
+              "text": "It holds at a fixed current (P = I²R) and is reversed at a fixed voltage (P = V²/R)",
+              "feedback": "Right: what the source holds fixed decides which way the power goes.",
+              "correct": true
+            },
+            {
+              "text": "It is always true, because resistance is what turns energy into heat",
+              "feedback": "Resistance is where the heat is produced, but more of it also lowers the current when the voltage is fixed. Across a fixed voltage a bigger R dissipates less."
+            },
+            {
+              "text": "It is never true: more resistance always means less current, so less heat",
+              "feedback": "Only when the voltage is fixed. A constant-current source keeps the current at {I} whatever the resistance, and then a bigger R dissipates more."
+            },
+            {
+              "text": "It holds only for wirewound resistors",
+              "feedback": "The construction doesn't matter: P = I²R and P = V²/R hold for any resistance. What matters is whether the source fixes the current or the voltage."
+            }
+          ],
+          "explanation": "P = I²R and P = V²/R are the same law. Which one shows the effect of R plainly depends on the source: hold I and P grows with R; hold V and P falls with R."
+        }
+      ],
+      "schematic": {
+        "netlist": "constant current through a resistor\nI1 0 a {I:spice}\nR1 a 0 {R:spice}\n",
+        "parts": [
+          {
+            "ref": "I1",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 270,
+            "label": "{I}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              2
+            ],
+            "rot": 90,
+            "label": "{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            3,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ph_what_if_cable_v",
+      "topicId": "power_heat",
+      "prompt": "A {V} system delivers {P} to a load through a cable whose two conductors together have {Rc} of resistance. It is redesigned to run at {new_V}, with a load made for that voltage, still drawing {P} through the same cable. What happens to the power lost as heat in the cable? (Take the current as I = P/V; the cable's own drop is small.)",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "value": 12
+        },
+        {
+          "name": "P",
+          "unit": "W",
+          "values": [
+            24,
+            36,
+            48
+          ]
+        },
+        {
+          "name": "Rc",
+          "unit": "Ω",
+          "values": [
+            0.05,
+            0.1,
+            0.15
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "I0",
+          "formula": "P/V",
+          "unit": "A"
+        },
+        {
+          "name": "RL",
+          "formula": "V^2/P",
+          "unit": "Ω"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the power lost in the cable",
+        "formula": "(P/V)^2*Rc",
+        "unit": "W",
+        "change": {
+          "V": "2*V"
+        },
+        "askFactor": true,
+        "factorHint": "The cable's heat is I²R_cable, and the current is P/V. How does the current change, and how does its square?",
+        "feedback": {
+          "up": "The same power at a higher voltage needs less current, I = P/V, and the cable's heat depends on the current through it, I²R.",
+          "same": "The load still takes the same power, but at the higher voltage it draws less current (I = P/V). The cable's heat is set only by the current through it and its own resistance, I²R_cable, not by the load's power."
+        }
+      },
+      "explanation": "The cable's heat is I²R_cable, and the current is I = P/V: {I0} at {V}. At {new_V} the same {P} needs half the current, so the loss falls to a quarter: {before} → {after}. This is why long cable runs, solar installations and power distribution use higher voltages.",
+      "hints": [
+        "Which voltage is across the cable? Find the current first: I = P/V."
+      ],
+      "schematic": {
+        "netlist": "supply, cable and load\nV1 in 0 {V:spice}\nR1 in a {Rc:spice}\nR2 a 0 {RL:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "cable\n{Rc}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "load\n{P}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ph_what_if_runtime_cells",
+      "topicId": "power_heat",
+      "prompt": "A device draws a steady {P} from a lithium-ion pack through its own converter, which takes the same power whatever the pack voltage. The pack is one {Vp} cell rated {cap}. It is replaced by two of the same cells in series ({new_Vp}, still rated {cap}). What happens to the run time? Treat the cell voltage and the converter's efficiency as constant.",
+      "variables": [
+        {
+          "name": "Vp",
+          "unit": "V",
+          "value": 3.7
+        },
+        {
+          "name": "cap",
+          "unit": "Ah",
+          "values": [
+            2,
+            2.5,
+            3
+          ]
+        },
+        {
+          "name": "P",
+          "unit": "W",
+          "values": [
+            0.5,
+            1,
+            2
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Wh1",
+          "formula": "Vp*cap",
+          "unit": "Wh"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the run time",
+        "formula": "Vp*cap/P",
+        "unit": "h",
+        "change": {
+          "Vp": "2*Vp"
+        },
+        "askFactor": true,
+        "feedback": {
+          "same": "Both packs are rated {cap}, but amp-hours measure charge, not energy. With two cells in series, every coulomb that passes through the pack gains energy from both cells' chemistry, so the pack stores more watt-hours.",
+          "down": "The higher voltage doesn't drain the pack faster: the device takes the same {P}, so at the higher voltage it draws less current."
+        }
+      },
+      "explanation": "What runs the device is energy: W = V·Q. One cell stores {Vp} × {cap} = {Wh1}, which lasts {before} at {P}. Two in series pass the same charge through both cells, so the rating stays {cap}, but every coulomb that passes through the pack gains two cells' worth of energy: twice the watt-hours, and twice the run time, {before} → {after}. Compare packs in watt-hours, not milliamp-hours.",
+      "hints": [
+        "Is a mAh rating an energy or a charge? Which one does a fixed-power device use up?"
+      ],
+      "noDrawing": "a battery pack feeding a converter that takes constant power; no circuit to solve",
+      "review": "verified"
+    },
+    {
+      "id": "ph_rating_meaning",
+      "topicId": "power_heat",
+      "level": "recall",
+      "prompt": "A resistor in a parts list is marked \"1/4 W\". What does that tell you?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "It is the most power the resistor may turn into heat continuously without its body getting too hot, at a stated ambient temperature; what it actually dissipates is set by the circuit",
+          "feedback": "Right: a rating is a limit. The actual power is V·I, from the voltage across it and the current through it.",
+          "correct": true
+        },
+        {
+          "text": "It always uses 0.25 W whenever it is connected in a circuit",
+          "feedback": "A resistor has no fixed consumption: its power is V·I, set by the voltage the circuit puts across it. A 1 kΩ resistor on 1 V dissipates 1 mW."
+        },
+        {
+          "text": "It limits the circuit so that no more than 0.25 W can ever be drawn through it",
+          "feedback": "A resistor doesn't regulate its own power. Put too much voltage across it and it dissipates more than 0.25 W, overheats and fails."
+        },
+        {
+          "text": "It delivers 0.25 W to the parts that come after it in the circuit",
+          "feedback": "A resistor delivers no power to other parts. It turns the energy each coulomb gives up crossing it into heat; the 1/4 W is the most heat it can handle."
+        }
+      ],
+      "explanation": "A power rating is a thermal limit: the dissipation at which the body reaches its highest safe temperature, at the rated ambient temperature (often 70 °C for small film resistors). What a resistor actually dissipates is P = V·I = I²R = V²/R, set by the circuit. Designers keep it well below the rating.",
+      "hints": [
+        "Does a resistor decide its own power, or does the circuit?"
+      ],
+      "noDrawing": "about what a part's power rating means; no particular circuit",
+      "review": "verified"
+    },
+    {
+      "id": "ph_where_heat",
+      "topicId": "power_heat",
+      "level": "recall",
+      "prompt": "A steady current flows through a resistor and the resistor warms up. What is happening inside the resistive material?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "The electric field accelerates the free electrons, and they keep losing the energy they gain in collisions with the vibrating atoms, impurities and defects; the atoms vibrate harder, which is a higher temperature",
+          "feedback": "Right: this is Joule heating. The charge passes on; the energy stays in the material as heat.",
+          "correct": true
+        },
+        {
+          "text": "Some of the electrons are used up in the resistor, and the charge lost turns into heat",
+          "feedback": "Charge is conserved: as many electrons leave the resistor each second as enter it, so the current is the same at both ends. What they give up is energy, not themselves."
+        },
+        {
+          "text": "The electrons slow down and pile up inside, so less current comes out than goes in",
+          "feedback": "In steady operation nothing piles up: a growing excess of charge would set up a field that drives it out again. The current out equals the current in."
+        },
+        {
+          "text": "The resistor stores the energy, and releases it as heat once it is full",
+          "feedback": "A resistor stores almost no energy. It turns the energy into heat as fast as it receives it, from the first moment the current flows."
+        }
+      ],
+      "explanation": "Between collisions the field does work on each free electron; in each collision with the lattice the electron hands that energy to the atoms. The average drift stays the same, so the current is the same at both ends, while the material heats at the rate V·I.",
+      "hints": [
+        "Charge comes out of the resistor as fast as it goes in. So what is left behind?"
+      ],
+      "noDrawing": "about what happens inside a resistor's material; no circuit to solve",
+      "review": "verified"
+    },
+    {
+      "id": "ph_hotter_parallel",
+      "topicId": "power_heat",
+      "prompt": "A 100 Ω resistor and a 1 kΩ resistor are both connected directly across a 12 V supply (in parallel). Both are 2 W parts. Which one gets hotter?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "The 100 Ω: both have 12 V across them, and the smaller resistance takes ten times the current, so ten times the power",
+          "feedback": "Right: P = V²/R gives 1.44 W in the 100 Ω and 0.144 W in the 1 kΩ.",
+          "correct": true
+        },
+        {
+          "text": "The 1 kΩ: the bigger resistance opposes the current more, and that opposition is what makes heat",
+          "feedback": "Opposing the current more also means less current flows. With the same 12 V across both, P = V²/R: the bigger resistance dissipates less, 0.144 W against 1.44 W."
+        },
+        {
+          "text": "Both the same: they have the same voltage across them",
+          "feedback": "Same voltage, but not the same current: the 100 Ω takes 120 mA and the 1 kΩ 12 mA, and P = V·I."
+        },
+        {
+          "text": "Both the same: parallel resistors share the supply's power equally",
+          "feedback": "Each branch takes V²/R. The power splits equally only between equal resistors."
+        }
+      ],
+      "explanation": "In parallel both resistors have the full 12 V across them. The current in each is V/R, so the power V²/R is largest in the smallest resistance: 1.44 W in the 100 Ω, 0.144 W in the 1 kΩ.",
+      "hints": [
+        "What is the same for both resistors in parallel: the voltage or the current?"
+      ],
+      "followUps": [
+        {
+          "prompt": "The same two resistors are now connected in series across the 12 V supply. Which one gets hotter now?",
+          "choices": [
+            {
+              "text": "The 1 kΩ: the same current flows through both, and the bigger resistance has the bigger voltage across it, so P = I²R is ten times larger",
+              "feedback": "Right: about 0.119 W in the 1 kΩ against 0.0119 W in the 100 Ω.",
+              "correct": true
+            },
+            {
+              "text": "The 100 Ω: the smaller resistance always gets hotter",
+              "feedback": "Only at a fixed voltage. In series the current is the same in both, and P = I²R is larger in the bigger resistance."
+            },
+            {
+              "text": "Both the same: the same current flows through both",
+              "feedback": "Same current, but not the same voltage: the 1 kΩ has 10.9 V across it and the 100 Ω 1.09 V, and P = V·I."
+            },
+            {
+              "text": "Both the same: each has half of the 12 V across it",
+              "feedback": "The voltage divides in proportion to resistance: 10.9 V across the 1 kΩ, 1.09 V across the 100 Ω. Equal halves would need equal resistors."
+            }
+          ],
+          "explanation": "In series one current flows: I = 12 V / 1100 Ω = 10.9 mA. P = I²R gives 0.119 W in the 1 kΩ and 0.0119 W in the 100 Ω. \"Bigger R is hotter\" is true at a fixed current and false at a fixed voltage."
+        }
+      ],
+      "schematic": {
+        "netlist": "two resistors in parallel\nV1 a 0 12\nR1 a 0 100\nR2 a 0 1k\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "100 Ω"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "1 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              8,
+              6
+            ],
+            [
+              14,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ph_choose_rating",
+      "topicId": "power_heat",
+      "prompt": "A 180 Ω resistor sits directly across a 9 V battery. Your design rule: a resistor may dissipate at most half its power rating. What is the smallest standard rating that meets the rule?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "1/8 W: a 180 Ω resistor is a small value, so it dissipates very little",
+          "feedback": "At a fixed voltage a smaller resistance dissipates more, not less: P = V²/R = 81 V² / 180 Ω = 0.45 W, more than three times 1/8 W."
+        },
+        {
+          "text": "1/4 W",
+          "feedback": "It would dissipate 0.45 W, almost twice its rating: its body would overheat and discolor, and it could drift in value or fail open."
+        },
+        {
+          "text": "1/2 W",
+          "feedback": "0.45 W is 90% of 1/2 W. It might survive in cool air, but its body would run near its maximum temperature, against the rule: half of 1/2 W is only 0.25 W."
+        },
+        {
+          "text": "1 W",
+          "feedback": "Right: 0.45 W is 45% of 1 W, inside the rule.",
+          "correct": true
+        },
+        {
+          "text": "2 W",
+          "feedback": "2 W meets the rule too, but 1 W already does; the larger part costs more and takes more board space."
+        }
+      ],
+      "explanation": "P = V²/R = (9 V)² / 180 Ω = 81/180 = 0.45 W. The rule needs a rating of at least 2 × 0.45 W = 0.9 W, so 1 W. Running at half the rating keeps the body cooler, slows drift and aging, and leaves room for a warm enclosure, a supply at the top of its range or a resistor at the low end of its tolerance.",
+      "hints": [
+        "Find the power first. Then double it."
+      ],
+      "schematic": {
+        "netlist": "battery and resistor\nV1 a 0 9\nR1 a 0 180\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "9 V",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "180 Ω"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ph_burnt_which",
+      "topicId": "power_heat",
+      "prompt": "On this board (12 V supply, R1 = 100 Ω, R2 = 220 Ω, R3 = 390 Ω, all 1/2 W parts; R2 and R3 together act as 140.7 Ω, since two paths from a to ground pass more current than either alone), R1 is brown and charred, while R2 and R3 look normal. Which fault explains it?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "Node a is shorted to ground (R2 or R3 failed short, or a solder bridge)",
+          "feedback": "Right: R1 then has the whole 12 V across it, P = (12 V)²/100 Ω = 1.44 W, almost three times its rating, while R2 and R3 have no voltage across them and stay cool.",
+          "correct": true
+        },
+        {
+          "text": "R1 is shorted",
+          "feedback": "A shorted R1 has no voltage across it and dissipates nothing. Node a would rise to 12 V, and R2 would take (12 V)²/220 Ω = 0.65 W and be the one to overheat."
+        },
+        {
+          "text": "R3 is open",
+          "feedback": "With R3 open the total resistance rises to 320 Ω and the current falls to 37.5 mA: R1 dissipates (37.5 mA)² × 100 Ω = 0.14 W, less than normal."
+        },
+        {
+          "text": "Nothing failed: R1 carries the whole current, so it was always going to overheat",
+          "feedback": "Normally the current is 12 V / (100 Ω + 220 Ω ∥ 390 Ω) = 12 V / 240.7 Ω = 49.9 mA, and R1 dissipates (49.9 mA)² × 100 Ω = 0.249 W: half its rating, warm but not charred."
+        }
+      ],
+      "explanation": "Work out each part's power in each case. Normally R1 takes 0.249 W, R2 0.224 W and R3 0.126 W, all within 1/2 W. Only a short from node a to ground puts the whole 12 V across R1: 1.44 W. A charred part tells you which resistor received too much power; P = V²/R tells you which fault put the voltage there.",
+      "hints": [
+        "A part chars when it dissipates far more than its rating. Which fault puts much more voltage across R1?"
+      ],
+      "schematic": {
+        "netlist": "load resistors fed through R1\nV1 in 0 12\nR1 in a 100\nR2 a 0 220\nR3 a 0 390\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n100 Ω"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n220 Ω"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n390 Ω"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              8,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ph_fault_heat",
+      "topicId": "power_heat",
+      "prompt": "A {Vs} supply feeds two load resistors, R2 = {R2} and R3 = {R3}, in parallel through R1 = {R1} (R2 and R3 together act as {Rpar}: two paths from a to ground pass more current than either alone). All three are 1/2 W parts. Normally node a sits at {h0} and R1 carries {h1}. After a fault the meters read as below. Which fault explains the readings?",
+      "variables": [
+        {
+          "name": "Vs",
+          "unit": "V",
+          "value": 12
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            100,
+            120
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            180,
+            220
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "values": [
+            390,
+            470
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rpar",
+          "formula": "R2||R3",
+          "unit": "Ω"
+        },
+        {
+          "name": "Ishort",
+          "formula": "Vs/R1",
+          "unit": "A"
+        },
+        {
+          "name": "PR1short",
+          "formula": "Vs^2/R1",
+          "unit": "W"
+        },
+        {
+          "name": "Ipar",
+          "formula": "Vs/(R2||R3)",
+          "unit": "A"
+        },
+        {
+          "name": "PR2full",
+          "formula": "Vs^2/R2",
+          "unit": "W"
+        },
+        {
+          "name": "PR3full",
+          "formula": "Vs^2/R3",
+          "unit": "W"
+        },
+        {
+          "name": "Va3",
+          "formula": "Vs*R2/(R1+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "PR2o",
+          "formula": "(Vs*R2/(R1+R2))^2/R2",
+          "unit": "W"
+        },
+        {
+          "name": "Va2",
+          "formula": "Vs*R3/(R1+R3)",
+          "unit": "V"
+        },
+        {
+          "name": "PR3o",
+          "formula": "(Vs*R3/(R1+R3))^2/R3",
+          "unit": "W"
+        }
+      ],
+      "fault": {
+        "netlist": "load resistors fed through R1\nV1 in 0 {Vs:spice}\nR1 in a {R1:spice}\nR2 a 0 {R2:spice}\nR3 a 0 {R3:spice}\n",
+        "probes": [
+          {
+            "label": "Voltage at node a (black lead on ground)",
+            "probe": "v(a)"
+          },
+          {
+            "label": "Current through R1",
+            "probe": "i(R1)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "Node a is shorted to ground (a solder bridge across R2 or R3)",
+            "short": "R2",
+            "feedback": "A short from node a to ground would pull node a to 0 V, and R1 alone would set the current: {Vs} / {R1} = {Ishort}.",
+            "why": "node a reads 0 V and R1 carries {Ishort}: something joins a to ground, and these meters can't say whether it sits across R2 or R3 (look for the bridge). R1 has the whole {Vs} across it and dissipates {PR1short}, far beyond its 1/2 W rating. R1 is the part that overheats and discolors; R2 and R3 have no voltage across them and stay cool. Left like this, R1 soon chars and may fail open, which is often how a technician first finds this fault."
+          },
+          {
+            "text": "R1 is shorted",
+            "short": "R1",
+            "feedback": "A shorted R1 would put node a at the full {Vs}, and the current would rise to {Vs} / {Rpar} = {Ipar}.",
+            "why": "node a reads the full {Vs}, so both loads have the whole supply across them: R2 dissipates {PR2full}, beyond its 1/2 W rating, and R3 {PR3full}. R2 is the one that overheats; the shorted R1 has no voltage across it and stays cool."
+          },
+          {
+            "text": "R3 is open (a cracked part or a dry joint)",
+            "open": "R3",
+            "feedback": "An open R3 would leave R1 and R2 as a divider: node a would rise to {Va3} and the current would fall.",
+            "why": "node a rose to {Va3} and the current fell, so a load went open; the reading matches R1 and R2 alone. The current falls, R1 runs cooler than normal, and R2 dissipates {PR2o}, within its rating: nothing overheats, the circuit just loses R3's load."
+          },
+          {
+            "text": "R2 is open",
+            "open": "R2",
+            "feedback": "An open R2 would leave R1 and R3 as a divider: node a would rise to {Va2} and the current would fall.",
+            "why": "node a rose to {Va2} and the current fell, matching R1 and R3 alone. R1 runs cooler than normal and R3 dissipates {PR3o}, within its rating: nothing overheats."
+          }
+        ]
+      },
+      "explanation": "Read the node voltage and the current together. 0 V at a with a large current: something shorts a to ground, and R1 takes the whole supply. The full supply at a: R1 is bypassed and the loads take it all. A higher node voltage with less current: a load went open. Then P = V²/R for each part tells which one, if any, now runs beyond its rating.",
+      "hints": [
+        "Compare the current with normal first: more means a short, less means something opened.",
+        "Then the node voltage says where: 0 V or the full supply at a points at a short; a value in between, at an open load."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vs}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              8,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    }
+  ]
+}

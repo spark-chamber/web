@@ -1,0 +1,677 @@
+{
+  "topics": [
+    {
+      "id": "decibels",
+      "title": "Decibels for voltage and power",
+      "summary": "Convert between ratios and dB: 20·log₁₀ for voltage, 10·log₁₀ for power, and why they agree.",
+      "lenses": [
+        "math",
+        "signals"
+      ],
+      "prerequisites": [
+        "si_prefixes",
+        "power_heat"
+      ],
+      "lensNotes": {
+        "math": "dB turns multiplication into addition: cascaded gains multiply, so their dB values add. 10·log₁₀ for power and 20·log₁₀ for voltage agree because power goes as voltage squared, and log(V²) = 2·log(V).",
+        "signals": "Signal chains span huge ranges, from microvolts of noise to volts of output, so engineers think in dB. Anchors worth memorizing: 3 dB is half power (0.707 in voltage), 6 dB is double voltage, 20 dB is ×10 in voltage."
+      },
+      "formulas": [
+        {
+          "label": "Voltage ratio",
+          "tex": "G_{dB} = 20\\log_{10}\\frac{V_2}{V_1}"
+        },
+        {
+          "label": "Power ratio",
+          "tex": "G_{dB} = 10\\log_{10}\\frac{P_2}{P_1}"
+        }
+      ],
+      "prerequisiteNotes": {
+        "si_prefixes": "Decibels are logarithms of ratios; both are ways of handling numbers that span many powers of ten.",
+        "power_heat": "P = V²/R is why a voltage ratio takes 20·log₁₀: across the same resistance, power goes as the square of the voltage."
+      },
+      "goals": [
+        "Convert a voltage ratio to dB with 20·log₁₀ and a power ratio with 10·log₁₀, and convert dB back to either ratio",
+        "Explain why a stage's gain in dB is the same whether you measure its voltages or its powers, and when that stops being true",
+        "Find the overall gain of a chain of stages by adding their dB values instead of multiplying their ratios",
+        "Estimate ratios without a calculator from a few anchors: 3 dB is ×2 in power, 6 dB is about ×2 in voltage, 20 dB is ×10 in voltage"
+      ],
+      "intuition": "A decibel value is a ratio on a logarithmic scale, so gains that multiply simply add.",
+      "why": "The decibel is defined on power: 10·log₁₀(P₂/P₁). Power in a resistance is P = V²/R, so when two voltages appear across the same resistance, the power ratio is the square of the voltage ratio. The logarithm of a square is twice the logarithm, so 10·log₁₀(V₂²/V₁²) = 20·log₁₀(V₂/V₁). The 20 is not a second definition; it is the same decibel reached through voltage. That is why a voltage falling to 0.707 of its value and a power falling to half are both −3 dB. If the two resistances differ, the voltage and power figures no longer agree.",
+      "explanation": "You already use prefixes to handle numbers that span many powers of ten. Decibels do the same for ratios. For power, gain = 10·log₁₀(P₂/P₁), so ×10 in power is 10 dB and ×100 is 20 dB. For voltage, gain = 20·log₁₀(V₂/V₁), so ×10 in voltage is 20 dB. Use 20 for voltage and 10 for power; mixing them up gives an answer twice or half the right size. A ratio above 1 gives a positive number (gain), a ratio below 1 a negative one (loss), and a ratio of exactly 1 is 0 dB. To go back, undo the logarithm: voltage ratio = 10^(dB/20), power ratio = 10^(dB/10). Because the logarithm of a product is the sum of the logarithms, the gains of stages in a chain add: a +20 dB amplifier followed by a −6 dB stage gives +14 dB. A few anchors let you estimate: 3 dB is ×2 in power (×1.41 in voltage), 6 dB is about ×2 in voltage, 20 dB is ×10 in voltage and ×100 in power. A plain dB value is a ratio, not an amount; it names a level only when a reference is attached, as in dBV (relative to 1 V).",
+      "workedExample": {
+        "problem": "A preamp multiplies a 10 mV microphone signal by 100. The stage after it passes half of the voltage it receives. What is each stage's gain in dB, what is the overall gain, and what voltage comes out?",
+        "steps": [
+          "Preamp, a voltage ratio, so use 20·log₁₀: 20·log₁₀(100) = 20 × 2 = 40 dB.",
+          "Second stage: 20·log₁₀(0.5) = 20 × (−0.301) = −6.02 dB. A ratio below 1 gives a negative value: a loss.",
+          "Overall: 40 dB + (−6.02 dB) = 33.98 dB. Check by multiplying the ratios instead: 100 × 0.5 = 50, and 20·log₁₀(50) = 33.98 dB.",
+          "Output: the overall ratio is 10^(33.98 / 20) = 50, so 10 mV × 50 = 500 mV = 0.50 V.",
+          "Power view of the preamp: if its input and output voltages appeared across the same resistance, ×100 in voltage would be ×100² = ×10 000 in power, and 10·log₁₀(10 000) = 40 dB, the same figure. Writing 10·log₁₀(100) = 20 dB for the voltage ratio is the classic slip: it halves the answer."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 1 \"Amplifiers and Active Devices\", section \"Decibels\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_1.html#xtocid90094",
+          "note": "A power ratio takes 10·log₁₀ and a voltage or current ratio 20·log₁₀ (the same load impedance assumed), going back uses powers of ten, a gain is positive, a loss negative, unity 0 dB, and stage gains in dB add."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 1 \"Amplifiers and Active Devices\", section \"Absolute dB scales\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_1.html#xtocid90095",
+          "note": "A dB figure names an absolute level only when tied to a stated reference, such as 1 mW for dBm or 1 W for dBW."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Elementary Filter Circuits\", ch. 5 \"Derivations and Technical References\", section 5.1 \"Decibels\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_filters.pdf",
+          "note": "The 20 for voltage comes from P = V²/R in a fixed resistance, and as estimates every 10 dB is a factor of 10 in power and every 3 dB roughly a factor of 2."
+        }
+      ],
+      "remediation": true
+    }
+  ],
+  "templates": [
+    {
+      "id": "db_from_voltage_gain",
+      "topicId": "decibels",
+      "prompt": "An amplifier's output voltage is {G} times its input voltage. What is its voltage gain in dB?",
+      "variables": [
+        {
+          "name": "G",
+          "unit": "",
+          "values": [
+            1.2,
+            1.5,
+            1.8,
+            2.2,
+            2.7,
+            3.3,
+            3.9,
+            4.7,
+            5.6,
+            6.8,
+            8.2,
+            10,
+            12,
+            15,
+            18,
+            22,
+            27,
+            33,
+            39,
+            47,
+            56,
+            68,
+            82
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "20*log10(G)",
+        "unit": "dB",
+        "tolerance": 0.02
+      },
+      "explanation": "For a voltage ratio, gain in dB = 20·log₁₀(Vout / Vin) = 20·log₁₀({G}) = {answer}. The 20 comes from power ∝ V²: 10·log₁₀(V²) = 20·log₁₀(V).",
+      "hints": [
+        "Is this a voltage ratio or a power ratio? That decides 10 or 20.",
+        "Voltage ratios use dB = 20·log₁₀(ratio)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "10*log10(G)",
+          "feedback": "10·log₁₀ is for power ratios. Voltage ratios use 20·log₁₀, because power goes as voltage squared."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does a voltage ratio use 20·log₁₀ when a power ratio uses 10·log₁₀?",
+          "choices": [
+            {
+              "text": "Power goes as voltage squared, and squaring a ratio doubles its logarithm",
+              "feedback": "Right: across the same resistance P = V²/R, so 10·log₁₀((V₂/V₁)²) = 20·log₁₀(V₂/V₁).",
+              "correct": true
+            },
+            {
+              "text": "Voltage counts twice as much as power",
+              "feedback": "It isn't a weighting. The 20 makes a voltage change and the power change it causes read the same number of dB."
+            },
+            {
+              "text": "It's a historical habit with no reason behind it",
+              "feedback": "There is a reason: P ∝ V². With 10·log₁₀ for voltage, one amplifier would have two different gains in dB."
+            },
+            {
+              "text": "Voltages are bigger numbers than powers",
+              "feedback": "Size has nothing to do with it. Volts and watts are different units; what links them is the square law."
+            }
+          ],
+          "explanation": "A decibel is defined on power: 10·log₁₀(P₂/P₁). Across the same resistance P = V²/R, so the power ratio is the voltage ratio squared, and log(x²) = 2·log(x). A ×{G} voltage gain is a ×{G}² power gain, and both come to {answer}."
+        }
+      ],
+      "noDrawing": "a ratio-to-dB conversion; the amplifier's circuit doesn't enter into it",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "db_to_voltage_ratio",
+      "topicId": "decibels",
+      "prompt": "An amplifier stage has a voltage gain of {GdB}. What is the ratio Vout / Vin?",
+      "variables": [
+        {
+          "name": "GdB",
+          "unit": "dB",
+          "range": {
+            "min": 6,
+            "max": 40,
+            "step": 2
+          }
+        }
+      ],
+      "answer": {
+        "formula": "10^(GdB/20)",
+        "unit": "",
+        "unitless": true,
+        "tolerance": 0.02
+      },
+      "explanation": "Undo dB = 20·log₁₀(ratio): ratio = 10^(dB / 20) = 10^({GdB} / 20) = {answer}. Anchors: 20 dB is 10×, 6 dB is about 2×.",
+      "hints": [
+        "Run the dB formula backwards.",
+        "For voltage, ratio = 10^(dB / 20). Example: 20 dB → 10^1 = 10×."
+      ],
+      "misconceptions": [
+        {
+          "formula": "10^(GdB/10)",
+          "feedback": "That's the power ratio. For voltage, divide the dB by 20, not 10: 20 dB is 10× in voltage but 100× in power."
+        },
+        {
+          "formula": "GdB/20",
+          "feedback": "That's the exponent, not the ratio. Raise 10 to it: ratio = 10^(dB / 20)."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "This stage feeds a second, identical stage that doesn't load the first. Why is the total gain in dB simply twice one stage's?",
+          "choices": [
+            {
+              "text": "The voltage ratios multiply, and the log of a product is the sum of the logs",
+              "feedback": "Right: Vout/Vin = A₁·A₂, and log(A₁·A₂) = log A₁ + log A₂. Gains multiply, so dB add.",
+              "correct": true
+            },
+            {
+              "text": "The voltage ratios add, so the dB add too",
+              "feedback": "The ratios multiply: ×10 then ×10 is ×100, not ×20. Only the dB values add: 20 dB + 20 dB = 40 dB."
+            },
+            {
+              "text": "You should multiply the dB values, not add them",
+              "feedback": "Multiplying dB would square the logarithm. Logs turn multiplication into addition, so dB add."
+            },
+            {
+              "text": "Each stage adds a fixed number of volts",
+              "feedback": "An amplifier multiplies what it gets. Adding a fixed voltage would be an offset, not a gain."
+            }
+          ],
+          "explanation": "Stage 1 multiplies by A₁, stage 2 by A₂, so the chain multiplies by A₁·A₂. Because log(A₁·A₂) = log A₁ + log A₂, the dB values add. That's why engineers use dB for signal chains: a string of gains and losses becomes a sum (as long as each stage isn't loaded by the next)."
+        }
+      ],
+      "noDrawing": "a dB-to-ratio conversion; the amplifier's circuit doesn't enter into it",
+      "review": "verified"
+    },
+    {
+      "id": "db_from_power_ratio",
+      "topicId": "decibels",
+      "prompt": "A stage delivers {P} times as much power at its output as it takes at its input. What is its power gain in dB?",
+      "variables": [
+        {
+          "name": "P",
+          "unit": "",
+          "values": [
+            1.2,
+            1.5,
+            1.8,
+            2.2,
+            2.7,
+            3.3,
+            3.9,
+            4.7,
+            5.6,
+            6.8,
+            8.2,
+            10,
+            12,
+            15,
+            18,
+            22,
+            27,
+            33,
+            39,
+            47,
+            56,
+            68,
+            82,
+            100,
+            120,
+            150,
+            180,
+            220,
+            270,
+            330,
+            390,
+            470,
+            560,
+            680,
+            820
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "10*log10(P)",
+        "unit": "dB",
+        "tolerance": 0.02
+      },
+      "explanation": "For a power ratio, gain in dB = 10·log₁₀(Pout / Pin) = 10·log₁₀({P}) = {answer}. Anchors: 2× power ≈ 3 dB, 10× power = 10 dB.",
+      "hints": [
+        "Is this a voltage ratio or a power ratio?",
+        "Power ratios use dB = 10·log₁₀(ratio)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "20*log10(P)",
+          "feedback": "20·log₁₀ is for voltage or current ratios. A power ratio uses 10·log₁₀."
+        }
+      ],
+      "noDrawing": "a power-ratio-to-dB conversion; no circuit is described",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "db_attenuation",
+      "topicId": "decibels",
+      "prompt": "A voltage divider's output is {k} times its input. What is its gain in dB?",
+      "variables": [
+        {
+          "name": "k",
+          "unit": "",
+          "range": {
+            "min": 0.1,
+            "max": 0.9,
+            "step": 0.05
+          }
+        }
+      ],
+      "answer": {
+        "formula": "20*log10(k)",
+        "unit": "dB",
+        "tolerance": 0.02
+      },
+      "explanation": "Gain = 20·log₁₀({k}) = {answer}. A ratio below 1 is a loss, so the dB value is negative; halving the voltage is about −6 dB.",
+      "hints": [
+        "A ratio smaller than 1 gives a negative number of dB.",
+        "Use 20·log₁₀(ratio) for voltage, and keep the minus sign."
+      ],
+      "misconceptions": [
+        {
+          "formula": "10*log10(k)",
+          "feedback": "10·log₁₀ is for power; a voltage ratio uses 20·log₁₀."
+        },
+        {
+          "formula": "-20*log10(k)",
+          "feedback": "A ratio below 1 is a loss: the dB value is negative."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "Vin"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ],
+        "netlist": "divider\nV1 in 0 5\nR1 in out 1k\nR2 out 0 1k\n"
+      },
+      "review": "verified"
+    },
+    {
+      "id": "bridge_half_power",
+      "topicId": "decibels",
+      "bridge": [
+        "math",
+        "signals"
+      ],
+      "prompt": "At a filter's −3 dB point the output voltage is 0.707 of the input. Why is it called the half-power point?",
+      "choices": [
+        {
+          "text": "Power goes as voltage squared, and 0.707² = 0.5",
+          "correct": true,
+          "feedback": "Yes: −3 dB is half the power and 1/√2 of the voltage, the same point seen two ways."
+        },
+        {
+          "text": "Because the voltage has dropped by half",
+          "feedback": "Half the voltage is −6 dB. At −3 dB the voltage is 0.707."
+        },
+        {
+          "text": "Because the phase is 45°",
+          "feedback": "The phase is 45° there for a first-order filter, but 'half power' is about the magnitude."
+        },
+        {
+          "text": "It's just a naming convention",
+          "feedback": "It's exact: 20·log₁₀(0.707) = −3.01 dB = 10·log₁₀(0.5)."
+        }
+      ],
+      "explanation": "P ∝ V², so a voltage ratio of 1/√2 is a power ratio of 1/2. In dB both are −3.01 dB: 20·log₁₀(0.707) = 10·log₁₀(0.5).",
+      "noDrawing": "about what −3 dB means for any filter, not a particular circuit",
+      "level": "recall",
+      "review": "verified"
+    },
+    {
+      "id": "db_3_concept",
+      "topicId": "decibels",
+      "prompt": "A signal's power goes up by 3 dB. Roughly what happened?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "The power doubled",
+          "feedback": "Right: 10·log₁₀(2) ≈ 3.01 dB.",
+          "correct": true
+        },
+        {
+          "text": "The power tripled",
+          "feedback": "Tripling is about 4.8 dB."
+        },
+        {
+          "text": "The voltage doubled",
+          "feedback": "Doubling the voltage is 6 dB (20·log₁₀ 2)."
+        },
+        {
+          "text": "The power rose by 3 watts",
+          "feedback": "Decibels are ratios, not amounts."
+        }
+      ],
+      "explanation": "For power, dB = 10·log₁₀(P₂/P₁). A ratio of 2 gives 3.01 dB, which is why −3 dB marks the half-power point of a filter.",
+      "hints": [
+        "Which ratio has 10·log₁₀ equal to about 3?"
+      ],
+      "noDrawing": "about what a 3 dB change in signal power means; no circuit",
+      "level": "recall",
+      "review": "verified"
+    },
+    {
+      "id": "db_what_if_plus6",
+      "topicId": "decibels",
+      "prompt": "An amplifier's voltage gain is {GdB}. It is turned up to {new_GdB}. What happens to the voltage ratio Vout / Vin?",
+      "variables": [
+        {
+          "name": "GdB",
+          "unit": "dB",
+          "range": {
+            "min": 8,
+            "max": 34,
+            "step": 2
+          }
+        }
+      ],
+      "whatIf": {
+        "quantity": "the voltage ratio",
+        "formula": "10^(GdB/20)",
+        "unit": "",
+        "change": {
+          "GdB": "GdB+6"
+        },
+        "askFactor": false,
+        "feedback": {
+          "down": "Decibels are 20·log10 of the voltage ratio, and a logarithm only increases when the ratio it is taken of increases. Adding dB means multiplying the ratio by 10^(ΔdB/20), a factor above one.",
+          "same": "The dB value is 20·log10 of the ratio, and each ratio has exactly one dB value. A different dB value describes a different ratio: adding dB multiplies the ratio, it doesn't relabel it."
+        }
+      },
+      "explanation": "Ratio = 10^(dB/20). Adding 6 dB multiplies it by 10^(6/20) = 10^0.3 ≈ 2: {before} → {after}. Whatever the starting gain, +6 dB doubles the voltage. In power the same +6 dB is ×4, because power goes as voltage squared.",
+      "hints": [
+        "Adding dB multiplies the ratio. By what factor does 6 dB multiply a voltage?"
+      ],
+      "derived": [
+        {
+          "name": "dbr",
+          "formula": "(GdB+6)/GdB",
+          "unit": ""
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "By how much does the voltage ratio change?",
+          "choices": [
+            {
+              "text": "×2",
+              "feedback": "Right: 10^(6/20) ≈ 2, whatever the starting gain.",
+              "correct": true
+            },
+            {
+              "text": "×4",
+              "feedback": "That's the power ratio: +6 dB is ×4 in power, ×2 in voltage."
+            },
+            {
+              "text": "About ×{dbr}, the new dB value over the old ({new_GdB} ÷ {GdB})",
+              "feedback": "dB are logarithms; adding dB multiplies the ratio by a fixed factor, not by the ratio of the dB numbers."
+            },
+            {
+              "text": "×6",
+              "feedback": "6 dB is not ×6; 20 dB is ×10 in voltage."
+            }
+          ],
+          "explanation": "Adding dB multiplies the ratio: +6 dB multiplies a voltage ratio by 10^(6/20) = 10^0.3 ≈ 2, from any starting gain. The same +6 dB is ×4 in power, because power goes as voltage squared."
+        }
+      ],
+      "noDrawing": "a dB-to-ratio relation; the amplifier's circuit doesn't enter into it",
+      "review": "verified"
+    },
+    {
+      "id": "db_what_if_input_level",
+      "topicId": "decibels",
+      "prompt": "An amplifier with a voltage gain of ×{G} is fed a signal of {Vin}. The input is raised to {new_Vin}, and the amplifier stays linear. What happens to its gain in dB?",
+      "variables": [
+        {
+          "name": "G",
+          "unit": "",
+          "range": {
+            "min": 2,
+            "max": 20,
+            "step": 1
+          }
+        },
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 0.01,
+            "max": 0.1,
+            "step": 0.01
+          }
+        }
+      ],
+      "whatIf": {
+        "quantity": "the gain in dB",
+        "formula": "20*log10(G)",
+        "unit": "dB",
+        "change": {
+          "Vin": "2*Vin"
+        },
+        "feedback": {
+          "up": "The output does get bigger, but so does the input. dB measure the ratio Vout / Vin, and a linear amplifier keeps that ratio fixed.",
+          "down": "Nothing inside the amplifier changed. The output doubles along with the input, so their ratio stays put."
+        }
+      },
+      "explanation": "Gain in dB = 20·log₁₀(Vout / Vin). A linear amplifier multiplies by {G} whatever it gets, so doubling the input doubles the output and the ratio is unchanged: {after}. A decibel is a ratio, never an amount.",
+      "hints": [
+        "Is dB a measure of how big the signal is, or of a ratio?"
+      ],
+      "noDrawing": "about what dB measure (a ratio, not a level); the amplifier's circuit doesn't enter into it",
+      "review": "verified"
+    },
+    {
+      "id": "db_cascade_3db",
+      "topicId": "decibels",
+      "level": "reason",
+      "prompt": "A signal passes through two stages in cascade, each buffered so that it does not load the stage before it. At the signal frequency each stage has a gain of −{A}. What fraction of the input voltage reaches the output (Vout / Vin)?",
+      "variables": [
+        {
+          "name": "A",
+          "unit": "dB",
+          "value": 3
+        }
+      ],
+      "derived": [
+        {
+          "name": "Atot",
+          "formula": "2*A",
+          "unit": "dB"
+        },
+        {
+          "name": "a",
+          "formula": "A",
+          "unit": ""
+        },
+        {
+          "name": "atot",
+          "formula": "2*A",
+          "unit": ""
+        },
+        {
+          "name": "one",
+          "formula": "10^(-A/20)",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "10^(-2*A/20)",
+        "unit": "",
+        "unitless": true,
+        "tolerance": 0.02
+      },
+      "explanation": "Each stage multiplies the voltage it receives by its own ratio, so the ratios multiply and their dB values add: −{A} + (−{A}) = −{Atot}. Back to a voltage ratio: 10^(−{atot}/20) = {answer}, half the input voltage. The same in ratios: one −{A} stage passes 10^(−{a}/20) = {one} of the voltage it receives, and {one} × {one} = {answer}. In power each stage passes half, so the pair passes a quarter of the power; a quarter of the power is half the voltage, because power goes as voltage squared.",
+      "hints": [
+        "Do the dB values of stages in a chain add or multiply?",
+        "Add the dB values, then convert back with ratio = 10^(dB/20)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "2*10^(-A/20)",
+          "feedback": "That adds the two stages' ratios (0.708 + 0.708). Each stage multiplies what it receives, so the ratios multiply, 0.708 × 0.708 = 0.5; only the dB values add."
+        },
+        {
+          "formula": "10^(-2*A/10)",
+          "feedback": "That is the power fraction: each stage passes half the power, ½ × ½ = ¼. The question asks for voltage, and voltage goes as the square root of power: √0.25 = 0.5."
+        },
+        {
+          "formula": "10^(-A/20)",
+          "feedback": "That is what one −3 dB stage leaves. The second stage passes 0.708 (≈ 1/√2) of what the first one delivers, not of the original input."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Measured into equal resistances, the pair leaves half the voltage but only a quarter of the power. Why are the two fractions different?",
+          "choices": [
+            {
+              "text": "Power goes as voltage squared, so its fraction is the voltage fraction squared",
+              "feedback": "Right: into the same resistance P = V²/R, so ½ in voltage is ¼ in power. Both are −6 dB.",
+              "correct": true
+            },
+            {
+              "text": "The stages dissipate some of the power as heat, so less power than voltage gets through",
+              "feedback": "Whatever becomes heat inside the stages, the output figures are linked by P = V²/R: half the voltage across the same resistance is a quarter of the power. That alone makes the two fractions differ."
+            },
+            {
+              "text": "Voltage fractions add through a cascade, while power fractions multiply",
+              "feedback": "Both ratios multiply through a cascade: 0.708 × 0.708 = 0.5 in voltage, ½ × ½ = ¼ in power. What adds is the dB value."
+            },
+            {
+              "text": "They are not really different: −6 dB means a quarter in voltage as well",
+              "feedback": "−6 dB in voltage is 10^(−6/20) = 0.5, not 0.25. A quarter in voltage would be −12 dB."
+            }
+          ],
+          "explanation": "The ratios multiply through the chain: 0.708 × 0.708 (each ≈ 1/√2) = 0.5 in voltage and ½ × ½ = ¼ in power. Into the same resistance P = V²/R, so the power fraction is always the voltage fraction squared, and both come to the same −6 dB: 20·log₁₀(0.5) = 10·log₁₀(0.25)."
+        }
+      ],
+      "noDrawing": "about how the dB values of cascaded stages combine; the stages' circuits don't enter into it",
+      "review": "verified",
+      "placement": true
+    }
+  ]
+}

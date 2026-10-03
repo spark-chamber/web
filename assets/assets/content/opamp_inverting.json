@@ -1,0 +1,1713 @@
+{
+  "topics": [
+    {
+      "id": "opamp_inverting",
+      "title": "Inverting amplifier",
+      "summary": "Gain −Rf/Rin: the output is an amplified, upside-down copy of the input, and the source sees Rin.",
+      "lenses": [
+        "circuit",
+        "signals"
+      ],
+      "prerequisites": [
+        "opamp_ideal"
+      ],
+      "lensNotes": {
+        "circuit": "The inverting input sits at a virtual ground, so the input current is V_in/R_in and all of it flows through R_f. The source sees R_in, which is easy to set but can load a weak source.",
+        "signals": "The gain −R_f/R_in scales the signal and shifts it by 180°. In dB the minus sign disappears: the phase changes, the magnitude doesn't."
+      },
+      "formulas": [
+        {
+          "label": "Gain",
+          "tex": "\\frac{V_{out}}{V_{in}} = -\\frac{R_f}{R_{in}}"
+        },
+        {
+          "label": "Input resistance",
+          "tex": "R_{\\text{in, circuit}} = R_{in}"
+        },
+        {
+          "label": "Gain in dB",
+          "tex": "G_{dB} = 20\\log_{10}\\frac{R_f}{R_{in}}"
+        }
+      ],
+      "prerequisiteNotes": {
+        "opamp_ideal": "The inverting amplifier is the golden rules applied once: a virtual ground at the − input and the same current through Rin and Rf."
+      },
+      "goals": [
+        "Find an inverting amplifier's output from Rin, Rf and the input, sign included",
+        "Choose Rf for a required gain, and state the input resistance the source sees",
+        "Explain from the virtual ground why the gain is Rf/Rin in size and why changing Rf leaves the input current unchanged",
+        "Check that the output stays inside its swing limits, and find the largest input before it clips"
+      ],
+      "intuition": "With the + input grounded and negative feedback, the − input is held at 0 V, so the input current is fixed at Vin/Rin and the output goes to whatever voltage makes that same current flow through Rf (this holds only while the output stays inside its swing limits).",
+      "why": "The + input is grounded, so feedback holds the − input at 0 V, although nothing connects it to ground: a virtual ground. Rin has Vin on one end and 0 V on the other, so its current is Vin/Rin whatever Rf is. That current cannot enter the op amp, so all of it continues through Rf to the output. For current to flow from the 0 V node through Rf, the output must be below 0 V when Vin is positive: Vout = −I·Rf = −(Rf/Rin)·Vin. The source sees only Rin, because Rin's far end stays at 0 V.",
+      "explanation": "The input goes through Rin to the − input. Rf connects the − input to the output. The + input goes to ground. Negative feedback makes V− equal V+, so the − input sits at 0 V. It is called a virtual ground: the output holds it at 0 V, no wire does, and no current flows to ground there. The current through Rin is therefore Vin/Rin. None of it enters the op amp, so all of it flows through Rf. The output is the voltage at the far end of Rf: Vout = −(Rf/Rin)·Vin. The minus sign means inversion: a positive input gives a negative output, and a sine wave comes out shifted by 180°. The size of the gain can be below 1, equal to 1 or above it. The source sees Rin, because Rin runs into a node held at 0 V. A small Rin can load a weak source; a larger Rin needs a larger Rf for the same gain. The output cannot go beyond its swing limits, at or inside the supply rails, so the largest usable input is that limit divided by the size of the gain.",
+      "workedExample": {
+        "problem": "An inverting amplifier runs from ±15 V supplies, with Rin = 10 kΩ, Rf = 47 kΩ and the + input grounded. Find the output for a 0.50 V input, the input resistance, and the largest input before the output clips.",
+        "steps": [
+          "The + input is at 0 V, so feedback holds the − input at 0 V (a virtual ground).",
+          "Current through Rin: I = (0.50 V − 0 V) / 10 kΩ = 50 µA, flowing toward the − input.",
+          "None of it enters the op amp, so the same 50 µA flows through Rf, dropping 50 µA × 47 kΩ = 2.35 V.",
+          "The current flows from the 0 V node toward the output, so the output is 2.35 V below 0 V: Vout = −2.35 V. Check with the formula: gain = −47 kΩ / 10 kΩ = −4.7, and −4.7 × 0.50 V = −2.35 V. In dB the size of the gain is 20·log₁₀(4.7) = 13.4 dB.",
+          "Input resistance: the source drives Rin into a node held at 0 V, so it sees 10 kΩ. Rf does not add to it.",
+          "Largest input: with a rail-to-rail output that can reach ±15 V, |Vin| can be up to 15 V / 4.7 = 3.19 V. If the output is not rail-to-rail and stops, say, 2 V short of each rail (±13 V), the limit is 13 V / 4.7 = 2.77 V.",
+          "Past that limit V− = V+ stops holding, but the inputs still draw no current. With ±13 V swing and a 3.0 V input, the output would need −14.1 V but stays at −13 V. Rin and Rf then carry the same current and form a plain divider between 3.0 V and −13 V: V− = 3.0 V − 16 V × 10 kΩ / 57 kΩ = 0.19 V, no longer a virtual ground."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 8 \"Operational Amplifiers\", section \"Divided feedback\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_8.html#xtocid90724",
+          "note": "With the + input grounded, feedback holds the − input at a virtual ground that is not wired to ground; the gain is −R2/R1 (feedback over input resistor), can be below 1, and inverts polarity."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Operational Amplifiers\" (last update 23 September 2026), section 3.10 \"Inverting and noninverting amplification\" (pp. 54–58)",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_opamp.pdf",
+          "note": "The input voltage sits across the input resistor, the same current must flow through the feedback resistor because the pin takes none, and that drop sets the output below ground for a positive input."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 8 \"Operational Amplifiers\", section \"Negative feedback\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_8.html#xtocid90723",
+          "note": "The output can only swing to its saturation voltages, which for bipolar-output parts such as the 741 stop short of the rails and for FET-output parts come within millivolts of them."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "inv_vout",
+      "topicId": "opamp_inverting",
+      "prompt": "An inverting amplifier (ideal op amp on ±15 V supplies) has Rin = {Rin} and Rf = {Rf}. The input is {Vin}. What is the output voltage?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 0.1,
+            "max": 1,
+            "step": 0.1
+          }
+        },
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "G",
+          "formula": "-Rf/Rin",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "-Rf/Rin*Vin",
+        "unit": "V"
+      },
+      "explanation": "Gain = −Rf / Rin = −{Rf} / {Rin} = {G}. Vout = {G} × {Vin} = {answer}. The minus sign means the output is inverted.",
+      "hints": [
+        "The current Vin/Rin also flows through Rf.",
+        "Vout = −(Rf / Rin) · Vin."
+      ],
+      "misconceptions": [
+        {
+          "formula": "-(1+Rf/Rin)*Vin",
+          "feedback": "The '1 +' belongs to the non-inverting amplifier. The inverting gain is just −Rf / Rin."
+        }
+      ],
+      "simCheck": {
+        "netlist": "inverting\nV1 in 0 {Vin:spice}\nR1 in inv {Rin:spice}\nR2 inv out {Rf:spice}\nX1 0 inv out OPAMP\n",
+        "probe": "v(out)"
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rin {Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "The op amp itself has a gain of about 100 000. Why does this stage's gain depend only on Rf and Rin?",
+          "choices": [
+            {
+              "text": "The huge gain only keeps V− at 0 V; then all of Vin/Rin must flow through Rf, so the resistors alone set Vout",
+              "feedback": "Right: the op amp's gain just makes sure the inputs stay equal. Once V− = 0 V, Ohm's law and KCL set the output, and only the resistors appear.",
+              "correct": true
+            },
+            {
+              "text": "The feedback resistor switches the op amp's own gain off, leaving only the resistor ratio",
+              "feedback": "The open-loop gain is still there and still huge. It is what holds V− at 0 V; the resistors then set the output."
+            },
+            {
+              "text": "It doesn't: the stage's gain is −Rf/Rin multiplied by the op amp's own 100 000",
+              "feedback": "That would saturate the output for any input. Feedback trades the huge open-loop gain for a small, exact one set by the resistors."
+            },
+            {
+              "text": "The input current flows into the − input, and the op amp amplifies it by Rf/Rin",
+              "feedback": "No current enters the input. The input current goes on through Rf, and that is what sets the output."
+            }
+          ],
+          "explanation": "Negative feedback: if the output were too small, V− would drift above 0 V and the huge gain would push the output down until V− is back at 0 V. So the op amp's gain doesn't set the result; it only enforces V− = V+. KCL at the − input (from the Kirchhoff topic) then gives Vin/Rin = −Vout/Rf."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "inv_design_rf",
+      "topicId": "opamp_inverting",
+      "prompt": "You need an inverting amplifier with a gain of −{G} and Rin = {Rin}. What value of Rf do you need?",
+      "variables": [
+        {
+          "name": "G",
+          "unit": "",
+          "range": {
+            "min": 2,
+            "max": 20,
+            "step": 1
+          }
+        },
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "G*Rin",
+        "unit": "Ω"
+      },
+      "explanation": "|Gain| = Rf / Rin, so Rf = {G} × {Rin} = {answer}.",
+      "hints": [
+        "The magnitude of the gain is Rf / Rin.",
+        "Rf = |G| · Rin."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(G-1)*Rin",
+          "feedback": "Subtracting 1 is for the non-inverting amplifier (gain 1 + Rf/Rg). For the inverting amplifier, Rf = |G| · Rin."
+        },
+        {
+          "formula": "Rin/G",
+          "feedback": "That's upside down. Gain is Rf / Rin, so Rf = |G| · Rin."
+        }
+      ],
+      "schematic": {
+        "netlist": "Inv\nV1 in 0 1\nR1 in inv {Rin:spice}\nR2 inv out 1k\nX1 0 inv out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rin {Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf = ?"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "inv_input_resistance",
+      "topicId": "opamp_inverting",
+      "prompt": "An inverting amplifier uses Rin = {Rin} and Rf = {Rf}. What input resistance does the signal source see?",
+      "variables": [
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            5
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "Rin",
+        "unit": "Ω"
+      },
+      "explanation": "The inverting input is a virtual ground, so the source drives Rin straight into 0 V: R_in = {answer}. That's why an inverting amplifier can load down a high-impedance source: the source sees only Rin.",
+      "hints": [
+        "What voltage sits at the far end of Rin?",
+        "Rin goes to a virtual ground."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Rin+Rf",
+          "feedback": "Rf connects to the output, not to ground. The source sees Rin going to a virtual ground, so R_in = Rin."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Rf connects to the same node as Rin. Why doesn't Rf change the resistance the source sees?",
+          "choices": [
+            {
+              "text": "Feedback holds the far end of Rin at 0 V, so the source current is Vin/Rin whatever Rf is",
+              "feedback": "Right: the source only 'sees' Rin going to a node that stays at 0 V. Rf changes the output, not the input current.",
+              "correct": true
+            },
+            {
+              "text": "Rf carries no current, so it isn't part of the circuit",
+              "feedback": "Rf carries the whole input current: none can go into the op amp."
+            },
+            {
+              "text": "Rf is in series with Rin, but the op amp's huge gain divides it away",
+              "feedback": "Rf isn't in series with Rin to ground. The op amp's gain does make Rf look like almost 0 Ω from the − node, which is the same virtual ground seen another way; either way only Rin counts."
+            },
+            {
+              "text": "The op amp's input resistance is infinite, so it hides Rf",
+              "feedback": "The infinite input resistance means no current enters the op amp. What hides Rf is the virtual ground: the node where Rf joins Rin is held at 0 V."
+            }
+          ],
+          "explanation": "The input resistance is V_in / I_in. The virtual ground makes I_in = V_in/Rin, so R_in = Rin: Ohm's law across one resistor. Compare the non-inverting amplifier, where the source feeds the + input directly and sees an almost infinite resistance."
+        }
+      ],
+      "schematic": {
+        "netlist": "inverting\nV1 in 0 1\nR1 in inv {Rin:spice}\nR2 inv out {Rf:spice}\nX1 0 inv out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rin {Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "inv_gain_db",
+      "topicId": "opamp_inverting",
+      "prompt": "An inverting amplifier has Rin = {Rin} and Rf = {Rf}. What is the magnitude of its gain in dB?",
+      "variables": [
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            5
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "G",
+          "formula": "Rf/Rin",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "20*log10(Rf/Rin)",
+        "unit": "dB"
+      },
+      "explanation": "|Gain| = {Rf} / {Rin} = {G}. In dB: 20·log₁₀({G}) = {answer}. The inversion is a 180° phase shift and doesn't change the dB value.",
+      "hints": [
+        "Find the gain magnitude first.",
+        "It's a voltage ratio, so use 20·log₁₀."
+      ],
+      "misconceptions": [
+        {
+          "formula": "10*log10(Rf/Rin)",
+          "feedback": "Voltage gain uses 20·log₁₀, not 10·log₁₀."
+        }
+      ],
+      "schematic": {
+        "netlist": "inverting\nV1 in 0 1\nR1 in inv {Rin:spice}\nR2 inv out {Rf:spice}\nX1 0 inv out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rin {Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "inv_input_needed",
+      "topicId": "opamp_inverting",
+      "prompt": "An inverting amplifier (ideal op amp on ±15 V supplies) has Rin = {Rin} and Rf = {Rf}. What input voltage gives an output of {Vout}?",
+      "variables": [
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "Vout",
+          "unit": "V",
+          "range": {
+            "min": -10,
+            "max": -1,
+            "step": 1
+          }
+        }
+      ],
+      "answer": {
+        "formula": "-Vout*Rin/Rf",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "V_out = −(Rf/Rin)·V_in, so V_in = −V_out·Rin/Rf = −({Vout}) × {Rin}/{Rf} = {answer}.",
+      "hints": [
+        "Rearrange V_out = −(Rf/Rin)·V_in.",
+        "V_in = −V_out·Rin/Rf; mind the sign."
+      ],
+      "misconceptions": [
+        {
+          "formula": "-Vout*Rf/Rin",
+          "feedback": "You multiplied by the gain instead of dividing. V_in = −V_out·Rin/Rf."
+        }
+      ],
+      "schematic": {
+        "netlist": "inverting\nV1 in 0 1\nR1 in inv {Rin:spice}\nR2 inv out {Rf:spice}\nX1 0 inv out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rin {Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "inv_virtual_ground_concept",
+      "topicId": "opamp_inverting",
+      "prompt": "In an inverting amplifier, the inverting input is called a \"virtual ground\". What does that mean?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "Feedback holds it at about 0 V, though it isn't connected to ground",
+          "feedback": "Right: the op amp drives the output so that V− matches V+ = 0 V, but no current flows from that node to ground.",
+          "correct": true
+        },
+        {
+          "text": "It is wired directly to ground",
+          "feedback": "If it were, the input current would go to ground and the amplifier would have no gain."
+        },
+        {
+          "text": "No current flows through Rin",
+          "feedback": "Current does flow through Rin: V_in/Rin. It continues through Rf because none enters the op amp."
+        },
+        {
+          "text": "The output is always 0 V",
+          "feedback": "The output is −(Rf/Rin)·V_in; only the inverting input sits at 0 V."
+        }
+      ],
+      "explanation": "Negative feedback makes V− follow V+. With V+ grounded, V− stays at about 0 V although it isn't connected to ground: a virtual ground. That's why the input current is simply V_in/Rin.",
+      "hints": [
+        "Which golden rule applies when there's negative feedback?"
+      ],
+      "noDrawing": "defines the term virtual ground; no particular stage or values",
+      "review": "verified"
+    },
+    {
+      "id": "inv_what_if_rf_gain",
+      "topicId": "opamp_inverting",
+      "prompt": "An inverting amplifier has Rin = {Rin} and Rf = {Rf}. Rf is doubled to {new_Rf} (a second {Rf} added in series). What happens to the size of the gain?",
+      "variables": [
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the size of the gain",
+        "formula": "Rf/Rin",
+        "unit": "",
+        "change": {
+          "Rf": "2*Rf"
+        },
+        "askFactor": true,
+        "feedback": {
+          "down": "A bigger Rf doesn't reduce the input current: that is still Vin/Rin, set by the virtual ground. All of it must flow on through Rf, and pushing the same current through more resistance takes a bigger output swing.",
+          "same": "The input current is fixed by Rin, but the output is the voltage that current drops across Rf, V = I·Rf, and Rf is now larger."
+        },
+        "factorHint": "|Gain| = Rf/Rin: Rf appears once, on top, with no square or root on it."
+      },
+      "explanation": "|Gain| = Rf/Rin goes from {before} to {after}. The virtual ground fixes the current at Vin/Rin; the output has to swing far enough to push that current through Rf (Ohm's law), so the gain is in proportion to Rf.",
+      "hints": [
+        "Does doubling Rf change the current through Rin?",
+        "The output voltage is the drop across Rf: I × Rf."
+      ],
+      "schematic": {
+        "netlist": "inverting\nV1 in 0 1\nR1 in inv {Rin:spice}\nR2 inv out {Rf:spice}\nX1 0 inv out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rin {Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "inv_what_if_rin_gain",
+      "topicId": "opamp_inverting",
+      "prompt": "An inverting amplifier has Rin = {Rin} and Rf = {Rf}. Rin is doubled to {new_Rin} (a second {Rin} added in series). What happens to the size of the gain?",
+      "variables": [
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the size of the gain",
+        "formula": "Rf/Rin",
+        "unit": "",
+        "change": {
+          "Rin": "2*Rin"
+        },
+        "askFactor": true,
+        "feedback": {
+          "up": "A bigger resistor means a bigger drop only for the same current. Here Rin sets the current: with the − input held at 0 V it is Vin/Rin, so a bigger Rin lets less in, and that smaller current is what flows through the same Rf.",
+          "same": "The gain is a ratio of the two resistors, and Rin is under the line: the input current, Vin/Rin, depends on Rin, and the output is that current's drop across Rf."
+        },
+        "factorHint": "|Gain| = Rf/Rin: Rin appears once, underneath, with no square or root on it."
+      },
+      "explanation": "|Gain| = Rf/Rin goes from {before} to {after}. With the − input at 0 V, the input current is Vin/Rin; doubling Rin halves it, and the output is that current times Rf. Doubling Rin also doubles the input resistance the source sees.",
+      "hints": [
+        "What happens to the current Vin/Rin?"
+      ],
+      "schematic": {
+        "netlist": "inverting\nV1 in 0 1\nR1 in inv {Rin:spice}\nR2 inv out {Rf:spice}\nX1 0 inv out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rin {Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "inv_fault",
+      "topicId": "opamp_inverting",
+      "prompt": "This inverting amplifier runs from ±12 V supplies (rail-to-rail output, not drawn). With Rin = {Rin}, Rf = {Rf} and {Vin} in, the output should be {h0}. The meter readings are below. Which fault explains them?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 0.5,
+            "max": 1,
+            "step": 0.1
+          }
+        },
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "fault": {
+        "netlist": "inverting\nV1 in 0 {Vin:spice}\nR1 in inv {Rin:spice}\nR2 inv out {Rf:spice}\nX1 0 inv out OA\n.model OA OPAMP(VPOS=12 VNEG=-12)\n",
+        "probes": [
+          {
+            "label": "Output voltage",
+            "probe": "v(out)"
+          },
+          {
+            "label": "Voltage at the − input",
+            "probe": "v(inv)"
+          },
+          {
+            "label": "Current from the input source (Rin branch)",
+            "probe": "i(R1)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "Rin is open (cracked, or a dry joint)",
+            "open": "R1",
+            "feedback": "With Rin open no input current could flow, so Rf would carry nothing either: the − input and the output would both sit at 0 V, with 0 A in Rin.",
+            "why": "No current flows in Rin, yet the − input still reads 0 V, so the feedback loop works. With no input current there is nothing for Rf to carry, so the output sits at 0 V: the input is cut off at Rin."
+          },
+          {
+            "text": "Rf is open",
+            "open": "R2",
+            "feedback": "With Rf open nothing would bring the output back: no current could flow in Rin, so the − input would rise to the full input voltage, and the op amp, with V− above V+, would drive its output to the −12 V rail.",
+            "why": "The − input reads the full input voltage instead of 0 V: the virtual ground is gone because nothing feeds back. No current flows in Rin (it has the same voltage on both ends), and with V− above V+ and no feedback, the output sits at the −12 V rail."
+          },
+          {
+            "text": "Rf is shorted (a solder bridge across it)",
+            "short": "R2",
+            "feedback": "With Rf shorted the output would be tied to the − input, which feedback holds at 0 V: the output would read 0 V while the normal current, Vin/Rin, still flowed through Rin into the bridge.",
+            "why": "The − input is still at 0 V and Rin still carries the normal Vin/Rin, so the input side is healthy. But the output reads 0 V: the current is going through the Rf position without dropping any voltage, so Rf is bridged."
+          },
+          {
+            "text": "Rin is shorted",
+            "short": "R1",
+            "feedback": "With Rin shorted the − input would be tied straight to the source, so the op amp could never pull it to 0 V: the output would go to the −12 V rail and pull a large current from the source through the short and Rf into its output: (Vin + 12 V)/Rf = {Ishort}, within a typical op amp's roughly 20 mA output limit.",
+            "why": "The − input reads the full input voltage, so the op amp can't hold it at 0 V: the source is driving that node directly. The output gives up at the −12 V rail, and a current flows ({Ishort}) from the source through the short where Rin should be, then through Rf into the op amp's output: only Rf now limits it."
+          }
+        ]
+      },
+      "explanation": "Start at the − input. If it still reads 0 V, the virtual ground works, and the current from the source tells you whether the input is cut off (0 A, Rin open) or the output is bridged (normal current, Rf shorted). If it reads the full input voltage, the loop has lost control and the output sits at a rail; the current from the source tells you whether Rf is missing (0 A) or Rin is bridged (current still flowing, now limited only by Rf).",
+      "hints": [
+        "Is the − input still a virtual ground (0 V)?",
+        "Then use the current from the source to tell the two possibilities apart."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rin {Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "derived": [
+        {
+          "name": "Ishort",
+          "formula": "(Vin+12)/Rf",
+          "unit": "A"
+        }
+      ],
+      "review": "verified"
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "id": "battery_monitor",
+  "number": "2",
+  "region": "indicators",
+  "title": "Battery monitor for a 3.3 V ADC",
+  "brief": "A 3.3 V microcontroller reads a 9 V battery, from 6.0 V (empty) to 9.6 V (fresh), on an ADC pin. Divide the battery down so the pin never passes 3.3 V and still reaches at least 2.7 V with a fresh battery, so the reading uses most of the ADC's range. The divider runs all the time, so it may draw no more than 50 µA. Label the divider's output ADC (net label, N) and put at least 100 nF from it to ground: the divider's output resistance is far above what an ADC's sampling capacitor can charge through in one sample time, so the capacitor holds the pin while the ADC samples. The checker sets the battery to 6.0, 9.0 and 9.6 V for its lines.",
+  "topics": [
+    "dividers",
+    "real_components"
+  ],
+  "neighbors": [],
+  "supply": {
+    "ref": "V1",
+    "label": "9 V battery (6.0 V empty to 9.6 V fresh)",
+    "volts": 9,
+    "min": 6,
+    "max": 9.6
+  },
+  "start": {
+    "parts": [
+      {
+        "ref": "V1",
+        "type": "dcSource",
+        "at": [
+          0,
+          2
+        ],
+        "rot": 90,
+        "value": "9"
+      }
+    ],
+    "grounds": [
+      [
+        0,
+        6
+      ]
+    ]
+  },
+  "parts": [
+    {
+      "type": "resistor",
+      "label": "Resistor, E12, 5 %, ¼ W",
+      "series": "E12",
+      "tolerance": 0.05,
+      "ratingW": 0.25,
+      "min": 10,
+      "max": 10000000
+    },
+    {
+      "type": "capacitor",
+      "label": "Capacitor, E6, ±10 %",
+      "series": "E6",
+      "tolerance": 0.1,
+      "min": 1e-09,
+      "max": 1e-05
+    }
+  ],
+  "spec": [
+    {
+      "id": "pin_fresh",
+      "quantity": "ADC pin with a fresh battery",
+      "how": "V to ground on the ADC net, battery at 9.6 V",
+      "measure": {
+        "kind": "nodeVoltage",
+        "net": "ADC"
+      },
+      "supply": 9.6,
+      "min": 2.7,
+      "max": 3.3,
+      "unit": "V",
+      "note": "3.3 V is the ADC's full scale (its reference, the 3.3 V supply): above it the reading clips at the top code, and past about VDD + 0.3 V the pin's protection diode conducts. 2.7 V keeps the reading in the top of the ADC's range. The spec is the pin's own voltage: a real 10 MΩ meter reads it a little low, by R_out / (10 MΩ + R_out) with R_out the divider's output resistance (under 1 % while R_out is under about 100 kΩ); the Bench's meter doesn't load the circuit yet."
+    },
+    {
+      "id": "pin_nominal",
+      "quantity": "ADC pin at 9.0 V",
+      "how": "V to ground on the ADC net, battery at 9.0 V",
+      "measure": {
+        "kind": "nodeVoltage",
+        "net": "ADC"
+      },
+      "supply": 9.0,
+      "unit": "V"
+    },
+    {
+      "id": "pin_empty",
+      "quantity": "ADC pin with an empty battery",
+      "how": "V to ground on the ADC net, battery at 6.0 V",
+      "measure": {
+        "kind": "nodeVoltage",
+        "net": "ADC"
+      },
+      "supply": 6.0,
+      "unit": "V"
+    },
+    {
+      "id": "divider_current",
+      "quantity": "Divider current",
+      "how": "The A and W tool on the battery, at 9.6 V",
+      "measure": {
+        "kind": "supplyCurrent"
+      },
+      "supply": 9.6,
+      "max": 5e-05,
+      "unit": "A"
+    },
+    {
+      "id": "adc_capacitor",
+      "quantity": "Capacitor from the ADC pin to ground",
+      "how": "The capacitors between the ADC net and ground, by their marked values",
+      "measure": {
+        "kind": "capacitance",
+        "net": "ADC"
+      },
+      "min": 1e-07,
+      "max": 1e-06,
+      "unit": "F",
+      "note": "At least 100 nF: each sample takes the ADC's roughly 10 pF sampling capacitor's charge from it, moving the pin by about 3 V × 10 pF / 100 nF = 0.3 mV, under half a 12-bit step (0.8 mV); τ = (R_top ∥ R_bottom) × C stays in milliseconds."
+    }
+  ],
+  "clearing": {
+    "lights": [],
+    "features": [
+      {
+        "id": "tolerance_corners",
+        "label": "Tolerance corners (worst-case runs)"
+      }
+    ]
+  },
+  "tiers": [
+    {
+      "tier": 2,
+      "title": "Worst-case corners",
+      "modifiers": [
+        "The pin stays at or below 3.3 V at 9.6 V with both resistors at their ±5 % corners, and still reaches 2.7 V with the resistors at the opposite corners."
+      ]
+    }
+  ]
+}

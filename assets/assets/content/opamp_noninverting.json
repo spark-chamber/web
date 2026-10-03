@@ -1,0 +1,1413 @@
+{
+  "topics": [
+    {
+      "id": "opamp_noninverting",
+      "title": "Non-inverting amplifier and follower",
+      "summary": "Gain 1 + Rf/Rg with a very high input resistance; with Rf = 0 it becomes a unity-gain buffer.",
+      "lenses": [
+        "circuit",
+        "signals"
+      ],
+      "prerequisites": [
+        "opamp_ideal"
+      ],
+      "lensNotes": {
+        "circuit": "The input goes straight into the op amp, so the source sees an almost infinite resistance. R_f and R_g feed back a fraction of the output; the gain is 1 + R_f/R_g, never below 1.",
+        "signals": "No inversion: the output is an in-phase, scaled copy. With R_f = 0 it's a follower, a unity-gain buffer that isolates a signal source from its load."
+      },
+      "formulas": [
+        {
+          "label": "Gain",
+          "tex": "\\frac{V_{out}}{V_{in}} = 1 + \\frac{R_f}{R_g}"
+        },
+        {
+          "label": "Follower",
+          "tex": "V_{out} = V_{in}"
+        }
+      ],
+      "prerequisiteNotes": {
+        "opamp_ideal": "The non-inverting amplifier uses the rule V− = V+: the op amp drives its output until the feedback divider hands back the input voltage."
+      },
+      "goals": [
+        "Find a non-inverting amplifier's output from Rf, Rg and the input",
+        "Choose Rf and Rg from E-series values for a required gain, knowing the gain can never be below 1",
+        "Explain why the source sees a very high input resistance, and why a voltage follower isolates a source from its load",
+        "Predict what a heavier load or a ten times larger Rf does to the output, and explain why"
+      ],
+      "intuition": "With negative feedback through the Rf–Rg divider, the op amp moves its output until the divider feeds exactly Vin back to the − input, so the output is Vin divided by the fraction Rg/(Rf + Rg), and the source only drives the + input, which draws no current (this holds only while the output stays inside its swing limits).",
+      "why": "The signal drives the + input, which draws no current, so the source is not loaded. Rf and Rg form a divider from the output to ground, with the − input at its midpoint. The − input draws no current either, so this divider is unloaded: V− = Vout·Rg/(Rf + Rg). Negative feedback drives V− to equal Vin, so Vout = Vin·(Rf + Rg)/Rg = Vin·(1 + Rf/Rg). A divider hands back at most all of its input, so the gain is at least 1. With Rf = 0 the fraction is 1, and the output follows the input.",
+      "explanation": "Start from the inverting amplifier and move the signal to the other input. The signal now goes straight to the + input. Rf runs from the output to the − input, and Rg from the − input to ground. They form a divider from the output. The − input draws no current, so the divider is unloaded. Negative feedback makes V− equal V+, which is the input. So the output must be the voltage whose divided-down share is Vin: Vout = Vin·(1 + Rf/Rg). The output is in phase with the input: no inversion. The gain is never below 1, because a divider cannot hand back more than it is given. The 1 + is also why ten times Rf gives less than ten times the gain. The input resistance is very high: the source only drives the + input, which ideally takes no current. With Rf = 0 and Rg left out, the output connects straight to the − input: a voltage follower, gain 1. It passes on the voltage but not the load current: that comes from the op amp's supply, not from the source. The output still cannot go beyond its swing limits.",
+      "workedExample": {
+        "problem": "A sensor gives 0.80 V with no load and has a 10 kΩ output resistance. It drives a non-inverting amplifier on ±12 V supplies with Rf = 47 kΩ and Rg = 10 kΩ. Find the voltage at the + input, the gain, the output, and the largest sensor voltage before a rail-to-rail output clips. Then choose E24 resistors for a gain of 10 instead.",
+        "steps": [
+          "The + input draws no current, so no current flows through the sensor's 10 kΩ and nothing is dropped across it: V+ = 0.80 V.",
+          "Gain = 1 + Rf/Rg = 1 + 47 kΩ / 10 kΩ = 5.7.",
+          "Vout = 0.80 V × 5.7 = 4.56 V, in phase with the input.",
+          "Check with the rules: the divider returns 4.56 V × 10 kΩ / (47 kΩ + 10 kΩ) = 0.80 V to the − input, equal to V+. The divider carries 4.56 V / 57 kΩ = 80 µA, supplied by the op amp's output, not by the sensor.",
+          "Clipping: 4.56 V is well inside ±12 V. A rail-to-rail output reaches +12 V when the input is 12 V / 5.7 = 2.11 V; an output that stops short of the rails clips earlier.",
+          "Compare: had the sensor driven an inverting stage with Rin = 10 kΩ and the same Rf = 47 kΩ, its 10 kΩ would sit in series with Rin: gain −47 kΩ / 20 kΩ = −2.35 instead of the −4.7 the resistors promise, half. The non-inverting stage does not load the sensor at all.",
+          "Gain of 10: Rf/Rg = 10 − 1 = 9. With Rg = 10 kΩ, Rf = 90 kΩ is not an E24 value; the nearest is 91 kΩ, giving 1 + 91 kΩ / 10 kΩ = 10.1, 1% high. Freeing Rg does better: 18 kΩ and 2.0 kΩ (or 27 kΩ and 3.0 kΩ) are both E24 with a ratio of exactly 9, so the gain is 10.0."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 8 \"Operational Amplifiers\", section \"Divided feedback\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_8.html#xtocid90724",
+          "note": "A divider in the feedback path gives a gain of 1 + Rfeedback/Rground with the same polarity as the input, never below 1, reducing to the follower when the feedback resistor is zero, and the signal source supplies no current."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 8 \"Operational Amplifiers\", section \"Negative feedback\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_8.html#xtocid90723",
+          "note": "The voltage follower has a gain of 1 and a high input impedance, and its load current comes from the op amp's supply rather than from the signal source."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Operational Amplifiers\" (last update 23 September 2026), section 3.10 \"Inverting and noninverting amplification\" (pp. 54–56)",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_opamp.pdf",
+          "note": "The closed-loop gain is the reciprocal of the feedback divider ratio, (RA + RB)/RB = 1 + RA/RB, found with zero input current and zero differential voltage."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "noninv_vout",
+      "topicId": "opamp_noninverting",
+      "prompt": "A non-inverting amplifier has Rf = {Rf} (output to inverting input) and Rg = {Rg} (inverting input to ground). The input is {Vin}. What is the output voltage?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 0.1,
+            "max": 1,
+            "step": 0.1
+          }
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "Rg",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "G",
+          "formula": "1+Rf/Rg",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "Vin*(1+Rf/Rg)",
+        "unit": "V"
+      },
+      "explanation": "Rf and Rg form a divider from the output back to the inverting input, which must equal Vin. So Vout = Vin (1 + Rf/Rg) = {Vin} × {G} = {answer}.",
+      "hints": [
+        "The inverting input sees Vout through the Rf–Rg divider, and must equal Vin.",
+        "Gain = 1 + Rf / Rg."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vin*Rf/Rg",
+          "feedback": "You're missing the 1: a non-inverting gain is 1 + Rf/Rg, never less than 1."
+        },
+        {
+          "formula": "-Vin*Rf/Rg",
+          "feedback": "That's the inverting amplifier. This one doesn't invert, and its gain is 1 + Rf/Rg."
+        }
+      ],
+      "simCheck": {
+        "netlist": "non-inverting\nV1 in 0 {Vin:spice}\nX1 in inv out OPAMP\nRF out inv {Rf:spice}\nRG inv 0 {Rg:spice}\n",
+        "probe": "v(out)"
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "flip": true,
+            "label": ""
+          },
+          {
+            "ref": "RG",
+            "at": [
+              7,
+              8
+            ],
+            "rot": 90,
+            "label": "Rg\n{Rg}"
+          },
+          {
+            "ref": "RF",
+            "at": [
+              13,
+              8
+            ],
+            "rot": 180,
+            "label": "Rf {Rf}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ],
+          [
+            [
+              13,
+              4
+            ],
+            [
+              13,
+              8
+            ]
+          ],
+          [
+            [
+              9,
+              8
+            ],
+            [
+              7,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "steps": [
+        "The golden rules make V− = V+ = {Vin}.",
+        "Rf and Rg form a divider from the output to V−, so V_out = V−·(1 + Rf/Rg).",
+        "Gain = 1 + {Rf}/{Rg} = {G}.",
+        "V_out = {Vin} × {G} = {answer}."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why is the gain 1 + Rf/Rg rather than Rf/Rg?",
+          "choices": [
+            {
+              "text": "The op amp drives the output until the divider Rf–Rg feeds back a voltage equal to Vin, so Vout = Vin·(Rf + Rg)/Rg",
+              "feedback": "Right: the divider hands back the fraction Rg/(Rf + Rg) of the output, and the op amp makes that equal to Vin.",
+              "correct": true
+            },
+            {
+              "text": "The extra 1 is the op amp's own gain added to the resistor gain",
+              "feedback": "The op amp's own gain is huge (around 100 000); the feedback divider, not the open-loop gain, sets the result."
+            },
+            {
+              "text": "Current flows into the non-inverting input and adds to the output",
+              "feedback": "Ideal op amp inputs draw no current."
+            },
+            {
+              "text": "It isn't; the gain of a non-inverting amplifier is Rf/Rg",
+              "feedback": "That is the size of the inverting amplifier's gain. Here the input goes straight to the + input, so the output must be large enough that the divider returns all of Vin."
+            }
+          ],
+          "explanation": "With negative feedback the op amp makes V− = V+ = Vin. V− comes from the divider: V− = Vout·Rg/(Rf + Rg). Solving gives Vout = Vin·(1 + Rf/Rg). Even with Rf = 0 the gain is 1, which is the voltage follower."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "noninv_design_rf",
+      "topicId": "opamp_noninverting",
+      "prompt": "You need a non-inverting amplifier with a gain of {G} using Rg = {Rg}. What value should Rf be?",
+      "variables": [
+        {
+          "name": "G",
+          "unit": "",
+          "range": {
+            "min": 2,
+            "max": 21,
+            "step": 1
+          }
+        },
+        {
+          "name": "Rg",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "(G-1)*Rg",
+        "unit": "Ω"
+      },
+      "explanation": "G = 1 + Rf/Rg, so Rf = (G − 1) · Rg = ({G} − 1) × {Rg} = {answer}.",
+      "hints": [
+        "Start from G = 1 + Rf / Rg.",
+        "Rf = (G − 1) · Rg."
+      ],
+      "misconceptions": [
+        {
+          "formula": "G*Rg",
+          "feedback": "That forgets the 1 in G = 1 + Rf/Rg; your gain would come out one too high. Use Rf = (G − 1) · Rg."
+        }
+      ],
+      "schematic": {
+        "netlist": "NonInv\nV1 in 0 1\nX1 in inv out OA\nRF out inv 1k\nRG inv 0 {Rg:spice}\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "flip": true,
+            "label": ""
+          },
+          {
+            "ref": "RG",
+            "at": [
+              7,
+              8
+            ],
+            "rot": 90,
+            "label": "Rg\n{Rg}"
+          },
+          {
+            "ref": "RF",
+            "at": [
+              13,
+              8
+            ],
+            "rot": 180,
+            "label": "Rf = ?"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ],
+          [
+            [
+              13,
+              4
+            ],
+            [
+              13,
+              8
+            ]
+          ],
+          [
+            [
+              9,
+              8
+            ],
+            [
+              7,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "Why can a non-inverting amplifier never have a gain below 1, whatever Rf and Rg you choose?",
+          "choices": [
+            {
+              "text": "The Rf–Rg divider returns at most all of the output to the − input, and that must equal Vin, so Vout ≥ Vin",
+              "feedback": "Right: V− = Vout·Rg/(Rf + Rg), a fraction no bigger than 1. For it to equal Vin, Vout must be at least Vin.",
+              "correct": true
+            },
+            {
+              "text": "It can: choose Rf smaller than Rg, and the gain drops below 1",
+              "feedback": "That works for the inverting amplifier (gain −Rf/Rin). Here Rf smaller than Rg gives a gain between 1 and 2, never below 1."
+            },
+            {
+              "text": "The op amp's own gain adds 1 to whatever gain the resistors give",
+              "feedback": "The op amp's own gain is about 100 000, not 1. The 1 comes from the feedback divider, which returns only a fraction of the output."
+            },
+            {
+              "text": "Current into the + input adds a copy of the input to the output",
+              "feedback": "An ideal op-amp input takes no current. The output is set by the feedback divider, not by input current."
+            }
+          ],
+          "explanation": "Negative feedback makes V− = Vin, and V− comes from the output through a divider (from Foundations). A divider can only make a voltage smaller, so the output must be at least as big as the input. For a gain below 1, use a divider before the amplifier, or an inverting stage."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "noninv_follower",
+      "topicId": "opamp_noninverting",
+      "prompt": "A sensor with {Rs} output resistance must drive a {RL} load. Why put a voltage follower (unity-gain buffer) between them?",
+      "variables": [
+        {
+          "name": "Rs",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            5
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            3
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "text": "Its input draws almost no current, so the sensor voltage isn't pulled down, and its output can drive the load",
+          "correct": true,
+          "feedback": "Yes: high input resistance, low output resistance, gain of 1."
+        },
+        {
+          "text": "It doubles the voltage so the load gets more",
+          "feedback": "A follower has a gain of exactly 1. Its value is in the impedances, not the gain."
+        },
+        {
+          "text": "It inverts the signal so the load sees the right polarity",
+          "feedback": "A follower doesn't invert; the output follows the input."
+        },
+        {
+          "text": "It isn't needed: {Rs} into {RL} works fine",
+          "feedback": "Connected directly, {Rs} and {RL} form a divider and most of the sensor voltage would be lost."
+        }
+      ],
+      "explanation": "Directly connected, {Rs} and {RL} form a divider that would lose most of the signal. A follower has near-infinite input resistance (no loading) and near-zero output resistance (drives the load), with a gain of 1.",
+      "schematic": {
+        "netlist": "buffered sensor\nVS s 0 1\nRS s in {Rs:spice}\nX1 in out out OA\nRL out 0 {RL:spice}\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "sensor"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rs {Rs}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "flip": true,
+            "label": ""
+          },
+          {
+            "ref": "RL",
+            "at": [
+              16,
+              4
+            ],
+            "rot": 90,
+            "label": "RL\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ],
+            [
+              13,
+              7
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              16,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            16,
+            8
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "noninv_design_pair",
+      "topicId": "opamp_noninverting",
+      "prompt": "Choose R_f and R_g (E24 values, 1 kΩ to 1 MΩ) for a non-inverting amplifier with a gain of {G}, within 5%.",
+      "variables": [
+        {
+          "name": "G",
+          "unit": "",
+          "range": {
+            "min": 2,
+            "max": 21,
+            "step": 1
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rfex",
+          "formula": "(G-1)*10000",
+          "unit": "Ω"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "Rf",
+            "label": "R_f",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 1000,
+            "max": 1000000
+          },
+          {
+            "name": "Rg",
+            "label": "R_g",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 1000,
+            "max": 1000000
+          }
+        ],
+        "result": "1+Rf/Rg",
+        "resultLabel": "gain",
+        "resultUnit": "",
+        "target": "G",
+        "tolerance": 0.05
+      },
+      "explanation": "Gain = 1 + R_f/R_g, so R_f/R_g = {G} − 1. With R_g = 10 kΩ, R_f = {Rfex}; round to the nearest E24 value and recheck the gain. If neither neighbor is within 5%, change R_g instead: for example G = 15 → R_g = 3.3 kΩ, R_f = 47 kΩ (15.2); G = 18 → R_g = 3.0 kΩ, R_f = 51 kΩ (18.0); G = 20 → R_g = 4.7 kΩ, R_f = 91 kΩ (20.4).",
+      "hints": [
+        "The gain is 1 + R_f/R_g.",
+        "Pick R_g, then R_f = (G − 1)·R_g."
+      ],
+      "schematic": {
+        "netlist": "non-inverting\nV1 in 0 1\nX1 in inv out OA\nRF out inv {Rf:spice}\nRG inv 0 {Rg:spice}\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "flip": true,
+            "label": ""
+          },
+          {
+            "ref": "RG",
+            "at": [
+              7,
+              8
+            ],
+            "rot": 90,
+            "label": "R_g\n{Rg}"
+          },
+          {
+            "ref": "RF",
+            "at": [
+              13,
+              8
+            ],
+            "rot": 180,
+            "label": "R_f {Rf}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              8
+            ]
+          ],
+          [
+            [
+              13,
+              4
+            ],
+            [
+              13,
+              8
+            ]
+          ],
+          [
+            [
+              9,
+              8
+            ],
+            [
+              7,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "follower_why_concept",
+      "topicId": "opamp_noninverting",
+      "prompt": "A voltage follower has a gain of exactly 1. Why is it still useful?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "It buffers: very high input resistance, very low output resistance",
+          "feedback": "Right: the source isn't loaded, and the output can drive a load the source couldn't.",
+          "correct": true
+        },
+        {
+          "text": "It doubles the available voltage",
+          "feedback": "Its gain is 1: the output voltage equals the input voltage."
+        },
+        {
+          "text": "It inverts the signal",
+          "feedback": "A follower doesn't invert; the output follows the input."
+        },
+        {
+          "text": "It removes the need for a power supply",
+          "feedback": "The op amp still needs supplies; the extra current comes from them."
+        }
+      ],
+      "explanation": "A follower copies the voltage but not the load: it draws almost nothing from the source and supplies the load current from its own supply. That isolates a weak source (a sensor, a divider) from a heavy load.",
+      "hints": [
+        "Think about current, not voltage: who supplies the load current?"
+      ],
+      "noDrawing": "why a unity-gain buffer is useful in general; no particular circuit",
+      "review": "verified"
+    },
+    {
+      "id": "noninv_what_if_rf_x10",
+      "topicId": "opamp_noninverting",
+      "prompt": "A non-inverting amplifier has Rf = {Rf} (output to − input) and Rg = {Rg} (− input to ground). Rf is swapped for {new_Rf}, ten times bigger. What happens to the gain?",
+      "variables": [
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "Rg",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the gain",
+        "formula": "1+Rf/Rg",
+        "unit": "",
+        "change": {
+          "Rf": "10*Rf"
+        },
+        "askFactor": true,
+        "feedback": {
+          "down": "A bigger Rf makes the feedback divider hand back a smaller fraction of the output, so the op amp must drive the output higher to bring V− back up to Vin.",
+          "same": "The gain is 1 + Rf/Rg, so it depends on Rf. A bigger Rf feeds back a smaller fraction of the output, and the output must rise to make up for it."
+        },
+        "factorHint": "The gain is 1 + Rf/Rg. Only the Rf/Rg part grows with Rf; the 1 (the input itself) stays. Work out both terms before and after; there is no square or root in it."
+      },
+      "explanation": "Gain = 1 + Rf/Rg goes from {before} to {after}: less than ten times, because only the Rf/Rg part grows tenfold, while the 1 stays. The 1 is the input itself: the output is always at least Vin, because V− has to reach Vin. The bigger Rf/Rg already is, the closer the change gets to ×10.",
+      "hints": [
+        "Write the gain as 1 + Rf/Rg. Which part grows tenfold?"
+      ],
+      "schematic": {
+        "netlist": "non-inverting\nV1 in 0 1\nX1 in inv out OA\nRF out inv {Rf:spice}\nRG inv 0 {Rg:spice}\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "flip": true,
+            "label": ""
+          },
+          {
+            "ref": "RG",
+            "at": [
+              7,
+              8
+            ],
+            "rot": 90,
+            "label": "Rg\n{Rg}"
+          },
+          {
+            "ref": "RF",
+            "at": [
+              13,
+              8
+            ],
+            "rot": 180,
+            "label": "Rf {Rf}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              8
+            ]
+          ],
+          [
+            [
+              13,
+              4
+            ],
+            [
+              13,
+              8
+            ]
+          ],
+          [
+            [
+              9,
+              8
+            ],
+            [
+              7,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "noninv_what_if_load",
+      "topicId": "opamp_noninverting",
+      "prompt": "A non-inverting amplifier (Rf = {Rf}, Rg = {Rg}, input {Vin}, op amp on ±15 V supplies, not drawn) drives a load RL = {RL}. RL is swapped for {new_RL}, a ten times heavier load. What happens to the output voltage?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 0.1,
+            "max": 1,
+            "step": 0.1
+          }
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "Rg",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the output voltage",
+        "formula": "Vin*(1+Rf/Rg)",
+        "unit": "V",
+        "change": {
+          "RL": "RL/10"
+        },
+        "feedback": {
+          "down": "That is what happens to a divider or a weak source when you load it. Here, if the output sagged, the divider would feed back less than Vin, and the op amp would push the output straight back up.",
+          "up": "More load current can't push the output up: feedback keeps it where the divider returns exactly Vin."
+        }
+      },
+      "explanation": "The output stays at Vin·(1 + Rf/Rg) = {after}. Feedback watches the output through the Rf–Rg divider: any sag would pull V− below Vin, and the op amp would raise its output until V− = Vin again. The load now draws {IL}, which comes from the op amp's supply. That is the low output resistance of a feedback amplifier (a real op amp manages this up to its current limit, typically about 20 mA).",
+      "hints": [
+        "If the output sagged a little, what would happen to V−, and what would the op amp do?"
+      ],
+      "schematic": {
+        "netlist": "non-inverting\nV1 in 0 {Vin:spice}\nX1 in inv out OA\nRF out inv {Rf:spice}\nRG inv 0 {Rg:spice}\nRL out 0 {RL:spice}\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "flip": true,
+            "label": ""
+          },
+          {
+            "ref": "RG",
+            "at": [
+              7,
+              8
+            ],
+            "rot": 90,
+            "label": "Rg\n{Rg}"
+          },
+          {
+            "ref": "RF",
+            "at": [
+              13,
+              8
+            ],
+            "rot": 180,
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              16,
+              4
+            ],
+            "rot": 90,
+            "label": "RL\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              8
+            ]
+          ],
+          [
+            [
+              13,
+              4
+            ],
+            [
+              13,
+              8
+            ]
+          ],
+          [
+            [
+              9,
+              8
+            ],
+            [
+              7,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              16,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            12
+          ],
+          [
+            16,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          }
+        ]
+      },
+      "derived": [
+        {
+          "name": "IL",
+          "formula": "Vin*(1+Rf/Rg)/(RL/10)",
+          "unit": "A"
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "noninv_gain",
+      "topicId": "opamp_noninverting",
+      "prompt": "A non-inverting amplifier has Rf = {Rf} (output to inverting input) and Rg = {Rg} (inverting input to ground). What is its voltage gain?",
+      "variables": [
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "values": [
+            10000,
+            12000,
+            15000,
+            18000,
+            22000,
+            27000,
+            33000,
+            39000,
+            47000
+          ]
+        },
+        {
+          "name": "Rg",
+          "unit": "Ω",
+          "values": [
+            2200,
+            2700,
+            3300,
+            3900,
+            4700,
+            5600,
+            6800,
+            8200
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "1+Rf/Rg",
+        "unit": "",
+        "unitless": true
+      },
+      "explanation": "Feedback makes V− equal the input, and Rf and Rg divide the output down to V− by the fraction Rg/(Rf + Rg). So the output is the input divided by that fraction: gain = 1 + Rf/Rg = 1 + {Rf}/{Rg} = {answer}.",
+      "hints": [
+        "V− must equal the input, and it sees the output through the Rf–Rg divider.",
+        "Gain = 1 + Rf/Rg."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Rf/Rg",
+          "feedback": "You're missing the 1. That's the size of the inverting amplifier's gain; the non-inverting gain is 1 + Rf/Rg, never below 1."
+        },
+        {
+          "formula": "1+Rg/Rf",
+          "feedback": "The ratio is upside down. Rf is the feedback resistor from the output: a bigger Rf means more gain, so the gain is 1 + Rf/Rg."
+        },
+        {
+          "formula": "Rg/(Rf+Rg)",
+          "feedback": "That's the fraction of the output fed back to V−. The gain is its inverse, (Rf + Rg)/Rg = 1 + Rf/Rg."
+        }
+      ],
+      "simCheck": {
+        "netlist": "non-inverting\nV1 in 0 1\nX1 in inv out OPAMP\nRF out inv {Rf:spice}\nRG inv 0 {Rg:spice}\n",
+        "probe": "v(out)"
+      },
+      "schematic": {
+        "netlist": "non-inverting\nV1 in 0 1\nX1 in inv out OA\nRF out inv {Rf:spice}\nRG inv 0 {Rg:spice}\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "flip": true,
+            "label": ""
+          },
+          {
+            "ref": "RG",
+            "at": [
+              7,
+              8
+            ],
+            "rot": 90,
+            "label": "Rg\n{Rg}"
+          },
+          {
+            "ref": "RF",
+            "at": [
+              13,
+              8
+            ],
+            "rot": 180,
+            "label": "Rf {Rf}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ],
+          [
+            [
+              13,
+              4
+            ],
+            [
+              13,
+              8
+            ]
+          ],
+          [
+            [
+              9,
+              8
+            ],
+            [
+              7,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

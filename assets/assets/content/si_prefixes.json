@@ -1,0 +1,1178 @@
+{
+  "topics": [
+    {
+      "id": "si_prefixes",
+      "title": "SI prefixes and engineering notation",
+      "summary": "Read and use k, M, m, µ, n and p so values like 4.7 kΩ and 10 µF go straight into formulas.",
+      "lenses": [
+        "math"
+      ],
+      "prerequisites": [
+        "ohms_law",
+        "power_heat"
+      ],
+      "prerequisiteNotes": {
+        "ohms_law": "Every calculation here is Ohm's law with prefixed values: mA × kΩ = V.",
+        "power_heat": "P = V·I, V²/R and I²R, and E = P·t, are the formulas the prefixes go into."
+      },
+      "lensNotes": {
+        "math": "Engineering notation keeps exponents in steps of three, so every value is a number from 1 to 999 with a prefix. Multiplying prefixes is adding exponents: kΩ × mA = 10³ × 10⁻³ = volts, and kΩ × µF = 10³ × 10⁻⁶ = milliseconds."
+      },
+      "formulas": [
+        {
+          "label": "Small",
+          "tex": "\\text{p} = 10^{-12},\\ \\ \\text{n} = 10^{-9},\\ \\ \\text{µ} = 10^{-6},\\ \\ \\text{m} = 10^{-3}"
+        },
+        {
+          "label": "Large",
+          "tex": "\\text{k} = 10^{3},\\ \\ \\text{M} = 10^{6},\\ \\ \\text{G} = 10^{9}"
+        },
+        {
+          "label": "Ohm's law",
+          "tex": "V = I R"
+        },
+        {
+          "label": "Power",
+          "tex": "P = V\\,I = \\frac{V^2}{R} = I^2 R"
+        },
+        {
+          "label": "Energy from power",
+          "tex": "E = P\\,t \\quad (1\\ \\text{W} = 1\\ \\text{J/s})"
+        }
+      ],
+      "goals": [
+        "Convert a value between prefixes, for example 4700 pF = 4.7 nF and 0.1 µF = 100 nF",
+        "Put values like 4.7 kΩ and 2.2 mA straight into Ohm's law and power formulas and give the result with the right prefix",
+        "Compare values written with different prefixes and say which is larger",
+        "Check the size of an answer before trusting it, and spot a lost k or m (an error of a factor of 1000)"
+      ],
+      "intuition": "Each prefix step is a factor of 1000, so the prefix tells you a value's size at a glance, and multiplying two prefixed values adds their exponents and dividing subtracts them: kΩ × mA gives volts, V ÷ kΩ gives mA.",
+      "why": "Circuit quantities span an enormous range: a leakage current of a few nanoamps and a motor current of a few amps differ by a factor of a billion. Prefixes change none of the physics; they are powers of ten written in front of a unit. The laws themselves hold in base units: one ohm is one volt per amp, one volt times one amp is one watt, and one watt is one joule per second. So V = I·R is exact in volts, amps and ohms, and prefixes only have to be carried through the arithmetic correctly.",
+      "explanation": "You already use prefixes outside electronics: a kilometer is a thousand meters, a millimeter is a thousandth of one. Electronics uses the same idea in steps of a thousand. Going up: k (kilo, 10³), M (mega, 10⁶), G (giga, 10⁹). Going down: m (milli, 10⁻³), µ (micro, 10⁻⁶), n (nano, 10⁻⁹), p (pico, 10⁻¹²). Engineering notation picks the prefix that leaves a number from 1 to 999, so 0.0047 A is written 4.7 mA. Formulas such as Ohm's law, V = I·R, and power, P = V·I, work in base units: volts, amps, ohms, watts. You can always convert everything first. It is faster to combine the prefixes: milli times kilo is 10⁻³ × 10³ = 1, so mA × kΩ gives volts, and volts ÷ kΩ gives mA. Squaring squares the prefix too: (2 mA)² is 4 × 10⁻⁶ A², not 4 × 10⁻³ A². The same value can be marked several ways: 0.1 µF, 100 nF and 100 000 pF are one capacitor. Before trusting a result, check its size. A few volts across a few kilohms should give a few milliamps; an answer in amps means a prefix was lost.",
+      "workedExample": {
+        "problem": "A 9 V battery is connected across a 4.7 kΩ resistor. Find the current, the power the resistor dissipates, and the energy it turns into heat in one hour.",
+        "steps": [
+          "Convert to base units: 4.7 kΩ = 4.7 × 10³ Ω = 4700 Ω.",
+          "Current: I = V / R = 9 V / 4700 Ω = 0.001915 A = 1.915 × 10⁻³ A = 1.91 mA. Shortcut: volts ÷ kΩ gives mA, so 9 V / 4.7 kΩ = 1.91 mA directly.",
+          "Size check: a few volts across a few kilohms gives a few milliamps, so 1.91 mA is plausible. 1.91 A would mean the k was dropped.",
+          "Power: P = V × I = 9 V × 1.915 mA = 17.2 mW (volts × mA gives mW). Cross-check: P = V² / R = (9 V)² / 4700 Ω = 81 V² / 4700 Ω = 0.0172 W = 17.2 mW.",
+          "Energy: a watt is a joule per second, and one hour is 3600 s, so E = P × t = 0.01723 W × 3600 s = 62.0 J.",
+          "A common 0.25 W (250 mW) resistor is dissipating about 7% of its rating, so it only runs slightly warm."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 4 \"Scientific Notation and Metric Prefixes\", section \"Metric notation\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_4.html#xtocid87342",
+          "note": "Prefixes as powers of ten in steps of three, which leave a mantissa between 1 and 999."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 4 \"Scientific Notation and Metric Prefixes\", section \"Arithmetic with scientific notation\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_4.html#xtocid87341",
+          "note": "Multiplying powers of ten adds their exponents and dividing subtracts them."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 4 \"Scientific Notation and Metric Prefixes\", section \"Hand calculator use\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_4.html#xtocid87344",
+          "note": "The exponents of p, n, µ, m, k, M and G, and engineering display in multiples of three."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "si_ohms_law_voltage",
+      "topicId": "si_prefixes",
+      "prompt": "A current of {I} flows through a {R} resistor. What is the voltage across the resistor?",
+      "variables": [
+        {
+          "name": "I",
+          "unit": "A",
+          "series": "E12",
+          "decades": [
+            -3,
+            -3
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            100,
+            120,
+            150,
+            180,
+            220,
+            270,
+            330,
+            390,
+            470,
+            560,
+            680,
+            820,
+            1000,
+            1200,
+            1500,
+            1800,
+            2200,
+            2700
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "I*R",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "Ohm's law: V = I·R = {I} × {R} = {answer}. Shortcut: mA × kΩ gives volts directly, because 10⁻³ × 10³ = 1.",
+      "hints": [
+        "Which law links voltage, current and resistance?",
+        "Use V = I·R with both values in base units (amps and ohms), or use the shortcut mA × kΩ = V."
+      ],
+      "misconceptions": [
+        {
+          "formula": "I/R",
+          "feedback": "You divided. Ohm's law is V = I·R: more resistance needs more voltage to push the same current."
+        },
+        {
+          "formula": "R/I",
+          "feedback": "R/I isn't a voltage. Ohm's law is V = I·R."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does multiplying milliamps by kilohms give plain volts?",
+          "choices": [
+            {
+              "text": "The prefixes cancel: milli is 10⁻³, kilo is 10³, and 10⁻³ × 10³ = 1",
+              "feedback": "Right: multiplying prefixes adds their exponents, −3 + 3 = 0, which leaves plain volts.",
+              "correct": true
+            },
+            {
+              "text": "Milliamps and kilohms are both 'small' units, so they match",
+              "feedback": "Kilo is big (×1000) and milli is small (÷1000). They cancel because they are opposites."
+            },
+            {
+              "text": "Ohm's law only works in mA and kΩ",
+              "feedback": "Ohm's law works in any consistent units; amps and ohms always work. mA and kΩ just happen to cancel."
+            },
+            {
+              "text": "It doesn't: you must always convert to amps and ohms first",
+              "feedback": "Converting always works, but here it isn't needed: 1 mA × 1 kΩ = 10⁻³ A × 10³ Ω = 1 V."
+            }
+          ],
+          "explanation": "Engineering notation steps in powers of a thousand, so multiplying prefixes means adding exponents in threes. mA × kΩ = 10⁻³ × 10³ = 10⁰, plain volts. The same idea gives V / kΩ = mA and kΩ × µF = ms. With ohms instead of kilohms, mA × Ω gives mV."
+        }
+      ],
+      "schematic": {
+        "netlist": "current through a resistor\nI1 0 a {I:spice}\nR1 a 0 {R:spice}\n",
+        "parts": [
+          {
+            "ref": "I1",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 270,
+            "label": "{I}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              2
+            ],
+            "rot": 90,
+            "label": "{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            3,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "si_ohms_law_current",
+      "topicId": "si_prefixes",
+      "prompt": "A {V} source is connected across a {R} resistor. How much current flows?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 7,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            220,
+            270,
+            330,
+            390,
+            470,
+            560,
+            680,
+            820,
+            1000,
+            1200,
+            1500,
+            1800,
+            2200,
+            2700,
+            3300,
+            3900,
+            4700,
+            5600,
+            6800,
+            8200,
+            10000,
+            12000,
+            15000,
+            18000,
+            22000,
+            27000,
+            33000,
+            39000,
+            47000,
+            56000,
+            68000,
+            82000
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "V/R",
+        "unit": "A",
+        "tolerance": 0.02
+      },
+      "explanation": "I = V / R = {V} / {R} = {answer}. Shortcut: V / kΩ gives mA.",
+      "hints": [
+        "Rearrange Ohm's law for current.",
+        "I = V / R. Convert {R} to ohms first, or remember that volts divided by kΩ gives mA."
+      ],
+      "misconceptions": [
+        {
+          "formula": "R/V",
+          "feedback": "That's R/V, upside down. Current is I = V / R: a bigger resistor lets less current through."
+        },
+        {
+          "formula": "V*R",
+          "feedback": "You multiplied. Current is I = V / R, so a bigger resistor means less current."
+        }
+      ],
+      "estimate": true,
+      "schematic": {
+        "netlist": "source and resistor\nV1 a 0 {V:spice}\nR1 a 0 {R:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              2
+            ],
+            "rot": 90,
+            "label": "{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            3,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "si_power_v2r",
+      "topicId": "si_prefixes",
+      "prompt": "A {V} supply is connected across a {R} resistor. How much power does the resistor dissipate?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 2,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "I",
+          "formula": "V/R",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "V^2/R",
+        "unit": "W",
+        "tolerance": 0.02
+      },
+      "explanation": "P = V² / R = ({V})² / {R} = {answer}. Check: I = V / R = {I}, and P = V·I gives the same result.",
+      "hints": [
+        "Power in a resistor can be written with V and R only.",
+        "P = V·I and I = V / R, so P = V² / R. Square the voltage first."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V/R",
+          "feedback": "That's the current (I = V / R), not the power. Power is P = V·I = V² / R."
+        },
+        {
+          "formula": "V*R",
+          "feedback": "Power isn't V·R. Use P = V² / R: a bigger resistor draws less current and dissipates less power."
+        },
+        {
+          "formula": "V^2*R",
+          "feedback": "Multiply by R? Use P = V² / R: divide the squared voltage by the resistance."
+        }
+      ],
+      "estimate": true,
+      "followUps": [
+        {
+          "prompt": "Why does the power depend on the voltage squared, not just on the voltage?",
+          "choices": [
+            {
+              "text": "More voltage also pushes more current (I = V / R), and power is voltage times current, so both factors grow",
+              "feedback": "Right: double V and you double I too, so P = V·I goes up four times.",
+              "correct": true
+            },
+            {
+              "text": "The square is just part of the formula; there's no physical reason",
+              "feedback": "There is a reason: P = V·I, and the current itself is V / R. One V from each factor makes V²."
+            },
+            {
+              "text": "The resistance rises as the voltage rises",
+              "feedback": "An ideal resistor keeps its value. The square comes from V·I with I = V / R, not from R changing."
+            },
+            {
+              "text": "Power is energy, and energy always goes as a square",
+              "feedback": "Not always: E = P·t grows in step with time. The square here comes from V·I, with I rising in step with V."
+            }
+          ],
+          "explanation": "P = V·I. In a resistor I = V / R, so P = V·(V / R) = V² / R. Doubling the voltage doubles the current, and their product goes up four times. That's why a modest overvoltage can overheat a resistor."
+        }
+      ],
+      "schematic": {
+        "netlist": "source and resistor\nV1 a 0 {V:spice}\nR1 a 0 {R:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              2
+            ],
+            "rot": 90,
+            "label": "{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            3,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "si_power_i2r",
+      "topicId": "si_prefixes",
+      "prompt": "A current of {I} flows through a {R} resistor. How much power does it dissipate?",
+      "variables": [
+        {
+          "name": "I",
+          "unit": "A",
+          "series": "E12",
+          "decades": [
+            -3,
+            -2
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            10,
+            12,
+            15,
+            18,
+            22,
+            27,
+            33
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "I^2*R",
+        "unit": "W",
+        "tolerance": 0.02
+      },
+      "explanation": "P = I²·R = ({I})² × {R} = {answer}. Square the current in amps first: milliamps squared are millionths.",
+      "hints": [
+        "Power in a resistor can be written with the current alone.",
+        "P = I²·R, with I in amps."
+      ],
+      "misconceptions": [
+        {
+          "formula": "I*R",
+          "feedback": "That's I·R, a voltage. Power is I²·R (or V·I)."
+        },
+        {
+          "formula": "I*R^2",
+          "feedback": "Square the current, not the resistance: P = I²·R."
+        }
+      ],
+      "schematic": {
+        "netlist": "current through a resistor\nI1 0 a {I:spice}\nR1 a 0 {R:spice}\n",
+        "parts": [
+          {
+            "ref": "I1",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 270,
+            "label": "{I}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              2
+            ],
+            "rot": 90,
+            "label": "{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            3,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "si_energy_time",
+      "topicId": "si_prefixes",
+      "prompt": "A {P} heater runs for {t}. How much energy does it use, in joules?",
+      "variables": [
+        {
+          "name": "P",
+          "unit": "W",
+          "series": "E12",
+          "decades": [
+            1,
+            2
+          ]
+        },
+        {
+          "name": "t",
+          "unit": "s",
+          "range": {
+            "min": 10,
+            "max": 120,
+            "step": 10
+          }
+        }
+      ],
+      "answer": {
+        "formula": "P*t",
+        "unit": "J",
+        "tolerance": 0.02
+      },
+      "explanation": "Energy is power × time: E = {P} × {t} = {answer}. A watt is one joule per second.",
+      "hints": [
+        "A watt is a joule per second.",
+        "E = P·t with t in seconds."
+      ],
+      "misconceptions": [
+        {
+          "formula": "P/t",
+          "feedback": "Divide and you get J/s², which isn't energy. Multiply: E = P·t."
+        }
+      ],
+      "noDrawing": "energy from power and time for an appliance; no circuit is described",
+      "review": "verified"
+    },
+    {
+      "id": "si_what_if_power_v",
+      "topicId": "si_prefixes",
+      "prompt": "The supply across a resistor of {R} is raised from {V} to {new_V}. What happens to the power the resistor dissipates?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 2,
+            "max": 6,
+            "step": 1
+          }
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the power in the resistor",
+        "formula": "V^2/R",
+        "unit": "W",
+        "change": {
+          "V": "2*V"
+        },
+        "askFactor": true,
+        "feedback": {
+          "down": "The resistor hasn't changed, so more voltage pushes more current through it (I = V / R). More voltage and more current can only mean more power.",
+          "same": "Power is V·I, and both rise with the supply. Only the resistance stays the same."
+        }
+      },
+      "explanation": "P = V² / R: {before} → {after}. Doubling V also doubles the current (Ohm's law, I = V / R), so the power, V × I, goes up four times, not two.",
+      "hints": [
+        "Does the current change when the voltage doubles?"
+      ],
+      "schematic": {
+        "netlist": "source and resistor\nV1 a 0 {V:spice}\nR1 a 0 {R:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              2
+            ],
+            "rot": 90,
+            "label": "{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            3,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "si_sanity_current",
+      "topicId": "si_prefixes",
+      "prompt": "A resistor of {R} sits across a supply of {V}. A classmate works out the current and gets {Ibad}. Before redoing the sum, what is your verdict?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 3,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "I",
+          "formula": "V/R",
+          "unit": "A"
+        },
+        {
+          "name": "Ibad",
+          "formula": "1000*V/R",
+          "unit": "A"
+        },
+        {
+          "name": "Ibig",
+          "formula": "1000000*V/R",
+          "unit": "A"
+        }
+      ],
+      "choices": [
+        {
+          "text": "About a thousand times too big: volts across kilohms give milliamps, so it should be about {I}",
+          "feedback": "Right: they most likely typed the resistance without its k. Volts ÷ kΩ = mA.",
+          "correct": true
+        },
+        {
+          "text": "About right: a few volts across a resistor gives around an amp",
+          "feedback": "An amp from a few volts needs a resistance of a few ohms. Across thousands of ohms, a few volts push only milliamps."
+        },
+        {
+          "text": "About a thousand times too small: the k means the current should be multiplied by a thousand, to about {Ibig}",
+          "feedback": "The k multiplies the resistance by a thousand, which divides the current by a thousand. The true current is smaller, not bigger."
+        },
+        {
+          "text": "The method is wrong: the current is the voltage times the resistance",
+          "feedback": "V × R isn't a current. I = V / R: more resistance means less current."
+        }
+      ],
+      "explanation": "Check the size before trusting a calculator. {V} / {R} = {I}. A result near amps means the k was lost: dividing by the bare number gives {Ibad}. Rule of thumb: volts ÷ kΩ = mA.",
+      "hints": [
+        "Roughly how much current do a few volts push through a few thousand ohms?"
+      ],
+      "schematic": {
+        "netlist": "source and resistor\nV1 a 0 {V:spice}\nR1 a 0 {R:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              2
+            ],
+            "rot": 90,
+            "label": "{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            3,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "si_which_bigger",
+      "topicId": "si_prefixes",
+      "prompt": "Four capacitors are marked {Au} µF, {Bn} nF, {Cp} pF and {Du} µF. Which has the largest capacitance?",
+      "variables": [
+        {
+          "name": "Au",
+          "unit": "",
+          "values": [
+            0.1,
+            0.22,
+            0.33
+          ]
+        },
+        {
+          "name": "Bn",
+          "unit": "",
+          "values": [
+            390,
+            470,
+            560,
+            680
+          ]
+        },
+        {
+          "name": "Cp",
+          "unit": "",
+          "values": [
+            2200,
+            3300,
+            4700,
+            6800
+          ]
+        },
+        {
+          "name": "Du",
+          "unit": "",
+          "values": [
+            0.15,
+            0.27
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "An",
+          "formula": "Au*1000",
+          "unit": ""
+        },
+        {
+          "name": "Bu",
+          "formula": "Bn/1000",
+          "unit": ""
+        },
+        {
+          "name": "Cn",
+          "formula": "Cp/1000",
+          "unit": ""
+        },
+        {
+          "name": "Dn",
+          "formula": "Du*1000",
+          "unit": ""
+        }
+      ],
+      "choices": [
+        {
+          "text": "{Bn} nF",
+          "correct": true,
+          "feedback": "Right: {Bn} nF = {Bu} µF, more than {Au} µF, {Du} µF or {Cp} pF ({Cn} nF). Put every value in one prefix before comparing."
+        },
+        {
+          "text": "{Au} µF",
+          "feedback": "The µF prefix is the bigger one, but {Au} µF = {An} nF, less than {Bn} nF. The prefix alone doesn't decide: convert to one prefix before comparing."
+        },
+        {
+          "text": "{Cp} pF",
+          "feedback": "It has the biggest number but the smallest prefix: {Cp} pF = {Cn} nF, against {Bn} nF."
+        },
+        {
+          "text": "{Du} µF",
+          "feedback": "{Du} µF = {Dn} nF, less than {Bn} nF. A bigger prefix with a small number can still be the smaller value: put all four in nanofarads first."
+        }
+      ],
+      "explanation": "In nanofarads: {Au} µF = {An} nF, {Bn} nF stays {Bn} nF, {Cp} pF = {Cn} nF and {Du} µF = {Dn} nF. Each prefix step is a factor of 1000, so a big number with a small prefix can be the smallest value. Parts are marked all these ways: 0.1 µF and 100 nF are the same capacitor.",
+      "hints": [
+        "Write all four in nanofarads.",
+        "1 µF = 1000 nF and 1 nF = 1000 pF."
+      ],
+      "noDrawing": "comparing capacitor markings in different prefixes; no circuit",
+      "level": "recall",
+      "placement": true
+    },
+    {
+      "id": "si_design_pullup",
+      "topicId": "si_prefixes",
+      "prompt": "A push button pulls a microcontroller input to ground, and a pull-up resistor from the {V} rail holds the pin high while the button is open. With the button pressed, the resistor should draw about {I} from the rail (within 30%, so between {Ilo} and {Ihi}). Take the pin itself as drawing no current. Choose R from the E12 series, between 1 kΩ and 1 MΩ.",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            3.3,
+            5
+          ]
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "values": [
+            4.7e-05,
+            5.6e-05,
+            6.8e-05,
+            8.2e-05,
+            0.0001,
+            0.00012,
+            0.00015,
+            0.00022,
+            0.00033,
+            0.00047,
+            0.00068,
+            0.001
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rex",
+          "formula": "V/I",
+          "unit": "Ω"
+        },
+        {
+          "name": "Ilo",
+          "formula": "0.7*I",
+          "unit": "A"
+        },
+        {
+          "name": "Ihi",
+          "formula": "1.3*I",
+          "unit": "A"
+        },
+        {
+          "name": "Rlo",
+          "formula": "V/(1.3*I)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rhi",
+          "formula": "V/(0.7*I)",
+          "unit": "Ω"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "R",
+            "label": "R",
+            "unit": "Ω",
+            "series": "E12",
+            "min": 1000,
+            "max": 1000000
+          }
+        ],
+        "result": "V/R",
+        "resultLabel": "current with the button pressed",
+        "resultUnit": "A",
+        "target": "I",
+        "tolerance": 0.3
+      },
+      "explanation": "Pressed, the button ties the pin to ground, so the whole {V} sits across R and I = V/R. Solve for R: R = {V} / {I} = {Rex}. Keep the prefixes straight: volts divided by milliamps give kilohms, and volts divided by microamps give megohms. Any E12 value from {Rlo} to {Rhi} keeps the current in range; pick one and check V/R.",
+      "hints": [
+        "With the button pressed, what voltage is across the resistor?",
+        "R = V/I. Volts ÷ mA = kΩ; volts ÷ µA = MΩ."
+      ],
+      "followUps": [
+        {
+          "prompt": "A classmate works out 3.3 V ÷ 100 µA and gets 33 Ω. What went wrong?",
+          "choices": [
+            {
+              "text": "They used 10⁻³ for µ (the milli factor), so the answer is 1000 times too small: 3.3 V / (100 × 10⁻⁶ A) = 33 kΩ",
+              "feedback": "Right: µ is 10⁻⁶. Dividing by it multiplies by 10⁶, so V/µA comes out in MΩ: 3.3/100 MΩ = 33 kΩ.",
+              "correct": true
+            },
+            {
+              "text": "They should have got 330 Ω, because 100 µA is 0.01 A",
+              "feedback": "100 µA is 10⁻⁴ A, not 10⁻²: 3.3/10⁻⁴ = 33 kΩ."
+            },
+            {
+              "text": "Nothing: 33 Ω is right, a pull-up only needs to be small",
+              "feedback": "33 Ω from 3.3 V draws 100 mA with the button pressed, a thousand times the target."
+            },
+            {
+              "text": "They forgot to square the current",
+              "feedback": "Ohm's law is linear, R = V/I. The error is a factor of 1000, exactly one prefix step."
+            }
+          ],
+          "explanation": "Dividing subtracts exponents: V / µA = 10⁰ / 10⁻⁶ = 10⁶, so the result is in MΩ. The same rule gives V / mA = kΩ. A current of a few microamps from a few volts therefore needs about a megohm, and a few milliamps about a kilohm."
+        }
+      ],
+      "schematic": {
+        "netlist": "pull-up and button\nV1 vdd 0 {V:spice}\nR1 vdd pin {R:spice}\nRS1 pin 0 0.005\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              -2
+            ],
+            "rot": 90,
+            "label": "R\n{R}"
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              6,
+              2
+            ],
+            "rot": 90,
+            "label": "button\n(pressed)",
+            "symbol": "switchClosed"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              -2
+            ],
+            [
+              6,
+              -2
+            ]
+          ],
+          [
+            [
+              6,
+              2
+            ],
+            [
+              9,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            3,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "pin",
+            "at": [
+              9,
+              2
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    }
+  ]
+}

@@ -1,0 +1,3488 @@
+{
+  "presets": [
+    {
+      "id": "divider",
+      "title": "Voltage divider",
+      "summary": "Two resistors split a voltage. Change the values and watch the output and currents.",
+      "params": [
+        {
+          "name": "Vin",
+          "label": "Supply",
+          "unit": "V",
+          "value": "12"
+        },
+        {
+          "name": "R1",
+          "label": "R1 (top)",
+          "unit": "Ω",
+          "value": "10k"
+        },
+        {
+          "name": "R2",
+          "label": "R2 (bottom)",
+          "unit": "Ω",
+          "value": "4.7k"
+        }
+      ],
+      "netlist": "Voltage divider\nV1 in 0 {Vin}\nR1 in out {R1}\nR2 out 0 {R2}\n.op\n",
+      "probes": [
+        "out"
+      ],
+      "predict": {
+        "label": "Before you simulate: what will V(out) be?",
+        "measure": "v(out)",
+        "unit": "V",
+        "tolerance": 0.02,
+        "explain": "The same current flows through both resistors, so each drops a share of the supply in proportion to its resistance: V_out = V_in·R2/(R1+R2) = 12·4.7k/14.7k ≈ 3.84 V."
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "showDc": true,
+      "lab": [
+        {
+          "set": {
+            "R2": "10k"
+          },
+          "label": "R2 is now 10 kΩ, equal to R1 (supply still 12 V). What will V(out) be?",
+          "measure": "v(out)",
+          "unit": "V",
+          "tolerance": 0.02,
+          "explain": "Equal resistors share the voltage equally: V_out = V_in·R2/(R1+R2) = 12·½ = 6 V."
+        },
+        {
+          "set": {
+            "Vin": "24"
+          },
+          "label": "Now double the input to 24 V (R1 and R2 both still 10 kΩ). What will V(out) be?",
+          "measure": "v(out)",
+          "unit": "V",
+          "tolerance": 0.02,
+          "explain": "The ratio is fixed by the resistors, so the output scales with the input: 24·½ = 12 V."
+        },
+        {
+          "set": {
+            "R1": "1k",
+            "R2": "1k"
+          },
+          "label": "Replace both resistors with 1 kΩ (input still 24 V). What will V(out) be now?",
+          "measure": "v(out)",
+          "unit": "V",
+          "tolerance": 0.02,
+          "explain": "Only the ratio matters for the unloaded output; scaling both resistors by 1/10 changes the current (12 mA) but not V_out."
+        }
+      ],
+      "topics": [
+        "dividers",
+        "thevenin"
+      ]
+    },
+    {
+      "id": "rc_lowpass",
+      "title": "RC low-pass filter",
+      "summary": "Step response (charging with τ = RC) and frequency response (−3 dB at 1/(2πRC)) of the same circuit.",
+      "params": [
+        {
+          "name": "R",
+          "label": "R",
+          "unit": "Ω",
+          "value": "1k"
+        },
+        {
+          "name": "C",
+          "label": "C",
+          "unit": "F",
+          "value": "100n"
+        }
+      ],
+      "derived": [
+        {
+          "name": "tau",
+          "formula": "R*C"
+        },
+        {
+          "name": "fc",
+          "formula": "1/(2*pi*R*C)"
+        },
+        {
+          "name": "fmin",
+          "formula": "fc/100"
+        },
+        {
+          "name": "fmax",
+          "formula": "fc*100"
+        },
+        {
+          "name": "tstop",
+          "formula": "5*tau"
+        },
+        {
+          "name": "tstep",
+          "formula": "tau/100"
+        }
+      ],
+      "netlist": "RC low-pass\nV1 in 0 PULSE(0 1 0 1n 1n 1 2) AC 1\nR1 in out {R}\nC1 out 0 {C}\n.tran {tstep} {tstop}\n.ac dec 20 {fmin} {fmax}\n",
+      "probes": [
+        "in",
+        "out"
+      ],
+      "predict": {
+        "label": "Before you simulate: at what frequency is the output 3 dB down?",
+        "measure": "f3db:v(out)",
+        "unit": "Hz",
+        "tolerance": 0.05,
+        "explain": "At f_c the capacitor's reactance 1/(2πfC) equals R, and the output is 1/√2 of the input (−3 dB): f_c = 1/(2πRC) = 1/(2π·1k·100n) ≈ 1.59 kHz."
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\nstep"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "lab": [
+        {
+          "set": {
+            "R": "2.2k"
+          },
+          "label": "R is now 2.2 kΩ (C still 100 nF). What is the new cutoff frequency?",
+          "measure": "f3db:v(out)",
+          "unit": "Hz",
+          "tolerance": 0.05,
+          "explain": "f_c = 1/(2πRC) is inversely proportional to R: 2.2× the resistance gives 1/2.2 the cutoff, 723 Hz."
+        },
+        {
+          "set": {
+            "C": "10n"
+          },
+          "label": "Keep R = 2.2 kΩ and shrink C to 10 nF. What is the cutoff now?",
+          "measure": "f3db:v(out)",
+          "unit": "Hz",
+          "tolerance": 0.05,
+          "explain": "C fell tenfold, so f_c rose tenfold: 7.23 kHz."
+        }
+      ],
+      "topics": [
+        "rc_time_constant",
+        "rc_lowpass_cutoff",
+        "reactance_impedance"
+      ]
+    },
+    {
+      "id": "rectifier",
+      "title": "Half-wave rectifier with reservoir capacitor",
+      "summary": "A diode charges the capacitor on each positive peak; the load discharges it in between, leaving ripple.",
+      "params": [
+        {
+          "name": "Vp",
+          "label": "Peak input",
+          "unit": "V",
+          "value": "10"
+        },
+        {
+          "name": "f",
+          "label": "Frequency",
+          "unit": "Hz",
+          "value": "60"
+        },
+        {
+          "name": "C",
+          "label": "Reservoir C",
+          "unit": "F",
+          "value": "100u"
+        },
+        {
+          "name": "RL",
+          "label": "Load",
+          "unit": "Ω",
+          "value": "1k"
+        }
+      ],
+      "derived": [
+        {
+          "name": "tstop",
+          "formula": "4/f"
+        },
+        {
+          "name": "tstep",
+          "formula": "1/(200*f)"
+        }
+      ],
+      "netlist": "Half-wave rectifier\nV1 in 0 SIN(0 {Vp} {f})\nD1 in out DSIL\nC1 out 0 {C}\nRL out 0 {RL}\n.model DSIL D(IS=2.5n N=1.75)\n.tran {tstep} {tstop}\n",
+      "probes": [
+        "in",
+        "out"
+      ],
+      "predict": {
+        "label": "Before you simulate: what is the peak output voltage?",
+        "measure": "max:v(out)",
+        "unit": "V",
+        "tolerance": 0.05,
+        "explain": "The capacitor charges to the input peak less the diode's forward drop while it conducts: 10 V − about 0.7 V ≈ 9.3 V."
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n{Vp}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "D1"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "RL\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              10,
+              0
+            ]
+          }
+        ]
+      },
+      "topics": [
+        "diode_rectifiers",
+        "app_power_supply"
+      ],
+      "lab": [
+        {
+          "set": {
+            "Vp": "10",
+            "f": "60",
+            "C": "100u",
+            "RL": "1k"
+          },
+          "label": "First, the ripple as it is (100 µF, 1 kΩ, 60 Hz, about 9.3 V peak). Estimate the peak-to-peak ripple with ΔV ≈ I/(fC); expect it to come out roughly 20% high, because the capacitor recharges before a full period has passed and the load current falls as the voltage droops.",
+          "measure": "pp:v(out)",
+          "unit": "V",
+          "tolerance": 0.3,
+          "explain": "I ≈ 9.3 V/1 kΩ = 9.3 mA, so I/(fC) = 9.3 mA/(60 Hz·100 µF) ≈ 1.55 V. The simulated ripple is about 1.3 V: the capacitor starts recharging before the full period is over, and the load current falls as the voltage droops."
+        },
+        {
+          "set": {
+            "C": "470u"
+          },
+          "label": "Raise C to 470 µF. What ripple now?",
+          "measure": "pp:v(out)",
+          "unit": "V",
+          "tolerance": 0.3,
+          "explain": "Ripple ≈ I/(fC): 4.7× the capacitance gives about 1/4.7 the ripple."
+        },
+        {
+          "set": {
+            "RL": "220"
+          },
+          "label": "Keep 470 µF but load it harder: R_L = 220 Ω. Ripple?",
+          "measure": "pp:v(out)",
+          "unit": "V",
+          "tolerance": 0.3,
+          "explain": "4.5× the load current gives about 4.5× the ripple."
+        }
+      ]
+    },
+    {
+      "id": "ce_amp",
+      "title": "Common-emitter amplifier",
+      "summary": "Divider bias, a bypassed emitter resistor and coupling capacitors: a small sine in, a larger inverted sine out.",
+      "params": [
+        {
+          "name": "Vcc",
+          "label": "Supply",
+          "unit": "V",
+          "value": "12"
+        },
+        {
+          "name": "R1",
+          "label": "R1 (bias top)",
+          "unit": "Ω",
+          "value": "47k"
+        },
+        {
+          "name": "R2",
+          "label": "R2 (bias bottom)",
+          "unit": "Ω",
+          "value": "10k"
+        },
+        {
+          "name": "Rc",
+          "label": "R_C",
+          "unit": "Ω",
+          "value": "4.7k"
+        },
+        {
+          "name": "Re",
+          "label": "R_E",
+          "unit": "Ω",
+          "value": "1k"
+        },
+        {
+          "name": "Vs",
+          "label": "Input amplitude",
+          "unit": "V",
+          "value": "2m"
+        },
+        {
+          "name": "f",
+          "label": "Frequency",
+          "unit": "Hz",
+          "value": "1k"
+        }
+      ],
+      "derived": [
+        {
+          "name": "tstop",
+          "formula": "4/f"
+        },
+        {
+          "name": "tstep",
+          "formula": "1/(200*f)"
+        }
+      ],
+      "netlist": "Common-emitter amplifier\nVCC vcc 0 {Vcc}\nVS sig 0 SIN(0 {Vs} {f}) AC 1\nCIN sig b 10u\nR1 vcc b {R1}\nR2 b 0 {R2}\nRC vcc c {Rc}\nRE e 0 {Re}\nCE e 0 100u\nCOUT c out 10u\nRL out 0 100k\nQ1 c b e QN\n.model QN NPN(BF=150)\n.tran {tstep} {tstop}\n.ac dec 20 10 1meg\n",
+      "probes": [
+        "sig",
+        "out"
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              2,
+              2
+            ],
+            "rot": 90,
+            "label": "VCC\n{Vcc}"
+          },
+          {
+            "ref": "VS",
+            "at": [
+              4,
+              10
+            ],
+            "rot": 90,
+            "label": "VS\n{Vs}"
+          },
+          {
+            "ref": "CIN",
+            "at": [
+              4,
+              7
+            ],
+            "label": "CIN 10 µF"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              8
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              12,
+              0
+            ],
+            "rot": 90,
+            "label": "RC\n{Rc}"
+          },
+          {
+            "ref": "RE",
+            "at": [
+              12,
+              10
+            ],
+            "rot": 90,
+            "label": "RE\n{Re}"
+          },
+          {
+            "ref": "CE",
+            "at": [
+              16,
+              10
+            ],
+            "rot": 90,
+            "label": "CE\n100 µF"
+          },
+          {
+            "ref": "COUT",
+            "at": [
+              12,
+              6
+            ],
+            "label": ""
+          },
+          {
+            "ref": "RL",
+            "at": [
+              20,
+              6
+            ],
+            "rot": 90,
+            "label": "RL\n100 kΩ"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              10,
+              8
+            ],
+            "label": "Q1"
+          }
+        ],
+        "wires": [
+          [
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              12,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              4
+            ],
+            [
+              8,
+              8
+            ],
+            [
+              10,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              12,
+              6
+            ]
+          ],
+          [
+            [
+              12,
+              10
+            ],
+            [
+              16,
+              10
+            ]
+          ],
+          [
+            [
+              16,
+              6
+            ],
+            [
+              20,
+              6
+            ]
+          ],
+          [
+            [
+              4,
+              10
+            ],
+            [
+              4,
+              7
+            ]
+          ],
+          [
+            [
+              2,
+              6
+            ],
+            [
+              2,
+              14
+            ],
+            [
+              8,
+              14
+            ]
+          ],
+          [
+            [
+              8,
+              12
+            ],
+            [
+              8,
+              14
+            ],
+            [
+              20,
+              14
+            ],
+            [
+              20,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            14
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              18,
+              6
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              8,
+              6
+            ]
+          },
+          {
+            "text": "c",
+            "at": [
+              12,
+              5
+            ]
+          },
+          {
+            "text": "e",
+            "at": [
+              14,
+              10
+            ]
+          }
+        ]
+      },
+      "showDc": true,
+      "topics": [
+        "bjt_amplifiers",
+        "bjt_bias"
+      ],
+      "lab": [
+        {
+          "set": {
+            "Re": "2.2k"
+          },
+          "label": "Raise R_E to 2.2 kΩ. The base sits near 2.1 V. What DC voltage will the emitter settle at (average V(e))?",
+          "measure": "avg:v(e)",
+          "unit": "V",
+          "tolerance": 0.05,
+          "explain": "V_E = V_B − V_BE ≈ 2.1 − 0.65 ≈ 1.4 V, almost the same as with R_E = 1 kΩ (1.37 V). R_E sets the current, not the emitter voltage."
+        },
+        {
+          "set": {
+            "Re": "2.2k"
+          },
+          "label": "Still R_E = 2.2 kΩ: with I_C ≈ V_E/R_E, what is the average collector voltage, V(c)?",
+          "measure": "avg:v(c)",
+          "unit": "V",
+          "tolerance": 0.05,
+          "explain": "I_C ≈ V_E/R_E = 1.43 V/2.2 kΩ ≈ 0.65 mA, so R_C drops about 3.0 V and V_C ≈ 12 − 3.0 = 9.0 V."
+        }
+      ]
+    },
+    {
+      "id": "opamp_inverting",
+      "title": "Inverting amplifier with a real op amp",
+      "summary": "Gain −Rf/Rin until the op amp runs out of gain-bandwidth, slew rate or supply voltage.",
+      "params": [
+        {
+          "name": "Vin",
+          "label": "Input amplitude",
+          "unit": "V",
+          "value": "0.5"
+        },
+        {
+          "name": "f",
+          "label": "Frequency",
+          "unit": "Hz",
+          "value": "1k"
+        },
+        {
+          "name": "Rin",
+          "label": "R_in",
+          "unit": "Ω",
+          "value": "1k"
+        },
+        {
+          "name": "Rf",
+          "label": "R_f",
+          "unit": "Ω",
+          "value": "10k"
+        },
+        {
+          "name": "GBW",
+          "label": "Gain-bandwidth",
+          "unit": "Hz",
+          "value": "1meg"
+        },
+        {
+          "name": "SR",
+          "label": "Slew rate",
+          "unit": "V/s",
+          "value": "500k"
+        }
+      ],
+      "derived": [
+        {
+          "name": "tstop",
+          "formula": "3/f"
+        },
+        {
+          "name": "tstep",
+          "formula": "1/(200*f)"
+        }
+      ],
+      "netlist": "Inverting amplifier\nV1 in 0 SIN(0 {Vin} {f}) AC 1\nR1 in inv {Rin}\nR2 inv out {Rf}\nX1 0 inv out OA\n.model OA OPAMP(A=1e5 GBW={GBW} SR={SR} VPOS=15 VNEG=-15 VHEAD=1.5)\n.tran {tstep} {tstop}\n.ac dec 20 10 10meg\n",
+      "probes": [
+        "in",
+        "out"
+      ],
+      "predict": {
+        "label": "Before you simulate: what is the peak output voltage?",
+        "measure": "max:v(out)",
+        "unit": "V",
+        "tolerance": 0.05,
+        "explain": "The gain is −R_f/R_in = −10, so the 0.5 V peak input gives 5 V peak (inverted). At 1 kHz the op amp has gain-bandwidth to spare, and the output's fastest slope, 2π·1 kHz·5 V ≈ 31 kV/s, is far below the 500 kV/s slew rate."
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "V1\n{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rin\n{Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf\n{Rf}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ]
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "showDc": true,
+      "lab": [
+        {
+          "set": {
+            "Rf": "47k"
+          },
+          "label": "Raise Rf to 47 kΩ (gain −47) with the 0.5 V input. The op amp runs from ±15 V, and like most op amps its output saturates about 1.5 V inside each rail. What peak output will you see?",
+          "measure": "max:v(out)",
+          "unit": "V",
+          "tolerance": 0.05,
+          "explain": "The ideal output, 47·0.5 = 23.5 V peak, would need more than the supply. The output saturates 1.5 V inside each rail, so the sine is clipped flat at about +13.5 V and −13.5 V."
+        },
+        {
+          "set": {
+            "Rf": "100k",
+            "Vin": "0.05"
+          },
+          "label": "Rf = 100 kΩ (gain −100) and a 50 mV input. With GBW = 1 MHz, what is the −3 dB bandwidth?",
+          "measure": "f3db:v(out)",
+          "unit": "Hz",
+          "tolerance": 0.1,
+          "explain": "Bandwidth ≈ GBW/noise gain = 1 MHz/(1 + 100k/1k) ≈ 9.9 kHz."
+        }
+      ],
+      "topics": [
+        "opamp_inverting",
+        "opamp_bandwidth",
+        "opamp_slew_rate"
+      ]
+    },
+    {
+      "id": "mosfet_flyback",
+      "title": "MOSFET switch with inductive load",
+      "summary": "A low-side MOSFET chops current through a coil; when the switch opens, the flyback diode D1 (through the clamp resistor RS) carries the coil current. C_oss is the MOSFET's own drain-to-source capacitance, and DB its body diode.",
+      "params": [
+        {
+          "name": "Vdd",
+          "label": "Supply",
+          "unit": "V",
+          "value": "12"
+        },
+        {
+          "name": "L",
+          "label": "Coil inductance",
+          "unit": "H",
+          "value": "10m"
+        },
+        {
+          "name": "Rs",
+          "label": "Clamp resistor RS",
+          "unit": "Ω",
+          "value": "0.1"
+        },
+        {
+          "name": "RL",
+          "label": "Coil resistance",
+          "unit": "Ω",
+          "value": "10"
+        },
+        {
+          "name": "f",
+          "label": "Switching frequency",
+          "unit": "Hz",
+          "value": "1k"
+        },
+        {
+          "name": "D",
+          "label": "Duty cycle",
+          "unit": "",
+          "value": "0.5"
+        }
+      ],
+      "derived": [
+        {
+          "name": "period",
+          "formula": "1/f"
+        },
+        {
+          "name": "ton",
+          "formula": "D/f"
+        },
+        {
+          "name": "tstop",
+          "formula": "5/f"
+        },
+        {
+          "name": "tstep",
+          "formula": "1/(400*f)"
+        }
+      ],
+      "netlist": "MOSFET flyback\nVDD vdd 0 {Vdd}\nVG g 0 PULSE(0 10 0 100n 100n {ton} {period})\nL1 vdd a {L}\nRL a d {RL}\nD1 d k DF\nRS vdd k {Rs}\nCOSS d 0 220p\nM1 d g 0 NM\nDB 0 d DBODY\n.model NM NMOS(VTO=2 KP=5)\n.model DF D(IS=1n N=1.5)\n.model DBODY D(IS=1e-12 N=1)\n.tran {tstep} {tstop}\n",
+      "probes": [
+        "d",
+        "I(L1)"
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "VDD",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "VDD\n{Vdd}"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              6,
+              2
+            ],
+            "rot": 90,
+            "label": "L1\n{L}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              6,
+              6
+            ],
+            "rot": 90,
+            "label": "RL\n{RL}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              10,
+              10
+            ],
+            "rot": 270,
+            "label": "D1"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "RS\n{Rs}"
+          },
+          {
+            "ref": "COSS",
+            "at": [
+              19,
+              10
+            ],
+            "rot": 90,
+            "label": "C_oss\n220p"
+          },
+          {
+            "ref": "M1",
+            "at": [
+              4,
+              12
+            ],
+            "label": "M1"
+          },
+          {
+            "ref": "VG",
+            "at": [
+              1,
+              12
+            ],
+            "rot": 90,
+            "label": "VG"
+          },
+          {
+            "ref": "DB",
+            "at": [
+              12,
+              14
+            ],
+            "rot": 270,
+            "label": "DB\nbody diode"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          [
+            [
+              6,
+              10
+            ],
+            [
+              10,
+              10
+            ]
+          ],
+          [
+            [
+              10,
+              10
+            ],
+            [
+              12,
+              10
+            ]
+          ],
+          [
+            [
+              12,
+              10
+            ],
+            [
+              19,
+              10
+            ]
+          ],
+          [
+            [
+              1,
+              12
+            ],
+            [
+              4,
+              12
+            ]
+          ],
+          [
+            [
+              6,
+              14
+            ],
+            [
+              6,
+              16
+            ]
+          ],
+          [
+            [
+              1,
+              16
+            ],
+            [
+              6,
+              16
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            12,
+            14
+          ],
+          [
+            19,
+            14
+          ]
+        ],
+        "labels": [
+          {
+            "text": "d",
+            "at": [
+              8,
+              10
+            ]
+          }
+        ]
+      },
+      "topics": [
+        "mosfet_switching",
+        "diode_practical"
+      ],
+      "lab": [
+        {
+          "set": {},
+          "label": "With D1 clamping the coil (RS = 0.1 Ω), how high does the drain voltage go when the MOSFET turns off?",
+          "measure": "max:v(d)",
+          "unit": "V",
+          "tolerance": 0.03,
+          "explain": "The coil's current (about 0.7 A by the end of each on-time, once the cycles settle) cannot stop instantly: v = L·di/dt. When the MOSFET opens, the drain rises until D1 conducts and the current has a path again, through RL, D1 and RS back to the top of the coil. That holds the drain at V_DD + V_D + I·RS = 12 + 0.79 + 0.07 ≈ 12.9 V. The circulating current then decays with τ = L/(RL + RS) ≈ 1 ms, so about 0.4 A is still flowing when the MOSFET turns on again."
+        },
+        {
+          "set": {
+            "Rs": "1meg"
+          },
+          "label": "Set RS to 1 MΩ: D1's path is now practically open, as if the diode were removed, and only the MOSFET's 220 pF C_oss can take the coil current. How high does the drain go now?",
+          "measure": "max:v(d)",
+          "unit": "V",
+          "tolerance": 0.1,
+          "explain": "With nowhere else to go, the current charges C_oss. Each on-time now starts from zero (there is no clamp loop for the current to circulate in, and the swing back below ground is caught by the MOSFET's body diode), so the current reaches (12 V/10 Ω)(1 − e^(−0.5 ms/1 ms)) = 0.47 A, storing ½LI² = ½ × 10 mH × (0.47 A)² ≈ 1.1 mJ. That energy moves into the capacitor: ½C·V² = ½L·I², so the drain swings I·√(L/C) = 0.47 A × √(10 mH/220 pF) ≈ 0.47 A × 6.7 kΩ ≈ 3.2 kV above the 12 V supply. A real MOSFET never gets there: it breaks down (avalanches) at or a little above its V_DS rating and must absorb at least that 1.1 mJ itself on every cycle (more, because the supply keeps feeding the coil during the avalanche), over 1 W at 1 kHz. Unless the part is rated for that repetitive avalanche energy, it overheats and fails. The flyback diode gives that energy a safe path."
+        },
+        {
+          "set": {
+            "Rs": "100"
+          },
+          "label": "Now RS = 100 Ω: the diode conducts again, but through 100 Ω. How high does the drain go?",
+          "measure": "max:v(d)",
+          "unit": "V",
+          "tolerance": 0.05,
+          "explain": "At turn-off the coil's 0.47 A has to flow through RS, so the drain rises to V_DD + V_D + I·RS = 12 + 0.77 + 47 ≈ 60 V. In exchange, the current decays with τ = L/(RL + RS) = 10 mH/110 Ω ≈ 91 µs instead of about 1 ms, so it reaches zero well within the 0.5 ms off-time. This is a real design trade-off: a resistor or Zener diode in series with the flyback diode makes a relay release faster, but the MOSFET must be rated for the higher spike."
+        },
+        {
+          "set": {
+            "Rs": "0.1",
+            "L": "100m"
+          },
+          "label": "Back to RS = 0.1 Ω, with a coil ten times larger: L = 100 mH. How high does the drain go now?",
+          "measure": "max:v(d)",
+          "unit": "V",
+          "tolerance": 0.03,
+          "explain": "Still about V_DD + V_D ≈ 12.8 V. With a clamp, the diode sets the spike's height, not the coil. The coil sets the timing: τ = L/RL = 100 mH/10 Ω = 10 ms, ten times longer. The current climbs only about 50–60 mA per on-time (di/dt ≈ 12 V/100 mH = 120 A/s at first, less as I·RL grows), loses only about 7–14 mA per off-time, and is still building up (0.23 A) when this 5 ms run ends. A larger coil holds its energy ½LI² for longer, and through a plain diode that energy takes several L/R to die away. That is why a big relay clamped by a diode alone releases slowly."
+        }
+      ]
+    },
+    {
+      "id": "zener_regulator",
+      "title": "Zener regulator",
+      "summary": "Sweep the input: while the divider output V_in·R_L/(R_S+R_L) is below V_Z the Zener is off and the output follows it; once it would exceed V_Z, the Zener conducts and the output flattens at about V_Z.",
+      "params": [
+        {
+          "name": "Vz",
+          "label": "Zener voltage",
+          "unit": "V",
+          "value": "5.1"
+        },
+        {
+          "name": "Rs",
+          "label": "Series R",
+          "unit": "Ω",
+          "value": "220"
+        },
+        {
+          "name": "RL",
+          "label": "Load",
+          "unit": "Ω",
+          "value": "1k"
+        },
+        {
+          "name": "Vmax",
+          "label": "Sweep up to",
+          "unit": "V",
+          "value": "15"
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vstep",
+          "formula": "Vmax/150"
+        }
+      ],
+      "netlist": "Zener regulator\nVIN in 0 0\nRS in out {Rs}\nDZ 0 out DZ\nRL out 0 {RL}\n.model DZ D(IS=1e-14 BV={Vz} IBV=5m)\n.dc VIN 0 {Vmax} {Vstep}\n",
+      "probes": [
+        "in",
+        "out"
+      ],
+      "predict": {
+        "label": "Before you simulate: what will V(out) be at the top of the sweep?",
+        "measure": "final:v(out)",
+        "unit": "V",
+        "tolerance": 0.03,
+        "explain": "Without the Zener the divider would give 15·1k/1.22k ≈ 12.3 V, far above V_Z, so the Zener conducts and takes whatever current holds the output near 5.1 V. R_S drops the rest, about 9.9 V."
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "VIN\n0–{Vmax}"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              2,
+              0
+            ],
+            "label": "RS\n{Rs}"
+          },
+          {
+            "ref": "DZ",
+            "at": [
+              8,
+              6
+            ],
+            "rot": 270,
+            "label": "DZ\n{Vz}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "RL\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              10,
+              0
+            ]
+          }
+        ]
+      },
+      "lab": [
+        {
+          "set": {
+            "RL": "100"
+          },
+          "label": "A much heavier load: RL = 100 Ω. What will V(out) be at the top of the 15 V sweep?",
+          "measure": "final:v(out)",
+          "unit": "V",
+          "tolerance": 0.03,
+          "explain": "With R_L = 100 Ω the divider alone gives 15·100/320 = 4.69 V, below V_Z, so the Zener never conducts."
+        },
+        {
+          "set": {
+            "RL": "100",
+            "Rs": "100"
+          },
+          "label": "Keep RL = 100 Ω and lower the series resistor to 100 Ω. V(out) at 15 V now? (R_S now dissipates about 1 W: size it accordingly.)",
+          "measure": "final:v(out)",
+          "unit": "V",
+          "tolerance": 0.03,
+          "explain": "The divider alone would now give 15·100/200 = 7.5 V, above V_Z, so the Zener conducts and clamps the output near 5.1 V (5.16 V). R_S carries (15 − 5.16)/100 ≈ 98 mA: 52 mA to the load, the rest through the Zener."
+        }
+      ],
+      "topics": [
+        "diode_practical",
+        "app_power_supply"
+      ]
+    },
+    {
+      "id": "schmitt",
+      "title": "Schmitt trigger vs plain comparator",
+      "summary": "The same sine, with a 50× faster interfering tone added, drives a plain comparator (it chatters at each crossing) and a Schmitt trigger (it switches once).",
+      "params": [
+        {
+          "name": "A",
+          "label": "Signal amplitude",
+          "unit": "V",
+          "value": "1"
+        },
+        {
+          "name": "f",
+          "label": "Signal frequency",
+          "unit": "Hz",
+          "value": "100"
+        },
+        {
+          "name": "An",
+          "label": "Interference amplitude (tone at 50 f)",
+          "unit": "V",
+          "value": "100m"
+        },
+        {
+          "name": "R1",
+          "label": "R1 (input)",
+          "unit": "Ω",
+          "value": "10k"
+        },
+        {
+          "name": "R2",
+          "label": "R2 (feedback)",
+          "unit": "Ω",
+          "value": "100k"
+        }
+      ],
+      "derived": [
+        {
+          "name": "fn",
+          "formula": "50*f"
+        },
+        {
+          "name": "tstop",
+          "formula": "2/f"
+        },
+        {
+          "name": "tstep",
+          "formula": "1/(20*fn)"
+        }
+      ],
+      "netlist": "Schmitt trigger\nVS s 0 SIN(0 {A} {f})\nVN in s SIN(0 {An} {fn})\nX1 in 0 cmp OA\nR1 in p {R1}\nR2 p sch {R2}\nX2 p 0 sch OA\n.model OA OPAMP(A=1e5 GBW=10meg SR=1meg VPOS=5 VNEG=-5)\n.tran {tstep} {tstop}\n",
+      "probes": [
+        "in",
+        "cmp",
+        "sch"
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              8
+            ],
+            "rot": 90,
+            "label": "VS\n{A}"
+          },
+          {
+            "ref": "VN",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "VN\nnoise"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              5,
+              1
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              -2
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "X2",
+            "at": [
+              10,
+              2
+            ],
+            "flip": true,
+            "label": "Schmitt"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              10,
+              8
+            ],
+            "flip": true,
+            "label": "comparator"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              5,
+              1
+            ]
+          ],
+          [
+            [
+              9,
+              1
+            ],
+            [
+              10,
+              1
+            ]
+          ],
+          [
+            [
+              9,
+              1
+            ],
+            [
+              9,
+              -2
+            ],
+            [
+              10,
+              -2
+            ]
+          ],
+          [
+            [
+              14,
+              -2
+            ],
+            [
+              15,
+              -2
+            ],
+            [
+              15,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              2
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              10,
+              3
+            ],
+            [
+              9,
+              3
+            ],
+            [
+              9,
+              5
+            ]
+          ],
+          [
+            [
+              4,
+              1
+            ],
+            [
+              4,
+              7
+            ],
+            [
+              10,
+              7
+            ]
+          ],
+          [
+            [
+              10,
+              9
+            ],
+            [
+              9,
+              9
+            ],
+            [
+              9,
+              11
+            ]
+          ],
+          [
+            [
+              14,
+              8
+            ],
+            [
+              16,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            12
+          ],
+          [
+            9,
+            5
+          ],
+          [
+            9,
+            11
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              4,
+              4
+            ]
+          },
+          {
+            "text": "sch",
+            "at": [
+              16,
+              2
+            ]
+          },
+          {
+            "text": "cmp",
+            "at": [
+              16,
+              8
+            ]
+          }
+        ]
+      },
+      "topics": [
+        "opamp_comparator"
+      ],
+      "lab": [
+        {
+          "set": {},
+          "label": "First the plain comparator. The 1 V sine now carries a 0.1 V interfering tone at 50 times its frequency. A clean sine would make it switch twice per period, once at each zero crossing. With the interference, how many times does it switch per period? (An estimate is enough: within 50% counts.)",
+          "measure": "edges:v(cmp)",
+          "unit": "",
+          "tolerance": 0.5,
+          "explain": "A comparator without hysteresis switches every time its input crosses 0 V. Near each zero crossing the sine changes slowly (slope 2πf·1 V), while the tone's slope reaches 2π·50f·0.1 V, five times steeper. So the tone drags the sum back and forth across zero for as long as the sine is within 0.1 V of zero: about ±0.1 rad, 1.6 cycles of the tone. The sum ends on the opposite side from where it started, so each clean crossing becomes an odd number of crossings. Here both sources start at phase 0, and solving sin x + 0.1·sin 50x = 0 gives 5 crossings around the rising zero crossing and 3 around the falling one: 8 switches per period instead of 2. The exact count depends on the tone's phase at each crossing; the mechanism does not."
+        },
+        {
+          "set": {},
+          "label": "Now the Schmitt trigger. The op amps run from ±5 V, so V_sat = 5 V and the Schmitt thresholds are ±V_sat·R1/R2 = ±0.5 V. How many times does its output switch during one period of the signal?",
+          "measure": "edges:v(sch)",
+          "unit": "",
+          "tolerance": 0.01,
+          "explain": "Once the output switches, the threshold moves to the other side of zero by 0.5 V. The ±0.1 V interference cannot bring the input back across it."
+        },
+        {
+          "set": {
+            "R2": "20k"
+          },
+          "label": "Lower R2 to 20 kΩ. How many times does the Schmitt output switch per period now?",
+          "measure": "edges:v(sch)",
+          "unit": "",
+          "tolerance": 0.01,
+          "explain": "The thresholds are now ±5·10k/20k = ±2.5 V. The input peaks at only about 1.1 V, so it never reaches either threshold and the output never changes state."
+        },
+        {
+          "set": {
+            "R2": "100k",
+            "An": "300m"
+          },
+          "label": "Back to R2 = 100 kΩ (±0.5 V), with three times the interference (0.3 V). How many switches per period?",
+          "measure": "edges:v(sch)",
+          "unit": "",
+          "tolerance": 0.01,
+          "explain": "The interference is 0.6 V peak to peak, still less than the 1 V gap between the thresholds."
+        }
+      ]
+    },
+    {
+      "id": "h_bridge",
+      "title": "H-bridge motor driver",
+      "summary": "Two half-bridges drive a motor (modeled as L and R). Swapping which diagonal is on reverses the current. Real drivers add a short dead time between turning one transistor off and its partner on; without it both conduct for an instant and short the supply (shoot-through).",
+      "params": [
+        {
+          "name": "Vdd",
+          "label": "Supply",
+          "unit": "V",
+          "value": "12"
+        },
+        {
+          "name": "Rm",
+          "label": "Motor resistance",
+          "unit": "Ω",
+          "value": "4"
+        },
+        {
+          "name": "Lm",
+          "label": "Motor inductance",
+          "unit": "H",
+          "value": "1m"
+        },
+        {
+          "name": "f",
+          "label": "Reversal rate",
+          "unit": "Hz",
+          "value": "200"
+        }
+      ],
+      "derived": [
+        {
+          "name": "period",
+          "formula": "1/f"
+        },
+        {
+          "name": "thalf",
+          "formula": "0.5/f"
+        },
+        {
+          "name": "tstop",
+          "formula": "6/f"
+        },
+        {
+          "name": "tstep",
+          "formula": "1/(400*f)"
+        }
+      ],
+      "netlist": "H-bridge\nVDD vdd 0 {Vdd}\nMP1 a gl vdd PM\nMN1 a gl 0 NM\nMP2 b gr vdd PM\nMN2 b gr 0 NM\nLM a m {Lm}\nRM m b {Rm}\nVGL gl 0 PULSE({Vdd} 0 0 1u 1u {thalf} {period})\nVGR gr 0 PULSE(0 {Vdd} 0 1u 1u {thalf} {period})\n.model NM NMOS(VTO=2 KP=5)\n.model PM PMOS(VTO=-2 KP=5)\n.tran {tstep} {tstop}\n",
+      "probes": [
+        "a",
+        "b",
+        "I(LM)"
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "VDD",
+            "at": [
+              -2,
+              2
+            ],
+            "rot": 90,
+            "label": "VDD\n{Vdd}"
+          },
+          {
+            "ref": "MP1",
+            "at": [
+              4,
+              3
+            ],
+            "label": "MP1"
+          },
+          {
+            "ref": "MN1",
+            "at": [
+              4,
+              11
+            ],
+            "label": "MN1"
+          },
+          {
+            "ref": "MP2",
+            "at": [
+              16,
+              3
+            ],
+            "flip": true,
+            "label": "MP2"
+          },
+          {
+            "ref": "MN2",
+            "at": [
+              16,
+              11
+            ],
+            "flip": true,
+            "label": "MN2"
+          },
+          {
+            "ref": "LM",
+            "at": [
+              6,
+              7
+            ],
+            "label": "LM {Lm}"
+          },
+          {
+            "ref": "RM",
+            "at": [
+              10,
+              7
+            ],
+            "label": "RM {Rm}"
+          },
+          {
+            "ref": "VGL",
+            "at": [
+              2,
+              12
+            ],
+            "rot": 90,
+            "label": "VGL"
+          },
+          {
+            "ref": "VGR",
+            "at": [
+              18,
+              12
+            ],
+            "rot": 90,
+            "label": "VGR"
+          }
+        ],
+        "wires": [
+          [
+            [
+              -2,
+              2
+            ],
+            [
+              -2,
+              0
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              1
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          [
+            [
+              6,
+              5
+            ],
+            [
+              6,
+              9
+            ]
+          ],
+          [
+            [
+              14,
+              5
+            ],
+            [
+              14,
+              9
+            ]
+          ],
+          [
+            [
+              4,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              12
+            ]
+          ],
+          [
+            [
+              2,
+              11
+            ],
+            [
+              4,
+              11
+            ]
+          ],
+          [
+            [
+              16,
+              3
+            ],
+            [
+              18,
+              3
+            ],
+            [
+              18,
+              12
+            ]
+          ],
+          [
+            [
+              18,
+              11
+            ],
+            [
+              16,
+              11
+            ]
+          ],
+          [
+            [
+              6,
+              13
+            ],
+            [
+              6,
+              14
+            ],
+            [
+              14,
+              14
+            ],
+            [
+              14,
+              13
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            -2,
+            6
+          ],
+          [
+            10,
+            14
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            18,
+            16
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              6,
+              7
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              14,
+              7
+            ]
+          }
+        ]
+      },
+      "topics": [
+        "h_bridge"
+      ],
+      "lab": [
+        {
+          "set": {
+            "Rm": "2"
+          },
+          "label": "Halve the motor's winding resistance to 2 Ω (still 1 mH, 12 V, 200 Hz). What peak current flows now? (Each MOSFET is about 0.02 Ω when on.)",
+          "measure": "max:i(LM)",
+          "unit": "A",
+          "tolerance": 0.1,
+          "explain": "Steady current = V/(R_m + 2R_on) = 12/2.04 ≈ 5.9 A. With τ = L/R ≈ 0.5 ms and 2.5 ms per direction, the current gets within about 1% of it (5.8 A)."
+        },
+        {
+          "set": {
+            "Rm": "4",
+            "f": "2k"
+          },
+          "label": "Back to 4 Ω, but reverse ten times faster: 2 kHz. With L/R = 0.25 ms, does the current still reach 3 A? What peak do you expect? (In steady state the current swings symmetrically between −I_pk and +I_pk.)",
+          "measure": "max:i(LM)",
+          "unit": "A",
+          "tolerance": 0.15,
+          "explain": "Each half-period (0.25 ms) is only about one τ, so the current never settles. In steady state it swings symmetrically between ±I·tanh(t_half/2τ) = ±2.97 A·tanh(0.5) ≈ ±1.4 A."
+        }
+      ]
+    },
+    {
+      "id": "buck",
+      "title": "Buck converter",
+      "summary": "A PMOS switch chops the input, a diode freewheels the inductor current, and the LC filter averages it: V_out ≈ D·V_in.",
+      "params": [
+        {
+          "name": "Vin",
+          "label": "Input",
+          "unit": "V",
+          "value": "12"
+        },
+        {
+          "name": "D",
+          "label": "Duty cycle",
+          "unit": "",
+          "value": "0.5"
+        },
+        {
+          "name": "f",
+          "label": "Switching frequency",
+          "unit": "Hz",
+          "value": "100k"
+        },
+        {
+          "name": "L",
+          "label": "Inductor",
+          "unit": "H",
+          "value": "47u"
+        },
+        {
+          "name": "C",
+          "label": "Capacitor",
+          "unit": "F",
+          "value": "47u"
+        },
+        {
+          "name": "RL",
+          "label": "Load",
+          "unit": "Ω",
+          "value": "5"
+        }
+      ],
+      "derived": [
+        {
+          "name": "period",
+          "formula": "1/f"
+        },
+        {
+          "name": "ton",
+          "formula": "D/f"
+        },
+        {
+          "name": "tstop",
+          "formula": "150/f"
+        },
+        {
+          "name": "tstep",
+          "formula": "1/(40*f)"
+        }
+      ],
+      "netlist": "Buck converter\nVIN in 0 {Vin}\nMP sw g in PM\nVG g 0 PULSE({Vin} 0 0 10n 10n {ton} {period})\nD1 0 sw DS\nL1 sw out {L}\nC1 out 0 {C}\nRL out 0 {RL}\n.model PM PMOS(VTO=-2 KP=10)\n.model DS D(IS=1e-9 N=1)\n.tran {tstep} {tstop}\n",
+      "probes": [
+        "sw",
+        "out",
+        "I(L1)"
+      ],
+      "predict": {
+        "label": "Before you simulate: what average output voltage do you expect?",
+        "measure": "avg:v(out)",
+        "unit": "V",
+        "tolerance": 0.08,
+        "explain": "While the switch is on, sw sits at V_in; while it is off, the freewheeling diode holds sw about 0.5 V below ground. The LC filter passes the average: V_out ≈ D·V_in − (1−D)·V_D = 6 − 0.5·0.5 ≈ 5.75 V."
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              -3,
+              2
+            ],
+            "rot": 90,
+            "label": "VIN\n{Vin}"
+          },
+          {
+            "ref": "MP",
+            "at": [
+              4,
+              4
+            ],
+            "label": "MP"
+          },
+          {
+            "ref": "VG",
+            "at": [
+              2,
+              6
+            ],
+            "rot": 90,
+            "label": "VG"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              6,
+              12
+            ],
+            "rot": 270,
+            "label": "D1"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              8
+            ],
+            "label": "L1\n{L}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              14,
+              8
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              19,
+              8
+            ],
+            "rot": 90,
+            "label": "RL\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              -3,
+              2
+            ],
+            [
+              -3,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          [
+            [
+              6,
+              6
+            ],
+            [
+              6,
+              8
+            ],
+            [
+              8,
+              8
+            ]
+          ],
+          [
+            [
+              4,
+              4
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              2,
+              6
+            ]
+          ],
+          [
+            [
+              12,
+              8
+            ],
+            [
+              19,
+              8
+            ]
+          ],
+          [
+            [
+              6,
+              12
+            ],
+            [
+              19,
+              12
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            -3,
+            6
+          ],
+          [
+            2,
+            10
+          ],
+          [
+            10,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "sw",
+            "at": [
+              7,
+              8
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              16,
+              8
+            ]
+          }
+        ]
+      },
+      "topics": [
+        "switching_supplies"
+      ],
+      "lab": [
+        {
+          "set": {
+            "D": "0.25"
+          },
+          "label": "Set the duty cycle to 0.25. Roughly what average output voltage will the buck give? (Its diode drops about 0.5 V while it conducts.)",
+          "measure": "avg:v(out)",
+          "unit": "V",
+          "tolerance": 0.1,
+          "explain": "V_out ≈ D·V_in − (1−D)·V_D = 3 − 0.75·0.5 ≈ 2.6 V."
+        }
+      ]
+    },
+    {
+      "id": "diode_iv",
+      "title": "Diode I–V curve",
+      "summary": "Sweep the voltage across a silicon diode and watch the current. On a linear axis it looks like almost nothing, then a sharp rise; in fact it grows tenfold for every 60 mV (at n = 1) everywhere above about 0.1 V. VM is a 0 V source used as an ammeter, a standard SPICE trick.",
+      "params": [
+        {
+          "name": "Is",
+          "label": "Saturation current I_S",
+          "unit": "A",
+          "value": "10f"
+        },
+        {
+          "name": "N",
+          "label": "Emission coefficient n",
+          "unit": "",
+          "value": "1"
+        },
+        {
+          "name": "Vmax",
+          "label": "Sweep up to",
+          "unit": "V",
+          "value": "0.7"
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vstep",
+          "formula": "Vmax/160"
+        }
+      ],
+      "netlist": "Diode I-V curve\nVD a 0 0\nVM a k 0\nD1 k 0 DX\n.model DX D(IS={Is} N={N})\n.dc VD 0 {Vmax} {Vstep}\n",
+      "probes": [
+        "I(VM)"
+      ],
+      "predict": {
+        "label": "Before you simulate: how much current flows at the top of the sweep? (I_S = 10 fA, n = 1, V_T = 25.85 mV)",
+        "measure": "final:i(VM)",
+        "unit": "A",
+        "tolerance": 0.25,
+        "explain": "I = I_S·(e^(V/nV_T) − 1) = 10 fA·e^(0.7/0.02585) = 10 fA·e^27.1 ≈ 5.7 mA. The exponent, not I_S, does almost all the work."
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "VD",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "VD\nswept"
+          },
+          {
+            "ref": "VM",
+            "at": [
+              2,
+              0
+            ],
+            "label": "VM (0 V ammeter)"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "D1"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "topics": [
+        "diode_models",
+        "pn_junction"
+      ],
+      "lab": [
+        {
+          "set": {
+            "Vmax": "0.6"
+          },
+          "label": "Sweep only to 0.6 V: 0.1 V less than before (I_S = 10 fA, n = 1). How much current flows at the top now?",
+          "measure": "final:i(VM)",
+          "unit": "A",
+          "tolerance": 0.25,
+          "explain": "At n = 1 the current falls tenfold for every 59.5 mV: 0.1 V lower is ÷48."
+        },
+        {
+          "set": {
+            "N": "2"
+          },
+          "label": "Keep 0.6 V and set the emission coefficient n = 2. Current at 0.6 V? (Model experiment: a real diode with n = 2 would also have a far larger I_S.)",
+          "measure": "final:i(VM)",
+          "unit": "A",
+          "tolerance": 0.25,
+          "explain": "n = 2 doubles the voltage per decade, so the exponent halves: I = I_S·e^(0.6/0.0517) ≈ 1.1 nA."
+        }
+      ]
+    },
+    {
+      "id": "mosfet_transfer",
+      "title": "MOSFET transfer curve",
+      "summary": "Sweep V_GS with V_DS held high: no current below the threshold, then I_D = K(V_GS − V_t)² in saturation.",
+      "params": [
+        {
+          "name": "Vt",
+          "label": "Threshold V_t",
+          "unit": "V",
+          "value": "2"
+        },
+        {
+          "name": "K",
+          "label": "K (A/V²)",
+          "unit": "",
+          "value": "2m"
+        },
+        {
+          "name": "Vds",
+          "label": "Drain supply",
+          "unit": "V",
+          "value": "10"
+        },
+        {
+          "name": "Vgmax",
+          "label": "Sweep V_GS up to",
+          "unit": "V",
+          "value": "5"
+        }
+      ],
+      "derived": [
+        {
+          "name": "KP",
+          "formula": "2*K"
+        },
+        {
+          "name": "Vstep",
+          "formula": "Vgmax/100"
+        }
+      ],
+      "netlist": "MOSFET transfer curve\nVGS g 0 0\nVDD dd 0 {Vds}\nVM dd d 0\nM1 d g 0 NM\n.model NM NMOS(VTO={Vt} KP={KP})\n.dc VGS 0 {Vgmax} {Vstep}\n",
+      "probes": [
+        "I(VM)"
+      ],
+      "predict": {
+        "label": "Before you simulate: what drain current flows at the top of the sweep?",
+        "measure": "final:i(VM)",
+        "unit": "A",
+        "tolerance": 0.05,
+        "explain": "With V_DS = 10 V the MOSFET is in saturation, so I_D = K(V_GS − V_t)² = 2 mA/V²·(5 − 2)² = 18 mA."
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "M1",
+            "at": [
+              6,
+              6
+            ],
+            "label": "M1"
+          },
+          {
+            "ref": "VGS",
+            "at": [
+              3,
+              8
+            ],
+            "rot": 90,
+            "label": "V_GS\nswept"
+          },
+          {
+            "ref": "VM",
+            "at": [
+              8,
+              0
+            ],
+            "rot": 90,
+            "label": "VM\n0 V"
+          },
+          {
+            "ref": "VDD",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vds}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              3,
+              8
+            ],
+            [
+              3,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ],
+          [
+            [
+              12,
+              2
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            3,
+            12
+          ],
+          [
+            8,
+            8
+          ],
+          [
+            12,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "topics": [
+        "mosfet_intro"
+      ],
+      "lab": [
+        {
+          "set": {
+            "Vt": "1"
+          },
+          "label": "Lower the threshold to 1 V (K = 2 mA/V²). What drain current flows at V_GS = 5 V?",
+          "measure": "final:i(VM)",
+          "unit": "A",
+          "tolerance": 0.03,
+          "explain": "(5−1)² = 16 vs (5−2)² = 9: 32 mA."
+        },
+        {
+          "set": {
+            "K": "4m"
+          },
+          "label": "Keep V_t = 1 V and double K to 4 mA/V². Drain current at V_GS = 5 V?",
+          "measure": "final:i(VM)",
+          "unit": "A",
+          "tolerance": 0.03,
+          "explain": "I_D is proportional to K: 64 mA."
+        }
+      ]
+    },
+    {
+      "id": "emitter_follower",
+      "title": "Emitter follower",
+      "summary": "The emitter follows the base about 0.7 V lower, with a gain just under 1. Its input draws only I_E/(β+1), so a weak source can drive a heavy load.",
+      "params": [
+        {
+          "name": "Vb",
+          "label": "Input DC level",
+          "unit": "V",
+          "value": "6"
+        },
+        {
+          "name": "Vs",
+          "label": "Input amplitude",
+          "unit": "V",
+          "value": "2"
+        },
+        {
+          "name": "f",
+          "label": "Frequency",
+          "unit": "Hz",
+          "value": "1k"
+        },
+        {
+          "name": "Re",
+          "label": "R_E",
+          "unit": "Ω",
+          "value": "1k"
+        }
+      ],
+      "derived": [
+        {
+          "name": "tstep",
+          "formula": "1/(f*200)"
+        },
+        {
+          "name": "tstop",
+          "formula": "4/f"
+        }
+      ],
+      "netlist": "Emitter follower\nVCC vcc 0 12\nVS in 0 SIN({Vb} {Vs} {f})\nQ1 vcc in out QN\nRE out 0 {Re}\n.model QN NPN(BF=100)\n.tran {tstep} {tstop}\n",
+      "probes": [
+        "in",
+        "out"
+      ],
+      "predict": {
+        "label": "Before you simulate: what is the average (DC) level of V(out)?",
+        "measure": "avg:v(out)",
+        "unit": "V",
+        "tolerance": 0.03,
+        "explain": "The emitter sits one V_BE below the base. At about 5.3 mA the transistor needs V_BE ≈ 0.70 V, so the output averages 6 − 0.70 ≈ 5.30 V."
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "Q1",
+            "at": [
+              6,
+              6
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "VCC",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "VS",
+            "at": [
+              3,
+              8
+            ],
+            "rot": 90,
+            "label": "VS\n{Vb} ± {Vs}"
+          },
+          {
+            "ref": "RE",
+            "at": [
+              8,
+              8
+            ],
+            "rot": 90,
+            "label": "RE\n{Re}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              8,
+              4
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              3,
+              8
+            ],
+            [
+              3,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ],
+          [
+            [
+              8,
+              8
+            ],
+            [
+              10,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            12,
+            6
+          ],
+          [
+            3,
+            12
+          ],
+          [
+            8,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              4,
+              6
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              10,
+              8
+            ]
+          }
+        ]
+      },
+      "showDc": true,
+      "lab": [
+        {
+          "set": {
+            "Re": "100"
+          },
+          "label": "A heavier emitter load: R_E = 100 Ω, so ten times the emitter current. V_BE grows by about 60 mV per decade of current. What is the average V(out) now?",
+          "measure": "avg:v(out)",
+          "unit": "V",
+          "tolerance": 0.005,
+          "explain": "Ten times the current raises V_BE by about V_T·ln 10 ≈ 60 mV, to about 0.76 V, so the output average falls from 5.30 V to about 5.24 V."
+        }
+      ],
+      "topics": [
+        "bjt_amplifiers",
+        "bjt_intro"
+      ]
+    },
+    {
+      "id": "active_lowpass",
+      "title": "Active low-pass filter",
+      "summary": "An inverting amplifier with a capacitor across R_f: gain −R_f/R_in at low frequencies, falling 20 dB per decade above f_c = 1/(2π R_f C).",
+      "params": [
+        {
+          "name": "Rin",
+          "label": "R_in",
+          "unit": "Ω",
+          "value": "1k"
+        },
+        {
+          "name": "Rf",
+          "label": "R_f",
+          "unit": "Ω",
+          "value": "10k"
+        },
+        {
+          "name": "C",
+          "label": "C",
+          "unit": "F",
+          "value": "10n"
+        },
+        {
+          "name": "f",
+          "label": "Test frequency",
+          "unit": "Hz",
+          "value": "500"
+        },
+        {
+          "name": "Vin",
+          "label": "Input amplitude",
+          "unit": "V",
+          "value": "100m"
+        }
+      ],
+      "derived": [
+        {
+          "name": "tstep",
+          "formula": "1/(f*200)"
+        },
+        {
+          "name": "tstop",
+          "formula": "4/f"
+        }
+      ],
+      "netlist": "Active low-pass\nV1 in 0 SIN(0 {Vin} {f}) AC 1\nR1 in inv {Rin}\nR2 inv out {Rf}\nC1 inv out {C}\nX1 0 inv out OA\n.model OA OPAMP(A=1e5 GBW=1meg VPOS=15 VNEG=-15)\n.tran {tstep} {tstop}\n.ac dec 20 10 1meg\n",
+      "probes": [
+        "in",
+        "out"
+      ],
+      "predict": {
+        "label": "Before you simulate: what is the cutoff frequency?",
+        "measure": "f3db:v(out)",
+        "unit": "Hz",
+        "tolerance": 0.05,
+        "explain": "At low frequencies the gain is −R_f/R_in = −10. The capacitor in parallel with R_f takes over the feedback once its reactance falls below R_f: f_c = 1/(2πR_fC) = 1/(2π·10k·10n) ≈ 1.59 kHz."
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rin {Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              -3
+            ],
+            "label": "C {C}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              -3
+            ],
+            [
+              8,
+              -3
+            ]
+          ],
+          [
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              -3
+            ],
+            [
+              13,
+              -3
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "topics": [
+        "active_filters"
+      ],
+      "lab": [
+        {
+          "set": {
+            "C": "22n"
+          },
+          "label": "Change C to 22 nF (R_f = 10 kΩ). What is the new cutoff frequency?",
+          "measure": "f3db:v(out)",
+          "unit": "Hz",
+          "tolerance": 0.05,
+          "explain": "f_c = 1/(2πR_fC): 2.2× C gives about 723 Hz."
+        },
+        {
+          "set": {
+            "Rf": "4.7k"
+          },
+          "label": "Keep C = 22 nF and lower R_f to 4.7 kΩ. Cutoff now? (The gain drops too.)",
+          "measure": "f3db:v(out)",
+          "unit": "Hz",
+          "tolerance": 0.05,
+          "explain": "R_f sets both the gain and the cutoff: 1/(2π·4.7k·22n) ≈ 1.54 kHz, and the gain falls to −4.7."
+        }
+      ]
+    },
+    {
+      "id": "led_driver",
+      "title": "Constant-current LED driver",
+      "summary": "An op amp drives a MOSFET so the sense resistor always holds V_set: the current through the two LEDs (1 W white power LEDs, about 3.1 V at 100 mA) is V_set/R_s whatever the supply does, until the headroom runs out. VM is a 0 V ammeter. The op amp runs from its own 0–15 V supply.",
+      "params": [
+        {
+          "name": "Vs",
+          "label": "Supply",
+          "unit": "V",
+          "value": "12"
+        },
+        {
+          "name": "Vset",
+          "label": "V_set",
+          "unit": "V",
+          "value": "500m"
+        },
+        {
+          "name": "Rs",
+          "label": "R_s",
+          "unit": "Ω",
+          "value": "4.99"
+        }
+      ],
+      "netlist": "LED driver\nVS vs 0 {Vs}\nVM vs top 0\nD1 top a DL\nD2 a d DL\nM1 d g s NM\nRS s 0 {Rs}\nVSET set 0 {Vset}\nX1 set s g OA\n.model DL D(IS=1e-27 N=2)\n.model NM NMOS(VTO=2 KP=2)\n.model OA OPAMP(A=1e5 VPOS=15 VNEG=0)\n.op\n",
+      "probes": [],
+      "showDc": true,
+      "predict": {
+        "label": "Before you simulate: how much current flows through the LEDs?",
+        "measure": "i(VM)",
+        "unit": "A",
+        "tolerance": 0.03,
+        "explain": "The op amp raises the gate until V(s) equals V_set, so I = V_set/R_s = 0.5 V/4.99 Ω ≈ 100.2 mA. The LEDs and the MOSFET take whatever voltage that current needs."
+      },
+      "topics": [
+        "app_led_driver",
+        "mosfet_intro"
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vs}"
+          },
+          {
+            "ref": "VM",
+            "at": [
+              1,
+              0
+            ],
+            "label": "VM (ammeter)"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "LED"
+          },
+          {
+            "ref": "D2",
+            "at": [
+              10,
+              4
+            ],
+            "rot": 90,
+            "label": "LED"
+          },
+          {
+            "ref": "M1",
+            "at": [
+              8,
+              10
+            ],
+            "label": "M1"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              10,
+              12
+            ],
+            "rot": 90,
+            "label": "R_s\n{Rs}"
+          },
+          {
+            "ref": "VSET",
+            "at": [
+              -6,
+              12
+            ],
+            "rot": 90,
+            "label": "V_set"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              -2,
+              10
+            ],
+            "flip": true,
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          [
+            [
+              5,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              -6,
+              12
+            ],
+            [
+              -6,
+              9
+            ],
+            [
+              -2,
+              9
+            ]
+          ],
+          [
+            [
+              2,
+              10
+            ],
+            [
+              8,
+              10
+            ]
+          ],
+          [
+            [
+              10,
+              12
+            ],
+            [
+              11,
+              12
+            ]
+          ],
+          [
+            [
+              -2,
+              11
+            ],
+            [
+              -3,
+              11
+            ],
+            [
+              -3,
+              13
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            10,
+            16
+          ],
+          [
+            -6,
+            16
+          ]
+        ],
+        "labels": [
+          {
+            "text": "d",
+            "at": [
+              10,
+              8
+            ]
+          },
+          {
+            "text": "g",
+            "at": [
+              3,
+              10
+            ]
+          },
+          {
+            "text": "s",
+            "at": [
+              11,
+              12
+            ]
+          },
+          {
+            "text": "s",
+            "at": [
+              -3,
+              13
+            ]
+          }
+        ]
+      },
+      "lab": [
+        {
+          "set": {
+            "Vs": "15"
+          },
+          "label": "Raise the supply to 15 V (R_s = 4.99 Ω). What LED current flows now?",
+          "measure": "i(VM)",
+          "unit": "A",
+          "tolerance": 0.03,
+          "explain": "The loop holds V(R_s) = V_set, so I = V_set/R_s. The extra supply voltage appears across the MOSFET."
+        },
+        {
+          "set": {
+            "Rs": "2.49"
+          },
+          "label": "Halve R_s to 2.49 Ω (supply 15 V). LED current? (The MOSFET now dissipates about 1.7 W: it needs a heat sink.)",
+          "measure": "i(VM)",
+          "unit": "A",
+          "tolerance": 0.03,
+          "explain": "I = V_set/R_s = 0.5/2.49 ≈ 200.8 mA, twice the current."
+        },
+        {
+          "set": {
+            "Vs": "6"
+          },
+          "label": "Drop the supply to 6 V. Two LEDs at about 3.1 V each plus V_set don't fit, so the op-amp output rises to its rail, the MOSFET is fully on, and regulation is lost. Each LED's voltage falls about 0.12 V for every tenfold drop in current (3.1 V at 100 mA). Roughly how much current flows?",
+          "measure": "i(VM)",
+          "unit": "A",
+          "tolerance": 0.3,
+          "explain": "With the MOSFET fully on, 6 V = 2·V_LED + I·2.49 Ω. At about 12 mA each LED needs 3.1 − 0.12·log10(100/12) ≈ 2.99 V, and the two take 5.97 V, leaving only about 30 mV across R_s: the simulator gives 11.8 mA."
+        }
+      ]
+    }
+  ]
+}

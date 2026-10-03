@@ -1,0 +1,1741 @@
+{
+  "topics": [
+    {
+      "id": "ohms_law",
+      "title": "Resistance and Ohm's law",
+      "summary": "Resistance is the voltage across a part divided by the current through it. For a wire it is set by the material, the length and the cross-section (R = ρL/A); in an ohmic part such as a resistor it is the same at every voltage, so the current is proportional to the voltage.",
+      "lenses": [
+        "physics",
+        "circuit",
+        "math"
+      ],
+      "prerequisites": [
+        "charge_current",
+        "voltage_energy"
+      ],
+      "prerequisiteNotes": {
+        "charge_current": "Current is charge per second and is the same at every point of a loop, so the current leaving a resistor equals the current entering it; resistance says how much current a part passes for each volt across it.",
+        "voltage_energy": "Resistance is the voltage across a part divided by the current through it, so it needs the idea of a voltage between a part's two terminals; the energy each coulomb gives up crossing a resistor becomes heat."
+      },
+      "lensNotes": {
+        "physics": "Inside a metal the field accelerates each free electron, which then scatters off the lattice's vibrations and impurities, in copper about every 2 × 10⁻¹⁴ s. The result is a net drift speed proportional to the field, so the current density is proportional to the field, J = E/ρ: Ohm's law at the scale of the material. For a uniform wire the field is V/L and the current is J·A, which gives R = ρL/A. Heating makes the lattice vibrate harder and scatter the electrons more often, so a metal's resistivity rises with temperature (copper about 0.39 % per °C near 20 °C). In a diode the current is limited by a barrier at the junction instead, and grows exponentially with voltage. Pure copper is 1.68 × 10⁻⁸ Ω·m with α ≈ 0.0040 per °C; wire tables use the annealed-copper standard for commercial wire, 1.72 × 10⁻⁸ Ω·m and α = 0.00393 per °C at 20 °C, and so does this topic.",
+        "circuit": "R = V/I gives a part's resistance at any operating point. A resistor is built so that R barely changes (a tolerance such as ±1 %, and a temperature coefficient in ppm/°C). An ohmmeter passes its own small test current and reports V/I, so the circuit must be unpowered, and for a true reading the part must be out of circuit or have one leg lifted. Wires are resistors too: 10 m of 22 AWG copper is about 0.53 Ω.",
+        "math": "For an ohmic part I = V/R = G·V: on a plot of current against voltage it is a straight line through the origin with slope G = 1/R. A lamp or a diode gives a curve, and V/I differs from point to point. R = ρL/A is proportional to length and inversely proportional to area; area goes as the diameter squared, so doubling a wire's diameter quarters its resistance."
+      },
+      "formulas": [
+        {
+          "label": "Ohm's law",
+          "tex": "V = I\\,R \\qquad I = \\frac{V}{R}"
+        },
+        {
+          "label": "Resistance (definition)",
+          "tex": "R = \\frac{V}{I}\\quad (1\\ \\Omega = 1\\ \\text{V/A})"
+        },
+        {
+          "label": "Conductance",
+          "tex": "G = \\frac{1}{R} = \\frac{I}{V}\\quad (\\text{siemens, S})"
+        },
+        {
+          "label": "Resistance of a uniform conductor",
+          "tex": "R = \\frac{\\rho\\,L}{A}"
+        },
+        {
+          "label": "Copper wire",
+          "tex": "\\rho_{Cu} = 1.72\\times10^{-8}\\ \\Omega\\cdot\\text{m at } 20\\ ^{\\circ}\\text{C}"
+        },
+        {
+          "label": "Temperature",
+          "tex": "R_T = R_{20}\\,[1 + \\alpha\\,(T - 20\\ ^{\\circ}\\text{C})],\\quad \\alpha_{Cu} = 0.00393\\ /^{\\circ}\\text{C}"
+        }
+      ],
+      "goals": [
+        "Find a current, voltage or resistance from the other two (V = IR), and a conductance from a resistance (G = 1/R)",
+        "Work out a copper wire's resistance from its length and cross-section (R = ρL/A), and the voltage a cable loses carrying a current",
+        "Tell ohmic parts from non-ohmic ones by their readings: a resistor's V/I stays constant, a lamp filament's rises as it heats, a diode's falls steeply",
+        "Measure resistance correctly: circuit unpowered, one leg lifted when other parts share the same two nodes"
+      ],
+      "intuition": "Resistance is how many volts a part needs across it for each ampere through it; in a metal that ratio is fixed by the material, its temperature and the conductor's shape, so twice the voltage gives twice the current.",
+      "why": "A voltage across a conductor sets up an electric field along it. The field accelerates the free electrons, but each one scatters off the vibrating atoms and impurities of the lattice about every 2 × 10⁻¹⁴ s and loses the velocity it gained. The result is a steady net drift proportional to the field, so the current is proportional to the voltage: that proportionality is Ohm's law, and the ratio V/I is the resistance. The energy the field gives the electrons between collisions passes to the lattice as heat, which is why a resistor gets warm. The material sets the resistivity ρ (how many free carriers it has and how often they scatter). A longer conductor needs more volts for the same field along it, and a wider one has more free electrons in each slice to carry the current, so R = ρL/A. Heating makes the lattice vibrate harder, so the electrons scatter more often: copper's resistance rises about 0.39 % per °C, and a tungsten lamp filament's rises roughly tenfold between room temperature and its working temperature. A diode is different: current flows only as carriers get over a barrier at its junction, and the number that can do so grows exponentially with voltage, so no single resistance describes it.",
+      "explanation": "Resistance is the voltage across a part divided by the current through it: R = V/I, in ohms (Ω). Rearranged, V = IR and I = V/R. Conductance is the inverse, G = 1/R = I/V, in siemens (S).\n\nOhm's law is the finding that for metals, and for resistors made to obey it, R is the same at every voltage, at a fixed temperature: double the voltage and the current doubles. Such parts are ohmic; their plot of current against voltage is a straight line through the origin with slope 1/R. Many parts are not ohmic. A lamp filament's resistance rises as it heats; a diode passes almost nothing until about 0.5 to 0.6 V, then its current climbs steeply. For them V/I changes from point to point.\n\nFor a uniform conductor R = ρL/A: proportional to length, inversely proportional to cross-sectional area, with resistivity ρ set by the material (copper wire: 1.72 × 10⁻⁸ Ω·m at 20 °C). Copper's resistance rises about 0.39 % per °C.\n\nThe current leaving a resistor equals the current entering it; each coulomb gives up energy crossing it, measured as the voltage across it. Measure resistance with the circuit unpowered.",
+      "workedExample": {
+        "problem": "A 12 V pump draws 2.0 A through a two-conductor cable 8.0 m long; each conductor is 20 AWG copper, 0.518 mm² in cross-section. How much resistance does the cable add, and what voltage reaches the pump?",
+        "steps": [
+          "The current goes out on one conductor and back on the other, so the copper in the loop is 2 × 8.0 m = 16 m long.",
+          "Area in square meters: 0.518 mm² = 0.518 × (10⁻³ m)² = 0.518 × 10⁻⁶ m².",
+          "R = ρL/A = 1.72 × 10⁻⁸ Ω·m × 16 m / (0.518 × 10⁻⁶ m²) = 0.531 Ω. Units: Ω·m × m / m² = Ω.",
+          "Voltage lost in the cable: V = IR = 2.0 A × 0.531 Ω = 1.06 V, so the pump gets about 12 V − 1.06 V = 10.9 V.",
+          "The same 2.0 A flows in both conductors. The cable reduces the voltage, not the current: the field does 1.06 J of work on each coulomb crossing the copper, and that work becomes heat in the cable.",
+          "Size check: 20 AWG copper is about 33 mΩ per meter, and 16 m × 33 mΩ/m ≈ 0.53 Ω. An ohmmeter would struggle to show this: its own leads are often 0.1 to 0.3 Ω, so low resistances are measured with the leads zeroed out first, or with a separate pair of leads sensing the voltage."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 2 \"Ohm's Law\", section \"How voltage, current, and resistance relate\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_2.html#xtocid87160",
+          "note": "Ohm's finding: the current through a metal conductor is proportional to the voltage across it at a given temperature; E = IR, I = E/R, R = E/I."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 2 \"Ohm's Law\", section \"Nonlinear conduction\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_2.html#xtocid87165",
+          "note": "A resistor's current–voltage plot is a straight line; a lamp filament's resistance rises steeply as it heats, so its plot curves and V/I differs from point to point; R = E/I is better seen as a definition that holds for a class of materials."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 12 \"Physics of Conductors and Insulators\", section \"Specific resistance\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_12.html#xtocid88064",
+          "note": "R = ρl/A, with length in meters and area in square meters for ρ in Ω·m; a supply-and-return run counts both conductors in the voltage drop. Its table gives pure copper as 1.678 µΩ·cm; this topic uses the annealed-copper wire standard, 1.72 × 10⁻⁸ Ω·m."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 12 \"Physics of Conductors and Insulators\", section \"Temperature coefficient of resistance\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_12.html#xtocid88065",
+          "note": "Resistance changes by a factor α per °C from its 20 °C value; pure metals have positive coefficients, carbon and silicon negative. Its table gives pure copper as 0.004041 per °C; this topic uses 0.00393 per °C, the annealed-copper wire standard at 20 °C."
+        }
+      ],
+      "visuals": [
+        "charge_flow"
+      ],
+      "analogy": {
+        "text": "Slow, smooth (laminar) flow of a viscous liquid through a narrow channel follows a law of the same form as V = IR: the flow rate is proportional to the pressure difference across the channel, and the ratio, its flow resistance, is fixed by the liquid and the channel's shape. A longer channel resists more and a wider one less, and all the work the pressure does on the liquid becomes heat, as in a resistor.",
+        "breaksDown": "A pipe's flow resistance falls with the fourth power of its radius, because the liquid is still at the walls and fastest in the middle, while a wire's falls only with its area (radius squared), because the current spreads evenly over the cross-section: twice the diameter gives a quarter of the resistance, not a sixteenth. Faster flow turns turbulent and stops being proportional, while a resistor stays ohmic across its whole rating. A hot liquid flows more easily, but a hot metal's resistance rises, because its electrons scatter more often off the harder-vibrating lattice."
+      }
+    }
+  ],
+  "templates": [
+    {
+      "id": "ohm_current",
+      "topicId": "ohms_law",
+      "prompt": "A {V} battery is connected across R1 = {R}. Treat the battery as ideal: it holds {V} across R1. What current flows through R1?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            3,
+            4.5,
+            5,
+            9,
+            12
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "I",
+          "formula": "V/R",
+          "unit": "A"
+        },
+        {
+          "name": "V2",
+          "formula": "2*V",
+          "unit": "V"
+        },
+        {
+          "name": "Wc",
+          "formula": "V",
+          "unit": "J"
+        }
+      ],
+      "answer": {
+        "formula": "V/R",
+        "unit": "A",
+        "tolerance": 0.02
+      },
+      "estimate": true,
+      "explanation": "Ohm's law: I = V/R = {V} / {R} = {answer}. A volt per ohm is an ampere, so volts divided by kilohms give milliamps directly.",
+      "hints": [
+        "Resistance is volts per ampere. Rearrange it for the current.",
+        "I = V/R, with V in volts and R in ohms, gives amps."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V*R",
+          "feedback": "You multiplied. A larger resistance passes less current for the same voltage, so the current is the voltage divided by the resistance: I = V/R."
+        },
+        {
+          "formula": "R/V",
+          "feedback": "That's upside down: ohms per volt. Resistance is volts per ampere, so amperes are volts divided by ohms: I = V/R."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "A second ammeter is put in the wire between R1 and the battery's − terminal, so it measures the current after it has passed through R1. What does it read?",
+          "choices": [
+            {
+              "text": "{I}, the same as the current into R1",
+              "correct": true,
+              "feedback": "Right: charge can't pile up in R1 or vanish in it, so the current out equals the current in. What each coulomb gives up in R1 is energy, measured as the voltage across it."
+            },
+            {
+              "text": "Less than {I}, because R1 used up part of the current",
+              "feedback": "A resistor doesn't use up current. Every coulomb that enters R1 leaves it; each one gives up {Wc} of energy crossing R1 ({V} is {Wc} per coulomb), and that energy heats R1."
+            },
+            {
+              "text": "Almost zero, because R1 turns the current into heat",
+              "feedback": "R1 turns energy into heat, not current. If no current came out of R1, none could go in either: a resistor in a single loop sets the current for the whole loop."
+            },
+            {
+              "text": "More than {I}, because the battery's − terminal attracts the electrons",
+              "feedback": "The current in a single loop is the same at every point, the terminals included. The − terminal has no extra pull that adds current on one side of R1."
+            }
+          ],
+          "explanation": "In a single loop the current is the same at every point (charge and current). R1 sets how large that current is, I = V/R, and the energy each coulomb gives up crossing it, {Wc}, appears as heat in R1."
+        },
+        {
+          "prompt": "The battery is swapped for one of {V2}, twice the voltage (R1 is rated well above the new power). What is R1's resistance now?",
+          "choices": [
+            {
+              "text": "Still {R}: a resistor is ohmic, so the current doubles along with the voltage and V/I stays the same",
+              "correct": true,
+              "feedback": "Right: R1's resistance is set by its material and construction, not by the voltage across it. The current becomes 2 × {I}."
+            },
+            {
+              "text": "Twice {R}, because R = V/I and V has doubled",
+              "feedback": "R = V/I with both V and I changing: twice the voltage gives twice the current through an ohmic part, so the ratio is unchanged."
+            },
+            {
+              "text": "Half of {R}, because the higher voltage drives current through more easily",
+              "feedback": "A resistor's resistance is a property of its material and shape. The higher voltage gives a proportionally higher current; V/I stays {R}."
+            },
+            {
+              "text": "It can't be known without measuring it again at the new voltage",
+              "feedback": "For a resistor it can: an ohmic part has the same V/I at every voltage within its ratings. That isn't true of a lamp or a diode, but R1 is a resistor."
+            }
+          ],
+          "explanation": "Ohm's law says that for an ohmic part the current is proportional to the voltage, so V/I is a constant, the resistance. A resistor obeys it as long as it stays near its rated temperature; its datasheet gives the small drift as a temperature coefficient in ppm/°C."
+        }
+      ],
+      "schematic": {
+        "netlist": "battery and resistor\nV1 a 0 {V:spice}\nR1 a 0 {R:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R1\n{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "ohm_resistance_from_meters",
+      "topicId": "ohms_law",
+      "prompt": "An unmarked resistor Rx is connected to a bench supply. A voltmeter across Rx reads {V} and an ammeter in series with it reads {I}. What is Rx?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            3,
+            5,
+            9,
+            12
+          ]
+        },
+        {
+          "name": "Rx",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "I",
+          "formula": "V/Rx",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "V/I",
+        "unit": "Ω",
+        "tolerance": 0.02
+      },
+      "estimate": true,
+      "explanation": "Resistance is the voltage across the part divided by the current through it: R = V/I = {V} / {I} = {answer}. Volts divided by milliamps give kilohms.",
+      "hints": [
+        "Resistance is defined as a ratio of the two readings. Which one goes on top?",
+        "R = V/I: volts per ampere."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V*I",
+          "feedback": "That's V × I, which is the power in watts (the next topic), not the resistance. Resistance is volts per ampere: R = V/I."
+        },
+        {
+          "formula": "I/V",
+          "feedback": "That's amperes per volt, the conductance G in siemens: the inverse of the resistance. Resistance is R = V/I."
+        }
+      ],
+      "schematic": {
+        "netlist": "supply and unknown resistor\nV1 a 0 {V:spice}\nR1 a 0 {Rx:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "bench\nsupply"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "Rx"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "ohm_conductance",
+      "topicId": "ohms_law",
+      "prompt": "Circuit simulators solve for node voltages using conductances (amperes per volt) rather than resistances. What is the conductance of a {R} resistor? Answer in siemens (S); prefixes such as m and µ are fine.",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "G",
+          "formula": "1/R",
+          "unit": "S"
+        },
+        {
+          "name": "G2",
+          "formula": "2/R",
+          "unit": "S"
+        },
+        {
+          "name": "Gh",
+          "formula": "1/(2*R)",
+          "unit": "S"
+        },
+        {
+          "name": "G4",
+          "formula": "4/R",
+          "unit": "S"
+        },
+        {
+          "name": "Rh",
+          "formula": "R/2",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "1/R",
+        "unit": "S",
+        "tolerance": 0.02
+      },
+      "explanation": "Conductance is the inverse of resistance: G = 1/R = 1 / {R} = {answer}. It is the current per volt: a conductance of {answer} passes that many amperes for each volt across the resistor (1 mS is 1 mA per volt). One over kilohms gives millisiemens.",
+      "hints": [
+        "Conductance is the reciprocal of resistance.",
+        "G = 1/R. One over kilohms gives millisiemens."
+      ],
+      "misconceptions": [
+        {
+          "formula": "R",
+          "feedback": "That's the resistance itself, in ohms. Conductance is its reciprocal, G = 1/R, in siemens."
+        },
+        {
+          "formula": "1000/R",
+          "feedback": "That's 1 divided by the resistance in kilohms, which is the conductance in millisiemens, not siemens. Write it with the prefix (mS) or divide by 1000."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "The {R} resistor sits across an ideal supply, which holds its voltage whatever is connected. A second {R} resistor is connected to the same two terminals, so it has the same voltage across it. What conductance does the supply see from the pair, and why?",
+          "choices": [
+            {
+              "text": "{G2}: each resistor alone conducts {G}, so it draws G·V, and the supply delivers both currents",
+              "correct": true,
+              "feedback": "Right: each resistor has the full voltage across it, so each draws I = G·V as if it were alone. The supply's current is the sum, so the current per volt doubles: twice {G} = {G2}."
+            },
+            {
+              "text": "{Gh}: two resistors put twice the resistance in the current's way, so half the current flows per volt",
+              "feedback": "That is true end to end (in series), where every coulomb must cross both resistors. Here each resistor is its own path between the same two terminals, and a second path can only add current."
+            },
+            {
+              "text": "{G}, unchanged: the supply's voltage is the same, and the current divides between the two resistors, so each passes half what one did alone",
+              "feedback": "A resistor's current is set by the voltage across it, I = G·V, and each still has the full voltage, so each still passes {G} × V. The supply doesn't hand out a fixed total to be shared; it delivers whatever the resistors draw, now twice as much."
+            },
+            {
+              "text": "{G4}: two resistors on the supply means double the current through each, and two of them, so four times the current per volt",
+              "feedback": "Each resistor's current depends only on its own voltage, I = G·V, and that voltage is the supply's, which hasn't changed. So each passes the same current as before; only the number of paths doubles, so the total is twice {G} = {G2}."
+            }
+          ],
+          "explanation": "With both resistors on the same two terminals, each has the supply's voltage V across it and passes G·V. Charge is conserved where the wires join, so the supply delivers the sum: I = 2G·V, a conductance of {G2}, which is a resistance of {Rh}, half of {R}. Conductances of parts sharing the same two nodes simply add. This is why circuit simulators work in conductances: the currents of all the parts on a node add, so their conductances add straight into the equations, where resistances would need reciprocals every time."
+        }
+      ],
+      "noDrawing": "a unit conversion for one part; no circuit to analyze",
+      "review": "verified"
+    },
+    {
+      "id": "ohm_wire_resistance",
+      "topicId": "ohms_law",
+      "prompt": "A spool holds {L} of {awg} AWG solid copper hookup wire, {Amm} mm² in cross-section. Copper wire has a resistivity of 1.72 × 10⁻⁸ Ω·m at 20 °C. What is the resistance from one end of the wire to the other, at 20 °C?",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "m",
+          "values": [
+            10,
+            20,
+            30,
+            50
+          ]
+        },
+        {
+          "name": "awg",
+          "unit": "",
+          "values": [
+            18,
+            20,
+            22,
+            24
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Amm",
+          "formula": "pi/4*(0.127*92^((36-awg)/39))^2",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "1.72e-8*L/(Amm*1e-6)",
+        "unit": "Ω",
+        "tolerance": 0.02
+      },
+      "estimate": true,
+      "explanation": "R = ρL/A with the area in square meters: {Amm} mm² = {Amm} × 10⁻⁶ m². R = 1.72 × 10⁻⁸ Ω·m × {L} / ({Amm} × 10⁻⁶ m²) = {answer}. Units: Ω·m × m / m² = Ω. Small next to most circuit resistances, but not next to a low-resistance load or a heavy current (a cable feeding a 12 V load, for example).",
+      "hints": [
+        "R = ρL/A. Every quantity must be in SI units first.",
+        "1 mm = 10⁻³ m, so 1 mm² = (10⁻³ m)² = 10⁻⁶ m²."
+      ],
+      "misconceptions": [
+        {
+          "formula": "1.72e-8*L/Amm",
+          "feedback": "The area is still in mm². Convert it first: 1 mm² = 10⁻⁶ m², so your answer is a million times too small."
+        },
+        {
+          "formula": "1.72e-8*L/(Amm*1e-3)",
+          "feedback": "You converted mm² with 10⁻³, the factor for millimeters. An area is a length squared: 1 mm² = (10⁻³ m)² = 10⁻⁶ m²."
+        },
+        {
+          "formula": "1.72e-8*(Amm*1e-6)/L",
+          "feedback": "Length and area are swapped. A longer wire has more resistance (R ∝ L) and a thicker one less (R ∝ 1/A): R = ρL/A."
+        }
+      ],
+      "noDrawing": "about one length of wire on a spool; no circuit to analyze",
+      "review": "verified"
+    },
+    {
+      "id": "ohm_wire_drop",
+      "topicId": "ohms_law",
+      "prompt": "A 12 V battery feeds a work lamp through a two-conductor cable {L} long. Each conductor is {awg} AWG copper, {Amm} mm² in cross-section (ρ = 1.72 × 10⁻⁸ Ω·m). The lamp draws {I} (measured in the cable). How much voltage is lost in the cable, both conductors together?",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "m",
+          "values": [
+            3,
+            5,
+            8,
+            10
+          ]
+        },
+        {
+          "name": "awg",
+          "unit": "",
+          "values": [
+            18,
+            20,
+            22
+          ]
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "values": [
+            1,
+            1.5,
+            2
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Amm",
+          "formula": "pi/4*(0.127*92^((36-awg)/39))^2",
+          "unit": ""
+        },
+        {
+          "name": "Rc",
+          "formula": "1.72e-8*L/(Amm*1e-6)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rl",
+          "formula": "12/I",
+          "unit": "Ω"
+        },
+        {
+          "name": "Vlamp",
+          "formula": "12-I*2*Rc",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "I*2*1.72e-8*L/(Amm*1e-6)",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "Each conductor is R = ρL/A = 1.72 × 10⁻⁸ Ω·m × {L} / ({Amm} × 10⁻⁶ m²) = {Rc}. The current goes out on one and back on the other, so the cable has 2 × {Rc} in series with the lamp. Voltage lost: V = I × 2R = {I} × 2 × {Rc} = {answer}, leaving about {Vlamp} for the lamp. This is why low-voltage loads far from their supply need thick cable: the volts lost depend only on the current and the cable's resistance, not on the supply, so on a 12 V system even 1 V lost is over 8 % of the supply.",
+      "hints": [
+        "Find the resistance of one conductor with R = ρL/A, area in m². How many conductors does the current pass through?",
+        "Out and back: the loop has 2 × {L} of copper. Then V = IR."
+      ],
+      "misconceptions": [
+        {
+          "formula": "I*1.72e-8*L/(Amm*1e-6)",
+          "feedback": "That's the drop in one conductor. The current returns through the second conductor too, and that drop adds: the loop has 2 × {L} of copper."
+        },
+        {
+          "formula": "12-I*2*1.72e-8*L/(Amm*1e-6)",
+          "feedback": "That's the voltage left for the lamp. The question asks for the voltage lost in the cable: I × (resistance of both conductors)."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Compare the current in the conductor going to the lamp with the current in the conductor coming back from it.",
+          "choices": [
+            {
+              "text": "They are equal: the cable and lamp form one loop, and what the cable takes is energy, seen as voltage across each conductor",
+              "correct": true,
+              "feedback": "Right: going once around the loop, the field does 12 J of work on each coulomb, a little in the outgoing conductor, most in the lamp and a little in the return conductor, and every coulomb comes back."
+            },
+            {
+              "text": "The return current is smaller, because the lamp and the outgoing conductor used some of it",
+              "feedback": "Neither the lamp nor the cable uses up charge. In a single loop the current is {I} at every point; what they take is energy, shown by the voltage across each of them."
+            },
+            {
+              "text": "The return current is larger, because the lamp adds its own current to it",
+              "feedback": "A lamp is not a source; it can't add charge. One loop has one current, {I}, everywhere."
+            },
+            {
+              "text": "The return current is zero, because the return conductor is at 0 V",
+              "feedback": "A conductor's voltage from ground says nothing about the current in it. The return conductor carries the full {I}; its voltage changes along its length by I times its resistance."
+            }
+          ],
+          "explanation": "The voltage lost in each conductor is I × R for that conductor, with the same I in both. That is why the drop counts both conductors: the out and return paths are two resistances in the same loop."
+        }
+      ],
+      "schematic": {
+        "netlist": "cable and lamp\nV1 a 0 12\nRw1 a b {Rc:spice}\nRL1 b c {Rl:spice}\nRw2 c 0 {Rc:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V",
+            "symbol": "battery"
+          },
+          {
+            "ref": "Rw1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "cable, out\n{L}"
+          },
+          {
+            "ref": "RL1",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "lamp\n{I}",
+            "symbol": "lamp"
+          },
+          {
+            "ref": "Rw2",
+            "at": [
+              6,
+              8
+            ],
+            "rot": 180,
+            "label": "cable, return\n{L}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              10,
+              8
+            ],
+            [
+              6,
+              8
+            ]
+          ],
+          [
+            [
+              2,
+              8
+            ],
+            [
+              0,
+              8
+            ],
+            [
+              0,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            8
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ohm_winding_temp",
+      "topicId": "ohms_law",
+      "prompt": "A 12 V relay's copper coil reads {Rc} on an ohmmeter at 20 °C. After an hour switched on, the supply is disconnected and the coil immediately reads {Rh}. Copper's resistance rises by α = 0.00393 of its 20 °C value per °C. What is the average temperature of the winding?",
+      "variables": [
+        {
+          "name": "Rc",
+          "unit": "Ω",
+          "values": [
+            270,
+            330,
+            390,
+            470
+          ]
+        },
+        {
+          "name": "T",
+          "unit": "°C",
+          "values": [
+            45,
+            55,
+            65,
+            75
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rh",
+          "formula": "Rc*(1+0.00393*(T-20))",
+          "unit": "Ω"
+        },
+        {
+          "name": "rise",
+          "formula": "(Rh/Rc-1)/0.00393",
+          "unit": "°C"
+        },
+        {
+          "name": "dR",
+          "formula": "Rh-Rc",
+          "unit": "Ω"
+        },
+        {
+          "name": "pct",
+          "formula": "100*(Rh/Rc-1)",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "20+(Rh/Rc-1)/0.00393",
+        "unit": "°C",
+        "tolerance": 0.03
+      },
+      "explanation": "R_T = R₂₀[1 + α(T − 20 °C)], so T = 20 °C + (R_T/R₂₀ − 1)/α. The resistance has risen by {Rh} − {Rc} = {dR}, which is {pct} % of {Rc}. Each °C adds 0.393 %, so the rise is {pct} / 0.393 = {rise} above 20 °C, and the winding averages about {answer}. This resistance method is the standard way to find the temperature inside a winding, where no thermometer can reach: the winding's resistance measures the average copper temperature directly.",
+      "hints": [
+        "Write R_hot = R_cold × [1 + α(T − 20 °C)] and solve for T.",
+        "First find R_hot/R_cold; the fraction above 1, divided by 0.00393, is the rise in °C."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(Rh/Rc-1)/0.00393",
+          "feedback": "That's the temperature rise above 20 °C. The question asks for the winding's temperature: add the 20 °C it started at."
+        },
+        {
+          "formula": "20+(Rh-Rc)/0.00393",
+          "feedback": "α is a fraction of the 20 °C resistance per degree, not ohms per degree. Divide the change by {Rc} first: (R_hot/R_cold − 1)/α."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does the copper's resistance rise as it heats?",
+          "choices": [
+            {
+              "text": "The atoms of the lattice vibrate more, so the free electrons scatter more often and drift more slowly for the same field",
+              "correct": true,
+              "feedback": "Right: in a metal the number of free electrons hardly changes with temperature; what changes is how often they scatter."
+            },
+            {
+              "text": "The wire expands, so it gets longer and R = ρL/A rises",
+              "feedback": "Copper expands only about 0.0017 % per °C, and its area grows too, which lowers R. The 0.39 % per °C comes from the resistivity itself."
+            },
+            {
+              "text": "Heat drives free electrons out of the copper, leaving fewer to carry the current",
+              "feedback": "A metal keeps its free electrons; their number barely changes with temperature. (In a semiconductor heating frees more carriers, which is why its resistance falls.)"
+            },
+            {
+              "text": "The coil's current heats the copper's electrons, and hot electrons carry less current",
+              "feedback": "The free electrons in a metal move at about 10⁶ m/s at any temperature; a few tens of degrees barely change that. The rise comes from more frequent scattering off the warmer lattice."
+            }
+          ],
+          "explanation": "Resistivity comes from the free electrons scattering off the lattice's vibrations and impurities. Warmer atoms vibrate with larger amplitude, so collisions come more often and the drift for a given field is smaller. For copper near room temperature that adds about 0.39 % of the 20 °C resistance per °C."
+        }
+      ],
+      "noDrawing": "about a coil's resistance measured on its own with an ohmmeter",
+      "review": "verified"
+    },
+    {
+      "id": "ohm_lamp_hot",
+      "topicId": "ohms_law",
+      "prompt": "A 12 V incandescent lamp is lit from a {V} battery and draws {I}. What is the filament's resistance while it is lit?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "value": 12
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "values": [
+            0.1,
+            0.25,
+            0.42,
+            0.83
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rcold",
+          "formula": "V/I/12",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rhot",
+          "formula": "V/I",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "V/I",
+        "unit": "Ω",
+        "tolerance": 0.02
+      },
+      "explanation": "The resistance at this operating point is R = V/I = {V} / {I} = {answer}. That is the hot filament's resistance; a lamp's V/I is only meaningful at the point where it was measured, because the filament's resistance depends on its temperature.",
+      "hints": [
+        "Resistance is the voltage across a part divided by the current through it.",
+        "R = V/I with the lamp running."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V*I",
+          "feedback": "That's V × I, the power in watts (the next topic). The resistance is the voltage divided by the current: R = V/I."
+        },
+        {
+          "formula": "I/V",
+          "feedback": "That's amperes per volt, the conductance. The resistance is volts per ampere: R = V/I."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "With the lamp out of the circuit and at room temperature, an ohmmeter across it reads about {Rcold}. Why is that so different?",
+          "choices": [
+            {
+              "text": "Tungsten's resistance rises steeply with temperature; lit, the filament is at over 2000 °C and its resistance is more than ten times its cold value",
+              "correct": true,
+              "feedback": "Right: the filament's lattice vibrates far harder at white heat, so the electrons scatter much more often. The lamp is not ohmic over its working range."
+            },
+            {
+              "text": "The ohmmeter is inaccurate at low resistances and reads far too low",
+              "feedback": "A meter's lead resistance makes low readings too high by a few tenths of an ohm, not ten times too low. The filament really is more than ten times lower in resistance when cold."
+            },
+            {
+              "text": "The lamp is faulty: a good lamp reads the same resistance cold and lit",
+              "feedback": "Every tungsten filament lamp shows this. Its resistance follows its temperature, and the temperature changes by over 2000 °C between cold and lit."
+            },
+            {
+              "text": "Resistance depends on voltage: the meter's small test voltage always gives a small resistance",
+              "feedback": "A resistor reads the same on an ohmmeter as V/I gives at full voltage. The filament's resistance changes with its temperature, which the voltage only sets indirectly through the heating."
+            }
+          ],
+          "explanation": "Cold, the filament's resistance is less than a tenth of its hot value, so at switch-on the current briefly jumps to more than ten times the running current until the filament heats, within tens of milliseconds. This inrush is why filament lamps usually fail at switch-on, and why a lamp's V/I depends on where it is measured."
+        }
+      ],
+      "schematic": {
+        "netlist": "battery and lamp\nV1 a 0 {V:spice}\nRL1 a 0 {Rhot:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "RL1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "lamp",
+            "symbol": "lamp"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ohm_what_if_double_v",
+      "topicId": "ohms_law",
+      "prompt": "Resistor R1 = {R} sits across a {V} supply. The supply is turned up to {new_V}. What happens to the current through R1?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            2.5,
+            3,
+            4.5,
+            6
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the current",
+        "formula": "V/R",
+        "unit": "A",
+        "change": {
+          "V": "2*V"
+        },
+        "askFactor": true,
+        "feedback": {
+          "same": "A resistor doesn't hold its current at one value. Its resistance stays {R}, and the current is whatever the voltage across it can drive through that resistance, I = V/R: a larger voltage sets up a stronger field along the resistor, which drives the charge through it faster.",
+          "down": "A resistor doesn't resist more at a higher voltage; its resistance stays {R}. A larger voltage across the same resistance sets up a stronger field along it, which drives the charge through it faster: I = V/R."
+        }
+      },
+      "explanation": "The resistor is ohmic: its resistance stays {R} whatever the voltage. I = V/R goes from {V}/{R} = {before} to {new_V}/{R} = {after}, exactly twice. (A lamp would not double, because its filament heats up and its resistance rises.)",
+      "hints": [
+        "Does the resistor's resistance depend on the voltage across it?",
+        "I = V/R with R fixed: what does doubling V do?"
+      ],
+      "schematic": {
+        "netlist": "supply and resistor\nV1 a 0 {V:spice}\nR1 a 0 {R:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R1\n{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ohm_what_if_wire_length",
+      "topicId": "ohms_law",
+      "prompt": "A {L} run of copper wire with a {Amm} mm² cross-section is replaced by a run of the same wire {new_L} long. What happens to the resistance of the run?",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "m",
+          "values": [
+            5,
+            10,
+            20
+          ]
+        },
+        {
+          "name": "Amm",
+          "unit": "",
+          "values": [
+            0.5,
+            0.75,
+            1.5
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the resistance",
+        "formula": "1.72e-8*L/(Amm*1e-6)",
+        "unit": "Ω",
+        "change": {
+          "L": "2*L"
+        },
+        "askFactor": true,
+        "feedback": {
+          "same": "The material and thickness are the same, but there is twice as much wire for the current to pass through, and each meter is a resistance in series with the next.",
+          "down": "Adding wire can't make it easier to push the current through: each meter is a resistance in series with the next, and for the same current each meter needs the same voltage across it."
+        }
+      },
+      "explanation": "R = ρL/A with the same ρ and A: R is proportional to length, {before} → {after}. Seen another way: for a given current, each meter of wire needs the same field and so the same voltage, and the voltages of the meters add.",
+      "hints": [
+        "Think of the run as many one-meter pieces, one after another.",
+        "R = ρL/A: only L changes."
+      ],
+      "noDrawing": "about one wire's dimensions; no circuit to analyze",
+      "review": "verified"
+    },
+    {
+      "id": "ohm_what_if_wire_diameter",
+      "topicId": "ohms_law",
+      "prompt": "A {L} run of round copper wire {d} mm in diameter is replaced by copper wire {new_d} mm in diameter, the same length. What happens to its resistance?",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "m",
+          "values": [
+            5,
+            10,
+            20
+          ]
+        },
+        {
+          "name": "d",
+          "unit": "",
+          "values": [
+            0.4,
+            0.5,
+            0.6,
+            0.8
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the resistance",
+        "formula": "1.72e-8*L/(pi/4*(d*1e-3)^2)",
+        "unit": "Ω",
+        "change": {
+          "d": "2*d"
+        },
+        "askFactor": true,
+        "feedback": {
+          "up": "A thicker wire doesn't oppose the current more: each slice of it holds more free electrons to share the same current, so each electron drifts more slowly and the wire needs a weaker field along it.",
+          "same": "The length and material are the same, but resistance also depends on the cross-section, R = ρL/A. A larger area puts more free electrons in each slice to share the same current, so each drifts more slowly, and the field (and so the voltage) needed to drive that current is not the same as before."
+        },
+        "factorHint": "R = ρL/A, and the area A = πd²/4 depends on the diameter squared. Work out what doubling d does to A first, then what that does to R. (A fourth-power law belongs to liquid flow in a pipe, not to current in a wire.)"
+      },
+      "explanation": "R = ρL/A, and the cross-section of a round wire is A = πd²/4. Twice the diameter gives four times the area, so a quarter of the resistance: {before} → {after}. That square law is why wire gauges step quickly: every 3 AWG sizes roughly double the area and halve the resistance per meter.",
+      "hints": [
+        "R depends on the area, not directly on the diameter. How does a circle's area change when its diameter doubles?",
+        "A = πd²/4: doubling d multiplies A by 4."
+      ],
+      "noDrawing": "about one wire's dimensions; no circuit to analyze",
+      "review": "verified"
+    },
+    {
+      "id": "ohm_what_if_hot_coil",
+      "topicId": "ohms_law",
+      "prompt": "A relay coil wound from copper reads {Rc} at {T} and runs from a fixed 12 V supply. Switched on for a long time, the winding warms to {new_T}. Copper's resistance rises by 0.00393 of its 20 °C value per °C. What happens to the coil current?",
+      "variables": [
+        {
+          "name": "Rc",
+          "unit": "Ω",
+          "values": [
+            270,
+            330,
+            390,
+            470
+          ]
+        },
+        {
+          "name": "T",
+          "unit": "°C",
+          "value": 20
+        }
+      ],
+      "whatIf": {
+        "quantity": "the coil current",
+        "formula": "12/(Rc*(1+0.00393*(T-20)))",
+        "unit": "A",
+        "change": {
+          "T": "T+50"
+        },
+        "askFactor": false,
+        "feedback": {
+          "up": "Heat doesn't help the free electrons through the metal: the lattice vibrates harder and scatters them more often, so the coil's resistance rises, and at a fixed 12 V the current is I = V/R.",
+          "same": "The supply voltage is fixed, but the coil's resistance is not: copper's resistance rises about 0.39 % per °C. With the same 12 V across a different resistance, I = V/R changes."
+        }
+      },
+      "explanation": "At 20 °C, I = 12 V / {Rc} = {before}. At 70 °C the resistance is {Rc} × (1 + 0.00393 × 50) = 1.197 × {Rc}, so I = {after}, about 16 % less. A relay's magnetic pull depends on the coil current, so a hot coil pulls in less firmly; relay datasheets state the must-operate voltage at a stated temperature (usually 23 °C ambient), and some give a higher hot-start value; a hot coil needs more voltage to reach the same current.",
+      "hints": [
+        "What does heating do to copper's resistance?",
+        "R_70 = R₂₀ × (1 + 0.00393 × 50); then I = 12 V / R_70."
+      ],
+      "noDrawing": "about a coil on a fixed supply; the change is in the coil's material, not the circuit",
+      "review": "verified"
+    },
+    {
+      "id": "ohm_lamp_vs_resistor",
+      "topicId": "ohms_law",
+      "prompt": "A 12 V filament lamp and a wirewound power resistor each draw {I6} when connected, one at a time, across a 6 V supply. Each is then connected across 12 V. Which statement about the currents at 12 V is right?",
+      "variables": [
+        {
+          "name": "I6",
+          "unit": "A",
+          "values": [
+            0.1,
+            0.15,
+            0.2,
+            0.3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "I12",
+          "formula": "2*I6",
+          "unit": "A"
+        }
+      ],
+      "choices": [
+        {
+          "text": "The resistor draws {I12}; the lamp draws more than {I6} but less than {I12}",
+          "correct": true,
+          "feedback": "Right: the resistor's V/I stays fixed, so its current doubles. The lamp's filament runs hotter at 12 V, its resistance rises, and its current grows less than in proportion."
+        },
+        {
+          "text": "Both draw {I12}: by Ohm's law, twice the voltage gives twice the current",
+          "feedback": "That holds only for an ohmic part. The filament gets hotter at 12 V, and hot tungsten has a higher resistance, so the lamp's current less than doubles."
+        },
+        {
+          "text": "The resistor draws {I12}; the lamp draws more than {I12}, because a hotter filament conducts better",
+          "feedback": "Metals conduct worse when hot: the hotter lattice scatters the free electrons more often. The filament's resistance rises, so its current less than doubles."
+        },
+        {
+          "text": "Both still draw {I6}: each part limits the current to its own value",
+          "feedback": "Neither part fixes its current. A resistor fixes the ratio V/I, so its current doubles; the lamp's current rises too, though by less."
+        }
+      ],
+      "explanation": "Ohm's law is a property of a material at a fixed temperature, not a law every part obeys. At 6 V both parts have V/I = 6 V / {I6}. At 12 V the resistor still has that ratio and draws {I12}. The lamp's filament heats further, its resistance rises, and its current lands somewhere between {I6} and {I12}: its I–V plot bends over instead of running straight.",
+      "hints": [
+        "Which of the two parts changes temperature a great deal when the voltage doubles?",
+        "A metal's resistance rises with temperature. What does that do to the lamp's current at 12 V?"
+      ],
+      "noDrawing": "compares two parts' I–V behavior; no particular circuit",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "ohm_diode_ratio",
+      "topicId": "ohms_law",
+      "prompt": "A small silicon diode is measured on a bench in its forward direction. Typical readings: 0.30 V gives 2 µA, 0.60 V gives 0.8 mA, and 0.70 V gives 6 mA. What do the readings say about the diode and Ohm's law?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "V/I falls from about 150 kΩ to about 120 Ω over these readings: the diode has no single resistance, so it is not ohmic",
+          "correct": true,
+          "feedback": "Right: an ohmic part keeps one V/I at every voltage. The diode's current grows exponentially with voltage, so its V/I changes by more than a factor of a thousand."
+        },
+        {
+          "text": "The diode is ohmic: V = IR holds at every reading, with R worked out from that reading",
+          "feedback": "V/I can be worked out at any point for any part; that just defines R there. Ohm's law says more: that the ratio is the same at every voltage. Here it changes over a thousandfold, so the diode is not ohmic."
+        },
+        {
+          "text": "Its resistance is about 120 Ω; the low-voltage readings are meter errors",
+          "feedback": "The readings are what silicon junctions really do: almost no current until about 0.5 to 0.6 V, then a steep rise. A meter error wouldn't give a smooth exponential pattern."
+        },
+        {
+          "text": "Every part's resistance falls as the voltage rises; a resistor would show the same pattern",
+          "feedback": "A resistor keeps the same V/I at every voltage, and a metal filament's V/I rises as it heats. The steep fall is particular to the diode's junction."
+        }
+      ],
+      "explanation": "For each reading R = V/I: 0.30 V / 2 µA = 150 kΩ, 0.60 V / 0.8 mA = 750 Ω, 0.70 V / 6 mA ≈ 117 Ω. In a diode the current is set by how many carriers get over the barrier at the junction, and that number grows exponentially with voltage. Its I–V plot is a sharp curve, not a straight line, so Ohm's law does not describe it; diode models do (the Diodes unit).",
+      "hints": [
+        "Work out V/I for each reading. Is it the same each time?",
+        "Ohmic means one value of V/I at every voltage."
+      ],
+      "noDrawing": "about one part's I–V readings; no circuit to analyze",
+      "review": "verified"
+    },
+    {
+      "id": "ohm_iv_slope",
+      "topicId": "ohms_law",
+      "prompt": "Two resistors, A and B, are swept from 0 to 5 V on a curve tracer, which plots current (vertical) against voltage (horizontal). Both give straight lines through the origin. At 5 V, A passes {IA} and B passes {IB}, so A's line is the steeper. Which has the larger resistance?",
+      "variables": [
+        {
+          "name": "RA",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500,
+            2200
+          ]
+        },
+        {
+          "name": "RB",
+          "unit": "Ω",
+          "values": [
+            4700,
+            6800,
+            10000
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "IA",
+          "formula": "5/RA",
+          "unit": "A"
+        },
+        {
+          "name": "IB",
+          "formula": "5/RB",
+          "unit": "A"
+        }
+      ],
+      "choices": [
+        {
+          "text": "B: the slope of a current–voltage line is I/V = 1/R, so the shallower line is the larger resistance",
+          "correct": true,
+          "feedback": "Right: B needs more volts for each ampere. Its resistance is 5 V / {IB} = {RB}, against {RA} for A."
+        },
+        {
+          "text": "A: the steeper line rises faster, which means more resistance",
+          "feedback": "With current on the vertical axis the slope is amperes per volt, the conductance. A steep line passes a lot of current per volt: a small resistance."
+        },
+        {
+          "text": "Neither: both lines are straight, so both have the same resistance",
+          "feedback": "Straight lines through the origin mean both are ohmic, each with a constant V/I. Their slopes differ, so their resistances differ."
+        },
+        {
+          "text": "It can't be told without knowing each resistor's power rating",
+          "feedback": "The power rating says how much heat a resistor can take, not its resistance. The plot alone gives each one's V/I."
+        }
+      ],
+      "explanation": "On an I–V plot the slope is ΔI/ΔV = 1/R. A is {RA} and B is {RB}: the line through (5 V, {IA}) is the steeper one, and B's line through (5 V, {IB}) is shallower. Plots with voltage on the vertical axis exist too, so always check the axes before reading resistance from a slope.",
+      "hints": [
+        "What are the units of the slope when current is vertical and voltage horizontal?",
+        "Slope = ΔI/ΔV = 1/R."
+      ],
+      "noDrawing": "about reading an I–V plot; no circuit to analyze",
+      "review": "verified"
+    },
+    {
+      "id": "ohm_in_circuit_meter",
+      "topicId": "ohms_law",
+      "prompt": "On an unpowered board, R1 is marked {R1} (±5 %). A meter on its ohms range across R1's two pins, nodes x and y, reads {Rread}. Which step tells you whether R1 itself is good?",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "value": 10000
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            3300,
+            4700,
+            6800
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "values": [
+            4700,
+            10000
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rread",
+          "formula": "R1 || (R2+R3)",
+          "unit": "Ω"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Unsolder one of R1's legs and measure it again, so the meter's test current can only flow through R1",
+          "correct": true,
+          "feedback": "Right: with one leg lifted, R1 is the only path between the meter's probes, so V/I is R1's resistance."
+        },
+        {
+          "text": "Nothing more: the meter reads R1, so R1 has drifted to {Rread} and must be replaced",
+          "feedback": "The meter reads everything connected between x and y. Its test current also flows through R2 and R3, so it sees more current for its test voltage and reports a lower V/I than R1 alone."
+        },
+        {
+          "text": "Power the board and measure again, so the parts are in their working state",
+          "feedback": "An ohmmeter works out R from its own test current and the voltage it measures. With the board powered, the circuit's own voltages and currents add to those, so the reading is meaningless, and the meter can be damaged."
+        },
+        {
+          "text": "Switch to a higher ohms range, which keeps R2 and R3 out of the reading",
+          "feedback": "The range sets the meter's test current and resolution, not where that current flows. R2 and R3 still connect x to y on every range."
+        }
+      ],
+      "explanation": "An ohmmeter drives a small test current between its probes and reports V/I. In circuit, R2 and R3 form a second path from x to y, so part of the test current goes that way and the reading, {Rread}, is lower than R1's {R1}. Lifting one leg of R1 removes the other path. An in-circuit reading can only ever be equal to or lower than the part's own value when only resistors are involved, so a reading above the marked value does point at the part. Here {Rread} is exactly 10 kΩ ∥ (R2 + R3), what a healthy R1 would give, but that check trusts R2 and R3; lifting a leg doesn't.",
+      "hints": [
+        "What, besides R1, connects node x to node y?",
+        "The meter reports its test voltage divided by the total current it sends between its probes."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does the second path make the reading lower than R1, never higher?",
+          "choices": [
+            {
+              "text": "R1 and the R2–R3 path join the same two nodes, so whatever voltage appears across x–y drives current through both; the meter's V/I is that voltage over the sum of the two currents, which is less than R1",
+              "correct": true,
+              "feedback": "Right: each path adds current. The meter can't tell which path the current took; it divides its voltage by the total."
+            },
+            {
+              "text": "R2 and R3 are in series with R1 and take part of the test voltage, leaving less across R1",
+              "feedback": "R2–R3 is not in series with R1: it connects x to y by itself, so whatever voltage is across R1 is across R2–R3 too. It is a second current path."
+            },
+            {
+              "text": "The test current splits, so less flows through R1 and it seems smaller",
+              "feedback": "If the meter divided its voltage by R1's share of the current alone, it would read exactly R1. It divides by the total current between its probes, and the second path adds to that total, so the reading falls below R1."
+            },
+            {
+              "text": "R2 and R3 cancel part of R1's resistance",
+              "feedback": "Resistances don't cancel. A second path between the same two nodes simply passes extra current for the same voltage."
+            }
+          ],
+          "explanation": "The meter measures the whole network between its probes: V_test / (I_R1 + I_R2R3). Every extra path between x and y adds current, so an in-circuit resistance reading is never above the part's own value (with only resistors around it)."
+        }
+      ],
+      "schematic": {
+        "netlist": "in-circuit measurement\nR1 x y {R1:spice}\nR2 x z {R2:spice}\nR3 z y {R3:spice}\n",
+        "parts": [
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              2,
+              8
+            ],
+            "label": "R3\n{R3}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              8
+            ],
+            [
+              6,
+              8
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              8
+            ],
+            [
+              2,
+              8
+            ]
+          ]
+        ],
+        "grounds": [],
+        "labels": [
+          {
+            "text": "x",
+            "at": [
+              0,
+              0
+            ],
+            "left": true
+          },
+          {
+            "text": "y",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ohm_fault_heater",
+      "topicId": "ohms_law",
+      "prompt": "A {V} supply feeds a heater element (a {R1} power resistor) through a lead and connector of about 0.1 Ω. Healthy, the meters read {h0} at the supply terminals, {h1} across the heater and {h2} through it. The heater is not heating properly. Using Ohm's law on each part, which fault explains the readings below?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "value": 12
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            4.7,
+            6.8,
+            10,
+            15
+          ]
+        }
+      ],
+      "fault": {
+        "netlist": "supply, lead and heater\nV1 a 0 {V:spice}\nRW1 a b 0.1\nR1 b 0 {R1:spice}\n",
+        "probes": [
+          {
+            "label": "Voltage at the supply terminals (black lead on ground)",
+            "probe": "v(a)"
+          },
+          {
+            "label": "Voltage across the heater (black lead on ground)",
+            "probe": "v(b)"
+          },
+          {
+            "label": "Current through the heater (ammeter)",
+            "probe": "i(R1)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "The connector is corroded and has built up about 2 Ω",
+            "value": {
+              "ref": "RW1",
+              "formula": "2"
+            },
+            "feedback": "A corroded connector would leave the supply at full voltage but lose part of it before the heater: the heater would see a lower voltage, with a current that still gives V/I = {R1}.",
+            "why": "The supply holds its voltage, but only part of it reaches the heater; the rest is across the connector, I × R_connector. The heater's own V/I is still {R1}, so the heater is fine."
+          },
+          {
+            "text": "The heater element has degraded to ten times its rated resistance",
+            "value": {
+              "ref": "R1",
+              "formula": "R1*10"
+            },
+            "feedback": "A degraded element would still get nearly the full supply voltage, but its V/I would be far above {R1}, so the current would be much smaller.",
+            "why": "Nearly the full voltage is across the heater, yet the current is a tenth of normal: V/I across the heater is ten times {R1}. The fault is in the element."
+          },
+          {
+            "text": "The heater element is open (burned through)",
+            "open": "R1",
+            "feedback": "An open element would pass no current at all; with nothing flowing, no voltage is lost in the lead, so the full supply voltage would appear across the open element's terminals.",
+            "why": "Zero current, and the full supply voltage across the heater's terminals: no current means no drop in the lead (V = IR = 0), so the break must be in the element itself."
+          },
+          {
+            "text": "The supply has been set to half its voltage by mistake",
+            "value": {
+              "ref": "V1",
+              "formula": "V/2"
+            },
+            "feedback": "A supply at half voltage would show half voltage at its own terminals, with nearly all of it across the heater.",
+            "why": "The supply terminals read half the normal voltage, and nearly all of it reaches the heater. The heater's V/I is still {R1}; it just has half the voltage across it."
+          },
+          {
+            "text": "The lead is broken",
+            "open": "RW1",
+            "feedback": "A broken lead would stop the current, and the heater, now cut off from the supply, would read 0 V across it while the supply terminals still read full voltage.",
+            "why": "The supply reads full voltage, but the heater has 0 V across it and no current: the break is between them, in the lead."
+          }
+        ]
+      },
+      "explanation": "Apply R = V/I to each piece. Across the heater, V/I equal to {R1} means the element is fine; far above {R1} means the element has changed. The difference between the supply and heater readings is the voltage across the lead and connector, I × R_lead: 0.1 Ω × {h2}, at most a few tenths of a volt, when healthy; much more if a connection has gone bad. Zero current with full voltage across the heater means a break in the element; zero current with zero across it means the break is in the lead.",
+      "hints": [
+        "Work out V/I across the heater from its two readings. Is it still {R1}?",
+        "Then compare the supply voltage with the heater voltage: the difference is across the lead and connector."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "RW1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "lead +\nconnector"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "heater\n{R1}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              6
+            ],
+            [
+              0,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              0,
+              0
+            ],
+            "left": true
+          },
+          {
+            "text": "b",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    }
+  ]
+}

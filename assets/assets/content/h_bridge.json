@@ -1,0 +1,1773 @@
+{
+  "topics": [
+    {
+      "id": "h_bridge",
+      "title": "H-bridge motor drivers",
+      "summary": "Four switches let a motor run either way: turn on diagonal pairs, and never both switches on one side (shoot-through).",
+      "lenses": [
+        "circuit"
+      ],
+      "prerequisites": [
+        "mosfet_switching"
+      ],
+      "lensNotes": {
+        "circuit": "Four switches around a motor: diagonal pairs set the direction, both low sides brake, and one side's switches must never both be on (shoot-through). Dead time between them prevents that."
+      },
+      "formulas": [
+        {
+          "label": "Motor current",
+          "tex": "I = \\frac{V_s - E_b}{R_m + 2R_{DS(on)}}"
+        }
+      ],
+      "prerequisiteNotes": {
+        "mosfet_switching": "An H-bridge is four MOSFET switches; the losses, gate drive and dead time of one switch decide how the bridge behaves."
+      },
+      "goals": [
+        "Choose which switches to turn on to drive a motor either way or brake it, and name the combinations that short the supply",
+        "Find the motor current with I = (V_s − E_b)/(R_m + 2R_DS(on)), including the stall current when E_b = 0",
+        "Find the bridge's conduction loss, counting the two switches in the current path",
+        "Explain why shoot-through destroys a bridge and how dead time prevents it"
+      ],
+      "intuition": "With one switch on in each leg of an H-bridge, each end of the motor is tied to the supply or to ground: a diagonal pair ties the two ends to opposite rails, and which pair is on sets the direction of the current.",
+      "why": "A spinning motor generates a back-EMF E_b, in proportion to its speed, that opposes the driving voltage. With Q1 and Q4 on, the current runs supply → Q1 → winding → Q4 → ground, so two R_DS(on) sit in series with the winding and I = (V_s − E_b)/(R_m + 2R_DS(on)). At start or stall E_b = 0 and the current is largest. With Q1 and Q2 both on, the supply sees only two R_DS(on) and no winding: shoot-through, a near short circuit. A MOSFET takes time to turn off while its gate discharges, so the controller leaves a dead time.",
+      "explanation": "One MOSFET switch can run a motor in only one direction. An H-bridge can reverse the motor's voltage, using four switches. On each side of the motor, a high-side switch connects to the supply and a low-side switch to ground; each pair is a leg. An NMOS high side conducts with its source near V_s, so its gate must be driven about 5–10 V above the supply; driver ICs make that voltage with a charge pump or bootstrap capacitor. With Q1 (left high) and Q4 (right low) on, current flows through the motor left to right; with Q3 and Q2, right to left. Both low sides on shorts the motor's terminals, and a spinning motor's own voltage then drives a current that brakes it. Never turn on both switches in one leg: that shorts the supply (shoot-through). A turning motor generates a back-EMF E_b opposing the supply, so I = (V_s − E_b)/(R_m + 2R_DS(on)); at start or stall E_b = 0 and the current is largest. The current always passes through two switches, so the bridge's conduction loss is 2·I²·R_DS(on). A MOSFET takes time to turn off, so the controller waits a short dead time before turning on the other switch in a leg; meanwhile the winding keeps its current flowing through a body diode. PWM on a diagonal pair sets the speed.",
+      "workedExample": {
+        "problem": "A motor-driver IC (an H-bridge of four MOSFETs; assume R_DS(on) = 0.33 Ω per switch) runs from 12 V and drives a DC motor with winding resistance R_m = 2.7 Ω. Q1 and Q3 are the left and right high sides, Q2 and Q4 the left and right low sides. Find the current and the bridge's loss at start, and when running with a back-EMF of 9.0 V. What happens if the motor is reversed at full speed, or if Q2 turns on together with Q1?",
+        "steps": [
+          "Forward (left to right through the motor): turn on the diagonal pair Q1 and Q4, and keep Q2 and Q3 off. The current path is 12 V → Q1 → winding → Q4 → ground: two switches and the winding in series.",
+          "At start, or stalled, the motor is not turning, so E_b = 0 and only resistance limits the current: I = 12 V / (2.7 Ω + 2 × 0.33 Ω) = 12 V / 3.36 Ω = 3.57 A.",
+          "Bridge loss at start: 2 × (3.57 A)² × 0.33 Ω = 8.42 W. A small driver IC cannot shed that for long, which is why many such chips include current limiting and thermal shutdown.",
+          "Running, E_b = 9.0 V opposes the supply: I = (12 V − 9.0 V) / 3.36 Ω = 0.893 A. Bridge loss: 2 × (0.893 A)² × 0.33 Ω = 0.526 W. Each switch drops 0.893 A × 0.33 Ω = 0.295 V, so the motor's terminals see 12 V − 2 × 0.295 V = 11.41 V.",
+          "Reverse: turn off Q1 and Q4, wait the dead time, then turn on Q3 and Q2. At full speed the motor still spins the same way, so its 9.0 V back-EMF now adds to the reversed supply: the current heads for (12 V + 9.0 V) / 3.36 Ω = 6.25 A in the reverse direction (the winding's inductance sets how fast it gets there), more than the start current, until the motor slows.",
+          "Shoot-through: if Q2 turns on while Q1 is still on, the left leg puts only 2 × 0.33 Ω = 0.66 Ω across the supply. In this fixed-resistance model, 12 V / 0.66 Ω = 18.2 A flows, and each switch dissipates (18.2 A)² × 0.33 Ω = 109 W. Real supplies and wiring limit the peak, but it is still far beyond the switches' rating: never both switches in one leg."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Transistor Switching Circuits\" (last update 5 May 2026), section 3.8 \"H-bridge networks\" (p. 40)",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_qswitch.pdf",
+          "note": "An H-bridge reverses the load's polarity by turning on the transistors in opposite corners, an upper one sourcing and a lower one sinking the load current, and swapping to the other diagonal pair reverses the current."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Transistor Switching Circuits\" (last update 5 May 2026), section 2.4 \"Example: high-side N-channel switch\" (p. 13)",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_qswitch.pdf",
+          "note": "An N-channel MOSFET used as a high-side switch needs its gate driven above the load's supply by its turn-on gate-source voltage, which takes an extra, higher drive voltage."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"DC Motors\" (last update 24 November 2025), section 2.3 \"Counter-EMF\" (p. 16)",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_dcmotor.pdf",
+          "note": "A running motor's counter-EMF rises with speed and opposes the applied voltage, so armature current is (applied voltage minus counter-EMF) over winding resistance and is largest at start, when the counter-EMF is zero."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "hb_direction",
+      "topicId": "h_bridge",
+      "prompt": "An H-bridge has high-side switches Q1 (left) and Q3 (right), and low-side switches Q2 (left) and Q4 (right), with the motor between the left and right midpoints. Which switches make current flow through the motor from left to right?",
+      "choices": [
+        {
+          "text": "Q1 and Q4",
+          "correct": true,
+          "feedback": "Yes: the supply connects to the left side through Q1, and the right side returns to ground through Q4."
+        },
+        {
+          "text": "Q1 and Q2",
+          "feedback": "Those are both on the left: that shorts the supply to ground (shoot-through)."
+        },
+        {
+          "text": "Q3 and Q2",
+          "feedback": "That drives current right to left, the reverse direction."
+        },
+        {
+          "text": "Q2 and Q4",
+          "feedback": "Both low sides on shorts the motor terminals together: that brakes the motor, it doesn't drive it."
+        }
+      ],
+      "schematic": {
+        "netlist": "H-bridge\nVS vp 0 12\nRQ1 vp l 1e9\nRQ2 l 0 1e9\nRQ3 vp r 1e9\nRQ4 r 0 1e9\nRM l r 3\n",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              -2,
+              4
+            ],
+            "rot": 90,
+            "label": "supply"
+          },
+          {
+            "ref": "RQ1",
+            "at": [
+              4,
+              0
+            ],
+            "rot": 90,
+            "label": "Q1",
+            "symbol": "switch"
+          },
+          {
+            "ref": "RQ2",
+            "at": [
+              4,
+              8
+            ],
+            "rot": 90,
+            "label": "Q2",
+            "symbol": "switch"
+          },
+          {
+            "ref": "RQ3",
+            "at": [
+              12,
+              0
+            ],
+            "rot": 90,
+            "label": "Q3",
+            "symbol": "switch"
+          },
+          {
+            "ref": "RQ4",
+            "at": [
+              12,
+              8
+            ],
+            "rot": 90,
+            "label": "Q4",
+            "symbol": "switch"
+          },
+          {
+            "ref": "RM",
+            "at": [
+              6,
+              6
+            ],
+            "label": "motor",
+            "symbol": "motor"
+          }
+        ],
+        "wires": [
+          [
+            [
+              -2,
+              4
+            ],
+            [
+              -2,
+              0
+            ],
+            [
+              12,
+              0
+            ]
+          ],
+          [
+            [
+              -2,
+              8
+            ],
+            [
+              -2,
+              12
+            ],
+            [
+              12,
+              12
+            ]
+          ],
+          [
+            [
+              4,
+              4
+            ],
+            [
+              4,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              12,
+              8
+            ]
+          ],
+          [
+            [
+              4,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            8,
+            12
+          ]
+        ],
+        "labels": []
+      },
+      "explanation": "Diagonal pairs drive the motor: Q1 + Q4 gives left → right, Q3 + Q2 gives right → left. Both low sides on is dynamic braking.",
+      "review": "verified"
+    },
+    {
+      "id": "hb_shoot_through",
+      "topicId": "h_bridge",
+      "prompt": "Why does an H-bridge controller add a short 'dead time' between switching one side's high switch off and its low switch on?",
+      "choices": [
+        {
+          "text": "A MOSFET takes time to turn off, or both switches in the leg would conduct at once and short the supply",
+          "correct": true,
+          "feedback": "Yes: during any overlap, current flows straight from the supply to ground through both switches of the leg (shoot-through), limited only by their on-resistance and the wiring."
+        },
+        {
+          "text": "The motor's inductance needs time to discharge, or the next switch would see a voltage spike",
+          "feedback": "The winding's current does not die away during the dead time: it keeps flowing, almost unchanged, through a MOSFET's body diode, and the diode clamps the voltage. The gap exists so the two switches in one leg are never on together."
+        },
+        {
+          "text": "The motor's back-EMF needs time to discharge, or it would drive a current spike into the next switch",
+          "feedback": "Back-EMF is a voltage the spinning motor generates in proportion to its speed; nothing discharges it in a few microseconds, and it is still there after the dead time. The gap exists so the two switches in one leg are never on together."
+        },
+        {
+          "text": "The motor needs time to slow down between pulses, or each new pulse would draw too much current",
+          "feedback": "Dead time is nanoseconds to microseconds, far too short to change the motor's speed. Speed is set by the PWM duty cycle; the gap exists so the two switches in one leg are never on together."
+        }
+      ],
+      "schematic": {
+        "netlist": "H-bridge\nVS vp 0 12\nRQ1 vp l 1e9\nRQ2 l 0 1e9\nRQ3 vp r 1e9\nRQ4 r 0 1e9\nRM l r 3\n",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              -2,
+              4
+            ],
+            "rot": 90,
+            "label": "supply"
+          },
+          {
+            "ref": "RQ1",
+            "at": [
+              4,
+              0
+            ],
+            "rot": 90,
+            "label": "Q1",
+            "symbol": "switch"
+          },
+          {
+            "ref": "RQ2",
+            "at": [
+              4,
+              8
+            ],
+            "rot": 90,
+            "label": "Q2",
+            "symbol": "switch"
+          },
+          {
+            "ref": "RQ3",
+            "at": [
+              12,
+              0
+            ],
+            "rot": 90,
+            "label": "Q3",
+            "symbol": "switch"
+          },
+          {
+            "ref": "RQ4",
+            "at": [
+              12,
+              8
+            ],
+            "rot": 90,
+            "label": "Q4",
+            "symbol": "switch"
+          },
+          {
+            "ref": "RM",
+            "at": [
+              6,
+              6
+            ],
+            "label": "motor",
+            "symbol": "motor"
+          }
+        ],
+        "wires": [
+          [
+            [
+              -2,
+              4
+            ],
+            [
+              -2,
+              0
+            ],
+            [
+              12,
+              0
+            ]
+          ],
+          [
+            [
+              -2,
+              8
+            ],
+            [
+              -2,
+              12
+            ],
+            [
+              12,
+              12
+            ]
+          ],
+          [
+            [
+              4,
+              4
+            ],
+            [
+              4,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              12,
+              8
+            ]
+          ],
+          [
+            [
+              4,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            8,
+            12
+          ]
+        ],
+        "labels": []
+      },
+      "explanation": "MOSFETs don't turn off instantly. If one turns on before its partner in the same leg has turned off, the supply is shorted through both. Dead time makes sure one is fully off before the other turns on.",
+      "level": "recall",
+      "review": "verified"
+    },
+    {
+      "id": "hb_stall_current",
+      "topicId": "h_bridge",
+      "prompt": "A motor-driver IC (an H-bridge of four MOSFETs) runs from {V} and drives a stalled motor with winding resistance {Rm}. Each of its switches has R_DS(on) = {Rds}. What current flows?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 6,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "Rm",
+          "unit": "Ω",
+          "range": {
+            "min": 2,
+            "max": 4,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "Rds",
+          "unit": "Ω",
+          "values": [
+            0.18,
+            0.22,
+            0.27,
+            0.33,
+            0.39,
+            0.47
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "V/(Rm+2*Rds)",
+        "unit": "A"
+      },
+      "schematic": {
+        "netlist": "H-bridge\nVS vp 0 {V:spice}\nMQ1 vp g1 l NM\nMQ2 l g2 0 NM\nMQ3 vp g3 r NM\nMQ4 r g4 0 NM\nRM l r {Rm:spice}\n.model NM NMOS\n",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              -2,
+              4
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "MQ1",
+            "at": [
+              2,
+              2
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "MQ2",
+            "at": [
+              2,
+              10
+            ],
+            "label": "Q2"
+          },
+          {
+            "ref": "MQ3",
+            "at": [
+              14,
+              2
+            ],
+            "flip": true,
+            "label": "Q3"
+          },
+          {
+            "ref": "MQ4",
+            "at": [
+              14,
+              10
+            ],
+            "flip": true,
+            "label": "Q4"
+          },
+          {
+            "ref": "RM",
+            "at": [
+              6,
+              6
+            ],
+            "label": "stalled\n{Rm}",
+            "symbol": "motor"
+          }
+        ],
+        "wires": [
+          [
+            [
+              -2,
+              4
+            ],
+            [
+              -2,
+              0
+            ],
+            [
+              12,
+              0
+            ]
+          ],
+          [
+            [
+              -2,
+              8
+            ],
+            [
+              -2,
+              12
+            ],
+            [
+              12,
+              12
+            ]
+          ],
+          [
+            [
+              4,
+              4
+            ],
+            [
+              4,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              12,
+              8
+            ]
+          ],
+          [
+            [
+              4,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ],
+          [
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            [
+              2,
+              10
+            ],
+            [
+              1,
+              10
+            ]
+          ],
+          [
+            [
+              14,
+              2
+            ],
+            [
+              15,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              10
+            ],
+            [
+              15,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            8,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "G1",
+            "at": [
+              1,
+              2
+            ],
+            "left": true
+          },
+          {
+            "text": "G2",
+            "at": [
+              1,
+              10
+            ],
+            "left": true
+          },
+          {
+            "text": "G3",
+            "at": [
+              15,
+              2
+            ]
+          },
+          {
+            "text": "G4",
+            "at": [
+              15,
+              10
+            ]
+          }
+        ]
+      },
+      "explanation": "A stalled motor has no back-EMF, so only resistance limits the current. The path goes through two on MOSFETs and the winding: I = {V} / ({Rm} + 2 × {Rds}) = {answer}. Driver ICs have switches of a few hundred milliohms, so they matter here, and a stall current like this is often above the chip's rating: that is why many of these chips have a current limit.",
+      "hints": [
+        "How many switches are in the current path?",
+        "Two MOSFETs plus the motor, all in series."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V/Rm",
+          "feedback": "Include the two MOSFETs' on-resistance in series with the motor."
+        },
+        {
+          "formula": "V/(Rm+Rds)",
+          "feedback": "Current passes through two switches in an H-bridge (one high side, one low side)."
+        }
+      ],
+      "steps": [
+        "A stalled motor has no back-EMF: only its winding resistance limits the current.",
+        "The current passes through two on MOSFETs (one high side, one low side) and the motor in series.",
+        "I = {V}/({Rm} + 2 × {Rds}) = {answer}."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does a stalled motor draw so much more current than the same motor running?",
+          "choices": [
+            {
+              "text": "A spinning motor is also a generator, and its back-EMF opposes the supply; stalled, there is no back-EMF, so only the winding resistance and the two switches limit the current",
+              "feedback": "Right: with E_b = 0 the whole supply is across a few ohms.",
+              "correct": true
+            },
+            {
+              "text": "A stalled motor's winding resistance drops",
+              "feedback": "The winding resistance is the same whether the motor turns or not (it even rises a little as it heats). What disappears is the back-EMF."
+            },
+            {
+              "text": "The H-bridge pushes extra current to try to restart it",
+              "feedback": "The bridge only connects the supply to the motor; it doesn't regulate the current. The current is whatever the resistance in the loop allows once the back-EMF is gone."
+            },
+            {
+              "text": "The motor's inductance stops limiting the current",
+              "feedback": "Inductance only slows changes in current. At steady DC it limits nothing, turning or not."
+            }
+          ],
+          "explanation": "I = (V_s − E_b)/(R_m + 2R_DS(on)). Running, the back-EMF E_b is close to V_s, so only a small difference drives the current. Stalled, E_b = 0 and Kirchhoff's voltage law puts the whole supply across the winding and two switches. That is the current the MOSFETs must survive, or that a current limit must catch."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "hb_bridge_loss",
+      "topicId": "h_bridge",
+      "prompt": "An H-bridge carries {I} through a motor, with Q1 and Q4 held on (no PWM). Each MOSFET has R_DS(on) = {Rds}. What is the total conduction loss in the bridge?",
+      "variables": [
+        {
+          "name": "I",
+          "unit": "A",
+          "range": {
+            "min": 0.5,
+            "max": 10,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "Rds",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            -3,
+            -3
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "2*I^2*Rds",
+        "unit": "W"
+      },
+      "schematic": {
+        "netlist": "H-bridge\nVS vp 0 12\nMQ1 vp g1 l NM\nMQ2 l g2 0 NM\nMQ3 vp g3 r NM\nMQ4 r g4 0 NM\nRM l r 3\n.model NM NMOS\n",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              -2,
+              4
+            ],
+            "rot": 90,
+            "label": "supply"
+          },
+          {
+            "ref": "MQ1",
+            "at": [
+              2,
+              2
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "MQ2",
+            "at": [
+              2,
+              10
+            ],
+            "label": "Q2"
+          },
+          {
+            "ref": "MQ3",
+            "at": [
+              14,
+              2
+            ],
+            "flip": true,
+            "label": "Q3"
+          },
+          {
+            "ref": "MQ4",
+            "at": [
+              14,
+              10
+            ],
+            "flip": true,
+            "label": "Q4"
+          },
+          {
+            "ref": "RM",
+            "at": [
+              6,
+              6
+            ],
+            "label": "motor",
+            "symbol": "motor"
+          }
+        ],
+        "wires": [
+          [
+            [
+              -2,
+              4
+            ],
+            [
+              -2,
+              0
+            ],
+            [
+              12,
+              0
+            ]
+          ],
+          [
+            [
+              -2,
+              8
+            ],
+            [
+              -2,
+              12
+            ],
+            [
+              12,
+              12
+            ]
+          ],
+          [
+            [
+              4,
+              4
+            ],
+            [
+              4,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              12,
+              8
+            ]
+          ],
+          [
+            [
+              4,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ],
+          [
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            [
+              2,
+              10
+            ],
+            [
+              1,
+              10
+            ]
+          ],
+          [
+            [
+              14,
+              2
+            ],
+            [
+              15,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              10
+            ],
+            [
+              15,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            8,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "G1",
+            "at": [
+              1,
+              2
+            ],
+            "left": true
+          },
+          {
+            "text": "G2",
+            "at": [
+              1,
+              10
+            ],
+            "left": true
+          },
+          {
+            "text": "G3",
+            "at": [
+              15,
+              2
+            ]
+          },
+          {
+            "text": "G4",
+            "at": [
+              15,
+              10
+            ]
+          }
+        ]
+      },
+      "explanation": "Two MOSFETs conduct at a time, each dissipating I² R_DS(on): P = 2 × ({I})² × {Rds} = {answer}.",
+      "hints": [
+        "How many MOSFETs are on at once?",
+        "P = 2 · I² · R_DS(on)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "I^2*Rds",
+          "feedback": "That's one MOSFET. Two are conducting (one high, one low)."
+        },
+        {
+          "formula": "4*I^2*Rds",
+          "feedback": "Only two of the four MOSFETs conduct at once."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "During the dead time both switches in a leg are off, yet the motor current keeps flowing. Why, and through what?",
+          "choices": [
+            {
+              "text": "The motor winding is an inductor and keeps its current flowing; it forces its way through a MOSFET's body diode (or a flyback diode) until the next switch turns on",
+              "feedback": "Right: the current can't stop instantly, so it finds the diode built into each MOSFET.",
+              "correct": true
+            },
+            {
+              "text": "It doesn't: the current drops to zero the moment both switches are off",
+              "feedback": "An inductor's current can't change instantly (V = L·dI/dt): stopping it at once would take an enormous voltage. It keeps flowing and finds the diodes."
+            },
+            {
+              "text": "It flows through the gates of the off MOSFETs",
+              "feedback": "The gates are insulated by oxide; no load current can pass through them."
+            },
+            {
+              "text": "The supply capacitor pushes it through the off channels",
+              "feedback": "An off channel doesn't conduct. The path is the body diode that every power MOSFET has from source to drain."
+            }
+          ],
+          "explanation": "It is the flyback diode from 'LEDs, Zener regulators and flyback diodes' again: an inductor's current keeps going when its switch opens. During the dead time it flows through a body diode, which drops about 0.7–1 V instead of I·R_DS(on). A well-chosen channel drops far less than that (often only tens of millivolts), so the diode usually loses more than the on channel would, and dead time is kept as short as the switches safely allow."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "hb_what_if_shoot_through",
+      "topicId": "h_bridge",
+      "prompt": "An H-bridge on {V} drives a motor that is just starting (winding resistance {Rm}, not turning yet, so no back-EMF) through Q1 (left high side) and Q4 (right low side). Every MOSFET has R_DS(on) = {Rds}. A software bug also turns on Q2, the low-side switch in the same leg as Q1. Treat the supply as ideal and the MOSFETs as fixed resistances. What happens to the current drawn from the supply?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 12,
+            "max": 24,
+            "step": 1
+          }
+        },
+        {
+          "name": "Rm",
+          "unit": "Ω",
+          "range": {
+            "min": 2,
+            "max": 5,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "Rds",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            -2,
+            -2
+          ]
+        },
+        {
+          "name": "q2",
+          "unit": "",
+          "value": 0
+        }
+      ],
+      "whatIf": {
+        "quantity": "the supply current",
+        "formula": "V/(Rds+1/(q2/Rds+1/(Rm+Rds)))",
+        "unit": "A",
+        "change": {
+          "q2": "1"
+        },
+        "askFactor": true,
+        "feedback": {
+          "down": "Q2 adds a path; it doesn't remove one. After Q1, Q2 sits in parallel with the motor and Q4, so the current has a second way to ground with only Q2's milliohms in it, skipping the motor.",
+          "same": "The motor path is still there, but Q2 opens a second path that bypasses the motor, with only milliohms in it."
+        },
+        "factorHint": "Work out the resistance the supply sees before (Q1 + motor + Q4) and after: Q1 in series with Q2 ∥ (motor + Q4). Q2's branch has only {Rds} in it."
+      },
+      "schematic": {
+        "netlist": "H-bridge\nVS vp 0 {V:spice}\nRQ1 vp l {Rds:spice}\nRQ2 l 0 1e9\nRQ3 vp r 1e9\nRQ4 r 0 {Rds:spice}\nRM l r {Rm:spice}\n",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              -2,
+              4
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "RQ1",
+            "at": [
+              4,
+              0
+            ],
+            "rot": 90,
+            "label": "Q1",
+            "symbol": "switchClosed"
+          },
+          {
+            "ref": "RQ2",
+            "at": [
+              4,
+              8
+            ],
+            "rot": 90,
+            "label": "Q2",
+            "symbol": "switch"
+          },
+          {
+            "ref": "RQ3",
+            "at": [
+              12,
+              0
+            ],
+            "rot": 90,
+            "label": "Q3",
+            "symbol": "switch"
+          },
+          {
+            "ref": "RQ4",
+            "at": [
+              12,
+              8
+            ],
+            "rot": 90,
+            "label": "Q4",
+            "symbol": "switchClosed"
+          },
+          {
+            "ref": "RM",
+            "at": [
+              6,
+              6
+            ],
+            "label": "{Rm}",
+            "symbol": "motor"
+          }
+        ],
+        "wires": [
+          [
+            [
+              -2,
+              4
+            ],
+            [
+              -2,
+              0
+            ],
+            [
+              12,
+              0
+            ]
+          ],
+          [
+            [
+              -2,
+              8
+            ],
+            [
+              -2,
+              12
+            ],
+            [
+              12,
+              12
+            ]
+          ],
+          [
+            [
+              4,
+              4
+            ],
+            [
+              4,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              12,
+              8
+            ]
+          ],
+          [
+            [
+              4,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            8,
+            12
+          ]
+        ],
+        "labels": []
+      },
+      "explanation": "Before: I = V/(R_m + 2R_DS(on)) = {before}. With Q2 on as well, Q1 and Q2 form a path straight across the supply with only about 2 × {Rds} in it: shoot-through, a near short circuit. The supply current jumps to {after} in this ideal model. In a real circuit the supply's internal resistance, the wiring and the MOSFETs themselves (which stop behaving as small resistors at such currents) limit it, but the peak from the bulk capacitor still reaches tens to hundreds of amps: far beyond what the MOSFETs are rated for, and the parts fail within microseconds (or the supply's protection trips). That is why a controller never turns on both switches in one leg, and adds dead time because a MOSFET takes time to discharge its gate and turn off.",
+      "hints": [
+        "Q1 and Q2 are in series across the supply. What is between them and ground?"
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "hb_running_current",
+      "topicId": "h_bridge",
+      "prompt": "An H-bridge of four power MOSFETs runs from {V} with Q1 and Q4 on. The motor is up to speed and generates a back-EMF of {Eb}; its winding resistance is {Rm}. Each switch has R_DS(on) = {Rds}. What current flows through the motor?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            6,
+            9,
+            12
+          ]
+        },
+        {
+          "name": "frac",
+          "unit": "",
+          "values": [
+            0.6,
+            0.7,
+            0.8
+          ]
+        },
+        {
+          "name": "Rm",
+          "unit": "Ω",
+          "values": [
+            1,
+            1.5,
+            2.2
+          ]
+        },
+        {
+          "name": "Rds",
+          "unit": "Ω",
+          "values": [
+            0.1,
+            0.15,
+            0.22
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Eb",
+          "formula": "frac*V",
+          "unit": "V"
+        },
+        {
+          "name": "Vnet",
+          "formula": "V-frac*V",
+          "unit": "V"
+        },
+        {
+          "name": "Rloop",
+          "formula": "Rm+2*Rds",
+          "unit": "Ω"
+        },
+        {
+          "name": "Istall",
+          "formula": "V/(Rm+2*Rds)",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "(V-frac*V)/(Rm+2*Rds)",
+        "unit": "A"
+      },
+      "explanation": "The spinning motor is also a generator: its back-EMF, {Eb}, opposes the supply, so only {V} − {Eb} = {Vnet} is left to push current. That current flows through Q1, the winding and Q4 in series, {Rm} + 2 × {Rds} = {Rloop}: I = {Vnet}/{Rloop} = {answer}. Stalled, with no back-EMF, the same motor would try to draw {V}/{Rloop} = {Istall}, which is why drivers limit current.",
+      "hints": [
+        "The back-EMF opposes the supply. How much voltage is left to drive current around the loop?",
+        "I = (V_s − E_b)/(R_m + 2R_DS(on)): the loop holds the winding and two switches."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V/(Rm+2*Rds)",
+          "feedback": "That is the stall current. A running motor's back-EMF opposes the supply, so only V_s − E_b drives the current."
+        },
+        {
+          "formula": "(V-frac*V)/Rm",
+          "feedback": "The current also passes through two on switches, a high side and a low side; add 2 × R_DS(on) to the winding resistance."
+        },
+        {
+          "formula": "(V-frac*V)/(Rm+Rds)",
+          "feedback": "In an H-bridge the current passes through two switches, Q1 and Q4, not one."
+        },
+        {
+          "formula": "(V+frac*V)/(Rm+2*Rds)",
+          "feedback": "The back-EMF opposes the supply (that is what 'back' means): subtract it, don't add it."
+        }
+      ],
+      "steps": [
+        "Voltage left to drive current: V_s − E_b = {V} − {Eb} = {Vnet}.",
+        "Resistance in the loop: R_m + 2R_DS(on) = {Rm} + 2 × {Rds} = {Rloop}.",
+        "I = {Vnet}/{Rloop} = {answer}."
+      ],
+      "schematic": {
+        "netlist": "H-bridge\nVS vp 0 {V:spice}\nMQ1 vp g1 l NM\nMQ2 l g2 0 NM\nMQ3 vp g3 r NM\nMQ4 r g4 0 NM\nRM l r {Rm:spice}\n.model NM NMOS\n",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              -2,
+              4
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "MQ1",
+            "at": [
+              2,
+              2
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "MQ2",
+            "at": [
+              2,
+              10
+            ],
+            "label": "Q2"
+          },
+          {
+            "ref": "MQ3",
+            "at": [
+              14,
+              2
+            ],
+            "flip": true,
+            "label": "Q3"
+          },
+          {
+            "ref": "MQ4",
+            "at": [
+              14,
+              10
+            ],
+            "flip": true,
+            "label": "Q4"
+          },
+          {
+            "ref": "RM",
+            "at": [
+              6,
+              6
+            ],
+            "label": "{Rm}",
+            "symbol": "motor"
+          }
+        ],
+        "wires": [
+          [
+            [
+              -2,
+              4
+            ],
+            [
+              -2,
+              0
+            ],
+            [
+              12,
+              0
+            ]
+          ],
+          [
+            [
+              -2,
+              8
+            ],
+            [
+              -2,
+              12
+            ],
+            [
+              12,
+              12
+            ]
+          ],
+          [
+            [
+              4,
+              4
+            ],
+            [
+              4,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              12,
+              8
+            ]
+          ],
+          [
+            [
+              4,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ],
+          [
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            [
+              2,
+              10
+            ],
+            [
+              1,
+              10
+            ]
+          ],
+          [
+            [
+              14,
+              2
+            ],
+            [
+              15,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              10
+            ],
+            [
+              15,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            8,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "G1",
+            "at": [
+              1,
+              2
+            ],
+            "left": true
+          },
+          {
+            "text": "G2",
+            "at": [
+              1,
+              10
+            ],
+            "left": true
+          },
+          {
+            "text": "G3",
+            "at": [
+              15,
+              2
+            ]
+          },
+          {
+            "text": "G4",
+            "at": [
+              15,
+              10
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "hb_fault",
+      "topicId": "h_bridge",
+      "prompt": "An H-bridge on a {V} supply should drive its motor left to right, with Q1 and Q4 on and Q2 and Q3 off. Q4's gate gets 10 V; Q1 is a high-side NMOS, so its driver lifts its gate to {Vg1}, 10 V above the supply. Fully on, each MOSFET is about 0.1 Ω (V_t ≈ 2 V). In use the motor runs weakly or not at all. On the bench its shaft is clamped, so it acts as just its winding resistance, {Rm}. Healthy, the meters (10 MΩ) would read {h0} at the motor's left terminal (L), {h1} at its right terminal (R), and {h2} through the winding. The readings are below. Which fault explains them?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            9,
+            12
+          ]
+        },
+        {
+          "name": "Rm",
+          "unit": "Ω",
+          "values": [
+            2.2,
+            3.3,
+            4.7
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vg1",
+          "formula": "V+10",
+          "unit": "V"
+        }
+      ],
+      "fault": {
+        "netlist": "H-bridge\nVS vp 0 {V:spice}\nVG1 g1 0 {Vg1:spice}\nVG4 g4 0 10\nMQ1 vp g1 l NM\nMQ2 l 0 0 NM\nMQ3 vp r r NM\nMQ4 r g4 0 NM\nRM l r {Rm:spice}\n.model NM NMOS(VTO=2 KP=1.25)\n",
+        "probes": [
+          {
+            "label": "Left motor terminal (L)",
+            "probe": "v(l)"
+          },
+          {
+            "label": "Right motor terminal (R)",
+            "probe": "v(r)"
+          },
+          {
+            "label": "Current through the winding",
+            "probe": "i(RM)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "Q1 has failed open",
+            "open": "MQ1",
+            "feedback": "With Q1 open no current could flow, and nothing would connect the left terminal to the supply: it would be pulled down through the winding and Q4, so both terminals would read about 0 V.",
+            "why": "No current flows, and both terminals read about 0 V. The right terminal is held at ground by Q4, and the left one follows it through the idle winding, so the supply isn't reaching the left side at all. The break is between the supply and L: Q1. (Its gate drive is fine; a failed-open die doesn't respond to it.)"
+          },
+          {
+            "text": "Q4 has failed open",
+            "open": "MQ4",
+            "feedback": "With Q4 open no current could flow, and both terminals would read the supply voltage: Q1 holds the left one there, and the winding, carrying no current, drops nothing, so the right one reads the same.",
+            "why": "No current flows, yet both terminals read the supply voltage, {m0} and {m1}. Q1 is clearly connecting L to the supply, and R follows it through the winding because no current flows to drop any voltage. So the right terminal has no path to ground: the break is in Q4."
+          },
+          {
+            "text": "The winding is open (a broken brush lead)",
+            "open": "RM",
+            "feedback": "With the winding open no current could flow, but both switches would still hold their terminals: the left one at the supply voltage through Q1, the right one at 0 V through Q4.",
+            "why": "No current flows, but L reads the supply voltage ({m0}) and R reads 0 V. Both switches are doing their job, and the full supply appears across the motor's terminals with no current through it: the break is in the motor itself."
+          },
+          {
+            "text": "Q1's gate driver has failed: its gate reaches only the supply voltage, not 10 V above it",
+            "value": {
+              "ref": "VG1",
+              "formula": "V"
+            },
+            "feedback": "With Q1's gate only at the supply voltage, current would still flow, but less than healthy: Q1's source (the left terminal) can't rise above its gate minus about V_t, so L would sit several volts below the supply and Q1 would drop those volts as heat.",
+            "why": "Current flows but only {m2} of the healthy {h2}, and L reads {m0}, several volts below the {V} supply, while R is near 0 V as it should be. Q1 is conducting, just not fully on. A high-side NMOS has its source at the motor terminal, so to be fully on its gate must be about 10 V above that terminal, above the supply. With the gate only at the supply, Q1 can pull L up only to about the supply minus V_t minus the overdrive it needs to carry the current (V_t ≈ 2 V, plus 1.4–2.3 V of overdrive here), like a source follower. The volts it drops times the current are heat: Q1 will soon overheat."
+          }
+        ]
+      },
+      "explanation": "Start with the current: zero means a break somewhere in the loop; less than healthy means something in the loop is dropping extra voltage. Then use the two terminals to find where. Each on switch should tie its end of the motor to its rail (L to the supply through Q1, R to ground through Q4). A terminal that reads the wrong rail has lost its switch; a terminal stuck between the rails with current flowing has a switch that isn't fully on. With no current, the winding drops nothing, so both terminals read the same unless the break is in the winding itself.",
+      "hints": [
+        "Is any current flowing? If not, the loop is broken somewhere.",
+        "Which rail is each motor terminal connected to? A terminal that reads the other rail, or neither, points at its switch."
+      ],
+      "schematic": {
+        "netlist": "H-bridge\nVS vp 0 {V:spice}\nMQ1 vp g1 l NM\nMQ2 l g2 0 NM\nMQ3 vp g3 r NM\nMQ4 r g4 0 NM\nRM l r {Rm:spice}\n.model NM NMOS\n",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              -2,
+              4
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "MQ1",
+            "at": [
+              2,
+              2
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "MQ2",
+            "at": [
+              2,
+              10
+            ],
+            "label": "Q2"
+          },
+          {
+            "ref": "MQ3",
+            "at": [
+              14,
+              2
+            ],
+            "flip": true,
+            "label": "Q3"
+          },
+          {
+            "ref": "MQ4",
+            "at": [
+              14,
+              10
+            ],
+            "flip": true,
+            "label": "Q4"
+          },
+          {
+            "ref": "RM",
+            "at": [
+              6,
+              6
+            ],
+            "label": "{Rm}",
+            "symbol": "motor"
+          }
+        ],
+        "wires": [
+          [
+            [
+              -2,
+              4
+            ],
+            [
+              -2,
+              0
+            ],
+            [
+              12,
+              0
+            ]
+          ],
+          [
+            [
+              -2,
+              8
+            ],
+            [
+              -2,
+              12
+            ],
+            [
+              12,
+              12
+            ]
+          ],
+          [
+            [
+              4,
+              4
+            ],
+            [
+              4,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              12,
+              8
+            ]
+          ],
+          [
+            [
+              4,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ],
+          [
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            [
+              2,
+              10
+            ],
+            [
+              1,
+              10
+            ]
+          ],
+          [
+            [
+              14,
+              2
+            ],
+            [
+              15,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              10
+            ],
+            [
+              15,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            8,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "G1",
+            "at": [
+              1,
+              2
+            ],
+            "left": true
+          },
+          {
+            "text": "G2",
+            "at": [
+              1,
+              10
+            ],
+            "left": true
+          },
+          {
+            "text": "G3",
+            "at": [
+              15,
+              2
+            ]
+          },
+          {
+            "text": "G4",
+            "at": [
+              15,
+              10
+            ]
+          },
+          {
+            "text": "L",
+            "at": [
+              4,
+              6
+            ],
+            "left": true
+          },
+          {
+            "text": "R",
+            "at": [
+              12,
+              6
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    }
+  ]
+}

@@ -1,0 +1,1790 @@
+{
+  "topics": [
+    {
+      "id": "schem_nodes",
+      "title": "Reading a schematic: nodes, symbols and ground",
+      "summary": "A schematic is a map of connections, not of positions: find the nodes first, then ask which parts sit between them.",
+      "lenses": [
+        "circuit"
+      ],
+      "prerequisites": [
+        "series_parallel"
+      ],
+      "prerequisiteNotes": {
+        "series_parallel": "Series and parallel are defined by shared nodes; spotting them in a drawing is the first reading skill."
+      },
+      "lensNotes": {
+        "circuit": "Every wire joined together is one node at one voltage, however long or bent it is drawn. Ground symbols scattered around a drawing are all the same node. Read a schematic by naming the nodes, then the parts between them, then what each part does to the voltage or current."
+      },
+      "formulas": [
+        {
+          "label": "Series parts share one current",
+          "tex": "I_{R1} = I_{R2}"
+        },
+        {
+          "label": "Parallel parts share one voltage",
+          "tex": "V_{R1} = V_{R2}"
+        },
+        {
+          "label": "At every node (KCL)",
+          "tex": "\\sum I_{\\text{in}} = \\sum I_{\\text{out}}"
+        }
+      ],
+      "goals": [
+        "Mark every node in a schematic, treating all joined wire and every ground symbol as one node at one voltage",
+        "List the two nodes each part connects, and from that decide which parts are in series and which in parallel, however they are drawn",
+        "Predict what a voltmeter reads between two points by first asking whether they are the same node",
+        "Redraw a messy schematic more tidily without changing a single connection"
+      ],
+      "intuition": "A schematic is a map of connections, not of positions: every piece of joined wire is one node at one voltage, and what a part does depends only on which two nodes it connects.",
+      "why": "A wire in a schematic stands for a conductor whose resistance is negligible next to the parts it joins. With next to no resistance, even the full current through it makes next to no voltage (V = I·R), so every point on joined wire sits at the same voltage: one node. Where a line is drawn and how long it is carry no information. Ground symbols are shorthand for one shared wire, so all of them are the same node. A part only 'sees' the voltages at its two terminals. That is why parts between the same pair of nodes share one voltage (parallel), and why two parts joined at a node that nothing else touches share one current (series, by KCL).",
+      "explanation": "In series and parallel circuits the drawings were tidy, so series and parallel could be read off by eye. Real schematics are drawn for convenience: wires loop over the top, parts sit wherever there was room, and ground appears as many small symbols instead of one wire along the bottom. Read them in three passes. First, name the nodes. Start at one terminal, follow every wire joined to it, through junction dots and long detours, and give the whole connected set one name; repeat until every terminal belongs to a node. All ground symbols are one node. Likewise, points carrying the same net label are one node even with no wire drawn between them. Wires that cross without a dot are not joined. Second, list each part by the two nodes it connects: R1 from the supply to a, R2 from a to ground. Third, group them. Parts between the same two nodes are in parallel. Two parts are in series only if the node between them touches nothing else, so all of one's current must pass through the other. Parts drawn in a line can fail this test, and parts drawn far apart can pass it. A voltmeter between two points on one node reads 0 V, however far apart they are drawn.",
+      "workedExample": {
+        "problem": "A 12 V supply feeds five resistors. R1 = 2.2 kΩ runs from +12 V to a junction a. R2 = 10 kΩ runs from a down to a ground symbol. R3 = 1.8 kΩ runs from a to a junction b, and R4 = 3.3 kΩ from b to a second ground symbol. R5 = 10 kΩ is drawn at the far right, next to R4; its top connects by a long wire over the top of the drawing back to a, and its bottom goes to a third ground symbol. Find the nodes, sort the parts into series and parallel, and find the voltages at a and b.",
+        "steps": [
+          "Nodes: the +12 V wire; a (R1's lower end, R2's top, R3's left end and, through the long wire over the top, R5's top); b (R3's right end and R4's top, nothing else); and ground (all three ground symbols are one node). Four nodes in all.",
+          "Parts by node pair: R1 from +12 V to a; R2 from a to ground; R5 from a to ground; R3 from a to b; R4 from b to ground.",
+          "Series: R3 and R4 meet at b, which nothing else touches, so they carry one current and act as R3 + R4 = 1.8 kΩ + 3.3 kΩ = 5.1 kΩ from a to ground.",
+          "Parallel: R2, R5 and the R3–R4 string all connect a to ground. R5 is drawn beside R4 but is not across it. R2 ∥ R5 = 10 kΩ ∥ 10 kΩ = 5 kΩ, and 5 kΩ ∥ 5.1 kΩ = 2.52 kΩ.",
+          "Node a: R1 and the 2.52 kΩ from a to ground form a divider: V_a = 12 V × 2.52 kΩ / (2.2 kΩ + 2.52 kΩ) = 6.41 V.",
+          "Node b: R3 and R4 divide V_a: V_b = 6.41 V × 3.3 kΩ / 5.1 kΩ = 4.15 V. So R5 has 6.41 V across it, not the 4.15 V across R4 that its position suggests.",
+          "KCL check at a: R1 brings in (12 V − 6.41 V) / 2.2 kΩ = 2.54 mA. R2 and R5 each take 6.41 V / 10 kΩ = 0.641 mA, and the R3–R4 string takes 6.41 V / 5.1 kΩ = 1.26 mA: 0.641 mA + 0.641 mA + 1.26 mA = 2.54 mA. What flows in flows out."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 2 \"Ohm's Law\", section \"Circuit wiring\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_2.html#xtocid87166",
+          "note": "Checked that wire is treated as having negligible resistance, so points joined by wire are electrically common and read about 0 V between them however far apart they are drawn, and that wire length and routing do not change the circuit."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 5 \"Series and Parallel Circuits\", section \"What are \\\"series\\\" and \\\"parallel\\\" circuits?\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_5.html#xtocid87430",
+          "note": "Checked the definitions: series parts form a single current path, and parallel parts connect between the same two sets of electrically common points and so share one voltage."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Components and Symbols\", ch. 3 \"Full Tutorial\", section 3.20 \"Diagrams\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_components.pdf",
+          "note": "Checked that a schematic must show whether crossing wires join (a dot) or only pass, and that points joined by low-resistance wire are equipotential."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "schem_nodes_read_loop",
+      "topicId": "schem_nodes",
+      "prompt": "A node is every piece of wire joined together, however far it wanders across the page. Follow every wire out of the node, including the long one over the top, before you answer.",
+      "variables": [],
+      "reading": {
+        "netlist": "loop\nV1 in 0 12\nR1 in a 1k\nR2 a 0 2.2k\nR3 a b 4.7k\nR4 b 0 1k\nC1 a 0 100n\n",
+        "ask": "parallel",
+        "targets": [
+          "C1",
+          "R2"
+        ],
+        "names": {
+          "in": "node in",
+          "a": "node a",
+          "b": "node b"
+        }
+      },
+      "explanation": "Everything joined by wire is one node, at one voltage. C1 is drawn next to R4, but the long wire over the top joins it to node a, so it sits between node a and ground, in parallel with R2, not across R4.",
+      "hints": [
+        "Put your finger on the node and follow every wire out of it, including the one that loops over the top, until you reach a part."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R3"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R4"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              22,
+              2
+            ],
+            "rot": 90,
+            "label": "C1"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              9,
+              0
+            ],
+            [
+              9,
+              -3
+            ],
+            [
+              22,
+              -3
+            ],
+            [
+              22,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              22,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "a",
+            "at": [
+              6,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              16,
+              0
+            ]
+          }
+        ],
+        "netlist": "loop\nV1 in 0 12\nR1 in a 1k\nR2 a 0 2.2k\nR3 a b 4.7k\nR4 b 0 1k\nC1 a 0 100n\n"
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "schem_nodes_read_grounds",
+      "topicId": "schem_nodes",
+      "prompt": "This drawing has no ground wire along the bottom: each part that goes to ground has its own ground symbol. Every ground symbol is the same node.",
+      "variables": [],
+      "reading": {
+        "netlist": "ladder\nV1 in 0 9\nR1 in a 1k\nR2 a 0 4.7k\nR3 a b 2.2k\nR4 b 0 10k\nR5 a 0 3.3k\n",
+        "ask": "parallel",
+        "targets": [
+          "R2",
+          "R5"
+        ],
+        "names": {
+          "in": "node in",
+          "a": "node a",
+          "b": "node b"
+        }
+      },
+      "explanation": "All ground symbols are one node, so R2 and R5 both connect between node a and ground: they are in parallel, even though no drawn wire joins their bottom ends and R5 is drawn beside R4.",
+      "hints": [
+        "Imagine a wire joining every ground symbol. Then trace the top end of each part to its node."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R3"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R4"
+          },
+          {
+            "ref": "R5",
+            "at": [
+              22,
+              2
+            ],
+            "rot": 90,
+            "label": "R5"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              9,
+              0
+            ],
+            [
+              9,
+              -3
+            ],
+            [
+              22,
+              -3
+            ],
+            [
+              22,
+              2
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            8,
+            6
+          ],
+          [
+            16,
+            6
+          ],
+          [
+            22,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "a",
+            "at": [
+              6,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              16,
+              0
+            ]
+          }
+        ],
+        "netlist": "ladder\nV1 in 0 9\nR1 in a 1k\nR2 a 0 4.7k\nR3 a b 2.2k\nR4 b 0 10k\nR5 a 0 3.3k\n"
+      },
+      "review": "verified"
+    },
+    {
+      "id": "schem_nodes_read_apart",
+      "topicId": "schem_nodes",
+      "prompt": "Parts drawn in a straight line aren't always in series, and parts drawn far apart can be. Check what else connects where two parts meet.",
+      "variables": [],
+      "reading": {
+        "netlist": "apart\nV1 in 0 12\nR1 in a 1k\nR2 a b 2.2k\nR3 b 0 3.3k\nR4 a c 4.7k\nR5 c 0 1k\n",
+        "ask": "series",
+        "targets": [
+          "R2",
+          "R3",
+          "R5"
+        ],
+        "names": {
+          "in": "node in",
+          "a": "node a",
+          "b": "node b",
+          "c": "node c"
+        }
+      },
+      "explanation": "Two parts are in series when they meet at a node that nothing else touches, so all the current through one must go through the other. R2 and R3 are drawn far apart but share node b alone; R1 and R4 sit in a straight line but node a between them also feeds R2, so they aren't in series.",
+      "hints": [
+        "Find the node where the two parts meet. Count how many parts touch it: exactly two means series."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              8,
+              0
+            ],
+            "label": "R4"
+          },
+          {
+            "ref": "R5",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "R5"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              6,
+              2
+            ],
+            "rot": 90,
+            "label": "R2"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              18,
+              8
+            ],
+            "label": "R3"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              2
+            ]
+          ],
+          [
+            [
+              6,
+              6
+            ],
+            [
+              6,
+              8
+            ],
+            [
+              18,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            14,
+            6
+          ],
+          [
+            22,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "a",
+            "at": [
+              6,
+              0
+            ]
+          },
+          {
+            "text": "c",
+            "at": [
+              14,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              10,
+              8
+            ]
+          }
+        ],
+        "netlist": "apart\nV1 in 0 12\nR1 in a 1k\nR2 a b 2.2k\nR3 b 0 3.3k\nR4 a c 4.7k\nR5 c 0 1k\n"
+      },
+      "review": "verified"
+    },
+    {
+      "id": "schem_nodes_same_voltage",
+      "topicId": "schem_nodes",
+      "prompt": "The drawing is powered from 12 V. A voltmeter's leads touch point P (above R2) and point Q (on the long wire above C1). What does the meter read?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "0 V, because P and Q are one node and a drawn wire drops no voltage",
+          "feedback": "Right: the loop over the top joins P and Q directly, so they are one node at one voltage.",
+          "correct": true
+        },
+        {
+          "text": "The voltage across R3, because R3 sits between P and Q on the page",
+          "feedback": "R3 is drawn between them left to right, but the path from P to Q goes over the top through wire only. It never passes through R3."
+        },
+        {
+          "text": "A small voltage, because the long bent wire has some resistance",
+          "feedback": "Schematic wires are ideal: zero resistance, so no current through them makes any voltage. If a real wire's resistance mattered, the drawing would show it as a resistor."
+        },
+        {
+          "text": "It depends on C1's current, because current in a wire drops a voltage",
+          "feedback": "Whatever current flows in the wire, an ideal wire drops I × 0 Ω = 0 V. P and Q are one node."
+        }
+      ],
+      "explanation": "P and Q are joined by wire alone, so they are one node. A voltmeter measures the difference between two nodes; between a node and itself that difference is 0 V, however long the wire is drawn.",
+      "hints": [
+        "Follow the wire from P. Can you reach Q without passing through a part?"
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R3"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R4"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              22,
+              2
+            ],
+            "rot": 90,
+            "label": "C1"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              9,
+              0
+            ],
+            [
+              9,
+              -3
+            ],
+            [
+              22,
+              -3
+            ],
+            [
+              22,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              22,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "P",
+            "at": [
+              7,
+              0
+            ]
+          },
+          {
+            "text": "Q",
+            "at": [
+              22,
+              -3
+            ]
+          }
+        ],
+        "netlist": "loop\nV1 in 0 12\nR1 in a 1k\nR2 a 0 2.2k\nR3 a b 4.7k\nR4 b 0 1k\nC1 a 0 100n\n"
+      },
+      "followUps": [
+        {
+          "prompt": "Why can a schematic draw one node as a long, bent wire without changing the circuit?",
+          "choices": [
+            {
+              "text": "A drawn wire only states a connection: it has zero resistance, so it is all at one voltage",
+              "feedback": "Right: a schematic wire is a statement about connection, not a physical cable with a length.",
+              "correct": true
+            },
+            {
+              "text": "Current slows down along a long wire, but the voltage at both of its ends stays the same",
+              "feedback": "Current doesn't \"slow down\" along a wire; the same current flows in and out. And the point is that the wire is ideal, so nothing about its length matters."
+            },
+            {
+              "text": "Long wires are only allowed where no current flows, so they never drop any voltage",
+              "feedback": "Wires carry current all the time (the wire from V1 to R1 carries the whole supply current). An ideal wire drops no voltage whatever the current."
+            },
+            {
+              "text": "The drawing is scaled down, so the long bent wire is really a short one on the board",
+              "feedback": "A schematic isn't a scale drawing of a board at all. It shows connections, not distances."
+            }
+          ],
+          "explanation": "In a schematic every wire is ideal. Joined wires form one node, and a node has a single voltage. Length, bends and position on the page carry no electrical meaning."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "schem_nodes_redraw",
+      "topicId": "schem_nodes",
+      "prompt": "A classmate tidies this drawing: R3 is moved from the bottom right to sit just under R2, and its long wire is replaced by a short one. R3's left end is now joined straight to R2's bottom end and its right end to a ground symbol beside it. What happens to the circuit?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "Nothing: the same parts join the same nodes, so no voltage or current changes",
+          "feedback": "Right: a schematic records which terminals connect. Redrawing without changing connections gives the same circuit.",
+          "correct": true
+        },
+        {
+          "text": "The current through R3 rises, because its wire path to R2 is now much shorter",
+          "feedback": "The old long wire and the new short one are both ideal, zero resistance. The path length on the page has no effect on the current."
+        },
+        {
+          "text": "R2 and R3 stop being in series, because they are now drawn in a different place",
+          "feedback": "Series depends on sharing a node that nothing else touches. R2 and R3 still share node b alone, wherever they are drawn."
+        },
+        {
+          "text": "R3 now gets a bigger share of the voltage, because it sits closer to the supply",
+          "feedback": "Position doesn't decide voltage shares; resistance and connections do. Those haven't changed."
+        }
+      ],
+      "explanation": "A schematic is a map of connections, not of positions. As long as each terminal joins the same node, the circuit is the same circuit: tidier drawings just make it easier to read. Here R2 and R3 are in series across node a to ground before and after the move.",
+      "hints": [
+        "List each part's two nodes before and after the move. Did any change?"
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              8,
+              0
+            ],
+            "label": "R4"
+          },
+          {
+            "ref": "R5",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "R5"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              6,
+              2
+            ],
+            "rot": 90,
+            "label": "R2"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              18,
+              8
+            ],
+            "label": "R3"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              2
+            ]
+          ],
+          [
+            [
+              6,
+              6
+            ],
+            [
+              6,
+              8
+            ],
+            [
+              18,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            14,
+            6
+          ],
+          [
+            22,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "a",
+            "at": [
+              6,
+              0
+            ]
+          },
+          {
+            "text": "c",
+            "at": [
+              14,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              10,
+              8
+            ]
+          }
+        ],
+        "netlist": "apart\nV1 in 0 12\nR1 in a 1k\nR2 a b 2.2k\nR3 b 0 3.3k\nR4 a c 4.7k\nR5 c 0 1k\n"
+      },
+      "followUps": [
+        {
+          "prompt": "So what does a schematic tell you, if not where the parts are?",
+          "choices": [
+            {
+              "text": "Which terminals join into which nodes, and from that which parts are in series or parallel",
+              "feedback": "Right: read the nodes first, then the parts between them.",
+              "correct": true
+            },
+            {
+              "text": "The order in which the current reaches each part, reading the page from left to right",
+              "feedback": "Current flows around a loop all at once; left-to-right order on the page means nothing electrically."
+            },
+            {
+              "text": "Where to put each part on the circuit board, and which parts must sit next to each other",
+              "feedback": "That is the board layout, a different drawing. The schematic only fixes connections."
+            },
+            {
+              "text": "How long each wire must be, and which way it has to run between the parts",
+              "feedback": "Wires in a schematic are ideal and have no length that matters."
+            }
+          ],
+          "explanation": "The schematic's information is the netlist: each part and the nodes its terminals join. Designers lay it out to be readable (inputs left, outputs right, ground at the bottom), but that's a convention, not physics."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "schem_nodes_what_if_r3",
+      "topicId": "schem_nodes",
+      "prompt": "The circuit is drawn here (fed from {Vin}). R3 = {R3} is swapped for {new_R3}. What happens to the voltage across R5? Trace where R5's top wire really goes before you answer.",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R4",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R5",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rp",
+          "formula": "1/(1/R2+1/R5+1/(R3+R4))",
+          "unit": "Ω"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the voltage across R5",
+        "formula": "Vin*Rp/(R1+Rp)",
+        "unit": "V",
+        "change": {
+          "R3": "10*R3"
+        },
+        "feedback": {
+          "down": "That would be right if R5 were across R4, as the drawing suggests: a bigger R3 takes a bigger share and node b falls. But R5's top wire loops back to node a, so R5 has node a's voltage across it, and node a is set by how much current the branches pull through R1.",
+          "same": "R5 isn't on the R3–R4 branch, but it shares node a with it. Node a sits R1's drop below Vin, and R1 carries the current of every branch hanging off node a, the R3–R4 branch included."
+        }
+      },
+      "explanation": "R5 connects between node a and ground (the loop over the top, and a ground symbol that is the same node as all the others). So its voltage is node a's voltage. A bigger R3 makes the R3–R4 branch draw less, R1 carries less current and drops less, and node a rises: {before} → {after}. Node b, where R5 seemed to be, actually falls.",
+      "hints": [
+        "Which node is R5's top end on? Follow the wire over the top.",
+        "A lighter load on node a means less current through R1, so less voltage lost across it."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          },
+          {
+            "ref": "R5",
+            "at": [
+              22,
+              2
+            ],
+            "rot": 90,
+            "label": "R5\n{R5}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              9,
+              0
+            ],
+            [
+              9,
+              -5
+            ],
+            [
+              22,
+              -5
+            ],
+            [
+              22,
+              2
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            8,
+            6
+          ],
+          [
+            16,
+            6
+          ],
+          [
+            22,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "a",
+            "at": [
+              6,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              16,
+              0
+            ]
+          }
+        ],
+        "netlist": "ladder\nV1 in 0 {Vin:spice}\nR1 in a {R1:spice}\nR2 a 0 {R2:spice}\nR3 a b {R3:spice}\nR4 b 0 {R4:spice}\nR5 a 0 {R5:spice}\n"
+      },
+      "followUps": [
+        {
+          "prompt": "Node b falls when R3 grows. Why does the voltage across R5 go the other way?",
+          "choices": [
+            {
+              "text": "R5 is on node a, not node b; node a rises because R1 carries less current and drops less",
+              "feedback": "Right: the drawing puts R5 beside R4, but its wire says node a.",
+              "correct": true
+            },
+            {
+              "text": "R5 is in series with R3, so it takes the voltage R3 gives up",
+              "feedback": "R5 and R3 meet at node a, but R1 and R2 connect there too, so they aren't in series."
+            },
+            {
+              "text": "R5 is in parallel with R4, and parallel parts always move opposite ways",
+              "feedback": "Parallel parts share both ends and so have exactly the same voltage. R5 isn't across R4 at all."
+            },
+            {
+              "text": "The supply raises its voltage when the load gets lighter",
+              "feedback": "An ideal supply stays at Vin whatever it drives; the rise is at node a, because R1 drops less."
+            }
+          ],
+          "explanation": "Reading the nodes first gives the answer: R5 sits between node a and ground. Node a is a divider between R1 and everything hung on node a; lighten that load and node a moves toward Vin."
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "schem_nodes_read_ground_symbols",
+      "topicId": "schem_nodes",
+      "level": "recall",
+      "prompt": "Every ground symbol in a drawing is the same node, and a node includes every wire joined to it, however far it runs. Read the connections, not the positions.",
+      "variables": [],
+      "reading": {
+        "netlist": "grounds\nV1 in 0 9\nR1 in a 1k\nR2 a 0 4.7k\nR3 a b 2.2k\nR4 b c 3.3k\nR5 c 0 1k\nC1 b 0 100n\n",
+        "ask": "node",
+        "targets": [
+          "0",
+          "b"
+        ],
+        "names": {
+          "in": "node in",
+          "a": "node a",
+          "b": "node b",
+          "c": "node c"
+        }
+      },
+      "explanation": "Name each part by the two nodes it touches. V1, R2, R5 and C1 each end on a ground symbol, and all ground symbols are one node, so all four connect to ground. R4 is drawn pointing down toward the ground row, but its lower end stops at node c, the junction with R5; it never reaches a ground symbol. Node b is R3's right end, R4's top and, through the long wire to the right, C1's top.",
+      "hints": [
+        "Look at each part's two ends in turn. Does that end reach a ground symbol, or does it stop at a junction with another part?"
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R3"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R4"
+          },
+          {
+            "ref": "R5",
+            "at": [
+              16,
+              8
+            ],
+            "label": "R5"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              24,
+              2
+            ],
+            "rot": 90,
+            "label": "C1"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              24,
+              0
+            ],
+            [
+              24,
+              2
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              16,
+              6
+            ],
+            [
+              16,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            8,
+            6
+          ],
+          [
+            20,
+            8
+          ],
+          [
+            24,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "a",
+            "at": [
+              6,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              15,
+              0
+            ]
+          },
+          {
+            "text": "c",
+            "at": [
+              16,
+              7
+            ],
+            "left": true
+          }
+        ],
+        "netlist": "grounds\nV1 in 0 9\nR1 in a 1k\nR2 a 0 4.7k\nR3 a b 2.2k\nR4 b c 3.3k\nR5 c 0 1k\nC1 b 0 100n\n"
+      },
+      "review": "verified"
+    },
+    {
+      "id": "schem_nodes_fault_connections",
+      "topicId": "schem_nodes",
+      "prompt": "This board is built from the drawing and fed from {Vin}: R1 = 1 kΩ, R2 = 4.7 kΩ, R3 = 2.2 kΩ, R4 = 10 kΩ, R5 = 3.3 kΩ. R5's top is joined to node a by the long wire over the top. One connection is faulty. The meter readings (to ground) are below. Which fault explains them?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 6,
+            "max": 12,
+            "step": 1
+          }
+        }
+      ],
+      "fault": {
+        "netlist": "ladder\nV1 in 0 {Vin:spice}\nR1 in a 1k\nR2 a 0 4.7k\nR3 a b 2.2k\nR4 b 0 10k\nR5 a 0 3.3k\n",
+        "probes": [
+          {
+            "label": "Voltage at node a",
+            "probe": "v(a)"
+          },
+          {
+            "label": "Voltage at node b",
+            "probe": "v(b)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "The long wire over the top is broken, so R5 connects to nothing",
+            "open": "R5",
+            "feedback": "With R5 cut off, node a would carry one load fewer: R1 would drop less and node a would rise. Node b is still fed from node a through R3 and R4, so it would rise in step, keeping the same fraction of node a as before.",
+            "why": "Both nodes read higher than normal, and node b is still the same fraction of node a (10 kΩ/12.2 kΩ), so the R3–R4 branch is intact. Node a is carrying less load than it should: the part hung on it by the long wire, R5, is missing."
+          },
+          {
+            "text": "A solder bridge joins node b to ground",
+            "add": "Rbridge b 0 0.01",
+            "feedback": "A bridge from b to ground would pin node b at 0 V and put R3 straight across node a, an extra load, so node a would fall below normal.",
+            "why": "Node b reads 0 V and node a has fallen: something is pulling b to ground and drawing extra current out of node a through R3. A bridge from b to ground does exactly that."
+          },
+          {
+            "text": "R3 has a cracked (open) solder joint",
+            "open": "R3",
+            "feedback": "With R3 open, node b would be cut off from node a: R4 would pull it to 0 V. Node a would lose the R3–R4 load and rise a little above normal.",
+            "why": "Node b reads 0 V, but node a has risen rather than fallen. So b isn't being dragged to ground by an extra path (that would load node a and pull it down); it has lost its feed: R3 is open, and R4 pulls b to 0 V."
+          },
+          {
+            "text": "A solder bridge joins node a to node b",
+            "add": "Rbridge a b 0.01",
+            "feedback": "A bridge from a to b would make them one node, so the meter would read the same voltage at both.",
+            "why": "Node a and node b read the same voltage, so they have become one node: something with no resistance joins them, shorting out R3."
+          }
+        ]
+      },
+      "explanation": "Read the meters node by node. Two nodes that read the same have been joined. A node that reads 0 V is either bridged to ground or has lost its feed; the node before it tells which, because an extra path to ground draws more current and pulls it down, while a lost feed unloads it and lets it rise. If both nodes rise together, keeping their ratio, a load hung on node a has come off: here R5, which is on node a through the long wire even though it is drawn beside R4.",
+      "hints": [
+        "Compare each reading with the working board. Did node a go up or down, and what did node b do?",
+        "More load on a node pulls it down; less load lets it rise. Which fault adds a path and which removes one?"
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n1 kΩ"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n4.7 kΩ"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R3\n2.2 kΩ"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R4\n10 kΩ"
+          },
+          {
+            "ref": "R5",
+            "at": [
+              22,
+              2
+            ],
+            "rot": 90,
+            "label": "R5\n3.3 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              9,
+              0
+            ],
+            [
+              9,
+              -5
+            ],
+            [
+              22,
+              -5
+            ],
+            [
+              22,
+              2
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            8,
+            6
+          ],
+          [
+            16,
+            6
+          ],
+          [
+            22,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "a",
+            "at": [
+              6,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              16,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    }
+  ]
+}

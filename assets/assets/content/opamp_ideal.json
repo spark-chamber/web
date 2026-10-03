@@ -1,0 +1,1334 @@
+{
+  "topics": [
+    {
+      "id": "opamp_ideal",
+      "title": "Ideal op-amp rules",
+      "summary": "With negative feedback, an ideal op amp draws no input current and drives its output until both inputs sit at the same voltage.",
+      "lenses": [
+        "circuit"
+      ],
+      "prerequisites": [
+        "kirchhoff"
+      ],
+      "lensNotes": {
+        "circuit": "Two rules solve almost every op-amp circuit with negative feedback: no current into the inputs, and the output drives the inputs to the same voltage. Write KCL at the inverting input with those two rules."
+      },
+      "formulas": [
+        {
+          "label": "Golden rules (with feedback)",
+          "tex": "V_+ = V_-,\\qquad I_+ = I_- = 0"
+        },
+        {
+          "label": "Voltage divider",
+          "tex": "V_{out} = V_{in}\\,\\frac{R_2}{R_1 + R_2}"
+        }
+      ],
+      "prerequisiteNotes": {
+        "kirchhoff": "The golden rules turn every op-amp circuit into a KCL problem at the inverting input: no current flows into the pins, so the feedback current must equal the input current."
+      },
+      "goals": [
+        "Use the two ideal rules (no input current; with negative feedback, equal input voltages) to find the voltages and currents around an op amp",
+        "Tell when V− = V+ holds: negative feedback is present and the output is not clipping at a supply limit",
+        "Find the output by writing KCL at the − input, including when the + input is not at 0 V",
+        "Explain why a voltage follower lets a divider drive a load without being pulled down"
+      ],
+      "intuition": "With negative feedback (output returned to the − input) and the output inside its supply limits, the op amp moves its output until its two inputs sit at the same voltage, and the inputs themselves draw no current either way.",
+      "why": "An op amp amplifies the difference V+ − V− by a huge open-loop gain, typically 100 000 or more at low frequencies. Feed the output back to the − input and any difference corrects itself: if V+ rises above V−, the output rises and lifts V− until the gap almost vanishes. With a gain of 100 000 and 10 V at the output, the gap is 0.1 mV, so we call it zero. The inputs take only a tiny bias current, tens of nanoamps for a classic bipolar part such as the 741 (half a microamp at most) and picoamps for FET-input parts, so it too is treated as zero. If the output reaches its supply limit it cannot move further, the correction stops, and the inputs no longer match.",
+      "explanation": "An op amp has two inputs, + and −, and one output. It amplifies the difference V+ − V− by an enormous factor, so on its own even a fraction of a millivolt drives the output to a supply limit. Used that way it is a comparator. The trick is negative feedback: a path from the output back to the − input. Now the output moves until the two inputs are equal, and settles there. Two rules follow for an ideal op amp. First, with negative feedback, V− = V+. Second, no current flows into either input. The − input is not wired to the + input; the output holds it there through the feedback path. The simplest case is the voltage follower: the output wired straight to the − input, so Vout = V+. Together the rules turn an op-amp circuit into a KCL problem you already know: the current arriving at the − input through one resistor must leave through the feedback resistor, because it cannot enter the pin. V− = V+ fails without negative feedback, or when the output would have to go beyond what the supply allows, so always check the output.",
+      "workedExample": {
+        "problem": "An op amp runs from ±12 V supplies. Its + input is fed by a divider from +12 V: 47 kΩ on top, 10 kΩ to ground. An ideal 5.0 V source connects through Rin = 10 kΩ to the − input, and Rf = 22 kΩ runs from the − input to the output. Find V+, V−, the current in Rin and the output voltage.",
+        "steps": [
+          "Rf connects the output back to the − input, so the feedback is negative. V− = V+ holds if the output turns out to lie inside the ±12 V supplies; check that at the end.",
+          "No-current rule: the + input draws no current, so the divider is unloaded: V+ = 12 V × 10 kΩ / (47 kΩ + 10 kΩ) = 2.105 V.",
+          "Equal-inputs rule (rule 1): V− = V+ = 2.105 V. This is not a virtual ground: the − input follows the + input, and here the + input is not at 0 V.",
+          "Current in Rin, from the 5.0 V source toward the − input: I = (5.0 V − 2.105 V) / 10 kΩ = 0.2895 mA.",
+          "KCL at the − input: no current enters the pin, so the whole 0.2895 mA flows on through Rf toward the output, dropping 0.2895 mA × 22 kΩ = 6.369 V.",
+          "The output is at the far end of Rf, 6.369 V below the − input: Vout = 2.105 V − 6.369 V = −4.26 V.",
+          "Check: −4.26 V is well inside the ±12 V supplies, so the output is not clipping and V− = V+ held. With Rf = 100 kΩ the same working asks for 2.105 V − 0.2895 mA × 100 kΩ = −26.8 V, beyond the −12 V supply: the output would clip and V− would no longer equal V+."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 8 \"Operational Amplifiers\", section \"The \"operational\" amplifier\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_8.html#xtocid90722",
+          "note": "Open-loop gain is in the hundreds of thousands, so with no feedback a differential input of microvolts drives the output to a limit, which is how a bare op amp works as a comparator; the 741's inputs draw at most about half a microamp, FET-input parts far less."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 8 \"Operational Amplifiers\", section \"Negative feedback\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_8.html#xtocid90723",
+          "note": "Feeding the output back to the inverting input drives the input difference to practically zero, the follower has a gain of 1 with its output current coming from the supply, and this holds only inside the output swing limits."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Operational Amplifiers\" (last update 23 September 2026), section 5.7.3 \"Input bias current\" (p. 184)",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_opamp.pdf",
+          "note": "Inputs are normally analyzed as drawing no current, while real inputs take a small bias current (tens of nanoamps for a 741, p. 184; nanoamps for bipolar inputs and picoamps for FET inputs, p. 70 footnote)."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "oa_rule_inputs_equal",
+      "topicId": "opamp_ideal",
+      "prompt": "An ideal op amp has negative feedback, and its non-inverting input is held at {Vp}. What is the voltage at the inverting input?",
+      "variables": [
+        {
+          "name": "Vp",
+          "unit": "V",
+          "range": {
+            "min": 0.5,
+            "max": 5,
+            "step": 0.5
+          }
+        }
+      ],
+      "choices": [
+        {
+          "text": "{Vp}, the same as the non-inverting input",
+          "correct": true,
+          "feedback": "Yes: with negative feedback the output moves until the difference between the inputs is (almost) zero."
+        },
+        {
+          "text": "0 V, because the inverting input is always a virtual ground",
+          "feedback": "It is a virtual ground only when the non-inverting input is at 0 V. It follows whatever the non-inverting input is at."
+        },
+        {
+          "text": "It depends on the feedback resistors",
+          "feedback": "The resistors set the output voltage, but the feedback forces the inputs equal whatever the resistors are."
+        },
+        {
+          "text": "The supply voltage",
+          "feedback": "That happens without feedback (as a comparator). With negative feedback the inputs are driven equal."
+        }
+      ],
+      "explanation": "Golden rule 1: with negative feedback, the output does whatever it takes to make V− = V+. So V− = {Vp}.",
+      "hints": [
+        "What does negative feedback do to the difference between the inputs?"
+      ],
+      "noDrawing": "a golden rule for any op amp with negative feedback; no particular circuit",
+      "review": "verified"
+    },
+    {
+      "id": "oa_rule_no_current",
+      "topicId": "opamp_ideal",
+      "prompt": "How much current flows into the inputs of an ideal op amp?",
+      "choices": [
+        {
+          "text": "None",
+          "correct": true,
+          "feedback": "Right: an ideal op amp has infinite input resistance, so its inputs draw no current."
+        },
+        {
+          "text": "Whatever current flows through the input resistor",
+          "feedback": "That current has to go somewhere, but not into the op amp: it continues through the feedback resistor."
+        },
+        {
+          "text": "Enough to make the inputs equal",
+          "feedback": "The inputs are made equal by the output voltage acting through the feedback network, not by input current."
+        },
+        {
+          "text": "It depends on the gain",
+          "feedback": "The ideal input current is zero at any gain."
+        }
+      ],
+      "explanation": "Golden rule 2: the inputs draw no current. So any current through an input resistor must flow on through the feedback resistor, which is how you find the output voltage.",
+      "noDrawing": "a golden rule about any ideal op amp's inputs; no circuit",
+      "level": "recall",
+      "review": "verified"
+    },
+    {
+      "id": "oa_input_current",
+      "topicId": "opamp_ideal",
+      "prompt": "An inverting amplifier (ideal op amp on ±15 V supplies) has its non-inverting input grounded, Rin = {Rin} and Rf = {Rf}. The input is {Vin}. What current flows through Rin?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 0.1,
+            "max": 1,
+            "step": 0.1
+          }
+        },
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "Vin/Rin",
+        "unit": "A"
+      },
+      "explanation": "The inverting input is a virtual ground (0 V), so Rin has {Vin} on one end and 0 V on the other: I = {Vin} / {Rin} = {answer}. That same current flows through Rf, because none goes into the op amp.",
+      "hints": [
+        "What voltage is the inverting input at?",
+        "It's at 0 V (virtual ground), so I = Vin / Rin."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vin/(Rin+Rf)",
+          "feedback": "Rin and Rf aren't simply in series from the input to ground: the inverting input is held at 0 V, so only Rin sets this current."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Nothing connects the − input to ground. Why does it still sit at 0 V?",
+          "choices": [
+            {
+              "text": "The output, acting through Rf, pulls V− to match V+, which is grounded",
+              "feedback": "Right: negative feedback keeps the two inputs equal, and here V+ is 0 V. That's a virtual ground: held at 0 V, but no current goes to ground there.",
+              "correct": true
+            },
+            {
+              "text": "Current leaks from the − input to ground inside the op amp",
+              "feedback": "No current flows into an ideal op amp's inputs, so there is no path to ground through it. The 0 V comes from the output acting through Rf."
+            },
+            {
+              "text": "The output sits at 0 V, and Rf ties the − input to it",
+              "feedback": "The output isn't at 0 V: it is −(Rf/Rin)·Vin. It moves to whatever voltage makes the current through Rf pull the − input to 0 V."
+            },
+            {
+              "text": "Rin and Rf form a divider from the input to ground, and its middle happens to be 0 V",
+              "feedback": "Rf goes to the output, not to ground, and a divider fed with a positive Vin can't give 0 V at its middle on its own. The op amp's output is what holds that node at 0 V."
+            }
+          ],
+          "explanation": "This is golden rule 1 at work: with negative feedback the op amp makes V− = V+. With V+ grounded, V− stays at 0 V, which is why Kirchhoff's current law at that node is so simple: Vin/Rin in, the same current out through Rf."
+        }
+      ],
+      "schematic": {
+        "netlist": "inverting\nV1 in 0 {Vin:spice}\nR1 in inv {Rin:spice}\nR2 inv out {Rf:spice}\nX1 0 inv out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rin {Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "oa_follower",
+      "topicId": "opamp_ideal",
+      "prompt": "An op amp (ideal, on ±15 V supplies) has its output wired straight to its inverting input (a voltage follower). The non-inverting input is at {Vin}. What is the output voltage?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 0.5,
+            "max": 5,
+            "step": 0.5
+          }
+        }
+      ],
+      "answer": {
+        "formula": "Vin",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "With negative feedback the op amp makes V− = V+. The output is V−, so V_out = V+ = {answer}: a gain of exactly 1, with a very high input resistance.",
+      "hints": [
+        "Which input is the output connected to?",
+        "Negative feedback forces V− = V+, and here V− is the output."
+      ],
+      "schematic": {
+        "netlist": "follower\nV1 in 0 {Vin:spice}\nX1 in out out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "flip": true,
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ],
+            [
+              13,
+              7
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "oa_divider_input",
+      "topicId": "opamp_ideal",
+      "prompt": "An ideal op amp with negative feedback (output not clipping) has its non-inverting input fed by a divider from {Vs}: R1 = {R1} on top, R2 = {R2} to ground. What voltage sits at the inverting input?",
+      "variables": [
+        {
+          "name": "Vs",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500,
+            2200,
+            3300,
+            4700,
+            6800,
+            10000,
+            15000,
+            22000,
+            33000,
+            47000,
+            68000
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            1200,
+            1800,
+            2700,
+            3900,
+            5600,
+            8200,
+            12000,
+            18000,
+            27000,
+            39000,
+            56000,
+            82000
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "Vs*R2/(R1+R2)",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "No current flows into the input, so the divider is unloaded: V+ = {Vs} × {R2}/({R1} + {R2}) = {answer}. Negative feedback makes V− equal to V+.",
+      "hints": [
+        "Two golden rules: no input current, and V− = V+ with negative feedback.",
+        "First find V+ from the unloaded divider."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vs*R1/(R1+R2)",
+          "feedback": "That's the drop across the top resistor. The input sits at the junction: V+ = Vs·R2/(R1 + R2)."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "The op amp's + input is connected to the divider's midpoint. Why can you still use the unloaded divider formula?",
+          "choices": [
+            {
+              "text": "The + input draws no current, so R1 and R2 carry the same current, exactly as if nothing were connected",
+              "feedback": "Right: with no current taken from the midpoint, the divider is unloaded, so V+ = Vs·R2/(R1 + R2).",
+              "correct": true
+            },
+            {
+              "text": "Feedback forces the + input to the divider value",
+              "feedback": "Feedback acts on the − input through the output; it doesn't pull on the + input. The + input just sits wherever the divider puts it."
+            },
+            {
+              "text": "The + input is a virtual ground, so it doesn't count",
+              "feedback": "A virtual ground sits at 0 V. This input sits at the divider voltage, which isn't 0 V."
+            },
+            {
+              "text": "The op amp supplies the divider current, so the divider doesn't have to",
+              "feedback": "The op amp's inputs neither take nor give current. Only its output supplies current, and the output isn't connected to the divider."
+            }
+          ],
+          "explanation": "Golden rule 2: an ideal op-amp input draws no current. So the divider from Foundations is unloaded and V+ = Vs·R2/(R1 + R2). Rule 1 then copies that voltage to the − input."
+        }
+      ],
+      "schematic": {
+        "netlist": "divider into follower\nV1 vs 0 {Vs:spice}\nR1 vs p {R1:spice}\nR2 p 0 {R2:spice}\nX1 p out out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              -2,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vs}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              -1
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              2,
+              3
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "flip": true,
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              -2,
+              2
+            ],
+            [
+              -2,
+              -1
+            ],
+            [
+              2,
+              -1
+            ]
+          ],
+          [
+            [
+              2,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ],
+            [
+              13,
+              7
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            -2,
+            6
+          ],
+          [
+            2,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "oa_what_if_rf_current",
+      "topicId": "opamp_ideal",
+      "prompt": "An inverting amplifier (non-inverting input grounded, op amp on ±15 V supplies, not drawn) has Rin = {Rin}, Rf = {Rf} and {Vin} at its input. Rf is swapped for {new_Rf}. What happens to the current through Rin?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 0.1,
+            "max": 1,
+            "step": 0.1
+          }
+        },
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the current through Rin",
+        "formula": "Vin/Rin",
+        "unit": "A",
+        "change": {
+          "Rf": "Rf/10"
+        },
+        "feedback": {
+          "up": "Smaller total resistance, more current? Rin and Rf aren't in series to ground. Feedback still holds the − input at 0 V, so Rin has {Vin} on one end and 0 V on the other, whatever Rf is.",
+          "down": "Rf doesn't sit in the path that sets this current. The − input stays at 0 V, so the current is {Vin}/{Rin} with either Rf; only the output voltage changes."
+        }
+      },
+      "explanation": "The − input is a virtual ground, so the current through Rin is Vin/Rin = {after}, set by Rin alone. A smaller Rf means the output needs to swing less to carry that same current back through Rf: the gain drops to a tenth, the input current doesn't change.",
+      "hints": [
+        "What voltage sits at the − input, before and after the change?"
+      ],
+      "followUps": [
+        {
+          "prompt": "Why doesn't changing Rf change the current through Rin?",
+          "choices": [
+            {
+              "text": "Feedback holds the − input at 0 V, so Rin's current is set by Vin and Rin alone",
+              "feedback": "Right: Ohm's law across Rin: (Vin − 0 V)/Rin. Rf changes only how far the output has to swing to carry that current.",
+              "correct": true
+            },
+            {
+              "text": "The current through Rf is always zero, so Rf's value can't matter to Rin",
+              "feedback": "Rf carries the whole input current: none of it can go into the op amp, so it all flows on through Rf."
+            },
+            {
+              "text": "The op amp's − input absorbs any change in current, so Rin's stays put",
+              "feedback": "An ideal op-amp input takes no current at all, so it can't absorb a change."
+            },
+            {
+              "text": "Rf and Rin are in series, but the op amp supplies the extra current when Rf drops",
+              "feedback": "There is no extra current: the op amp's input takes no current, and Rin's current is (Vin − 0 V)/Rin, fixed by the virtual ground."
+            }
+          ],
+          "explanation": "The virtual ground splits the circuit in two: Ohm's law across Rin sets the current, and Kirchhoff's current law sends all of it through Rf. Rf only sets how far the output has to swing."
+        }
+      ],
+      "schematic": {
+        "netlist": "inverting\nV1 in 0 {Vin:spice}\nR1 in inv {Rin:spice}\nR2 inv out {Rf:spice}\nX1 0 inv out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "Rin {Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "oa_what_if_buffer_load",
+      "topicId": "opamp_ideal",
+      "prompt": "A divider (R1 = {R1} on top, R2 = {R2} to ground, fed from {Vs}) drives the + input of a voltage follower. The op amp runs from ±15 V (not drawn), and its output feeds a load RL = {RL}. RL is swapped for {new_RL}. What happens to the voltage at the divider's midpoint?",
+      "variables": [
+        {
+          "name": "Vs",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the voltage at the divider's midpoint",
+        "formula": "Vs*R2/(R1+R2)",
+        "unit": "V",
+        "change": {
+          "RL": "RL/10"
+        },
+        "feedback": {
+          "down": "A heavier load does draw ten times the current, but that current comes from the op amp's output and supplies, not from the divider. The + input takes no current, so the divider stays unloaded.",
+          "up": "Nothing new flows into the divider: the follower's + input neither takes nor gives current, whatever the load does."
+        }
+      },
+      "explanation": "The midpoint stays at Vs·R2/(R1 + R2) = {after}. The follower's input draws no current, so the divider never sees the load; the extra load current comes from the op amp's supply (the load now draws {IL}, well within a typical op amp's output limit of about 20 mA). Without the follower, RL would sit in parallel with R2 and pull the midpoint down (a loaded divider).",
+      "hints": [
+        "Where does the load current come from: the divider, or the op amp's output?"
+      ],
+      "schematic": {
+        "netlist": "buffered divider\nV1 vs 0 {Vs:spice}\nR1 vs p {R1:spice}\nR2 p 0 {R2:spice}\nX1 p out out OA\nRL out 0 {RL:spice}\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              -2,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vs}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              -1
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              2,
+              3
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "flip": true,
+            "label": ""
+          },
+          {
+            "ref": "RL",
+            "at": [
+              16,
+              4
+            ],
+            "rot": 90,
+            "label": "RL\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              -2,
+              2
+            ],
+            [
+              -2,
+              -1
+            ],
+            [
+              2,
+              -1
+            ]
+          ],
+          [
+            [
+              2,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ],
+            [
+              13,
+              7
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              16,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            -2,
+            6
+          ],
+          [
+            2,
+            7
+          ],
+          [
+            16,
+            8
+          ]
+        ],
+        "labels": []
+      },
+      "derived": [
+        {
+          "name": "IL",
+          "formula": "Vs*R2/(R1+R2)/(RL/10)",
+          "unit": "A"
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "oa_design_buffered_divider",
+      "topicId": "opamp_ideal",
+      "prompt": "A voltage follower (ideal op amp on ±15 V supplies, not drawn) must deliver {Vout} (within 5%) to a load RL = {RL}. Its + input is fed by a divider from {Vs}: R1 on top, R2 to ground. Choose R1 and R2 from the E24 series, each between 10 kΩ and 1 MΩ.",
+      "variables": [
+        {
+          "name": "Vs",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "k",
+          "unit": "",
+          "range": {
+            "min": 0.2,
+            "max": 0.8,
+            "step": 0.05
+          }
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            2200,
+            4700,
+            10000
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vout",
+          "formula": "k*Vs",
+          "unit": "V"
+        },
+        {
+          "name": "ratio",
+          "formula": "(1-k)/k",
+          "unit": ""
+        },
+        {
+          "name": "R1ex",
+          "formula": "100000*(1-k)/k",
+          "unit": "Ω"
+        },
+        {
+          "name": "IL",
+          "formula": "k*Vs/RL",
+          "unit": "A"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "R1",
+            "label": "R1 (top)",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 10000,
+            "max": 1000000
+          },
+          {
+            "name": "R2",
+            "label": "R2 (bottom)",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 10000,
+            "max": 1000000
+          }
+        ],
+        "result": "Vs*R2/(R1+R2)",
+        "resultLabel": "output voltage",
+        "resultUnit": "V",
+        "target": "k*Vs",
+        "tolerance": 0.05
+      },
+      "explanation": "The + input draws no current, so the divider is unloaded: V+ = {Vs}·R2/(R1 + R2). Negative feedback makes the output equal V+, and the load current, {IL}, comes from the op amp's output, not through the divider. So RL plays no part in the choice: you need R1/R2 = ({Vs} − {Vout})/{Vout} = {ratio}. For example, take R2 = 100 kΩ; then R1 = {R1ex}; round it to the nearest E24 value and check Vs·R2/(R1 + R2). Without the follower, RL would sit in parallel with R2 and pull the output down. With a real op amp, the input bias current flows through R1∥R2 and shifts V+; keep that parallel resistance modest (around 100 kΩ or less) or use a FET-input part when you choose large values.",
+      "hints": [
+        "Does any of the load current flow through the divider?",
+        "The + input takes no current: V+ = Vs·R2/(R1 + R2), and the follower's output equals V+."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does the load RL = {RL} not enter your choice of R1 and R2?",
+          "choices": [
+            {
+              "text": "The + input draws no current, and the load current comes from the op amp's output, so the divider never sees RL",
+              "feedback": "Right: golden rule 2. The divider only carries its own current, and the op amp supplies the {IL} the load takes.",
+              "correct": true
+            },
+            {
+              "text": "It does: RL sits in parallel with R2, so R2 must be made larger to make up for it",
+              "feedback": "That is true of a divider driving the load directly. Here RL hangs on the op amp's output, and the + input takes no current, so nothing from RL reaches the divider."
+            },
+            {
+              "text": "Because RL is much larger than R1 and R2",
+              "feedback": "It isn't: RL is no larger than the smallest divider resistor allowed here (10 kΩ). What isolates the divider is the + input drawing no current, not the size of RL."
+            },
+            {
+              "text": "Because a follower has a gain of 1, so no current flows through it to the load",
+              "feedback": "The follower does deliver current to the load, {IL} here, drawn from its supplies. A gain of 1 describes the voltage, not the current."
+            }
+          ],
+          "explanation": "Golden rule 2: no current flows into the + input. The divider supplies only its own current, so its midpoint is set by R1 and R2 alone. Feedback makes the output copy that voltage, and the op amp takes the load current from its supply rails. That is why a follower lets high-value resistors, which waste little current, set a voltage for a heavy load."
+        }
+      ],
+      "schematic": {
+        "netlist": "buffered divider\nV1 vs 0 {Vs:spice}\nR1 vs p {R1:spice}\nR2 p 0 {R2:spice}\nX1 p out out OA\nRL out 0 {RL:spice}\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              -2,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vs}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              -1
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              2,
+              3
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "flip": true,
+            "label": ""
+          },
+          {
+            "ref": "RL",
+            "at": [
+              16,
+              4
+            ],
+            "rot": 90,
+            "label": "RL\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              -2,
+              2
+            ],
+            [
+              -2,
+              -1
+            ],
+            [
+              2,
+              -1
+            ]
+          ],
+          [
+            [
+              2,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ],
+            [
+              13,
+              7
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              16,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            -2,
+            6
+          ],
+          [
+            2,
+            7
+          ],
+          [
+            16,
+            8
+          ]
+        ],
+        "labels": []
+      }
+    }
+  ]
+}

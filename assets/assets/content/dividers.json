@@ -1,0 +1,1916 @@
+{
+  "topics": [
+    {
+      "id": "dividers",
+      "title": "Voltage and current dividers",
+      "summary": "Two resistors split a voltage in proportion to their values; parallel branches split a current in inverse proportion.",
+      "lenses": [
+        "circuit"
+      ],
+      "prerequisites": [
+        "series_parallel"
+      ],
+      "lensNotes": {
+        "circuit": "Dividers make reference voltages, scale signals for an ADC and set transistor bias. The output only stays put if the load draws much less current than the divider itself, so either keep the load large or buffer it."
+      },
+      "formulas": [
+        {
+          "label": "Voltage divider",
+          "tex": "V_{out} = V_{in}\\,\\frac{R_2}{R_1 + R_2}"
+        },
+        {
+          "label": "Current divider",
+          "tex": "I_1 = I\\,\\frac{R_2}{R_1 + R_2}"
+        }
+      ],
+      "prerequisiteNotes": {
+        "series_parallel": "A voltage divider is two resistors in series sharing one current; a current divider is two in parallel sharing one voltage."
+      },
+      "goals": [
+        "Find a divider's output voltage from its two resistors and the supply",
+        "Split a current between parallel branches, knowing the smaller resistance takes the larger share",
+        "Explain why an unloaded divider's output depends on the ratio of the resistors, not their size",
+        "Predict how much a load pulls the output down, and choose resistor values that keep it small"
+      ],
+      "intuition": "An unloaded divider's output is set by the ratio of its resistors: the same current flows through both, so each takes a share of the supply in proportion to its resistance.",
+      "why": "With nothing connected to the output, the same current flows through R1 and R2 (charge has nowhere else to go). Each resistor drops I·R, so the drops split the supply in the ratio R1 : R2. Multiply both resistors by ten and the current falls to a tenth, but the ratio, and so the output, stays the same. A load connected across R2 is a second path for that current: it lowers the effective bottom resistance, so the output falls.",
+      "explanation": "Two resistors in series across a supply make a voltage divider. The output is taken across the bottom resistor R2, and Vout = Vin · R2 / (R1 + R2). Only the ratio matters with nothing connected to the output. In practice something is always connected: a meter, an ADC input, a transistor's base. That load sits in parallel with R2 and pulls the output down. The rule of thumb: keep the load at least ten times R2 and the output drops by less than 10%, whatever R1 is (the exact drop depends on both resistors, as the Thevenin topic shows). Put two resistors in parallel instead and they share one voltage, so the current splits the other way: I1 = I · R2 / (R1 + R2). The smaller resistance takes the larger share of the current. Smaller resistors hold up better under load but draw more current and waste more power, so choosing a divider is a trade between accuracy and power.",
+      "workedExample": {
+        "problem": "A 12 V supply feeds R1 = 10 kΩ on top and R2 = 4.7 kΩ on the bottom. What is the output with nothing connected, and what is it with a 10 kΩ load across R2?",
+        "steps": [
+          "Unloaded: Vout = 12 V × 4.7 kΩ / (10 kΩ + 4.7 kΩ) = 12 V × 0.320 = 3.84 V.",
+          "The divider current is 12 V / 14.7 kΩ = 0.816 mA, so the pair draws about 9.8 mW from the supply.",
+          "Loaded: the 10 kΩ load is in parallel with R2: 4.7 kΩ ∥ 10 kΩ = (4.7 kΩ × 10 kΩ) / (4.7 kΩ + 10 kΩ) = 3.20 kΩ.",
+          "Vout = 12 V × 3.20 kΩ / (10 kΩ + 3.20 kΩ) = 2.91 V: the load pulled the output down by about 24%, because it is only about twice R2, not ten times. With a 47 kΩ load (ten times R2) the output would be 3.59 V, about 6% low."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 6 \"Divider Circuits and Kirchhoff's Laws\", section \"Voltage divider circuits\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_6.html#xtocid87520",
+          "note": "Each series drop is the supply times its resistance over the total, and the ratio does not depend on the supply."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 6 \"Divider Circuits and Kirchhoff's Laws\", section \"Current divider circuits\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_6.html#xtocid87522",
+          "note": "Branch current is the total times R_total over the branch resistance, so the smaller branch takes more current."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 8 \"DC Metering Circuits\", section \"Voltmeter impact on measured circuit\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_8.html#xtocid87702",
+          "note": "A load across the lower resistor forms a parallel pair with it and pulls the divider output down."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "div_vout",
+      "topicId": "dividers",
+      "prompt": "A voltage divider has R1 = {R1} on top and R2 = {R2} on the bottom, fed from {Vin}. What is the output voltage across R2?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 3,
+            "max": 24,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500,
+            2200,
+            3300,
+            4700,
+            6800,
+            10000,
+            15000,
+            22000
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            1200,
+            1800,
+            2700,
+            3900,
+            5600,
+            8200,
+            12000,
+            18000,
+            27000,
+            39000,
+            56000,
+            82000
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "I",
+          "formula": "Vin/(R1+R2)",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "Vin*R2/(R1+R2)",
+        "unit": "V"
+      },
+      "explanation": "Vout = Vin · R2 / (R1 + R2) = {Vin} × {R2} / ({R1} + {R2}) = {answer}. Check: the current is {I}, and {I} × {R2} gives the same voltage.",
+      "hints": [
+        "The same current flows through R1 and R2.",
+        "Vout = Vin · R2 / (R1 + R2), with R2 the resistor you measure across."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vin*R1/(R1+R2)",
+          "feedback": "That's the voltage across R1 (the top resistor). The output is taken across R2: Vout = Vin · R2 / (R1 + R2)."
+        },
+        {
+          "formula": "Vin*R2/R1",
+          "feedback": "Divide by the total resistance R1 + R2, not by R1 alone."
+        }
+      ],
+      "simCheck": {
+        "netlist": "divider\nV1 in 0 {Vin:spice}\nR1 in out {R1:spice}\nR2 out 0 {R2:spice}\n",
+        "probe": "v(out)"
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "Why does R2 get the share R2 / (R1 + R2) of the input?",
+          "choices": [
+            {
+              "text": "The same current flows through both resistors, so each drops a voltage in proportion to its resistance",
+              "feedback": "Right: one current, I = Vin/(R1 + R2), and V = I·R for each resistor.",
+              "correct": true
+            },
+            {
+              "text": "Current splits between R1 and R2, and more goes through the smaller one",
+              "feedback": "That describes resistors in parallel. In a divider they are in series, so the same current flows through both."
+            },
+            {
+              "text": "The bottom resistor is closer to ground, so it takes the larger share",
+              "feedback": "Position doesn't matter; resistance does. Swap R1 and R2 and the shares swap with them."
+            },
+            {
+              "text": "R2 limits the supply voltage to its own value",
+              "feedback": "A resistor doesn't set a voltage by itself; the voltage across it is its current times its resistance."
+            }
+          ],
+          "explanation": "Series parts share one current. Kirchhoff's voltage law says their drops add up to Vin, and Ohm's law makes each drop proportional to its resistance, so R2 takes the fraction R2/(R1 + R2)."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "div_design_r2",
+      "topicId": "dividers",
+      "prompt": "You want {Vout} from a {Vin} supply using a divider with R1 = {R1} on top. What value should R2 (bottom) be?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 24,
+            "step": 1
+          }
+        },
+        {
+          "name": "k",
+          "unit": "",
+          "range": {
+            "min": 0.2,
+            "max": 0.8,
+            "step": 0.1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vout",
+          "formula": "k*Vin",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "R1*Vout/(Vin-Vout)",
+        "unit": "Ω"
+      },
+      "explanation": "The voltages split in proportion to the resistances: R2 / R1 = Vout / (Vin − Vout). So R2 = {R1} × {Vout} / ({Vin} − {Vout}) = {answer}.",
+      "hints": [
+        "The ratio of the two resistors equals the ratio of the voltages across them.",
+        "R2 = R1 · Vout / (Vin − Vout)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "R1*Vout/Vin",
+          "feedback": "The voltage across R1 is Vin − Vout, not Vin. Use R2 = R1 · Vout / (Vin − Vout)."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does R2 / R1 equal Vout / (Vin − Vout)?",
+          "choices": [
+            {
+              "text": "One current flows through both resistors, so each voltage is that current times its resistance, and the current cancels in the ratio",
+              "feedback": "Right: Vout = I·R2 and Vin − Vout = I·R1, so the voltages are in the same ratio as the resistances.",
+              "correct": true
+            },
+            {
+              "text": "Vin − Vout is the voltage across R2",
+              "feedback": "Vout is across R2, the bottom resistor. Vin − Vout is what's left, and it sits across R1."
+            },
+            {
+              "text": "The output depends only on R2, so any R1 works",
+              "feedback": "The output depends on the ratio of the two. Change R1 and R2 must change in step."
+            },
+            {
+              "text": "It only holds when the two resistors are equal",
+              "feedback": "It holds for any values: the current is shared, so the drops are in proportion to the resistances."
+            }
+          ],
+          "explanation": "KVL splits Vin into Vout (across R2) and Vin − Vout (across R1). One current flows through both, so each drop is I·R and the ratio of drops is R2 / R1. Only the ratio matters, which is why you can pick R1 first and scale R2 to it."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n?"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ],
+        "netlist": "divider\nV1 in 0 {Vin:spice}\nR1 in out {R1:spice}\nR2 out 0 1k\n"
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "div_current",
+      "topicId": "dividers",
+      "prompt": "A current of {I} splits between R1 = {R1} and R2 = {R2} in parallel. How much current flows through R1?",
+      "variables": [
+        {
+          "name": "I",
+          "unit": "A",
+          "series": "E12",
+          "decades": [
+            -3,
+            -3
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            100,
+            150,
+            220,
+            330,
+            470,
+            680,
+            1000,
+            1500,
+            2200,
+            3300,
+            4700,
+            6800
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            120,
+            180,
+            270,
+            390,
+            560,
+            820,
+            1200,
+            1800,
+            2700,
+            3900,
+            5600,
+            8200
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "I*R2/(R1+R2)",
+        "unit": "A"
+      },
+      "explanation": "Current divides in inverse proportion to resistance: I1 = I · R2 / (R1 + R2) = {I} × {R2} / ({R1} + {R2}) = {answer}. The smaller resistor carries the larger share.",
+      "hints": [
+        "Which way does more current go: through the bigger or the smaller resistor?",
+        "I1 = I · R2 / (R1 + R2): note the OTHER resistor on top."
+      ],
+      "misconceptions": [
+        {
+          "formula": "I*R1/(R1+R2)",
+          "feedback": "That puts R1 on top, which is the current through R2. Current favors the smaller resistance, so I1 = I · R2 / (R1 + R2)."
+        }
+      ],
+      "simCheck": {
+        "netlist": "current divider\nI1 0 top {I:spice}\nR1 top 0 {R1:spice}\nR2 top 0 {R2:spice}\n",
+        "probe": "i(R1)"
+      },
+      "estimate": true,
+      "followUps": [
+        {
+          "prompt": "Why does R1's share of the current have the other resistor, R2, on top?",
+          "choices": [
+            {
+              "text": "Both resistors have the same voltage across them, so the smaller one passes more current; R1's share grows as R2 gets bigger",
+              "feedback": "Right: one voltage across both, and I = V / R, so current divides in inverse proportion to resistance.",
+              "correct": true
+            },
+            {
+              "text": "Current takes only the easiest path",
+              "feedback": "Current takes every path, in inverse proportion to resistance. The bigger resistor still carries some."
+            },
+            {
+              "text": "It's just a convention; R1 on top works equally well",
+              "feedback": "With R1 on top you get the current through R2. The two differ unless R1 = R2."
+            },
+            {
+              "text": "The two currents are equal because the resistors are in parallel",
+              "feedback": "Parallel parts share a voltage, not a current. The currents are equal only if the resistors are."
+            }
+          ],
+          "explanation": "In parallel one voltage V sits across both, so I1 = V / R1 and I2 = V / R2, and I1 / I2 = R2 / R1: the smaller resistor takes the bigger share. Adding them up gives I1 = I·R2 / (R1 + R2). Compare the voltage divider, where series parts share a current and the bigger resistor takes the bigger share."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "I1",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 270,
+            "label": "{I}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              2
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              10,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            2,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "div_loaded",
+      "topicId": "dividers",
+      "prompt": "A divider of two equal {R} resistors is fed from {Vin}. A load of {RL} is connected across the bottom resistor. What is the output voltage now?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 4,
+            "max": 24,
+            "step": 2
+          }
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500,
+            2200,
+            3300,
+            4700,
+            6800,
+            10000
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rp",
+          "formula": "R*RL/(R+RL)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Vnl",
+          "formula": "Vin/2",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "Vin*Rp/(R+Rp)",
+        "unit": "V"
+      },
+      "explanation": "The load is in parallel with the bottom resistor: {R} || {RL} = {Rp}. The divider is now {R} over {Rp}, so Vout = {Vin} × {Rp} / ({R} + {Rp}) = {answer}, below the unloaded {Vnl}.",
+      "hints": [
+        "The load and the bottom resistor are in parallel.",
+        "Replace the bottom resistor with R || RL, then use the divider formula."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vin/2",
+          "feedback": "That's the unloaded output. The load in parallel with the bottom resistor lowers its resistance, so the output drops."
+        }
+      ],
+      "simCheck": {
+        "netlist": "loaded divider\nV1 in 0 {Vin:spice}\nR1 in out {R:spice}\nR2 out 0 {R:spice}\nRL out 0 {RL:spice}\n",
+        "probe": "v(out)"
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1 {R}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              13,
+              2
+            ],
+            "rot": 90,
+            "label": "RL\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              13,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              11,
+              0
+            ]
+          }
+        ]
+      },
+      "steps": [
+        "With no load, equal resistors give half the input: {Vnl}.",
+        "The load sits in parallel with the bottom resistor: {R} ∥ {RL} = {Rp}.",
+        "Use the divider rule with that new bottom resistance: {Vin} × {Rp}/({R} + {Rp}) = {answer}.",
+        "The load pulls the output below the unloaded {Vnl}: a stiff divider needs a load much larger than R."
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "div_design_pair",
+      "topicId": "dividers",
+      "prompt": "Design a divider that makes {Vout} (within 5%) from {Vin}. Choose R1 (top) and R2 (bottom) from the E24 series, between 1 kΩ and 100 kΩ.",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 24,
+            "step": 1
+          }
+        },
+        {
+          "name": "k",
+          "unit": "",
+          "range": {
+            "min": 0.2,
+            "max": 0.8,
+            "step": 0.05
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vout",
+          "formula": "k*Vin",
+          "unit": "V"
+        },
+        {
+          "name": "ratio",
+          "formula": "(1-k)/k",
+          "unit": ""
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "R1",
+            "label": "R1 (top)",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 1000,
+            "max": 100000
+          },
+          {
+            "name": "R2",
+            "label": "R2 (bottom)",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 1000,
+            "max": 100000
+          }
+        ],
+        "result": "Vin*R2/(R1+R2)",
+        "resultLabel": "V_out",
+        "resultUnit": "V",
+        "target": "k*Vin",
+        "tolerance": 0.05
+      },
+      "explanation": "The top resistor drops Vin − Vout and the bottom one Vout, so R1/R2 = (Vin − Vout)/Vout = {ratio}. Pick R2 (say 10 kΩ), multiply by {ratio} for R1, and round to E24. Check: Vout = Vin·R2/(R1 + R2).",
+      "hints": [
+        "What ratio R1/R2 do you need?",
+        "R1/R2 = (Vin − Vout)/Vout; choose R2 and scale."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ],
+        "netlist": "divider\nV1 in 0 {Vin:spice}\nR1 in out {R1:spice}\nR2 out 0 {R2:spice}\n"
+      },
+      "review": "verified"
+    },
+    {
+      "id": "divider_loading_concept",
+      "topicId": "dividers",
+      "prompt": "You connect a load across the bottom resistor of a voltage divider. Why does the output voltage drop?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "The load sits in parallel with the bottom resistor, lowering its effective resistance",
+          "feedback": "Right: a smaller bottom resistance takes a smaller share of the input.",
+          "correct": true
+        },
+        {
+          "text": "The load uses up voltage from the supply",
+          "feedback": "The supply voltage stays the same; the division ratio changes."
+        },
+        {
+          "text": "Current stops flowing through the top resistor",
+          "feedback": "More current flows through the top resistor, dropping more voltage there."
+        },
+        {
+          "text": "It doesn't drop; dividers ignore their load",
+          "feedback": "Only an infinitely large load leaves the output unchanged."
+        }
+      ],
+      "explanation": "The output is V_in·R_bottom/(R_top + R_bottom). A load in parallel makes R_bottom ∥ R_L smaller, so the ratio and the output drop. Keep the load at least 10× the divider resistors, or buffer the output.",
+      "hints": [
+        "What is the bottom resistor in parallel with?"
+      ],
+      "schematic": {
+        "netlist": "loaded divider\nV1 in 0 10\nR1 in out 1k\nR2 out 0 1k\nRL out 0 1k\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "supply"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "load"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              10,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "div_what_if_r2",
+      "topicId": "dividers",
+      "prompt": "A divider is fed from {Vin}, with R1 = {R1} on top and R2 = {R2} on the bottom. R2 is swapped for {new_R2}, ten times bigger. What happens to the output voltage across R2?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the output voltage",
+        "formula": "Vin*R2/(R1+R2)",
+        "unit": "V",
+        "change": {
+          "R2": "10*R2"
+        },
+        "feedback": {
+          "down": "The current does fall, but the output is that current times R2, and R2 grew tenfold while the current fell by less, because R1 is still in the string and didn't grow. The output is R2's share of Vin, R2/(R1 + R2).",
+          "same": "The output is R2's share of Vin, R2/(R1 + R2). R2 also appears in the total underneath, but R1 doesn't change, so R2 now makes up a different fraction of the string."
+        }
+      },
+      "explanation": "Vout = Vin·R2/(R1 + R2). A bigger R2 takes a bigger share: {before} → {after}. The current falls, but R2 grows by a larger factor than the current shrinks.",
+      "hints": [
+        "Which resistor gets the bigger share of the voltage, the bigger or the smaller one?"
+      ],
+      "followUps": [
+        {
+          "prompt": "The current through the divider falls when R2 grows. Why does the voltage across R2 still rise?",
+          "choices": [
+            {
+              "text": "R2 now takes a larger fraction of the total resistance, and each resistor's share of Vin equals its share of the resistance",
+              "feedback": "Right: V_R2 = Vin·R2/(R1 + R2), and that fraction grows toward 1 as R2 grows.",
+              "correct": true
+            },
+            {
+              "text": "The supply pushes out more voltage when the load changes",
+              "feedback": "An ideal supply stays at Vin whatever it drives."
+            },
+            {
+              "text": "Less current means less voltage everywhere, so it doesn't rise",
+              "feedback": "Less current means less drop across R1; the rest of Vin is left across R2."
+            },
+            {
+              "text": "Current builds up in R2",
+              "feedback": "Current doesn't collect in a resistor; the same current flows through both."
+            }
+          ],
+          "explanation": "KVL: V_R1 + V_R2 = Vin. The smaller current drops less voltage across the unchanged R1, so what's left across R2 goes up."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ],
+        "netlist": "divider\nV1 in 0 {Vin:spice}\nR1 in out {R1:spice}\nR2 out 0 {R2:spice}\n"
+      },
+      "review": "verified"
+    },
+    {
+      "id": "div_what_if_load",
+      "topicId": "dividers",
+      "prompt": "A divider (R1 = {R1}, R2 = {R2}, fed from {Vin}) drives a load of {RL} connected across R2. The load is replaced by a heavier one, {new_RL}. What happens to the output voltage?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "k",
+          "unit": "",
+          "value": 10
+        }
+      ],
+      "whatIf": {
+        "quantity": "the output voltage",
+        "formula": "Vin*(R2*RL/(R2+RL))/(R1+R2*RL/(R2+RL))",
+        "unit": "V",
+        "change": {
+          "RL": "RL/k"
+        },
+        "feedback": {
+          "up": "R_L in parallel with R2 gives current a second path from the output to ground, so the bottom leg is R2∥R_L, always below R2, and a smaller R_L pulls it further below. A smaller bottom leg against the same R1 takes a smaller share of the supply.",
+          "same": "The load sits in parallel with R2, giving current at the output a second path to ground, so the bottom leg is R2∥R_L, not R2. A heavier load is a smaller R_L, which changes that leg, and with it the share of Vin the bottom leg takes."
+        }
+      },
+      "explanation": "The load is in parallel with R2, so the bottom of the divider is R2 ∥ RL. A smaller RL makes R2 ∥ RL smaller, and the output drops: {before} → {after}. This is why a divider can't power anything that draws real current.",
+      "hints": [
+        "What is the load in parallel with?"
+      ],
+      "schematic": {
+        "netlist": "loaded divider\nV1 in 0 {Vin:spice}\nR1 in out {R1:spice}\nR2 out 0 {R2:spice}\nRL out 0 {RL:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1 {R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "RL\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              10,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "div_what_if_vin",
+      "topicId": "dividers",
+      "prompt": "A divider with R1 = {R1} and R2 = {R2} is fed from {Vin}. The input is raised to {new_Vin}. What happens to the output voltage?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 2,
+            "max": 6,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the output voltage",
+        "formula": "Vin*R2/(R1+R2)",
+        "unit": "V",
+        "change": {
+          "Vin": "2*Vin"
+        },
+        "askFactor": true,
+        "feedback": {
+          "down": "The resistors haven't changed, so the divider still passes the same fraction R2/(R1 + R2); the same fraction of a bigger input is a bigger output.",
+          "same": "The ratio stays fixed, but it is a ratio of Vin: the output is that fraction of Vin."
+        }
+      },
+      "explanation": "The divider passes a fixed fraction R2/(R1 + R2) of whatever goes in, so the output is proportional to the input: doubling Vin doubles Vout ({before} → {after}).",
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ],
+        "netlist": "divider\nV1 in 0 {Vin:spice}\nR1 in out {R1:spice}\nR2 out 0 {R2:spice}\n"
+      },
+      "review": "verified"
+    },
+    {
+      "id": "div_fault",
+      "topicId": "dividers",
+      "prompt": "A divider (R1 = {R1} on top, R2 = {R2} on the bottom, fed from {Vin}) should give {h0} at its output. The meter readings are below. Which fault explains them?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "fault": {
+        "netlist": "divider\nV1 in 0 {Vin:spice}\nR1 in out {R1:spice}\nR2 out 0 {R2:spice}\n",
+        "probes": [
+          {
+            "label": "Output voltage",
+            "probe": "v(out)"
+          },
+          {
+            "label": "Current from the supply (ammeter in the supply lead)",
+            "probe": "i(R1)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "R1 is open (cracked or not soldered)",
+            "open": "R1",
+            "feedback": "An open R1 would stop all current, so the supply current would read 0 A and the output would fall to 0 V.",
+            "why": "With R1 open no current flows, so R2 has nothing across it: the output reads 0 V and the supply current reads 0 A."
+          },
+          {
+            "text": "R2 is open",
+            "open": "R2",
+            "feedback": "An open R2 would stop the current (0 A), and with no drop across R1 the output would rise to the full input.",
+            "why": "With R2 open no current flows, so R1 drops nothing and the output sits at the full input, {Vin}."
+          },
+          {
+            "text": "R1 is shorted (a solder bridge across it)",
+            "short": "R1",
+            "feedback": "A shorted R1 would tie the output to the input, so it would read the full {Vin} while current Vin/R2 still flows.",
+            "why": "With R1 shorted, the output connects straight to the input, so it reads {Vin}, and R2 alone sets the current, Vin/R2."
+          },
+          {
+            "text": "R2 is shorted",
+            "short": "R2",
+            "feedback": "A shorted R2 would pull the output to 0 V with the whole input across R1, so the supply current would rise to Vin/R1, more than normal.",
+            "why": "With R2 shorted, the output is tied to ground (0 V) and the whole input sits across R1, so the supply current rises to Vin/R1, more than normal."
+          }
+        ]
+      },
+      "explanation": "Two readings tell the four faults apart: an open part stops the current, a short raises it, and the output voltage shows which half of the divider is at fault.",
+      "hints": [
+        "First look at the current: zero means something is open; more than normal means something is shorted."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "div_what_if_scale",
+      "topicId": "dividers",
+      "prompt": "A divider fed from {Vin} has R1 = {R1} on top and R2 = {R2} on the bottom, with nothing connected to the output. Both resistors are replaced by parts ten times bigger: {new_R1} and {new_R2}. What happens to the output voltage?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the output voltage",
+        "formula": "Vin*R2/(R1+R2)",
+        "unit": "V",
+        "change": {
+          "R1": "10*R1",
+          "R2": "10*R2"
+        },
+        "feedback": {
+          "down": "The current does drop to a tenth, but each drop is current × resistance: a tenth of the current through ten times the resistance gives the same drop.",
+          "up": "Bigger resistors don't raise the output. It depends only on the ratio R2 / (R1 + R2), and scaling both by ten leaves that ratio alone."
+        }
+      },
+      "explanation": "Vout = Vin·R2 / (R1 + R2) depends only on the ratio of the resistors: {before} both times. What does change is the current, which falls to a tenth, so the divider wastes only a tenth as much power.",
+      "hints": [
+        "What does the divider formula depend on: the resistor values, or their ratio?"
+      ],
+      "followUps": [
+        {
+          "prompt": "So why not always use very large divider resistors, to save power?",
+          "choices": [
+            {
+              "text": "A load across R2 then pulls the output down much more, because the divider's own resistance is ten times larger",
+              "feedback": "Right: the output resistance R1 ∥ R2 grows ten times, so the same load pulls the output down further.",
+              "correct": true
+            },
+            {
+              "text": "Large resistors change the output voltage",
+              "feedback": "The unloaded output depends only on the ratio, which you just saw stays the same."
+            },
+            {
+              "text": "Large resistors run hotter",
+              "feedback": "They run cooler: a tenth of the current means a tenth of the power."
+            },
+            {
+              "text": "There's no downside; bigger is always better",
+              "feedback": "Loading is the catch: a load across R2 matters more when R2 is large."
+            }
+          ],
+          "explanation": "A load across R2 sits in parallel with it, as in the loaded-divider problem. Scaling both resistors by ten scales the divider's output resistance, R1 ∥ R2, by ten, so the same load pulls the output down much further. Keep the load at least ten times R1 ∥ R2, the output resistance the Thevenin topic calls R_th."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ],
+        "netlist": "divider\nV1 in 0 {Vin:spice}\nR1 in out {R1:spice}\nR2 out 0 {R2:spice}\n"
+      },
+      "review": "verified"
+    }
+  ]
+}

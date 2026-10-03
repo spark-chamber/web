@@ -1,0 +1,1334 @@
+{
+  "topics": [
+    {
+      "id": "ideal_diode",
+      "title": "The ideal diode",
+      "summary": "Conducts in one direction only: a short circuit when forward biased, an open circuit when reverse biased.",
+      "lenses": [
+        "circuit"
+      ],
+      "prerequisites": [
+        "pn_junction",
+        "kirchhoff"
+      ],
+      "lensNotes": {
+        "circuit": "Treat the diode as a switch set by polarity: on (a short) when the anode is above the cathode, off (open) otherwise. Guess each diode's state, solve, then check the guess."
+      },
+      "formulas": [
+        {
+          "label": "Ideal diode",
+          "tex": "v_D = 0 \\text{ when on},\\quad i_D = 0 \\text{ when off}"
+        },
+        {
+          "label": "Diode OR",
+          "tex": "V_{load} = \\max(V_1, V_2)"
+        }
+      ],
+      "prerequisiteNotes": {
+        "pn_junction": "A diode is a PN junction: it conducts when forward biased and blocks when reversed, which the ideal model reduces to on or off.",
+        "kirchhoff": "Solving a diode circuit means guessing on or off, then checking the guess with KVL and KCL."
+      },
+      "goals": [
+        "Replace each diode by a short (on) or an open (off) and find the currents and voltages in the circuit",
+        "Use guess and check: assume each diode's state, solve with Kirchhoff's laws, then confirm every on diode carries forward current and every off diode has its anode at or below its cathode",
+        "Explain why a reverse-biased diode in series with a resistor takes the whole supply voltage while the resistor drops 0 V",
+        "Judge when ignoring a silicon diode's real forward drop of about 0.7 V is good enough"
+      ],
+      "intuition": "When the circuit's voltages are large next to the 0.6–0.7 V a conducting silicon diode really drops, a diode is a one-way switch: a short circuit while current flows from anode to cathode, an open circuit whenever the voltage would push current backwards.",
+      "why": "The ideal model keeps what matters most about a PN junction: direction. Forward biased, the current grows so steeply with voltage that a silicon diode's drop stays near 0.6–0.7 V over a wide range of current. Reverse biased, the barrier rises and only a tiny leakage flows. Calling these 0 V and 0 A turns the diode into a switch that Kirchhoff's laws can handle. In a series circuit the cost is an error of about 0.7 V divided by the supply: 6% at 12 V. The voltages around the diode set the switch, which is why you guess and check.",
+      "explanation": "You know from the PN junction topic that a diode conducts easily one way and hardly at all the other. The ideal diode keeps only that. The anode is the p side; the cathode is the n side, marked by the band on the body and the bar in the symbol. When current flows from anode to cathode, the diode is on: a short circuit, 0 V across it whatever the current. When the voltage would push current from cathode to anode, it is off: an open circuit, 0 A whatever the voltage. The circuit around it decides which, so use guess and check. Guess each diode's state. Replace on diodes by wires and off diodes by gaps. Solve with Ohm's and Kirchhoff's laws. Then check: every on diode must carry current from anode to cathode, and every off diode must have its anode at or below its cathode. If one fails, change that guess. A reverse-biased diode in series with a resistor passes no current, so the resistor drops 0 V and the diode takes the whole supply. Real silicon diodes drop about 0.7 V when on, so the ideal model suits supplies of many volts.",
+      "workedExample": {
+        "problem": "A 12 V main supply and a 9 V backup battery each feed a 1.0 kΩ load through their own 1N4007 rectifier diode (anodes to the sources, cathodes joined at the load). Using the ideal diode model, find the load voltage, the load current and the voltage across each diode. Then find them again after the main supply fails and its output falls to 0 V.",
+        "steps": [
+          "Guess (ideal model): D1, from the higher supply, is on and D2, from the battery, is off. D1 becomes a wire and D2 a gap, so the load is tied to the 12 V supply: V_load = 12 V.",
+          "Load current (Ohm's law): I = 12 V / 1.0 kΩ = 12 mA, all of it through D1.",
+          "Check the guess. D1 carries 12 mA from anode to cathode, forward, as an on diode must, with 0 V across it. D2 has its anode at 9 V and its cathode at 12 V: reverse biased by 3 V, so it carries no current. Both checks pass, so the guess holds.",
+          "With both diodes on, both would be wires, so KVL around the loop through the two sources would need 12 V = 9 V. The 3 V difference would drive current backwards through D2, which an on diode cannot carry, so that guess fails.",
+          "Main supply at 0 V: now guess D2 on and D1 off. V_load = 9 V and I = 9 V / 1.0 kΩ = 9.0 mA through D2. Check D1: anode at 0 V, cathode at 9 V, reverse biased by 9 V, so no current flows back into the failed supply. The guess holds.",
+          "How good is the ideal model here? Previewing the practical diode models: a real silicon diode drops about 0.7 V when on, so the load would get about 12 V − 0.7 V = 11.3 V, 0.7 V / 12 V = 5.8% below the ideal answer; from the battery, 9 V − 0.7 V = 8.3 V, 7.8% low. For supplies this large the ideal model is close; at 1.5 V it would not be."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 3 \"Diodes and Rectifiers\", section \"Introduction\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_3.html#xtocid90270",
+          "note": "A diode acts as a switch closed in forward bias and open in reverse bias, the symbol's arrow points in the conventional-current direction with the bar and body stripe marking the n-side cathode, a reverse-biased diode in series with a load takes the whole supply, and a conducting silicon diode drops about 0.7 V."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 3 \"Diodes and Rectifiers\", section \"Diode switching circuits\", subsection \"Logic\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_3.html#xtocid902710",
+          "note": "Two supplies diode-ORed onto one load: the higher one feeds the load, and when it fails to 0 V the other takes over while its diode stops current flowing back into the failed supply."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "id_model",
+      "topicId": "ideal_diode",
+      "level": "recall",
+      "prompt": "How does the ideal diode model treat a diode?",
+      "choices": [
+        {
+          "text": "A short circuit when forward biased, an open circuit when reverse biased",
+          "correct": true,
+          "feedback": "Yes: no voltage drop when on, no current when off."
+        },
+        {
+          "text": "A 0.7 V drop when forward biased",
+          "feedback": "That's the constant-voltage-drop model, a step more realistic than the ideal one."
+        },
+        {
+          "text": "A resistor whose value depends on current",
+          "feedback": "A real diode's V/I ratio does fall steeply as the current rises, but the ideal model drops that detail: it is a short or an open."
+        },
+        {
+          "text": "It conducts in both directions, but more in one",
+          "feedback": "An ideal diode conducts in one direction only."
+        }
+      ],
+      "explanation": "The ideal diode is a perfect switch controlled by polarity: forward biased it's a short (0 V drop), reverse biased it's open (0 current). It's the first step in analyzing any diode circuit.",
+      "noDrawing": "a definition of the ideal model, no circuit",
+      "review": "verified"
+    },
+    {
+      "id": "id_series_current",
+      "topicId": "ideal_diode",
+      "prompt": "A {V} source drives current through a forward-biased ideal diode and a {R} resistor in series. How much current flows?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 15,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "V/R",
+        "unit": "A"
+      },
+      "explanation": "A forward-biased ideal diode is a short, so the whole source voltage is across the resistor: I = {V} / {R} = {answer}.",
+      "hints": [
+        "What voltage does an ideal diode drop when it's on?",
+        "Zero, so I = V / R."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(V-0.7)/R",
+          "feedback": "That uses the constant-voltage-drop model. The question says ideal diode: zero drop."
+        }
+      ],
+      "schematic": {
+        "netlist": "Diode\nV1 a 0 {V:spice}\nD1 a b DS\nR1 b 0 {R:spice}\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "ideal"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "followUps": [
+        {
+          "prompt": "A real silicon diode drops about 0.7 V when it conducts. When is this ideal-model answer close to the real current?",
+          "choices": [
+            {
+              "text": "When the supply is many volts, because the 0.7 V the model ignores is then a small part of it",
+              "correct": true,
+              "feedback": "Right: the real current is (V − 0.7)/R, so the ideal answer is too big by the fraction 0.7 V/V. At 12 V that's about 6%; at 1 V it's 70%."
+            },
+            {
+              "text": "When the resistor is large, because then the current is small",
+              "feedback": "R divides both answers equally: ideal V/R against real (V − 0.7)/R. Their ratio, 1 − 0.7 V/V, doesn't depend on R at all."
+            },
+            {
+              "text": "Only when the current is below about 1 mA, where the diode drop disappears",
+              "feedback": "The drop doesn't disappear at small currents. It shrinks only about 60 mV for every tenfold fall in current, so at 0.1 mA it is still around 0.5–0.6 V."
+            },
+            {
+              "text": "Always: an ideal diode is by definition exact",
+              "feedback": "'Ideal' means simplified. No real diode conducts with 0 V across it; the model is only as good as 0.7 V is small next to the rest of the circuit."
+            }
+          ],
+          "explanation": "By Kirchhoff's voltage law the resistor gets whatever the diode leaves: V − 0.7 V for a real silicon diode, all of V for an ideal one. Ohm's law turns that into current, so the ideal answer is off by the fraction 0.7 V/V. For supplies of many volts that's a few percent and the ideal model is good enough; in a 1–2 V circuit the diode takes a large share and you need the 0.7 V model or the full diode equation."
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "id_reverse",
+      "topicId": "ideal_diode",
+      "prompt": "The diode in a series circuit with a {V} source and {R} resistor is turned around, so it is reverse biased. What happens?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            3
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "text": "No current flows, and the whole {V} appears across the diode",
+          "correct": true,
+          "feedback": "Yes: an open circuit takes all the voltage and passes no current, so the resistor drops 0 V."
+        },
+        {
+          "text": "No current flows, and the whole {V} appears across the resistor",
+          "feedback": "With no current, the resistor drops I·R = 0 V. The voltage appears across the open diode."
+        },
+        {
+          "text": "The current reverses direction",
+          "feedback": "An ideal diode blocks reverse current completely."
+        },
+        {
+          "text": "A small reverse current flows, limited by R",
+          "feedback": "R limits current only when something lets it flow; reverse biased, the ideal diode passes none, so R drops 0 V."
+        }
+      ],
+      "explanation": "Reverse biased, the ideal diode is an open circuit. No current flows, the resistor drops nothing, and by KVL the diode has the full {V} across it.",
+      "schematic": {
+        "netlist": "Reversed diode\nV1 a 0 {V:spice}\nD1 b a DS\nR1 b 0 {R:spice}\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 180,
+            "label": "ideal"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "id_diode_or",
+      "topicId": "ideal_diode",
+      "prompt": "Two supplies, {V1} and {V2}, each feed a load through their own ideal diode (anodes to the supplies, cathodes joined at the load). What voltage does the load see?",
+      "variables": [
+        {
+          "name": "V1",
+          "unit": "V",
+          "range": {
+            "min": 9,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "V2",
+          "unit": "V",
+          "values": [
+            5.5,
+            6.5,
+            7.5,
+            8.5,
+            12.5,
+            13.5,
+            14.5
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vhi",
+          "formula": "max(V1, V2)",
+          "unit": "V"
+        },
+        {
+          "name": "Vlo",
+          "formula": "min(V1, V2)",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "max(V1, V2)",
+        "unit": "V",
+        "tolerance": 0.01
+      },
+      "explanation": "The {Vhi} supply forward-biases its diode and pulls the load up to {Vhi}; that puts the cathode of the {Vlo} supply's diode above its anode, so it is reverse biased and off. The load sees the larger of {V1} and {V2}: {answer}. This is how battery backup circuits pick the higher source.",
+      "hints": [
+        "Assume one diode is on and check whether the other is then reverse biased.",
+        "The load sees the higher of the two supplies."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(V1+V2)/2",
+          "feedback": "The diodes don't average: the higher supply turns its diode on and the other diode off."
+        },
+        {
+          "formula": "V1+V2",
+          "feedback": "The supplies are in parallel through the diodes, not in series."
+        },
+        {
+          "formula": "min(V1, V2)",
+          "feedback": "The lower supply's diode is the one that turns off: the load node sits at the higher supply, which puts that diode's cathode above its anode."
+        }
+      ],
+      "schematic": {
+        "netlist": "OR\nV1 a 0 {V1:spice}\nV2 b 0 {V2:spice}\nD1 a out DS\nD2 b out DS\nRL out 0 1k\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V1}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "D1"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              3,
+              7
+            ],
+            "rot": 90,
+            "label": "{V2}"
+          },
+          {
+            "ref": "D2",
+            "at": [
+              4,
+              4
+            ],
+            "label": "D2"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "load"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              3,
+              7
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              4
+            ],
+            [
+              8,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            3,
+            11
+          ],
+          [
+            10,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              9,
+              0
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "When the two supplies differ, how can you be sure the diode from the lower one is off?",
+          "choices": [
+            {
+              "text": "Guess the higher supply's diode is on, then check: the output sits at the higher voltage, which reverse biases the other diode",
+              "correct": true,
+              "feedback": "Right: guess, solve, check. The guess gives an output voltage, and that voltage makes the other diode reverse biased, so nothing contradicts it."
+            },
+            {
+              "text": "Guess that both diodes are on: they then share the load current between them",
+              "feedback": "Check that guess with Kirchhoff's voltage law: two 'on' ideal diodes are shorts, so the loop through both supplies would need the two supplies to be equal. With different supplies the guess fails."
+            },
+            {
+              "text": "Current always takes the path of least resistance, and the lower supply's path has more",
+              "feedback": "Both paths have the same parts, and an ideal diode that's on has no resistance at all. What decides is the voltage across each diode, anode against cathode."
+            },
+            {
+              "text": "The lower supply is too weak to power the load, so it switches off",
+              "feedback": "The load has no minimum voltage here, and an ideal supply can deliver any current. The diode is off because of its polarity: its cathode is held above its anode."
+            }
+          ],
+          "explanation": "The method for any ideal-diode circuit: guess each diode's state, replace 'on' diodes by shorts and 'off' diodes by gaps, solve with Kirchhoff's laws, then check that every 'on' diode carries forward current and every 'off' diode has its anode at or below its cathode. With different supplies only one guess passes the check: the higher supply's diode on, the other off."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "id_what_if_or_second_cell",
+      "topicId": "ideal_diode",
+      "prompt": "A load is fed from a {V1} main supply and a {V2} backup battery, each through its own ideal diode (anodes to the sources, cathodes joined at the load; ideal sources). A second, identical {V2} battery is added in series with the backup, so the backup is now {new_V2}. What happens to the load voltage?",
+      "variables": [
+        {
+          "name": "V1",
+          "unit": "V",
+          "range": {
+            "min": 12,
+            "max": 15,
+            "step": 3
+          }
+        },
+        {
+          "name": "V2",
+          "unit": "V",
+          "range": {
+            "min": 1.5,
+            "max": 4.5,
+            "step": 1.5
+          }
+        }
+      ],
+      "whatIf": {
+        "quantity": "the load voltage",
+        "formula": "(V1+V2+abs(V1-V2))/2",
+        "unit": "V",
+        "change": {
+          "V2": "2*V2"
+        },
+        "feedback": {
+          "up": "The backup doubled, but at {new_V2} it is still below the main {V1}. The load node sits at {V1}, so the backup diode's cathode is above its anode: it stays off, and the backup adds nothing.",
+          "down": "Nothing in the main path changed. The main supply's diode is still on and still ties the load to {V1}; the backup diode stays off."
+        }
+      },
+      "explanation": "Guess and check: the main supply's diode is on, which puts the load at {V1}. Then the backup diode has {new_V2} on its anode and {V1} on its cathode, so it is reverse biased, and the guess holds. The load stays at {after}. The backup only takes over once it is higher than the main supply, for example when the main supply is switched off.",
+      "hints": [
+        "Which diode is on before the change? Does the change alter that?",
+        "Compare {new_V2} with {V1}."
+      ],
+      "schematic": {
+        "netlist": "Backup OR\nV1 a 0 {V1:spice}\nV2 b 0 {V2:spice}\nD1 a out DS\nD2 b out DS\nRL out 0 1k\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "main\n{V1}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "D1"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              3,
+              7
+            ],
+            "rot": 90,
+            "label": "backup\n{V2}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "D2",
+            "at": [
+              4,
+              4
+            ],
+            "label": "D2"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "load"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              3,
+              7
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              4
+            ],
+            [
+              8,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            3,
+            11
+          ],
+          [
+            10,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              9,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "id_backup_takes_over",
+      "topicId": "ideal_diode",
+      "prompt": "A load RL = {RL} is fed from a {V1} main supply through R1 = {R1}, which someone fitted as a current limiter, and diode D1, and from a backup battery of {V2} through diode D2. The cathodes join at the load. Treat the diodes and both sources as ideal. With the main supply on, how much current does the backup battery deliver?",
+      "variables": [
+        {
+          "name": "V1",
+          "unit": "V",
+          "value": 12
+        },
+        {
+          "name": "V2",
+          "unit": "V",
+          "values": [
+            7.2,
+            8.4,
+            9
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            470,
+            560,
+            680
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            330,
+            390,
+            470
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vm",
+          "formula": "V1*RL/(R1+RL)",
+          "unit": "V"
+        },
+        {
+          "name": "IL",
+          "formula": "V2/RL",
+          "unit": "A"
+        },
+        {
+          "name": "I1",
+          "formula": "(V1-V2)/R1",
+          "unit": "A"
+        },
+        {
+          "name": "R1max",
+          "formula": "RL*(V1-V2)/V2",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "V2/RL-(V1-V2)/R1",
+        "unit": "A"
+      },
+      "level": "reason",
+      "explanation": "Guess 1, the higher supply wins: D1 on, D2 off. R1 and the load then divide {V1} down to {V1} × {RL}/({R1} + {RL}) = {Vm}. Check D2: its anode is at {V2} and its cathode at {Vm}, so it is forward biased and cannot be off. The guess fails. Guess 2: D2 on, which ties the load to {V2}. The load draws {V2}/{RL} = {IL}. With D1 on as well, R1 has {V1} − {V2} across it and carries ({V1} − {V2})/{R1} = {I1}, flowing forward through D1, so D1 is on. KCL at the load node: the battery supplies the rest, {IL} − {I1} = {answer}, forward through D2. Every check passes. That is a design error: the battery drains while the main supply is on. A diode-OR backup needs the main path to hold the load above {V2}, so R1 must stay well below {R1max}.",
+      "steps": [
+        "Guess D1 on and D2 off: R1 and the load form a divider, so the load sits at {Vm}.",
+        "Check D2: anode at {V2}, cathode at {Vm}. It would be forward biased, so the guess fails.",
+        "Guess D2 on: the load is tied to {V2} and draws {V2}/{RL} = {IL}.",
+        "D1 on too: R1 carries ({V1} − {V2})/{R1} = {I1}, forward through D1.",
+        "KCL at the load node: the battery supplies {IL} − {I1} = {answer}, forward through D2, so both guesses check."
+      ],
+      "hints": [
+        "Guess the main supply's diode on and the battery's off. Does the check on D2 pass?",
+        "If D2 is on, the load sits at {V2}. Find the current in R1, then use KCL at the load node."
+      ],
+      "misconceptions": [
+        {
+          "formula": "0",
+          "feedback": "That assumes the higher supply wins and D2 is off. Check that guess: with D2 off, R1 and the load divide {V1} down to {Vm}, below the battery's {V2}, so D2's anode would be above its cathode. D2 is on."
+        },
+        {
+          "formula": "V2/RL",
+          "feedback": "That is the whole load current, as if D1 were off. With the load at {V2}, R1 still has {V1} − {V2} across it, so the main supply sends {I1} forward through D1, and the battery supplies only the rest (KCL at the load node)."
+        },
+        {
+          "formula": "(V1-V2)/R1",
+          "feedback": "That is the main supply's current, through R1 and D1. The battery supplies whatever the load needs beyond it: KCL at the load node, {IL} − {I1}."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does the backup battery deliver current even though the main supply is the higher of the two?",
+          "choices": [
+            {
+              "text": "R1 drops so much that the main alone would leave the load below the battery",
+              "correct": true,
+              "feedback": "Right: with D2 off, R1 and the load divide {V1} down to {Vm}, below {V2}. D2's anode would then be above its cathode, so it turns on and holds the load at {V2}."
+            },
+            {
+              "text": "A diode-OR shares the load between its sources in proportion to their voltages",
+              "feedback": "With R1 shorted, the {V1} supply would hold the load at {V1} and the battery would deliver nothing, whatever the ratio of the voltages. The split here is set by R1: the main supplies ({V1} − {V2})/R1 = {I1}, the battery the rest."
+            },
+            {
+              "text": "The battery has no series resistor, so the load draws its current from it first",
+              "feedback": "Current doesn't pick the easier path first. If R1 were below {R1max}, the main supply would hold the load above {V2}, D2 would be reverse biased, and the battery would deliver nothing despite having no resistor. What decides is the load voltage against {V2}."
+            },
+            {
+              "text": "D1 drops part of the main supply's voltage, so the main alone can't beat the battery",
+              "feedback": "An ideal diode that is on drops 0 V. The voltage is lost across R1: with the load at {V2}, R1 drops {V1} − {V2} at {I1}."
+            }
+          ],
+          "explanation": "\"The higher supply wins\" is a guess, and it has to be checked against the circuit. The main supply reaches the load through R1, and under load R1 drops enough that the main alone would leave the load at {Vm}, below the battery's {V2}. So D2 turns on, both diodes conduct, and KCL splits the load current: {I1} from the main through R1, {answer} from the battery. A diode-OR backup only stays idle while the main path can hold the load above the backup voltage."
+        }
+      ],
+      "schematic": {
+        "netlist": "Backup with series resistor\nV1 a 0 {V1:spice}\nR1 a m {R1:spice}\nD1 m out DS\nV2 b 0 {V2:spice}\nD2 b out DS\nRL out 0 {RL:spice}\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "main\n{V1}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              6,
+              0
+            ],
+            "label": "D1"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              3,
+              7
+            ],
+            "rot": 90,
+            "label": "backup\n{V2}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "D2",
+            "at": [
+              6,
+              4
+            ],
+            "label": "D2"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "load\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              10,
+              0
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              2
+            ]
+          ],
+          [
+            [
+              3,
+              7
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              6,
+              4
+            ]
+          ],
+          [
+            [
+              10,
+              4
+            ],
+            [
+              12,
+              4
+            ],
+            [
+              12,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            3,
+            11
+          ],
+          [
+            14,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              13,
+              0
+            ]
+          }
+        ]
+      },
+      "placement": true
+    },
+    {
+      "id": "id_series_divider",
+      "topicId": "ideal_diode",
+      "prompt": "A {V} source drives R1 = {R1}, a forward-biased ideal diode and R2 = {R2} in series. What voltage appears across R2?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500,
+            2200
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            3300,
+            4700,
+            6800
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "I",
+          "formula": "V/(R1+R2)",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "V*R2/(R1+R2)",
+        "unit": "V"
+      },
+      "explanation": "An ideal diode that is on is a short, so the loop is just the source with R1 and R2: I = {V}/({R1} + {R2}) = {I}. R2 drops I·R2 = {I} × {R2} = {answer}. The diode takes 0 V, so the two resistors share the whole supply as a divider.",
+      "hints": [
+        "What does an ideal diode look like to the rest of the circuit while it is on?",
+        "Replace it by a wire. What's left is a divider: V·R2/(R1 + R2)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(V-0.7)*R2/(R1+R2)",
+          "feedback": "That takes 0.7 V off for the diode, which is the constant-voltage-drop model. The question says ideal: 0 V across the diode when it is on."
+        },
+        {
+          "formula": "V*R1/(R1+R2)",
+          "feedback": "That's R1's share. The same current flows through both resistors, so the larger one, R2, drops the larger voltage."
+        }
+      ],
+      "schematic": {
+        "netlist": "Diode and two resistors\nV1 a 0 {V:spice}\nR1 a b {R1:spice}\nD1 b c DS\nR2 c 0 {R2:spice}\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              6,
+              0
+            ],
+            "label": "ideal"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              10,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            6,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "id_design_clamp",
+      "topicId": "ideal_diode",
+      "prompt": "A sensor output (treat it as an ideal source) can reach {Vin}, but it feeds a logic input powered from a {Vr} rail. A clamp diode runs from the input (anode) to the rail (cathode), and a resistor R sits between the sensor and the input. The input pin draws no current; treat the diode as ideal. Choose R (an E24 value) so the clamp current at the sensor's maximum is as close to {Imax} as possible without exceeding it (and no more than 15% below).",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 8,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "Vr",
+          "unit": "V",
+          "values": [
+            3.3,
+            5
+          ]
+        },
+        {
+          "name": "Imax",
+          "unit": "A",
+          "values": [
+            0.0005,
+            0.001,
+            0.002
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "VR",
+          "formula": "Vin-Vr",
+          "unit": "V"
+        },
+        {
+          "name": "Rex",
+          "formula": "(Vin-Vr)/Imax",
+          "unit": "Ω"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "R",
+            "label": "R",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 100,
+            "max": 100000
+          }
+        ],
+        "result": "(Vin-Vr)/R",
+        "resultLabel": "clamp current",
+        "resultUnit": "A",
+        "target": "Imax",
+        "tolerance": 0.15,
+        "mode": "atMost"
+      },
+      "explanation": "Guess the diode is on. An ideal diode that is on is a short, so the input sits at the rail, {Vr}, and R has {Vin} − {Vr} = {VR} across it. Check the guess: current flows from the sensor through R into the diode's anode and out to the rail, so 'on' holds. For a current of at most {Imax}, R ≥ {VR}/{Imax} = {Rex}; take the next E24 value up. The rail must be able to take this current too: if nothing on it draws more, the clamp current pushes the rail itself up.",
+      "hints": [
+        "Guess the diode's state with the sensor at its maximum. Where does that put the input pin?",
+        "On, the diode ties the input to the rail, so R carries (V_in − V_rail)/R. Round R up to keep the current under the limit."
+      ],
+      "followUps": [
+        {
+          "prompt": "A real silicon clamp diode drops about 0.6–0.7 V when it conducts. Why is a value of R chosen with the ideal model still safe?",
+          "choices": [
+            {
+              "text": "The real diode's drop leaves less voltage across R, so the real current is below the ideal estimate",
+              "correct": true,
+              "feedback": "Right: the input sits at the rail plus about 0.6 V, R has that much less across it, and the current is lower. The ideal model gives the worst case."
+            },
+            {
+              "text": "A real diode has a large resistance of its own, which limits the current further",
+              "feedback": "Once a silicon diode conducts, its current rises steeply with voltage, so it behaves like a nearly fixed drop, not a large resistance. R is what limits the current."
+            },
+            {
+              "text": "It isn't safe: the real drop makes the input 0.7 V lower, so R has more voltage across it and the current is higher",
+              "feedback": "The drop is from anode to cathode, so the input sits about 0.7 V above the rail, not below it. That leaves less voltage across R, not more."
+            },
+            {
+              "text": "The ideal model is exact here, because the diode is fully on",
+              "feedback": "No real diode conducts with 0 V across it. 'Fully on' still means about 0.6–0.7 V for silicon; the ideal model just ignores it."
+            }
+          ],
+          "explanation": "By KVL, R gets V_in minus whatever sits at the input. With an ideal diode that's the rail voltage; with a real one it's the rail plus about 0.6–0.7 V, so R carries less current. Designing with the ideal model therefore errs on the safe side for the diode and the rail. The price is that the input sits about 0.6–0.7 V above its rail, more than the V_DD + 0.3 V absolute maximum many logic inputs allow, which is why Schottky clamps (about 0.3 V) are common."
+        }
+      ],
+      "schematic": {
+        "netlist": "Input clamp\nVIN in 0 {Vin:spice}\nR1 in x 10k\nD1 x r DS\nVR r 0 {Vr:spice}\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "sensor\n≤ {Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R = ?"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              0
+            ],
+            "rot": 90,
+            "label": "clamp"
+          },
+          {
+            "ref": "VR",
+            "at": [
+              8,
+              4
+            ],
+            "rot": 90,
+            "label": "{Vr} rail"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              11,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            8,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "to input pin",
+            "at": [
+              11,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    }
+  ]
+}

@@ -1,0 +1,1322 @@
+{
+  "topics": [
+    {
+      "id": "diode_clippers_logic",
+      "title": "Clippers, limiters and diode logic",
+      "summary": "Diodes to a reference voltage cut off the tops of waveforms; diodes plus a resistor make simple OR and AND gates.",
+      "lenses": [
+        "circuit",
+        "signals"
+      ],
+      "prerequisites": [
+        "diode_models"
+      ],
+      "lensNotes": {
+        "circuit": "A diode to a reference voltage clips anything beyond it. Back-to-back diodes protect inputs; diode OR and AND gates show how logic can be built from switches, each stage losing a diode drop.",
+        "signals": "Clipping flattens the tops of waveforms, adding odd harmonics. That's harsh distortion in audio, but exactly what you want when protecting an ADC input."
+      },
+      "formulas": [
+        {
+          "label": "Clip level (diode to a reference)",
+          "tex": "V_{clip} = V_{ref} + V_D"
+        },
+        {
+          "label": "Diode OR gate output",
+          "tex": "V_{out} = V_{high} - V_D"
+        },
+        {
+          "label": "Clipper peak current",
+          "tex": "I = \\frac{V_p - V_{clip}}{R}"
+        }
+      ],
+      "prerequisiteNotes": {
+        "diode_models": "A clipper clamps at a diode's forward voltage plus any reference; the 0.7 V model tells you where the clipping happens."
+      },
+      "goals": [
+        "Find the level at which a diode clipper clips, V_ref + 0.7 V or V_ref − 0.7 V, from which way the diode points",
+        "Guess which diodes conduct in a clipper or a diode gate, then check each guess against the diode's bias",
+        "Find the output of a diode OR or AND gate, and explain why each stage moves the logic level by one diode drop",
+        "Explain what a clipper's series resistor sets (the current while clipping) and what it does not (the clip level)"
+      ],
+      "intuition": "A silicon diode from a resistor-fed output to a fixed voltage turns on once the output passes that voltage by one drop (about 0.7 V) in the direction that forward-biases the diode, then holds the output there while the resistor takes the rest.",
+      "why": "Below its turn-on voltage a silicon diode passes almost no current, so the output follows the input. Past about 0.7 V its current rises steeply, roughly tenfold for every 60–120 mV more. So once it conducts, a further rise of the input drives more current through the series resistor while the diode's voltage grows only slightly: the resistor absorbs the extra, and the output stays one drop from the reference. Diode gates work the same way with the inputs as references: the conducting diode sets the output, and the others are reverse biased and drop out.",
+      "explanation": "A silicon diode conducts once about 0.7 V appears across it, anode positive. In a clipper, feed the signal through a series resistor to the output, and connect a diode from the output to a reference voltage. With the anode at the output, the diode turns on when the output reaches V_ref + 0.7 V and holds it there; the resistor drops the rest and sets the current, which flows into the reference. Turn the diode around, cathode at the output, and it stops the output falling below V_ref − 0.7 V. Two diodes in opposite directions to ground limit a signal to about ±0.7 V, a common way to protect an input. Two diodes in series move the level one drop further. Diodes and a resistor also make logic. In an OR gate each input feeds the output through a diode, and a resistor pulls it down: the output follows the highest input, less one drop. In an AND gate the diodes point toward the inputs and a resistor pulls up: the output follows the lowest input, plus one drop. Nothing restores the lost drop, so after a few chained stages the high and low levels are no longer distinguishable.",
+      "workedExample": {
+        "problem": "A 5 V peak, 1 kHz sine feeds the output through R = 1 kΩ. D1, a 1N4148, runs from the output (anode) to a 2.5 V reference (cathode); D2, another 1N4148, runs from ground (anode) to the output (cathode). Find where the output is clipped and the diode currents at the input's peaks. Then find the outputs of a diode OR gate and a diode AND gate (1N4148 diodes, 10 kΩ resistors, 5 V logic) with one input at 5 V and the other at 0 V, and what a second OR stage does. Use the 0.7 V model throughout.",
+        "steps": [
+          "D1 turns on when its anode, the output, is 0.7 V above its cathode: the output is clipped at 2.5 V + 0.7 V = 3.2 V.",
+          "D2 turns on when ground, its anode, is 0.7 V above the output: the output is clipped at 0 V − 0.7 V = −0.7 V. Between −0.7 V and 3.2 V both diodes are off and the output follows the input.",
+          "At the positive peak, R has 5 V − 3.2 V = 1.8 V across it: 1.8 V / 1 kΩ = 1.8 mA flows through D1 into the 2.5 V reference, which must be able to accept it.",
+          "At the negative peak, R has −0.7 V − (−5 V) = 4.3 V across it: 4.3 V / 1 kΩ = 4.3 mA flows up from ground through D2 and R toward the source.",
+          "OR gate (diodes from inputs to the output, 10 kΩ pull-down): guess that the 5 V input's diode conducts. Then the output is 5 V − 0.7 V = 4.3 V. Check: the other diode has its anode at 0 V and its cathode at 4.3 V, so it is reverse biased and off. The pull-down carries 4.3 V / 10 kΩ = 0.43 mA.",
+          "A second OR stage, driven by that 4.3 V through another diode into another 10 kΩ pull-down, gives 4.3 V − 0.7 V = 3.6 V. Each stage costs one drop, and nothing gives it back.",
+          "AND gate (10 kΩ pull-up to 5 V, diodes from the output to the inputs): the diode to the 0 V input conducts, so the output is 0 V + 0.7 V = 0.7 V, and the pull-up's (5 V − 0.7 V) / 10 kΩ = 0.43 mA flows into that input. The diode to the 5 V input has its anode at 0.7 V and its cathode at 5 V, so it is off. A second AND stage would raise the low to 0.7 V + 0.7 V = 1.4 V."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 3 \"Diodes and Rectifiers\", section \"Clipper circuits\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_3.html#xtocid90275",
+          "note": "A series resistor and a diode to a DC source clip at that source's voltage plus or minus the 0.7 V silicon drop, with the resistor taking the rest of the input; an anti-parallel pair to ground limits the output to about ±0.7 V, and diodes to the supply rails protect IC inputs."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 3 \"Diodes and Rectifiers\", section \"Diode switching circuits\", subsection \"Logic\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_3.html#xtocid902710",
+          "note": "A diode AND gate uses a pull-up resistor with diodes toward the inputs, and a grounded input pulls the output down to about 0.7 V; a diode OR gate uses a pull-down resistor, and any high input drives the output high through its forward-biased diode."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "clip_level",
+      "topicId": "diode_clippers_logic",
+      "prompt": "A signal passes through a series resistor to the output. A silicon diode runs from the output (anode) to a {Vref} reference (cathode). Above what output voltage does the signal get clipped?",
+      "variables": [
+        {
+          "name": "Vref",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 5,
+            "step": 0.5
+          }
+        }
+      ],
+      "answer": {
+        "formula": "Vref+0.7",
+        "unit": "V"
+      },
+      "explanation": "The diode turns on once its anode is 0.7 V above its cathode. It then holds the output at {Vref} + 0.7 V = {answer}; the series resistor drops the rest.",
+      "hints": [
+        "When does the diode start conducting?",
+        "When the output is one diode drop above the reference."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vref",
+          "feedback": "The diode needs 0.7 V across it before it conducts, so clipping starts at V_ref + 0.7."
+        },
+        {
+          "formula": "Vref-0.7",
+          "feedback": "The anode (output) must be above the cathode (reference): V_ref + 0.7."
+        }
+      ],
+      "schematic": {
+        "netlist": "Clip\nVIN in 0 SIN(0 5 1k)\nR1 in out 1k\nD1 out ref DS\nVREF ref 0 {Vref:spice}\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "signal"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              0
+            ],
+            "rot": 90,
+            "label": "D1"
+          },
+          {
+            "ref": "VREF",
+            "at": [
+              8,
+              4
+            ],
+            "rot": 90,
+            "label": "{Vref}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              11,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            8,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              11,
+              0
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "Why does the output stop at V_ref + 0.7 V instead of following the input up?",
+          "choices": [
+            {
+              "text": "A conducting diode holds about 0.7 V, so the output can't get more than 0.7 V above the reference",
+              "feedback": "Right: the diode and the reference together pin the output, and the resistor takes up the difference.",
+              "correct": true
+            },
+            {
+              "text": "The series resistor limits the output voltage to V_ref + 0.7 V, however large the input gets",
+              "feedback": "A resistor sets a current, not a voltage. Change R and the clip level stays put; only the current while clipping changes."
+            },
+            {
+              "text": "The diode breaks down at V_ref + 0.7 V and then conducts backwards into the reference",
+              "feedback": "The diode conducts forwards here: its anode is at the output, its cathode at the reference. Breakdown would need a large reverse voltage."
+            },
+            {
+              "text": "Once the reference is exceeded, the output is held at V_ref once it is exceeded, so the output sits at V_ref",
+              "feedback": "The output can't get down to V_ref while the diode conducts: the diode keeps about 0.7 V between them."
+            }
+          ],
+          "explanation": "This is the 0.7 V model from Practical diodes: below V_ref + 0.7 V the diode is off and the output follows the input; above it the diode conducts and the output is held one drop above the reference. The reference must be able to sink the clipping current, and the resistor sets how big that current is."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "clip_or_gate_high",
+      "topicId": "diode_clippers_logic",
+      "prompt": "A diode OR gate has two inputs, each through a silicon diode to the output, with a pull-down resistor to ground. One input is at {Vh} and the other at 0 V. What is the output voltage?",
+      "variables": [
+        {
+          "name": "Vh",
+          "unit": "V",
+          "values": [
+            3.3,
+            5,
+            9,
+            12
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "Vh-0.7",
+        "unit": "V"
+      },
+      "explanation": "The high input forward-biases its diode, so the output is one drop below it: {Vh} − 0.7 = {answer}. The other diode is reverse biased. Each diode stage loses 0.7 V, which is why diode logic can't be chained far.",
+      "hints": [
+        "Which diode conducts?",
+        "The output is one diode drop below the high input."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vh",
+          "feedback": "The conducting diode drops 0.7 V, so the output is V_high − 0.7."
+        }
+      ],
+      "schematic": {
+        "netlist": "OR\nVA a 0 {Vh:spice}\nVB b 0 0\nD1 a out DS\nD2 b out DS\nR1 out 0 10k\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "VA",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vh}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "D1"
+          },
+          {
+            "ref": "VB",
+            "at": [
+              3,
+              7
+            ],
+            "rot": 90,
+            "label": "0 V"
+          },
+          {
+            "ref": "D2",
+            "at": [
+              4,
+              4
+            ],
+            "label": "D2"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "pull-down"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              3,
+              7
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              4
+            ],
+            [
+              8,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            3,
+            11
+          ],
+          [
+            10,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              9,
+              0
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "Why doesn't the 0 V input pull the output down?",
+          "choices": [
+            {
+              "text": "The output sits at V_high − 0.7 V, above the low input, so that input's diode is reverse biased and off",
+              "feedback": "Right: a reverse-biased diode is an open switch, so the low input is simply disconnected.",
+              "correct": true
+            },
+            {
+              "text": "It does pull: the output settles halfway between the two inputs, then loses 0.7 V",
+              "feedback": "That would be a resistor mixer. The diode to the low input only conducts one way, and here it is reverse biased, so it takes no part."
+            },
+            {
+              "text": "Both diodes conduct, and the pull-down resistor averages the two input voltages",
+              "feedback": "The diode to the 0 V input has its anode at 0 V and its cathode at the output, which is higher, so it is reverse biased and off."
+            },
+            {
+              "text": "The 0 V input's diode conducts backwards, and that is where the 0.7 V drop comes from",
+              "feedback": "A diode doesn't conduct backwards at these voltages. The 0.7 V drop is across the diode that conducts forwards, from the high input."
+            }
+          ],
+          "explanation": "Treat each diode with the 0.7 V model from Practical diodes: guess which ones conduct, then check. The high input's diode is forward biased and puts the output at V_high − 0.7 V. That leaves the low input's diode with its cathode above its anode, so it is off. The highest input wins: OR."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "clip_and_gate",
+      "topicId": "diode_clippers_logic",
+      "prompt": "A diode AND gate has a pull-up resistor from {Vcc} to the output and a diode from the output (anode) to each input (cathode). One input is at 0 V and the other at {Vcc}. What is the output?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 12,
+            "step": 1
+          }
+        }
+      ],
+      "choices": [
+        {
+          "text": "Low, about 0.7 V",
+          "correct": true,
+          "feedback": "Yes: the diode to the 0 V input conducts and pulls the output down to one drop above ground."
+        },
+        {
+          "text": "High, about {Vcc}",
+          "feedback": "The output is high only when all inputs are high. One low input pulls it down through its diode."
+        },
+        {
+          "text": "Halfway, about half of {Vcc}",
+          "feedback": "Diode logic isn't a divider: the conducting diode clamps the output near 0.7 V."
+        },
+        {
+          "text": "0 V exactly",
+          "feedback": "Close, but the conducting diode still drops about 0.7 V."
+        }
+      ],
+      "explanation": "Any low input forward-biases its diode and clamps the output to 0 + 0.7 V. Only when every input is high are all diodes off, letting the pull-up take the output high: AND.",
+      "schematic": {
+        "netlist": "Diode AND\nVA a 0 0\nVB b 0 {Vcc:spice}\nD1 out a DS\nD2 out b DS\nR1 vcc out 10k\nVCC vcc 0 {Vcc:spice}\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "VA",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "A\n0 V"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 180,
+            "label": "D1"
+          },
+          {
+            "ref": "VB",
+            "at": [
+              3,
+              7
+            ],
+            "rot": 90,
+            "label": "B\n{Vcc}"
+          },
+          {
+            "ref": "D2",
+            "at": [
+              8,
+              4
+            ],
+            "rot": 180,
+            "label": "D2"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              10,
+              -4
+            ],
+            "rot": 90,
+            "label": "pull-up"
+          },
+          {
+            "ref": "VCC",
+            "at": [
+              17,
+              -4
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              12,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              4
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              3,
+              7
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          [
+            [
+              10,
+              -4
+            ],
+            [
+              17,
+              -4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            3,
+            11
+          ],
+          [
+            17,
+            0
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              12,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "clip_antiparallel",
+      "topicId": "diode_clippers_logic",
+      "prompt": "Two silicon diodes are connected in opposite directions from a signal line to ground, after a series resistor. A sine wave of {Vp} peak is applied. What does the output look like?",
+      "variables": [
+        {
+          "name": "Vp",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 10,
+            "step": 1
+          }
+        }
+      ],
+      "choices": [
+        {
+          "text": "A sine clipped to about ±0.7 V, almost a square wave",
+          "correct": true,
+          "feedback": "Yes: one diode clamps the positive half, the other the negative half."
+        },
+        {
+          "text": "The full {Vp} sine wave",
+          "feedback": "The diodes start conducting at about 0.7 V in each direction and hold the output there."
+        },
+        {
+          "text": "Only the positive half-cycles",
+          "feedback": "That's a rectifier. Here one diode handles each polarity, so both halves are limited."
+        },
+        {
+          "text": "0 V all the time",
+          "feedback": "Below 0.7 V the diodes don't conduct, so small parts of the signal still get through."
+        }
+      ],
+      "explanation": "Back-to-back diodes limit the output to about ±0.7 V. This protects sensitive inputs from large signals, and a bigger input makes the output look more like a square wave.",
+      "schematic": {
+        "netlist": "Antiparallel clipper\nVIN in 0 SIN(0 {Vp:spice} 1k)\nR1 in out 1k\nD1 out 0 DS\nD2 0 out DS\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vp} peak"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              0
+            ],
+            "rot": 90,
+            "label": "D1"
+          },
+          {
+            "ref": "D2",
+            "at": [
+              12,
+              4
+            ],
+            "rot": 270,
+            "label": "D2"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              15,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            8,
+            4
+          ],
+          [
+            12,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              15,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "clip_what_if_series_diode",
+      "topicId": "diode_clippers_logic",
+      "prompt": "A signal feeds the output through a series resistor, and a silicon diode runs from the output (anode) to a {Vref} reference (cathode). A second silicon diode is added in series with the first, pointing the same way. Using the 0.7 V model, what happens to the level where the output is clipped?",
+      "variables": [
+        {
+          "name": "Vref",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 5,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "value": 1
+        }
+      ],
+      "whatIf": {
+        "quantity": "the clip level",
+        "formula": "Vref+0.7*n",
+        "unit": "V",
+        "change": {
+          "n": "2*n"
+        },
+        "feedback": {
+          "down": "Two diodes in series need two drops, 1.4 V, before any current flows, so the output has to rise further before they clamp it.",
+          "same": "The clip level is where the diode path starts to conduct, and two diodes in series need 0.7 V each before any current flows."
+        }
+      },
+      "explanation": "The path to the reference now needs 2 × 0.7 V before it conducts, so clipping starts at {Vref} + 1.4 V: {before} → {after}. It rises by one diode drop, not to twice the old level, because the reference hasn't changed. Series drops add (KVL), just as in Practical diodes; stacking diodes is a common way to set a clip level.",
+      "hints": [
+        "How much voltage does the diode path need before any current flows?"
+      ],
+      "schematic": {
+        "netlist": "Clip\nVIN in 0 SIN(0 5 1k)\nR1 in out 1k\nD1 out ref DS\nVREF ref 0 {Vref:spice}\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "signal"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              0
+            ],
+            "rot": 90,
+            "label": "D1"
+          },
+          {
+            "ref": "VREF",
+            "at": [
+              8,
+              4
+            ],
+            "rot": 90,
+            "label": "{Vref}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              11,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            8,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              11,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "clip_what_if_resistor",
+      "topicId": "diode_clippers_logic",
+      "prompt": "A signal feeds the output through a series resistor R = {R}. A silicon diode runs from the output (anode) to a {Vref} reference (cathode). R is swapped for {new_R}. Using the 0.7 V model, roughly what happens to the clip level?",
+      "variables": [
+        {
+          "name": "Vref",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 5,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the clip level",
+        "formula": "Vref+0.7",
+        "unit": "V",
+        "change": {
+          "R": "10*R"
+        },
+        "feedback": {
+          "up": "A bigger resistor doesn't lift the clip level. The level is set by the diode and the reference, V_ref + 0.7 V; R only sets how much current flows once the diode conducts.",
+          "down": "In the 0.7 V model the drop doesn't depend on current, so the clip level can't move. (A real diode's drop does fall about 0.06–0.12 V for a tenth of the current, which is a small shift and not what this model predicts.) R only sets the current while clipping."
+        }
+      },
+      "explanation": "Once the diode conducts, it and the reference fix the output at {Vref} + 0.7 V; the series resistor drops the rest of the input. A bigger R only lowers the current that flows while clipping, which lowers the diode's power and the current the reference must sink. The clip level stays at {before}. (A real diode's drop falls by only about 0.06–0.12 V for a tenth of the current, so the level barely moves.)",
+      "hints": [
+        "Which parts decide the voltage at which the diode starts to conduct?"
+      ],
+      "schematic": {
+        "netlist": "Clip\nVIN in 0 SIN(0 5 1k)\nR1 in out {R:spice}\nD1 out ref DS\nVREF ref 0 {Vref:spice}\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "signal"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "{R}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              0
+            ],
+            "rot": 90,
+            "label": "D1"
+          },
+          {
+            "ref": "VREF",
+            "at": [
+              8,
+              4
+            ],
+            "rot": 90,
+            "label": "{Vref}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              11,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            8,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              11,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "clip_or_fault",
+      "topicId": "diode_clippers_logic",
+      "prompt": "A diode OR gate combines two logic outputs, both high at {Vh}. Each drives its diode through its own 1 kΩ resistor (RA and RB), and a 10 kΩ pull-down R1 sits at the output. Healthy, the output reads about {h0}. The meter readings are below. Which fault explains them?",
+      "variables": [
+        {
+          "name": "Vh",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 12,
+            "step": 1
+          }
+        }
+      ],
+      "fault": {
+        "netlist": "Diode OR\nVA pa 0 {Vh:spice}\nVB pb 0 {Vh:spice}\nRA pa a 1k\nRB pb b 1k\nD1 a out DS\nD2 b out DS\nR1 out 0 10k\n.model DS D\n",
+        "probes": [
+          {
+            "label": "Output voltage",
+            "probe": "v(out)"
+          },
+          {
+            "label": "Current through RA",
+            "probe": "i(RA)"
+          },
+          {
+            "label": "Current through RB",
+            "probe": "i(RB)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "D1 is open",
+            "open": "D1",
+            "feedback": "An open D1 would leave RA with no current while RB carried all of the pull-down current, about twice its normal share; the output would stay high.",
+            "why": "With D1 open, input A can't deliver any current, so RA reads 0 A. D2 alone now feeds the pull-down, so RB carries about twice its usual current. The output hardly moves, which is why a logic test with both inputs high can't find this fault; the input currents can."
+          },
+          {
+            "text": "D2 is open",
+            "open": "D2",
+            "feedback": "An open D2 would leave RB with no current while RA carried all of the pull-down current; the output would stay high.",
+            "why": "With D2 open, input B delivers nothing, so RB reads 0 A, and D1 alone feeds the pull-down: RA carries about twice its usual current. The output still looks high."
+          },
+          {
+            "text": "R1 is open",
+            "open": "R1",
+            "feedback": "With the pull-down open, nothing would draw current: both RA and RB would read 0 A, and the output would float up closer to the inputs.",
+            "why": "Nothing but the meter's 10 MΩ draws current, so RA and RB read 0 A. Each diode passes well under a microamp and drops only about 0.45 V, so the output reads about {Vh} − 0.5 V, higher than healthy. The real symptom is that the output can no longer fall: when both inputs go low, nothing pulls it down."
+          },
+          {
+            "text": "The output is shorted to ground (a solder bridge across R1)",
+            "short": "R1",
+            "feedback": "A short at the output would pull it to 0 V, and each input would push about ({Vh} − 0.7 V)/1 kΩ through its resistor, far more than normal.",
+            "why": "The short holds the output at 0 V. Each input now has only its diode and its 1 kΩ resistor in the way, so RA and RB each carry about ({Vh} − 0.7 V)/1 kΩ, many times the normal current."
+          }
+        ]
+      },
+      "explanation": "Healthy, both diodes conduct and share the pull-down current, so RA and RB carry equal currents. Which input stops delivering current tells you which diode is open; zero current in both with the output still high means nothing is drawing current; large equal currents with the output at 0 V mean a short at the output. This builds on diode OR logic and the 0.7 V model from Practical diodes.",
+      "hints": [
+        "Compare RA and RB: healthy, they carry the same current."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "VA",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "A\n{Vh}"
+          },
+          {
+            "ref": "RA",
+            "at": [
+              2,
+              0
+            ],
+            "label": "RA\n1 kΩ"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              6,
+              0
+            ],
+            "label": "D1"
+          },
+          {
+            "ref": "VB",
+            "at": [
+              0,
+              10
+            ],
+            "rot": 90,
+            "label": "B\n{Vh}"
+          },
+          {
+            "ref": "RB",
+            "at": [
+              2,
+              8
+            ],
+            "label": "RB\n1 kΩ"
+          },
+          {
+            "ref": "D2",
+            "at": [
+              6,
+              8
+            ],
+            "label": "D2"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R1\n10 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              10,
+              0
+            ],
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              10
+            ],
+            [
+              0,
+              8
+            ],
+            [
+              2,
+              8
+            ]
+          ],
+          [
+            [
+              10,
+              8
+            ],
+            [
+              12,
+              8
+            ],
+            [
+              12,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            0,
+            14
+          ],
+          [
+            16,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              14,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "clip_peak_current",
+      "topicId": "diode_clippers_logic",
+      "prompt": "A sine wave of {Vp} peak feeds the output through R = {R}. A silicon diode runs from the output (anode) to a {Vref} reference (cathode), and nothing else is connected to the output. Using the 0.7 V model, how much current flows through the diode at the peak of the sine?",
+      "variables": [
+        {
+          "name": "Vp",
+          "unit": "V",
+          "range": {
+            "min": 8,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "Vref",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 5,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vclip",
+          "formula": "Vref+0.7",
+          "unit": "V"
+        },
+        {
+          "name": "VR",
+          "formula": "Vp-Vref-0.7",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "(Vp-Vref-0.7)/R",
+        "unit": "A"
+      },
+      "explanation": "At the peak the input is above {Vref} + 0.7 V, so the diode is on and holds the output at {Vclip}. R takes the rest: {Vp} − {Vclip} = {VR}. All the current through R goes on through the diode into the reference: {VR}/{R} = {answer}. This is the current the diode and the reference must handle, and R is what sets it.",
+      "hints": [
+        "At the peak, is the diode on? If so, what voltage does it hold the output at?",
+        "R has V_p − (V_ref + 0.7 V) across it, and its current all flows into the diode."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(Vp-Vref)/R",
+          "feedback": "The conducting diode keeps about 0.7 V between the output and the reference, so the output sits at V_ref + 0.7 V and R has 0.7 V less across it."
+        },
+        {
+          "formula": "(Vp-0.7)/R",
+          "feedback": "The diode's cathode goes to the reference, not to ground, so the output is held at V_ref + 0.7 V. Subtract the reference as well as the diode drop."
+        },
+        {
+          "formula": "Vp/R",
+          "feedback": "That treats the output as if it were at 0 V. While the diode conducts, the output is held at V_ref + 0.7 V, and R only has the rest of the input across it."
+        }
+      ],
+      "schematic": {
+        "netlist": "Clip\nVIN in 0 SIN(0 {Vp:spice} 1k)\nR1 in out {R:spice}\nD1 out ref DS\nVREF ref 0 {Vref:spice}\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vp} peak"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "{R}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              0
+            ],
+            "rot": 90,
+            "label": "D1"
+          },
+          {
+            "ref": "VREF",
+            "at": [
+              8,
+              4
+            ],
+            "rot": 90,
+            "label": "{Vref}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              11,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            8,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              11,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    }
+  ]
+}

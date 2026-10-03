@@ -1,0 +1,2208 @@
+{
+  "topics": [
+    {
+      "id": "real_components",
+      "title": "Real components: values, tolerances and ratings",
+      "summary": "Real resistors and capacitors come in standard values (the E-series), lie within a tolerance of their marked value, change a little with temperature, and have power and voltage limits. Reading their markings and datasheets tells you what a part guarantees; worst-case analysis tells you whether the circuit still works at the edges.",
+      "lenses": [
+        "circuit",
+        "physics",
+        "math"
+      ],
+      "prerequisites": [
+        "ohms_law",
+        "power_heat",
+        "capacitors"
+      ],
+      "prerequisiteNotes": {
+        "ohms_law": "Worst-case currents and divider outputs are Ohm's law with each resistance at the edge of its band, and a temperature coefficient is the change of resistance with temperature met in Ohm's law.",
+        "power_heat": "A resistor's power rating, its derating with ambient temperature and the half-rating rule come from P = V²/R and the thermal model.",
+        "capacitors": "Capacitor codes count picofarads, and a capacitor's voltage rating is set safely below the voltage at which its dielectric breaks down."
+      },
+      "lensNotes": {
+        "circuit": "Choose the nearest standard value, then check the circuit at both ends of every part's tolerance: highest and lowest current, highest and lowest divider output. Choose power and voltage ratings with margin (half the power rating is a common rule), derate for a hot enclosure, and keep supplies inside the recommended operating conditions, never near the absolute maximums.",
+        "physics": "A resistor's value is set by its film or wire and trimmed in production, so it varies a little from part to part; the tolerance bounds that spread. Temperature changes the resistivity: in a metal film the hotter lattice scatters electrons more, in carbon the resistance falls. The power rating is a thermal limit on the body's temperature; the limiting element voltage is a field limit, where the film, its trim cuts or the gap between the terminals can arc over.",
+        "math": "The E-n series divide each decade into n equal ratios of about 10^(1/n), so a calculated value is never more than a factor of about 10^(1/(2n)) from the nearest one (in ratio): about 10 % for E12, 5 % for E24. A tolerance t puts a value between R(1 − t) and R(1 + t). A temperature coefficient α in ppm/°C changes R by R·α·10⁻⁶·ΔT."
+      },
+      "formulas": [
+        {
+          "label": "E-series step",
+          "tex": "\\frac{R_{k+1}}{R_k} \\approx 10^{1/n}\\quad (n = 6, 12, 24, 96)"
+        },
+        {
+          "label": "Tolerance band",
+          "tex": "R(1 - t) \\le R_\\text{actual} \\le R(1 + t)"
+        },
+        {
+          "label": "Worst-case divider (highest)",
+          "tex": "V_\\text{out,max} = V_\\text{in}\\,\\frac{R_2(1+t)}{R_1(1-t) + R_2(1+t)}"
+        },
+        {
+          "label": "Temperature coefficient",
+          "tex": "\\Delta R = R\\,\\alpha\\,\\Delta T\\quad (\\alpha\\ \\text{in ppm/}^\\circ\\text{C} \\times 10^{-6})"
+        },
+        {
+          "label": "Resistor voltage limit",
+          "tex": "V_\\text{max} = \\min\\left(\\sqrt{P_\\text{rated}\\,R},\\ V_\\text{limit}\\right)"
+        },
+        {
+          "label": "Three-digit code",
+          "tex": "\\text{“}d_1 d_2 m\\text{”} = d_1 d_2 \\times 10^{m}\\ (\\Omega\\ \\text{or pF})"
+        }
+      ],
+      "goals": [
+        "Read a resistor's value and tolerance from its color bands (4 and 5 bands, IEC 60062) and from SMD resistor and capacitor number codes",
+        "Explain why standard values are spaced by equal ratios (the E-series of IEC 60063) and pick the nearest standard value to a calculated one",
+        "Find the worst-case current or divider output from part tolerances, and the change a temperature coefficient adds",
+        "Choose a part's power and voltage rating with margin, and tell a datasheet's absolute maximum ratings from its recommended operating conditions"
+      ],
+      "intuition": "A marked value is a guaranteed range, not a single number: a ±5 % part lies anywhere in a band 10 % wide, the standard values are spaced so neighboring bands meet, and every rating is a limit the circuit's real conditions must stay below.",
+      "why": "A resistor is a film of metal alloy, metal oxide or carbon on a ceramic body, a printed thick film on a chip, or a wound wire. Its value is set by the material and the shape, and in production each part is trimmed, often by cutting a groove into the film, until it reaches its value. The film, the cut and the end contacts all vary slightly from part to part, so the maker guarantees a band: a ±5 % part lies within 5 % of its marking as delivered. That band is fixed when the part is made. In use the value moves for other reasons, each specified separately: temperature changes the resistivity (in a metal the hotter lattice scatters the electrons more often; carbon's resistance falls instead), given as a temperature coefficient in ppm/°C, and long operation when hot slowly changes the film, given as load-life stability. Two ratings are physical limits as well. The power rating is the heat the body can lose before its hottest spot reaches its maximum temperature. The limiting element voltage is the voltage the film, its trim cuts and the gap between the terminals can hold off without arcing, however little power flows. Since a tolerance is a percentage of the value, the standard values are spaced by an equal ratio, so that neighboring bands meet all along each decade.",
+      "explanation": "Resistors and capacitors are made in standard values, the E-series of IEC 60063. Each divides a decade into n steps of equal ratio, about 10^(1/n): E6 (ratio 1.47), E12 (1.21), E24 (1.10), E96 (1.024). E6 to E24 values are rounded to two digits (4.7, not 4.64). E6 goes with ±20 %, E12 with ±10 % and E24 with ±5 %: neighboring bands just meet. Take the nearest standard value to a calculated one and check the circuit with it.\n\nTolerance is how far a part may be from its marking as made, not how much it changes in use. Worst-case analysis puts each part at the end of its band that makes the result worst.\n\nThe color code is IEC 60062. Four bands: two digits, a multiplier (the number of zeros), the tolerance. Five bands: three digits, multiplier, tolerance. As the last band, gold is ±5 % and silver ±10 %; as the multiplier they mean ×0.1 and ×0.01. Chip resistors print digits: 472 = 47 × 10² Ω = 4.7 kΩ, 4701 = 4.70 kΩ, 4R7 = 4.7 Ω. Capacitor codes count picofarads: 104 = 100 nF.\n\nRatings are limits: power (derated when hot), voltage, temperature. Absolute maximum ratings mark where damage may begin; design inside the recommended operating conditions.",
+      "workedExample": {
+        "problem": "A resistor across a 12 V supply should draw about 2.4 mA. Choose an E24 value, find the range of current a ±5 % part allows, choose its power rating, and give its color bands.",
+        "steps": [
+          "Calculated value: R = V/I = 12 V / 2.4 mA = 5.0 kΩ. That is not an E24 value.",
+          "The E24 values either side are 4.7 kΩ (6 % low) and 5.1 kΩ (2 % high). Choose 5.1 kΩ: nominal current 12 V / 5.1 kΩ = 2.35 mA.",
+          "Tolerance: a ±5 % part lies between 5.1 kΩ × 0.95 = 4.845 kΩ and 5.1 kΩ × 1.05 = 5.355 kΩ.",
+          "Current range: from 12 V / 5.355 kΩ = 2.24 mA to 12 V / 4.845 kΩ = 2.48 mA.",
+          "Power, worst case (lowest resistance): (12 V)² / 4.845 kΩ = 144 V² / 4845 Ω = 29.7 mW. A 1/8 W (125 mW) part runs at 24 % of its rating, inside the half-rating rule with room for a warm enclosure.",
+          "Color bands (IEC 60062): green (5), brown (1), red (×100), gold (±5 %). As a chip resistor it would be printed 512."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. V (Reference), ch. 2 \"Color Codes\", section \"Resistor Color Codes\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Ref/REF_2.html#xtocid93130",
+          "note": "Checked the color-code table (digits black 0 to white 9, multipliers 10⁰ to 10⁹ with gold ×0.1 and silver ×0.01, tolerances brown ±1 %, red ±2 %, gold ±5 %, silver ±10 %, none ±20 %) and the band order: digit, digit, multiplier, tolerance for four bands; three digits, multiplier, tolerance for five."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Ohm's and Joule's Laws, Resistor Ratings, and Electrical Safety\", sections 4.3 \"Resistors\", 6.2 \"Resistor labeling\", 6.3 \"Resistor parameters and types\" and 6.4 \"IEC standard component values\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_ohm.pdf",
+          "note": "Checked that tolerance is the allowed deviation from the nominal value due to manufacturing variation; that the four- and five-band codes are standardized in IEC 60062; the three- and four-digit SMD codes (digits then multiplier) and R as the decimal point; the E6, E12 and E24 values and that IEC 60063 defines the E-series (E48, E96 and E192 for tighter tolerances); and that maximum voltage, temperature coefficient (positive for most metals, negative for graphite) and long-term stability are separate resistor ratings. ModEL explains the E-series spacing by series and parallel combinations; this topic uses the tolerance-band reasoning."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "real_color_4band",
+      "topicId": "real_components",
+      "level": "recall",
+      "prompt": "A leaded resistor has four color bands. Read from left to right they are {R:bands4}. What is its marked resistance?",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E24",
+          "decades": [
+            2,
+            5
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "e",
+          "formula": "round(log10(R)-0.49)-1",
+          "unit": ""
+        },
+        {
+          "name": "N",
+          "formula": "round(R/10^e)",
+          "unit": ""
+        },
+        {
+          "name": "Rlo",
+          "formula": "R*0.95",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rhi",
+          "formula": "R*1.05",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rg",
+          "formula": "N/10",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rgm",
+          "formula": "(10*N+e)/10",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "R",
+        "unit": "Ω"
+      },
+      "explanation": "In the four-band code of IEC 60062 the first two bands are digits, the third is the multiplier (the number of zeros) and the fourth is the tolerance. The bands {R:bands4} give the digits {N}, and the third band's color stands for {e}: that many zeros follow the digits (brown one, red two, orange three, yellow four). So the value is {answer}. Gold in the fourth place is the tolerance, ±5 %: the part lies somewhere between {Rlo} and {Rhi}. E24 values have two significant figures, which is why a ±5 % part needs only a four-band code.",
+      "hints": [
+        "In a four-band code, which bands are digits and which one counts zeros?",
+        "The first two bands give {N}; the third band's color is a number of zeros."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(10*N+e)/10",
+          "feedback": "You read the third band as a third digit and the gold band as the multiplier (×0.1). In a four-band code only the first two bands are digits ({N}); the third is the multiplier, {e} zeros here. Gold in the fourth place is the tolerance, ±5 %."
+        },
+        {
+          "formula": "R/10",
+          "feedback": "One zero short. The multiplier band counts the zeros written after the two digits ({e} of them after {N}), not the total number of digits in the value."
+        },
+        {
+          "formula": "R*10",
+          "feedback": "One zero too many. The multiplier band's color is its digit value, the number of zeros after {N}: {e} here. Black means no zeros, brown one, red two."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "How do you know the gold band here is the tolerance and not a multiplier?",
+          "choices": [
+            {
+              "text": "It is the fourth of four bands: bands 1 and 2 are digits, band 3 the multiplier, band 4 the tolerance. Gold means ×0.1 only when it is the multiplier band, the third of four",
+              "feedback": "Right: position decides. With gold in the third place, {Rg:bands4} would be {Rg}.",
+              "correct": true
+            },
+            {
+              "text": "Gold is always the tolerance band, wherever it appears",
+              "feedback": "Not always: in the third place gold is the multiplier ×0.1, used for values below 10 Ω ({Rg:bands4} is {Rg}). Its position tells which."
+            },
+            {
+              "text": "Gold is always the multiplier ×0.1, so the value is {Rgm}",
+              "feedback": "That reads the third band as a third digit. A four-band code has only two digits, and the band after the multiplier is the tolerance; gold there means ±5 %."
+            },
+            {
+              "text": "Gold is a digit band read first, so the value should be read from the gold end",
+              "feedback": "Gold and silver are never digits, so a gold band at one end marks the end where reading stops. Start from the other end."
+            }
+          ],
+          "explanation": "In a four-band code, digits, digits, multiplier, tolerance. Gold and silver can be a multiplier (×0.1, ×0.01) or a tolerance (±5 %, ±10 %), never a digit; the band's position says which."
+        }
+      ],
+      "noDrawing": "reading a part's marking; no circuit to solve",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "real_color_5band",
+      "topicId": "real_components",
+      "level": "recall",
+      "prompt": "A metal film resistor has five color bands. Read from left to right they are {R:bands5}. What is its marked resistance?",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E96",
+          "decades": [
+            2,
+            5
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "e",
+          "formula": "round(log10(R)-0.495)-2",
+          "unit": ""
+        },
+        {
+          "name": "N",
+          "formula": "round(R/10^e)",
+          "unit": ""
+        },
+        {
+          "name": "d1",
+          "formula": "round(N/100-0.495)",
+          "unit": ""
+        },
+        {
+          "name": "d2",
+          "formula": "round((N-100*d1)/10-0.45)",
+          "unit": ""
+        },
+        {
+          "name": "d3",
+          "formula": "N-100*d1-10*d2",
+          "unit": ""
+        },
+        {
+          "name": "Rlo",
+          "formula": "R*0.99",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rhi",
+          "formula": "R*1.01",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "R",
+        "unit": "Ω",
+        "tolerance": 0.001
+      },
+      "explanation": "A five-band code has three digits, then the multiplier, then the tolerance. The bands {R:bands5} give the digits {N}, and the fourth band's color has the digit value {e}, the number of zeros to write after them (black adds none), so the value is {answer}. The last band, brown, is the tolerance, ±1 %: between {Rlo} and {Rhi}. Precision parts need the third figure because their standard values, the E96 series, are only about 2.4 % apart (5.49, 5.62, 5.76 …); two figures could not name them. A ±1 % brown band at one end can look like a brown first digit, so look for the wider gap before the tolerance band, and if in doubt measure the part out of circuit.",
+      "hints": [
+        "Five bands: how many of them are digits?",
+        "The first three bands give {N}; the fourth band counts zeros."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(10*d1+d2)*10^d3",
+          "feedback": "You read it as a four-band code: two digits and the third band as the multiplier. A five-band code has three digits ({N}); the multiplier is the fourth band."
+        },
+        {
+          "formula": "R/10",
+          "feedback": "That is ten times too small. The fourth band's color is its digit value, the number of zeros after {N}: {e} here (black means none, so the value is just the three digits)."
+        },
+        {
+          "formula": "R*10",
+          "feedback": "One zero too many. The fourth band's color is its digit value, the number of zeros after {N}: {e} here, and black means none."
+        }
+      ],
+      "noDrawing": "reading a part's marking; no circuit to solve",
+      "followUps": [
+        {
+          "prompt": "On a five-band ±1 % resistor whose first digit is 1, both end bands are brown. How do you tell which end to start reading from?",
+          "choices": [
+            {
+              "text": "The tolerance band sits after a wider gap; start from the other end, and measure the part if the gap is unclear",
+              "feedback": "Right: the spacing is what the code provides for this. Read backward, the same bands usually give a different value, and sometimes a plausible one, so a measurement settles any doubt.",
+              "correct": true
+            },
+            {
+              "text": "Always start from the end nearest the printed side of the board",
+              "feedback": "A leaded resistor can be fitted either way round, so its orientation on the board says nothing about the code. The wider gap before the tolerance band, or a measurement, decides."
+            },
+            {
+              "text": "Brown is always a digit, so either end gives the same value",
+              "feedback": "Brown is a digit (1) in the first three places, the multiplier ×10 in the fourth and ±1 % in the fifth. Read backward, the bands usually give a different value, so the end matters."
+            },
+            {
+              "text": "Start from whichever end gives the larger value, since the code is chosen to be read that way",
+              "feedback": "The code has no such rule. Either reading can be the larger one; only the wider gap before the tolerance band, or a measurement, tells you."
+            }
+          ],
+          "explanation": "Gold and silver are never digits, so on a ±5 % four-band part the gold end is obviously the tolerance end. On a ±1 % five-band part the tolerance band is brown, which is also a digit color, so the code puts a wider gap before the tolerance band. When that gap is hard to see, measure the resistor out of circuit and see which of the two readings it matches; if both directions give the same value, the direction does not matter."
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "real_smd_code",
+      "topicId": "real_components",
+      "prompt": "A ±5 % surface-mount chip resistor is printed with the three-digit code {code}. What is its resistance?",
+      "variables": [
+        {
+          "name": "mant",
+          "unit": "",
+          "values": [
+            10,
+            11,
+            12,
+            13,
+            15,
+            16,
+            18,
+            20,
+            22,
+            24,
+            27,
+            30,
+            33,
+            36,
+            39,
+            43,
+            47,
+            51,
+            56,
+            62,
+            68,
+            75,
+            82,
+            91
+          ]
+        },
+        {
+          "name": "m",
+          "unit": "",
+          "values": [
+            0,
+            2,
+            3,
+            4,
+            5
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "code",
+          "formula": "mant*10+m",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "mant*10^m",
+        "unit": "Ω"
+      },
+      "explanation": "The three-digit code follows the four-band color code without its tolerance band: two digits, then the number of zeros. {code} means {mant} followed by {m} zeros: {answer}. A last digit of 0 means no zeros (100 is 10 Ω, not 100 Ω). Values below 10 Ω use R for the decimal point (4R7 is 4.7 Ω), and 1 % parts use four digits, three digits and then the zeros (1002 is 10.0 kΩ).",
+      "hints": [
+        "The last digit is not part of the value. What does it count?",
+        "Two digits, then that many zeros, in ohms."
+      ],
+      "misconceptions": [
+        {
+          "formula": "mant*10+m",
+          "feedback": "The code is not the value in ohms. The last digit counts zeros: {code} is {mant} followed by {m} zeros."
+        },
+        {
+          "formula": "mant*10^(m-1)",
+          "feedback": "One zero short: the last digit is the number of zeros after the first two digits, {m} of them here."
+        }
+      ],
+      "noDrawing": "reading a part's marking; no circuit to solve",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "real_cap_code",
+      "topicId": "real_components",
+      "prompt": "A small ceramic capacitor is printed {code}. What is its capacitance?",
+      "variables": [
+        {
+          "name": "mant",
+          "unit": "",
+          "values": [
+            10,
+            15,
+            22,
+            33,
+            47,
+            68
+          ]
+        },
+        {
+          "name": "m",
+          "unit": "",
+          "values": [
+            2,
+            3,
+            4,
+            5
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "code",
+          "formula": "mant*10+m",
+          "unit": ""
+        },
+        {
+          "name": "pf",
+          "formula": "mant*10^m*1e-12",
+          "unit": "F"
+        }
+      ],
+      "answer": {
+        "formula": "mant*10^m*1e-12",
+        "unit": "F"
+      },
+      "estimate": true,
+      "explanation": "Capacitor codes count in picofarads: two digits, then the number of zeros. {code} is {mant} followed by {m} zeros, in pF: {answer}. The common decoupling capacitor marked 104 is 10 × 10⁴ pF = 100 000 pF = 100 nF. The values come from the E6 and E12 series, as for resistors.",
+      "hints": [
+        "The code's base unit is the picofarad.",
+        "Two digits, then that many zeros, in pF; then convert with 1000 pF = 1 nF."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(mant*10+m)*1e-12",
+          "feedback": "The printed number isn't the value in picofarads: its last digit counts zeros. {code} is {mant} followed by {m} zeros, in pF."
+        },
+        {
+          "formula": "mant*10^m*1e-9",
+          "feedback": "The code counts in picofarads, not nanofarads: divide by 1000 to get nF."
+        },
+        {
+          "formula": "mant*10^m*1e-6",
+          "feedback": "The code counts in picofarads, not microfarads: 1 µF is a million pF."
+        }
+      ],
+      "noDrawing": "reading a part's marking; no circuit to solve",
+      "review": "verified"
+    },
+    {
+      "id": "real_color_4band_gold",
+      "topicId": "real_components",
+      "level": "recall",
+      "prompt": "A leaded resistor has four color bands. Read from left to right they are {R:bands4}. What is its marked resistance?",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E24",
+          "decades": [
+            0,
+            0
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "R",
+        "unit": "Ω"
+      },
+      "explanation": "The first two bands are digits: {N}. The third band is the multiplier, and gold there means ×0.1, so the value is {N} × 0.1 Ω = {answer}. The fourth band, gold again, is the tolerance, ±5 %. The same color means different things in the third and fourth places; position decides. Values below 10 Ω use a gold (×0.1) or silver (×0.01) multiplier, because a multiplier of ×1 (black) cannot go below 10 Ω with two digits.",
+      "hints": [
+        "Two digits, then the multiplier, then the tolerance.",
+        "The digits give {N}; gold in the third place multiplies by 0.1."
+      ],
+      "misconceptions": [
+        {
+          "formula": "N",
+          "feedback": "That leaves out the multiplier. The third band is gold, which as a multiplier means ×0.1: {N} × 0.1."
+        },
+        {
+          "formula": "R/10",
+          "feedback": "That is ×0.01, the silver multiplier. Gold as the multiplier is ×0.1: {N} × 0.1."
+        }
+      ],
+      "noDrawing": "reading a part's marking; no circuit to solve",
+      "derived": [
+        {
+          "name": "N",
+          "formula": "round(R*10)",
+          "unit": ""
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "real_color_4band_yellow",
+      "topicId": "real_components",
+      "level": "recall",
+      "prompt": "A leaded resistor has four color bands. Read from left to right they are {R:bands4}. What is its marked resistance?",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E24",
+          "decades": [
+            5,
+            5
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "R",
+        "unit": "Ω"
+      },
+      "explanation": "The first two bands are digits: {N}. The third band, yellow, is the multiplier: yellow is 4, so four zeros follow, {N} × 10 000 Ω = {answer}. The gold fourth band is the tolerance, ±5 %. Counting zeros is the quick check: four zeros after two digits is a six-digit number of ohms, between 100 kΩ and 1 MΩ.",
+      "hints": [
+        "Two digits, then the multiplier, then the tolerance.",
+        "The digits give {N}; yellow is 4, so four zeros."
+      ],
+      "misconceptions": [
+        {
+          "formula": "R/10",
+          "feedback": "One zero short: yellow is 4, so four zeros after {N}, not three."
+        },
+        {
+          "formula": "10*N+4",
+          "feedback": "That reads yellow as a third digit. In a four-band code the third band is the multiplier: four zeros after {N}."
+        },
+        {
+          "formula": "R*10",
+          "feedback": "One zero too many: yellow is 4, so {N} followed by four zeros."
+        }
+      ],
+      "noDrawing": "reading a part's marking; no circuit to solve",
+      "derived": [
+        {
+          "name": "N",
+          "formula": "round(R/10^4)",
+          "unit": ""
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "real_color_5band_brown",
+      "topicId": "real_components",
+      "level": "recall",
+      "prompt": "A metal film resistor has five color bands. Read from left to right they are {R:bands5}. What is its marked resistance?",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1020,
+            1050,
+            1070,
+            1210,
+            1240,
+            1270,
+            1300,
+            1330,
+            1370,
+            1400,
+            1430,
+            1470,
+            1500,
+            1540,
+            1580,
+            1620,
+            1650,
+            1690,
+            1740,
+            1780,
+            1820,
+            1870,
+            1910,
+            1960
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "R",
+        "unit": "Ω",
+        "tolerance": 0.001
+      },
+      "explanation": "Three digits first: {N}. The fourth band, brown, is the multiplier: brown is 1, so one zero follows, {N} × 10 Ω = {answer}. The last band, also brown, is the tolerance, ±1 %. Here both end bands are brown, so the code can be read from either end. Read backward, the same bands give the digits 1, 1, {d3} and the value {Rback}, with a brown ±1 % band at the end too. Only the wider gap before the tolerance band, or a measurement out of circuit, tells which end is which. A backward reading in the hundreds of megohms or more is itself a clue, since leaded metal film parts rarely go above about 10 MΩ.",
+      "hints": [
+        "Three digits, then the multiplier, then the tolerance.",
+        "The digits give {N}; brown as the multiplier means one zero."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(110+d3)*10^d2",
+          "feedback": "That reads the bands from the wrong end: the brown tolerance band read as a first digit gives {Rback}. The tolerance band sits after the wider gap; when both end bands are brown and the gap isn't clear, measure the part out of circuit."
+        },
+        {
+          "formula": "(10*d1+d2)*10^d3",
+          "feedback": "You read it as a four-band code: two digits and the third band as the multiplier. A five-band code has three digits ({N}); the multiplier is the fourth band, brown, one zero."
+        },
+        {
+          "formula": "R/10",
+          "feedback": "That leaves out the multiplier: brown as the fourth band means ×10, one zero after {N}. Brown is 1, black would be ×1."
+        }
+      ],
+      "noDrawing": "reading a part's marking; no circuit to solve",
+      "derived": [
+        {
+          "name": "e",
+          "formula": "round(log10(R)-0.495)-2",
+          "unit": ""
+        },
+        {
+          "name": "N",
+          "formula": "round(R/10^e)",
+          "unit": ""
+        },
+        {
+          "name": "d1",
+          "formula": "round(N/100-0.495)",
+          "unit": ""
+        },
+        {
+          "name": "d2",
+          "formula": "round((N-100*d1)/10-0.45)",
+          "unit": ""
+        },
+        {
+          "name": "d3",
+          "formula": "N-100*d1-10*d2",
+          "unit": ""
+        },
+        {
+          "name": "Rback",
+          "formula": "(110+d3)*10^d2",
+          "unit": "Ω"
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "real_color_5band_silver",
+      "topicId": "real_components",
+      "level": "recall",
+      "prompt": "A metal film resistor has five color bands. Read from left to right they are {R:bands5}. What is its marked resistance?",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E96",
+          "decades": [
+            0,
+            0
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "R",
+        "unit": "Ω",
+        "tolerance": 0.001
+      },
+      "explanation": "Three digits: {N}. The fourth band, silver, is the multiplier ×0.01, so the value is {N} × 0.01 Ω = {answer}. The last band, brown, is the tolerance, ±1 %. With three digits, a ×0.01 multiplier is what puts a value between 1 and 10 Ω; silver and gold are never digits, so a silver band is either a multiplier (×0.01) or, as the last of four bands, a ±10 % tolerance.",
+      "hints": [
+        "Three digits, then the multiplier, then the tolerance.",
+        "The digits give {N}; silver as the multiplier is ×0.01."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(10*d1+d2)*10^d3",
+          "feedback": "That reads it as a four-band code: two digits and the third band as the multiplier. A five-band code has three digits ({N}), and the fourth band, silver, is the multiplier ×0.01."
+        },
+        {
+          "formula": "N",
+          "feedback": "That leaves out the multiplier. The fourth band is silver, which as a multiplier means ×0.01: {N} × 0.01."
+        },
+        {
+          "formula": "R*10",
+          "feedback": "That is ×0.1, the gold multiplier. Silver as the multiplier is ×0.01: {N} × 0.01."
+        }
+      ],
+      "noDrawing": "reading a part's marking; no circuit to solve",
+      "derived": [
+        {
+          "name": "e",
+          "formula": "round(log10(R)-0.495)-2",
+          "unit": ""
+        },
+        {
+          "name": "N",
+          "formula": "round(R/10^e)",
+          "unit": ""
+        },
+        {
+          "name": "d1",
+          "formula": "round(N/100-0.495)",
+          "unit": ""
+        },
+        {
+          "name": "d2",
+          "formula": "round((N-100*d1)/10-0.45)",
+          "unit": ""
+        },
+        {
+          "name": "d3",
+          "formula": "N-100*d1-10*d2",
+          "unit": ""
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "real_worst_current",
+      "topicId": "real_components",
+      "prompt": "A {R} ±{t} resistor sits directly across an ideal {V} supply and alone sets the current. What is the largest current that any part within that tolerance could draw?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            5,
+            9,
+            12
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "t",
+          "unit": "%",
+          "values": [
+            5,
+            10
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rmin",
+          "formula": "R*(1-t/100)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rmax",
+          "formula": "R*(1+t/100)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Inom",
+          "formula": "V/R",
+          "unit": "A"
+        },
+        {
+          "name": "Imin",
+          "formula": "V/(R*(1+t/100))",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "V/(R*(1-t/100))",
+        "unit": "A"
+      },
+      "explanation": "The tolerance says the part lies between {Rmin} and {Rmax}. The current is V/R, so the largest current comes from the smallest resistance: {V} / {Rmin} = {answer}. The nominal current is {Inom} and the smallest possible is {Imin}. A worst-case design checks that the circuit still works, and every part stays within its rating, at both ends.",
+      "hints": [
+        "Which end of the tolerance band gives the most current?",
+        "R_min = R × (1 − tolerance); I_max = V / R_min."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V/R",
+          "feedback": "That is the nominal current, for a part exactly at {R}. A ±{t} part may be as low as {Rmin}, and then it draws more."
+        },
+        {
+          "formula": "V/(R*(1+t/100))",
+          "feedback": "That is the smallest current, from the largest resistance, {Rmax}. More current needs less resistance: use {Rmin}."
+        }
+      ],
+      "schematic": {
+        "netlist": "resistor across a supply\nV1 a 0 {V:spice}\nR1 a 0 {R:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "{R}\n±{t}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "real_worst_divider",
+      "topicId": "real_components",
+      "prompt": "A divider makes a reference from {Vin}: R1 = {R1} on top, R2 = {R2} on the bottom, both ±{t} parts. With nothing loading the output, what is the highest output voltage the tolerances allow?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "value": 12
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            3300,
+            3900,
+            4700
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1200
+          ]
+        },
+        {
+          "name": "t",
+          "unit": "%",
+          "value": 5
+        }
+      ],
+      "derived": [
+        {
+          "name": "R1lo",
+          "formula": "R1*(1-t/100)",
+          "unit": "Ω"
+        },
+        {
+          "name": "R2hi",
+          "formula": "R2*(1+t/100)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Vnom",
+          "formula": "Vin*R2/(R1+R2)",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "Vin*R2*(1+t/100)/(R1*(1-t/100)+R2*(1+t/100))",
+        "unit": "V",
+        "tolerance": 0.01
+      },
+      "explanation": "The output is V_in × R2/(R1 + R2), which depends on the ratio of the two parts. It is highest when R2 is at the top of its band and R1 at the bottom: R2 = {R2hi}, R1 = {R1lo}. V_out = {Vin} × {R2hi} / ({R1lo} + {R2hi}) = {answer}, against {Vnom} nominal. With R2 the smaller part, the output moves by more than 5 %: both errors push the ratio the same way. This is the divider from Foundations, with each part at the edge of its band.",
+      "hints": [
+        "Which way must each resistor move to push the output up? Moving both the same way changes nothing.",
+        "R2 at +{t}, R1 at −{t}, then the divider formula."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vin*R2/(R1+R2)",
+          "feedback": "That is the nominal output, {Vnom}, with both parts exactly at their marked values. Put R2 at the top of its band and R1 at the bottom."
+        },
+        {
+          "formula": "Vin*R2/(R1+R2)*(1+t/100)",
+          "feedback": "Adding {t} to the output isn't the worst case: both resistors can be off, and with R1 low and R2 high their errors add. Work the divider through with R1 = {R1lo} and R2 = {R2hi}."
+        },
+        {
+          "formula": "Vin*R2*(1-t/100)/(R1*(1+t/100)+R2*(1-t/100))",
+          "feedback": "That is the lowest output: R2 low and R1 high. For the highest, swap them: R2 high, R1 low."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does the highest output need R2 at the top of its band and R1 at the bottom, rather than both at the top?",
+          "choices": [
+            {
+              "text": "The output depends only on the ratio R2/(R1 + R2): both 5 % high leaves it unchanged, while moving them apart changes it most",
+              "feedback": "Right: worst case means opposite ends for parts whose ratio sets the result.",
+              "correct": true
+            },
+            {
+              "text": "Both at the top gives the most output, because more resistance means more voltage",
+              "feedback": "With both 5 % high the current falls by the same fraction as R2 rises, so V = I·R2 is unchanged. Only the ratio matters."
+            },
+            {
+              "text": "R1 should be at the top of its band, because the top resistor sets the output",
+              "feedback": "A larger R1 takes a larger share of the supply and lowers the output. For the highest output R1 must be small."
+            },
+            {
+              "text": "The two tolerances cancel, so the output can never move from nominal",
+              "feedback": "They cancel only if both parts are off by the same fraction in the same direction. Two separate parts can be off in opposite directions."
+            }
+          ],
+          "explanation": "A divider's output is set by the ratio of its resistors. Errors that move both parts together cancel; errors in opposite directions add. That is why precision dividers use matched resistor networks, whose ratio is specified more tightly than either value."
+        }
+      ],
+      "schematic": {
+        "netlist": "divider\nV1 in 0 {Vin:spice}\nR1 in out {R1:spice}\nR2 out 0 {R2:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "real_nearest_e12",
+      "topicId": "real_components",
+      "prompt": "A calculation says a bias resistor should be {Rc}. You stock the E12 series: 1.0, 1.2, 1.5, 1.8, 2.2, 2.7, 3.3, 3.9, 4.7, 5.6, 6.8 and 8.2, times a power of ten. Which E12 value is nearest to {Rc}?",
+      "variables": [
+        {
+          "name": "R0",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        },
+        {
+          "name": "k",
+          "unit": "",
+          "values": [
+            0.93,
+            0.95,
+            1.05,
+            1.07
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rc",
+          "formula": "R0*k",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rlo",
+          "formula": "R0*0.9",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rhi",
+          "formula": "R0*1.1",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "R0",
+        "unit": "Ω"
+      },
+      "explanation": "Find the two E12 values either side of {Rc} and take the closer one: {answer}. Then check the circuit with that value, not the calculated one. A ±10 % E12 part marked {answer} can be anywhere from {Rlo} to {Rhi}, a band that already contains {Rc}.",
+      "hints": [
+        "Which two E12 values does {Rc} fall between?",
+        "Compare the differences to the value just below and just above."
+      ],
+      "misconceptions": [
+        {
+          "formula": "R0*k",
+          "feedback": "{Rc} is the calculated value, but it isn't a standard part: E12 has only twelve values in each decade. Choose the nearest one and check the circuit with it."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Your design tolerates ±10 % parts. Why is a {answer} part from the E12 series good enough, rather than a part as close as possible to {Rc}?",
+          "choices": [
+            {
+              "text": "The circuit must already work anywhere within ±10 % of the marked value, {Rlo} to {Rhi}; an offset of up to about 7 % from the calculation is of the same size, so the design is checked with the chosen value",
+              "feedback": "Right: the spacing of a series matches its tolerance. A design that needs a closer value uses ±1 % parts from E96, or two resistors in series.",
+              "correct": true
+            },
+            {
+              "text": "Resistors are made to whatever value is ordered, so you should order {Rc} exactly",
+              "feedback": "Stock resistors come only in the E-series values. E96 at ±1 % has values within about 1.2 % of any calculated value; custom values cost far more. A ±10 % design doesn't need them."
+            },
+            {
+              "text": "You should always round up to the next value, to be safe",
+              "feedback": "Whether rounding up or down is safe depends on the circuit: a resistor that limits a current is rounded up, one that must pass at least a current is rounded down. Without such a constraint, take the nearest."
+            },
+            {
+              "text": "A {answer} part settles toward the value the circuit needs once it is powered and warm",
+              "feedback": "A resistor doesn't adjust itself. Its value is fixed at manufacture within its tolerance and changes only slightly with temperature and age."
+            }
+          ],
+          "explanation": "The E-series are the values resistors and capacitors are made in, and their spacing matches their tolerance (E12 with ±10 %). A design that works across a part's whole tolerance band is not upset by the few percent between the calculated value and the nearest standard one; check it with the value actually fitted."
+        }
+      ],
+      "noDrawing": "rounding a calculated value to a standard one; no circuit to solve",
+      "review": "verified"
+    },
+    {
+      "id": "real_tempco_drift",
+      "topicId": "real_components",
+      "prompt": "A {R} metal film resistor has a temperature coefficient of ±{a} (the datasheet's limit). It is measured at 25 °C; then the board around it warms to {T}. By up to how much can its resistance change?",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E24",
+          "decades": [
+            3,
+            4
+          ]
+        },
+        {
+          "name": "a",
+          "unit": "ppm/°C",
+          "values": [
+            25,
+            50,
+            100
+          ]
+        },
+        {
+          "name": "T",
+          "unit": "°C",
+          "values": [
+            55,
+            70,
+            85
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "dT",
+          "formula": "T-25",
+          "unit": "°C"
+        }
+      ],
+      "answer": {
+        "formula": "R*a*1e-6*(T-25)",
+        "unit": "Ω"
+      },
+      "estimate": true,
+      "explanation": "ppm means parts per million: 1 ppm is 10⁻⁶ of the value, so ±{a} allows a change of up to that many millionths of the value for every degree. The rise is {T} − 25 °C = {dT}, so ΔR = R × α × ΔT = {R} × {a} × {dT} = {answer}. The datasheet gives a limit in both directions, so the value may rise or fall by up to that much, and it returns when the part cools. In a metal the hotter lattice scatters the electrons more often, so its resistivity rises; film resistors are made from alloys chosen to keep this small.",
+      "hints": [
+        "ppm/°C is a fraction of the value per degree. What is the temperature change?",
+        "ΔR = R × (α × 10⁻⁶) × ΔT."
+      ],
+      "misconceptions": [
+        {
+          "formula": "R*a*1e-6*T",
+          "feedback": "The coefficient multiplies the change in temperature, {T} − 25 °C = {dT}, not the temperature itself."
+        },
+        {
+          "formula": "R*a/100*(T-25)",
+          "feedback": "ppm is parts per million, not percent: 1 ppm is 10⁻⁶ of the value, ten thousand times smaller than 1 %."
+        },
+        {
+          "formula": "R*a*1e-6",
+          "feedback": "That is the change for one degree. Multiply by the temperature rise, {dT}."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "The same part is also marked ±1 %. How do its tolerance and its temperature coefficient differ?",
+          "choices": [
+            {
+              "text": "Tolerance is where its value sits as made and doesn't change in use; the temperature coefficient is how far the value moves, reversibly, as its temperature changes",
+              "feedback": "Right: two separate specifications. A worst-case design adds them: the ±1 % as made plus up to {answer} for this warming.",
+              "correct": true
+            },
+            {
+              "text": "They say the same thing: ±1 % is how far the value drifts as it warms",
+              "feedback": "Tolerance isn't a drift. It is the spread of values as made; a part that measures 0.8 % high as made stays about 0.8 % high. The change with temperature is the separate coefficient, and slow change over years of hot use is a third specification, the load-life stability."
+            },
+            {
+              "text": "The tolerance already includes the temperature drift, so they are never added",
+              "feedback": "Datasheets state them separately, and both apply at once: the part can be 1 % off as made and then shift by up to {answer} more as it warms."
+            },
+            {
+              "text": "The temperature coefficient only matters when the part runs above its power rating",
+              "feedback": "It applies to any temperature change, from warm air around the board or the part's own heating, well inside its rating."
+            }
+          ],
+          "explanation": "Tolerance: the band the value lies in as made. Temperature coefficient: the reversible change with temperature. Load-life stability: the slow, permanent change after long use at rated power. Each has its own line in a datasheet."
+        }
+      ],
+      "noDrawing": "a datasheet coefficient applied to a temperature change; no circuit to solve",
+      "review": "verified"
+    },
+    {
+      "id": "real_max_voltage",
+      "topicId": "real_components",
+      "prompt": "A family of 0402 chip resistors is rated 1/16 W in air no warmer than 70 °C, with a limiting element voltage of {Vlim} (both values typical for this size). What is the highest steady DC voltage you may put across a {R} part from this family?",
+      "variables": [
+        {
+          "name": "Pr",
+          "unit": "W",
+          "value": 0.0625
+        },
+        {
+          "name": "Vlim",
+          "unit": "V",
+          "value": 50
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            4700,
+            10000,
+            22000,
+            100000,
+            220000,
+            1000000
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vp",
+          "formula": "sqrt(Pr*R)",
+          "unit": "V"
+        },
+        {
+          "name": "Pv",
+          "formula": "Vlim^2/R",
+          "unit": "W"
+        },
+        {
+          "name": "Rcrit",
+          "formula": "Vlim^2/Pr",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "min(sqrt(Pr*R), Vlim)",
+        "unit": "V"
+      },
+      "explanation": "Two limits apply, and the lower one sets the maximum. Power: V²/R may not exceed {Pr}, so V ≤ √(P·R) = √({Pr} × {R}) = {Vp}. Voltage: never more than {Vlim}, however little power that means. The answer is the smaller, {answer}. The two limits cross at R = V²/P = {Rcrit}, which datasheets call the critical resistance: below it the power limit comes first, above it the voltage limit. In a warm enclosure the power limit is derated as well.",
+      "hints": [
+        "Work out the voltage that would make the part dissipate 1/16 W. Is it above or below {Vlim}?",
+        "V_max = the smaller of √(P·R) and the limiting element voltage."
+      ],
+      "misconceptions": [
+        {
+          "formula": "sqrt(Pr*R)",
+          "feedback": "{Vp} is the voltage at which the part would dissipate 1/16 W, but it is above the limiting element voltage, {Vlim}. At {R} the voltage limit comes first.",
+          "when": "sqrt(Pr*R)-Vlim"
+        },
+        {
+          "formula": "Vlim",
+          "feedback": "{Vlim} is the voltage limit, but at {R} the power limit comes first: {Vlim} across {R} would dissipate {Pv}, more than 1/16 W.",
+          "when": "Vlim-sqrt(Pr*R)"
+        },
+        {
+          "formula": "Pr*R",
+          "feedback": "P·R is in volts squared (V² = P·R). Take the square root, then compare with {Vlim}."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does a high-value resistor have a voltage limit at all, when it dissipates so little power?",
+          "choices": [
+            {
+              "text": "It is set by the electric field, not heat: the film, its trim cuts and the gap between the terminals can arc over above some voltage, however small the current",
+              "feedback": "Right: a separate failure mechanism. Parts for high voltage are made long, to spread the voltage over a longer path.",
+              "correct": true
+            },
+            {
+              "text": "It is the power limit written as a voltage",
+              "feedback": "Above {Rcrit} the power at {Vlim} is below 1/16 W, so heat isn't what stops you. The voltage limit is a separate mechanism: breakdown across the film and the gap."
+            },
+            {
+              "text": "A high-value resistor heats more for each volt across it, so its body reaches its maximum temperature sooner",
+              "feedback": "P = V²/R: at the same voltage a larger resistance dissipates less. The voltage limit has nothing to do with heat."
+            },
+            {
+              "text": "Above the limit its resistance falls to zero, so the current becomes unlimited",
+              "feedback": "Below breakdown the part stays ohmic. Above it, arcing damages the film and the value shifts or the part fails; the limit is where that may start."
+            }
+          ],
+          "explanation": "A resistor's ratings cover two different physical limits: the heat its body can lose (power) and the field its film, cuts and coating can hold off (voltage). For low values the power limit is reached first, for high values the voltage limit."
+        }
+      ],
+      "noDrawing": "reading two limits from a datasheet; no circuit to solve",
+      "review": "verified"
+    },
+    {
+      "id": "real_what_if_tolerance",
+      "topicId": "real_components",
+      "prompt": "A {R} ±{t} resistor across an ideal {V} supply sets a bias current. To tighten that current, the resistor is replaced by a ±1 % part with the same marked value. What happens to the worst-case spread of the current (largest possible minus smallest possible)?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            5,
+            9,
+            12
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "t",
+          "unit": "%",
+          "value": 5
+        }
+      ],
+      "derived": [
+        {
+          "name": "Inom",
+          "formula": "V/R",
+          "unit": "A"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the spread of the current",
+        "formula": "V/(R*(1-t/100))-V/(R*(1+t/100))",
+        "unit": "A",
+        "change": {
+          "t": "t/5"
+        },
+        "askFactor": true,
+        "factorHint": "The spread is V/(R(1 − t)) − V/(R(1 + t)). For a small t, 1/(1 − t) ≈ 1 + t and 1/(1 + t) ≈ 1 − t: how does the difference depend on t?",
+        "feedback": {
+          "up": "A tighter tolerance narrows the band the resistance can lie in, from ±5 % to ±1 %, so the band of possible currents narrows too.",
+          "same": "The nominal current stays at {Inom}, but the spread does not: a ±1 % part is guaranteed to sit closer to its marked value than a ±{t} part, so the lowest and highest possible resistances, and with them the largest and smallest currents, move closer together."
+        }
+      },
+      "explanation": "The largest current comes from the lowest resistance and the smallest from the highest, so the spread is V/(R(1 − t)) − V/(R(1 + t)), about 2t × V/R. With ±5 %: {before}; with ±1 %: {after}. The marked value, and so the nominal current {Inom}, stays the same. The new part is not exact either, only guaranteed closer; 1 % parts are commonly sold in the E24 values as well as the E96 ones.",
+      "hints": [
+        "The nominal current doesn't change. What about the band of resistances a part may have?"
+      ],
+      "followUps": [
+        {
+          "prompt": "Does the ±1 % part also change less as it warms up?",
+          "choices": [
+            {
+              "text": "Not necessarily: tolerance describes the value as made; how much it moves with temperature is the separate temperature coefficient in the datasheet",
+              "feedback": "Right: precision parts often have a small coefficient too, but only the datasheet says so.",
+              "correct": true
+            },
+            {
+              "text": "Yes: the tolerance is how far the value drifts in use, so it now drifts at most 1 %",
+              "feedback": "Tolerance isn't a drift in use. It is the band the value lies in as made; change with temperature is specified separately, in ppm/°C."
+            },
+            {
+              "text": "Yes: a part trimmed to ±1 % can no longer change with temperature",
+              "feedback": "Every resistive material changes with temperature to some degree. Trimming sets the value at the reference temperature; the coefficient says how far it moves from there."
+            },
+            {
+              "text": "No: tighter parts always change more with temperature",
+              "feedback": "There is no such rule. The coefficient depends on the resistive material and construction and is stated in the datasheet."
+            }
+          ],
+          "explanation": "Tolerance and temperature coefficient are separate lines in a datasheet. Choosing a ±1 % part narrows the first; the second must be checked on its own."
+        }
+      ],
+      "schematic": {
+        "netlist": "resistor across a supply\nV1 a 0 {V:spice}\nR1 a 0 {R:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "real_what_if_series",
+      "topicId": "real_components",
+      "prompt": "A designer rounds every calculated resistor to the nearest value of the E12 series: {n} values per decade, each about 1.21 times the one before. The parts list moves to the E24 series, with twice as many values per decade. For an ideal series with equal ratios, what happens to the largest possible error, in percent, between a calculated value and the nearest standard value, measured as a ratio (nearest on a logarithmic scale)?",
+      "variables": [
+        {
+          "name": "n",
+          "unit": "",
+          "value": 12
+        }
+      ],
+      "derived": [
+        {
+          "name": "q",
+          "formula": "10^(1/n)",
+          "unit": ""
+        }
+      ],
+      "whatIf": {
+        "quantity": "the largest rounding error",
+        "formula": "100*(10^(1/(2*n))-1)",
+        "unit": "%",
+        "change": {
+          "n": "2*n"
+        },
+        "askFactor": true,
+        "factorHint": "Each step is a factor of 10^(1/n), and the worst error is half a step, 10^(1/(2n)) − 1. For small x, 10^x − 1 grows almost in proportion to x: follow what doubling n does to x.",
+        "feedback": {
+          "up": "More values per decade puts the standard values closer together, so a calculated value can't be as far from the nearest one.",
+          "same": "The decade still spans a factor of 10, but it is split into 24 equal-ratio steps instead of 12. Each step is smaller, and so is the farthest a value can be from a standard one."
+        }
+      },
+      "explanation": "In an E-n series each value is about 10^(1/n) times the one before: {q} for E12. Measured as a ratio, a value can be at most halfway along a step from its nearest standard value: a factor of 10^(1/(2n)), an error of {before} for E12 and {after} for E24. That matches the tolerances the series are paired with: E12 with ±10 %, E24 with ±5 %. The real E12 and E24 values are rounded to two digits (4.7 rather than 4.64), so the actual largest error differs slightly.",
+      "hints": [
+        "Twice as many values over the same factor of 10: how big is each step now?"
+      ],
+      "followUps": [
+        {
+          "prompt": "Why are the E-series values spaced by an equal ratio rather than in equal steps (1, 2, 3 …)?",
+          "choices": [
+            {
+              "text": "A tolerance is a percentage of the value, so a part's band is wider for larger values; an equal ratio gives every value the same percentage gap to its neighbors, so the bands meet all along the decade",
+              "feedback": "Right: equal steps would crowd the top of the decade with overlapping bands and leave gaps at the bottom.",
+              "correct": true
+            },
+            {
+              "text": "Equal ratios make the numbers easier to remember",
+              "feedback": "4.7 and 6.8 are hardly easy numbers. The spacing follows from tolerance being a percentage of the value: equal ratios give equal percentage gaps."
+            },
+            {
+              "text": "Resistance can only be manufactured in steps that multiply",
+              "feedback": "A resistor can be trimmed to any value; the series is a choice. It is made of equal ratios because a part's tolerance band grows in proportion to its value."
+            },
+            {
+              "text": "So that two values in series always give another standard value",
+              "feedback": "Two standard values in series rarely give a third (1.0 kΩ + 1.2 kΩ = 2.2 kΩ is a coincidence). The spacing is set by tolerance, a percentage of the value."
+            }
+          ],
+          "explanation": "A ±10 % part marked 1 kΩ covers 0.9 to 1.1 kΩ; one marked 8.2 kΩ covers 7.38 to 9.02 kΩ. The bands grow with the value, so the values are spaced by a constant ratio, about 10^(1/n), to keep neighboring bands just meeting."
+        }
+      ],
+      "noDrawing": "about the spacing of the standard value series; no circuit to solve",
+      "review": "verified"
+    },
+    {
+      "id": "real_what_if_tracking",
+      "topicId": "real_components",
+      "prompt": "A divider on a {Vin} reference uses R1 = {R1} on top and R2 = {R2} on the bottom, both from one resistor network: they sit at the same temperature and change by the same fraction, +{a}. The board warms from {T} to 75 °C. With nothing loading the output, what happens to the output voltage?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "value": 5
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            3300,
+            4700,
+            6800
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            1500,
+            2200
+          ]
+        },
+        {
+          "name": "a",
+          "unit": "ppm/°C",
+          "value": 100
+        },
+        {
+          "name": "T",
+          "unit": "°C",
+          "value": 25
+        }
+      ],
+      "derived": [
+        {
+          "name": "I0",
+          "formula": "Vin/(R1+R2)",
+          "unit": "A"
+        },
+        {
+          "name": "I1",
+          "formula": "Vin/((R1+R2)*(1+a*1e-6*50))",
+          "unit": "A"
+        },
+        {
+          "name": "R2h",
+          "formula": "R2*(1+a*1e-6*50)",
+          "unit": "Ω"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the output voltage",
+        "formula": "Vin*R2*(1+a*1e-6*(T-25))/(R1*(1+a*1e-6*(T-25))+R2*(1+a*1e-6*(T-25)))",
+        "unit": "V",
+        "change": {
+          "T": "T+50"
+        },
+        "feedback": {
+          "up": "Each resistance rises by 0.5 %, but the output depends only on the ratio R2/(R1 + R2). The current falls by the same fraction that R2 rises, so V = I·R2 is unchanged.",
+          "down": "The current does fall, by about 0.5 %, but R2 rises by the same fraction, so the voltage across it, I·R2, stays put."
+        }
+      },
+      "explanation": "A 50 °C rise at +{a} raises each resistance by 100 × 10⁻⁶ × 50 = 0.5 %. The current falls from {I0} to {I1}, while R2 rises to {R2h}; their product is unchanged, so the output stays at {before}. A divider's output follows the ratio of its resistors, and parts that change together keep the ratio. Resistor networks specify this as tracking, in ppm/°C, which is much smaller than either part's own coefficient.",
+      "hints": [
+        "What sets a divider's output: the resistances themselves, or their ratio?"
+      ],
+      "followUps": [
+        {
+          "prompt": "When would this divider's output drift with temperature?",
+          "choices": [
+            {
+              "text": "When the two resistors change by different fractions: different temperature coefficients, or one running hotter than the other",
+              "feedback": "Right: only a change in the ratio moves the output.",
+              "correct": true
+            },
+            {
+              "text": "Whenever the board warms, since every resistance rises",
+              "feedback": "A rise that is the same fraction in both parts leaves the ratio, and the output, unchanged, as here."
+            },
+            {
+              "text": "Only when the reference voltage changes",
+              "feedback": "A change in the reference voltage does move the output, but so does any change in the ratio R2/(R1 + R2), for example from parts with different coefficients."
+            },
+            {
+              "text": "Never: dividers are immune to temperature",
+              "feedback": "Only a divider whose parts change together is immune. Two separate resistors with ±100 ppm/°C limits may move in opposite directions, so R2/R1 can shift by up to 200 ppm/°C."
+            }
+          ],
+          "explanation": "V_out = V_in × R2/(R1 + R2). Equal fractional changes cancel; unequal ones shift the output. This is why precision dividers use matched networks on one substrate, at one temperature."
+        }
+      ],
+      "schematic": {
+        "netlist": "divider\nV1 in 0 {Vin:spice}\nR1 in out {R1:spice}\nR2 out 0 {R2:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "real_design_min_load",
+      "topicId": "real_components",
+      "prompt": "A {Vs} regulator needs at least {Imin} of load to stay in regulation. A resistor across its output provides it. Aim the resistor at {I}, about 12 % above the minimum, so that the current stays above {Imin} whatever the E24 rounding and the part's ±5 % tolerance: choose an E24 value that draws within 5 % of {I} at its marked value.",
+      "variables": [
+        {
+          "name": "Vs",
+          "unit": "V",
+          "value": 12
+        },
+        {
+          "name": "Imin",
+          "unit": "A",
+          "values": [
+            0.005,
+            0.0055,
+            0.0068,
+            0.008
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "I",
+          "formula": "Imin*1.12",
+          "unit": "A"
+        },
+        {
+          "name": "Rx",
+          "formula": "Vs/(Imin*1.12)",
+          "unit": "Ω"
+        },
+        {
+          "name": "P",
+          "formula": "Vs*Imin*1.12",
+          "unit": "W"
+        },
+        {
+          "name": "Pw",
+          "formula": "Vs*Imin*1.12*1.05/0.95",
+          "unit": "W"
+        },
+        {
+          "name": "Ilow",
+          "formula": "Imin*1.12*0.95/1.05",
+          "unit": "A"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "R",
+            "label": "R (minimum load)",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 100,
+            "max": 100000
+          }
+        ],
+        "result": "Vs/R",
+        "resultLabel": "I",
+        "resultUnit": "A",
+        "target": "Imin*1.12",
+        "tolerance": 0.05
+      },
+      "explanation": "R = V/I = {Vs} / {I} = {Rx}. Pick the E24 value nearest to it and check the current, I = V/R: it must land within 5 % of {I}. Check the high end: R × 1.05 must still draw at least {Imin}. A part drawing 5 % below {I} at its marked value, and 5 % high in resistance, still draws {Ilow}. Then the power: about {P} at the aimed current, and at most {Pw} with the current 5 % above the aim and the part 5 % low. With at most half the rating as the rule, 1/8 W (125 mW) is not enough; a 1/4 W part is.",
+      "hints": [
+        "R = V/I with I = {I}; then find the E24 value that keeps the current within 5 % of it.",
+        "E24 has 1.0, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4 … per decade."
+      ],
+      "followUps": [
+        {
+          "prompt": "Your rule: the resistor may dissipate at most half its power rating in the worst case (the current 5 % above the aim, and the part 5 % low). Which standard rating is the smallest that meets it?",
+          "choices": [
+            {
+              "text": "1/8 W",
+              "feedback": "It would dissipate about {P} at the aimed current and up to {Pw} in the worst case: more than half of 125 mW. A rating is the limit at its stated ambient temperature (often 70 °C), not a level a part can run at in any conditions; in a warm enclosure it is derated further."
+            },
+            {
+              "text": "1/4 W",
+              "feedback": "Right: {Pw} is under half of 250 mW.",
+              "correct": true
+            },
+            {
+              "text": "1/2 W",
+              "feedback": "It meets the rule, but 1/4 W already does; the larger part takes more board space for no gain."
+            },
+            {
+              "text": "No rating needs checking: a resistor this size only matters above 1 W",
+              "feedback": "Every resistor has a power rating, and small parts have small ones: a 0402 chip is often 1/16 W. Check P = V²/R against it every time."
+            }
+          ],
+          "explanation": "P = V²/R is about {P} at the aimed current and at most {Pw} with the rounding and the part both on the high-current side. Half of 1/8 W is 62.5 mW, too little; half of 1/4 W is 125 mW, enough."
+        }
+      ],
+      "schematic": {
+        "netlist": "minimum load resistor\nV1 a 0 {Vs:spice}\nR1 a 0 {Rx:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vs}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "real_fault_misread",
+      "topicId": "real_components",
+      "prompt": "A divider should be R1 = {R1} on top and R2 = {R2} on the bottom, on a {Vin} supply, giving {h0} at its output. One resistor was fitted from the wrong drawer because its multiplier band was misread (both values should have a red multiplier band, ×100). The meters read as below. Which mistake explains the readings?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "values": [
+            9,
+            12
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            3300,
+            4700,
+            6800
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            1500,
+            2200
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "R1hi",
+          "formula": "R1*10",
+          "unit": "Ω"
+        },
+        {
+          "name": "R1lo",
+          "formula": "R1/10",
+          "unit": "Ω"
+        },
+        {
+          "name": "R2hi",
+          "formula": "R2*10",
+          "unit": "Ω"
+        },
+        {
+          "name": "R2lo",
+          "formula": "R2/10",
+          "unit": "Ω"
+        },
+        {
+          "name": "I0",
+          "formula": "Vin/(R1+R2)",
+          "unit": "A"
+        },
+        {
+          "name": "VoR1hi",
+          "formula": "Vin*R2/(10*R1+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "IR1hi",
+          "formula": "Vin/(10*R1+R2)",
+          "unit": "A"
+        },
+        {
+          "name": "VoR1lo",
+          "formula": "Vin*R2/(R1/10+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "IR1lo",
+          "formula": "Vin/(R1/10+R2)",
+          "unit": "A"
+        },
+        {
+          "name": "VoR2hi",
+          "formula": "Vin*10*R2/(R1+10*R2)",
+          "unit": "V"
+        },
+        {
+          "name": "IR2hi",
+          "formula": "Vin/(R1+10*R2)",
+          "unit": "A"
+        },
+        {
+          "name": "VoR2lo",
+          "formula": "Vin*R2/10/(R1+R2/10)",
+          "unit": "V"
+        },
+        {
+          "name": "IR2lo",
+          "formula": "Vin/(R1+R2/10)",
+          "unit": "A"
+        }
+      ],
+      "fault": {
+        "netlist": "divider\nV1 in 0 {Vin:spice}\nR1 in out {R1:spice}\nR2 out 0 {R2:spice}\n",
+        "probes": [
+          {
+            "label": "Output voltage",
+            "probe": "v(out)"
+          },
+          {
+            "label": "Current through R1",
+            "probe": "i(R1)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "R1 is {R1hi} (an orange multiplier band, ×1000)",
+            "value": {
+              "ref": "R1",
+              "formula": "R1*10"
+            },
+            "feedback": "R1 at {R1hi} would take most of the supply: the output would read {VoR1hi} and the current {IR1hi}.",
+            "why": "the output fell and the current fell well below the normal {I0}: much more resistance in the loop, on top, where it takes most of the supply."
+          },
+          {
+            "text": "R1 is {R1lo} (a brown multiplier band, ×10)",
+            "value": {
+              "ref": "R1",
+              "formula": "R1/10"
+            },
+            "feedback": "R1 at {R1lo} would let R2 take most of the supply: the output would read {VoR1lo} and the current {IR1lo}.",
+            "why": "the output rose and the current rose above the normal {I0}: less resistance in the loop, on top, so R2 takes more of the supply."
+          },
+          {
+            "text": "R2 is {R2hi} (an orange multiplier band, ×1000)",
+            "value": {
+              "ref": "R2",
+              "formula": "R2*10"
+            },
+            "feedback": "R2 at {R2hi} would take most of the supply: the output would read {VoR2hi} and the current {IR2hi}.",
+            "why": "the output rose while the current fell below the normal {I0}: more resistance in the loop, at the bottom, where it takes a larger share of the supply."
+          },
+          {
+            "text": "R2 is {R2lo} (a brown multiplier band, ×10)",
+            "value": {
+              "ref": "R2",
+              "formula": "R2/10"
+            },
+            "feedback": "R2 at {R2lo} would leave R1 most of the supply: the output would read {VoR2lo} and the current {IR2lo}.",
+            "why": "the output fell while the current rose above the normal {I0}: less resistance at the bottom, so R2 takes a smaller share of the supply."
+          }
+        ]
+      },
+      "explanation": "The output depends only on the ratio R2/(R1 + R2), so the output voltage alone can't tell R1 × 10 from R2 ÷ 10 (or R1 ÷ 10 from R2 × 10): both give the same ratio. The current tells them apart: a resistor ten times too large lowers it, one ten times too small raises it. A tenfold error is far outside any tolerance; a ±5 % part moves this output by a few percent at most. (The meter's 10 MΩ load moves the last digit of the readings.)",
+      "hints": [
+        "Look at the current first: is the total resistance larger or smaller than it should be?",
+        "Then the output: did the top or the bottom resistor take a bigger share of the supply?"
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "real_tolerance_meaning",
+      "topicId": "real_components",
+      "prompt": "A resistor is marked 10 kΩ ±5 %. What does the ±5 % guarantee?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "As made, its resistance lies somewhere between 9.5 kΩ and 10.5 kΩ; where in that band is unknown until you measure it",
+          "feedback": "Right: a tolerance is a band for the value as made, guaranteed for every part.",
+          "correct": true
+        },
+        {
+          "text": "Its resistance drifts by up to ±5 % while it is in use, as it warms and ages",
+          "feedback": "Tolerance isn't a drift. It is the band the value lies in as made. Change with temperature is the temperature coefficient (ppm/°C), and slow change with long use is the load-life stability: separate datasheet lines."
+        },
+        {
+          "text": "Its resistance is exactly 10 kΩ; ±5 % is how accurately a typical meter can measure it",
+          "feedback": "The ±5 % describes the part, not the meter. A part may be anywhere from 9.5 kΩ to 10.5 kΩ, and a good meter will show where."
+        },
+        {
+          "text": "About 95 % of the parts in a batch are close to 10 kΩ and the other 5 % may be anything",
+          "feedback": "The tolerance is a limit every delivered part meets, not a share of bad parts: no part outside 9.5 kΩ to 10.5 kΩ is within specification."
+        }
+      ],
+      "explanation": "Tolerance is the largest difference the maker allows between a part's actual value and its marked value, as delivered and measured at the reference temperature its datasheet states. 10 kΩ ± 5 % = 10 kΩ ± 500 Ω. Worst-case design uses the ends of that band; the effects of temperature and age are added on top from their own specifications.",
+      "hints": [
+        "Is the ±5 % about the part as made, or about how it changes later?"
+      ],
+      "noDrawing": "about what a marked tolerance means; no circuit to solve",
+      "review": "verified"
+    },
+    {
+      "id": "real_series_tolerance",
+      "topicId": "real_components",
+      "prompt": "IEC 60063 pairs the E12 series (1.0, 1.2, 1.5 … per decade) with ±10 % parts and the E24 series (1.0, 1.1, 1.2, 1.3 …) with ±5 % parts. Why do the series and the tolerance go together?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "E12 neighbors are about 21 % apart, so their ±10 % bands just meet (1.0 kΩ reaches up to 1.1 kΩ, 1.2 kΩ down to 1.08 kΩ); at ±5 % they would leave gaps, so twice as many values are needed",
+          "feedback": "Right: E24's neighbors are about 10 % apart, matching ±5 % bands.",
+          "correct": true
+        },
+        {
+          "text": "It is historical: the E12 values were fixed first, and the tolerance has nothing to do with the spacing",
+          "feedback": "The spacing follows from the tolerance: E12 neighbors are about 21 % apart, just what ±10 % bands cover. Finer values at ±10 % would have bands that overlap by half or more."
+        },
+        {
+          "text": "Tighter parts drift less in use, so they need more values to drift between before they leave their band",
+          "feedback": "Tolerance is not a drift. It is the band of values as made, and the series is spaced so neighboring bands meet."
+        },
+        {
+          "text": "E24 values are the E12 values with 5 % added, so each E12 part has an E24 partner 5 % above it",
+          "feedback": "E24 contains every E12 value plus one between each pair (1.1 between 1.0 and 1.2, 1.3 between 1.2 and 1.5), splitting each E12 step in two by ratio."
+        }
+      ],
+      "explanation": "The bands of two neighbors meet when the ratio between them is about (1 + t)/(1 − t). For ±10 % that is 1.22, close to E12's step of 10^(1/12) ≈ 1.21; for ±5 % it is 1.105, close to E24's 1.10. Coarser spacing would leave values no part can guarantee; finer spacing at the same tolerance adds parts that can't be told apart by their guaranteed bands. IEC 60063 pairs E96 with ±1 %: its step, 1.024, is a little larger than 1.01/0.99 = 1.020, so the bands leave small gaps. 1 % parts are also sold in E24 values; there the tight tolerance buys accuracy, not coverage of the decade.",
+      "hints": [
+        "Work out the band a 1.0 kΩ ±10 % part covers, and the band a 1.2 kΩ ±10 % part covers."
+      ],
+      "noDrawing": "about the standard value series; no circuit to solve",
+      "review": "verified"
+    },
+    {
+      "id": "real_abs_max",
+      "topicId": "real_components",
+      "prompt": "A sensor IC's datasheet gives a supply voltage of 6.0 V under Absolute Maximum Ratings, and 2.7 V to 5.5 V under Recommended Operating Conditions. It will run from a USB port: nominally 5.0 V, 4.75 V to 5.25 V at the port (USB 2.0). What can you conclude?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "It is suitable: 4.75 V to 5.25 V lies inside the recommended range, where the datasheet's specifications apply; 6.0 V is a damage limit to stay clear of, including during spikes",
+          "feedback": "Right: design to the recommended conditions, and keep the absolute maximum as a margin you never use.",
+          "correct": true
+        },
+        {
+          "text": "Anything up to 6.0 V is a normal supply, since that is the part's maximum rating and the datasheet allows it",
+          "feedback": "An absolute maximum rating is a stress limit: beyond it the part may be damaged, and at it nothing in the datasheet is guaranteed and its life may be shortened. Normal operation belongs in the recommended range."
+        },
+        {
+          "text": "It will be destroyed at once at 5.6 V, because that is above 5.5 V",
+          "feedback": "Between 5.5 V and 6.0 V the part isn't expected to be damaged, but its specifications are no longer guaranteed. Damage may begin only past the absolute maximum."
+        },
+        {
+          "text": "It needs exactly 6.0 V, the rated voltage, to meet its specifications",
+          "feedback": "6.0 V is the largest stress it may see, not its working voltage. Its specifications hold across the recommended 2.7 V to 5.5 V."
+        }
+      ],
+      "explanation": "A datasheet separates two kinds of limit. Absolute maximum ratings are stresses that must never be exceeded, even briefly; the part is not meant to operate there. Recommended operating conditions are where the electrical specifications in the tables hold. Design so the worst case, including tolerance, temperature and transients, stays inside the recommended range.",
+      "hints": [
+        "Which table says where the part works as specified, and which says where it may be damaged?"
+      ],
+      "noDrawing": "reading a datasheet's limits; no circuit to solve",
+      "review": "verified"
+    },
+    {
+      "id": "real_rating_hot_box",
+      "topicId": "real_components",
+      "prompt": "A 1/4 W film resistor dissipates 0.2 W. On the bench, in 25 °C air, it works. The finished board goes into a closed box where the air around the resistor reaches 100 °C. The datasheet allows the full rating up to 70 °C ambient, falling in a straight line to 0 W at 155 °C. Is the resistor still within its rating?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "No: at 100 °C it may dissipate only 0.25 W × (155 − 100)/(155 − 70) = 0.16 W, less than the 0.2 W it receives",
+          "feedback": "Right: hotter air leaves less room for the body's temperature rise, so the allowed power falls.",
+          "correct": true
+        },
+        {
+          "text": "Yes: 0.2 W is below 1/4 W, and a rating holds in any conditions",
+          "feedback": "A rating holds at its stated ambient temperature, here up to 70 °C. The body runs P·θ above the air (θ, its thermal resistance in °C/W), so in 100 °C air the same 0.2 W would push it past its maximum temperature."
+        },
+        {
+          "text": "Yes: a hotter resistor's value changes, so it will take less power by itself",
+          "feedback": "The circuit sets the power, V²/R. A film resistor's value changes by well under a few percent over this rise, so it still takes about 0.2 W."
+        },
+        {
+          "text": "No: above 70 °C ambient a resistor may not dissipate any power",
+          "feedback": "The allowed power falls in a straight line from 70 °C and reaches zero only at 155 °C; at 100 °C it is 0.16 W."
+        }
+      ],
+      "explanation": "A power rating is the dissipation that brings the body to its highest allowed temperature at a stated ambient temperature (see Power and heat). Above that ambient, the derating curve lowers the limit: at 100 °C, 0.25 W × 55/85 = 0.16 W. A 1/2 W part with the same curve would be allowed 0.5 W × 55/85 = 0.32 W there; or move the resistor to a cooler spot.",
+      "hints": [
+        "Read the derating curve at 100 °C before comparing with 0.2 W."
+      ],
+      "noDrawing": "reading a datasheet derating curve; no circuit to solve",
+      "review": "verified"
+    }
+  ]
+}

@@ -1,0 +1,1587 @@
+{
+  "topics": [
+    {
+      "id": "mosfet_intro",
+      "title": "MOSFET basics",
+      "summary": "The gate voltage, not a gate current, controls the drain current; above threshold a MOSFET follows a square law in saturation.",
+      "lenses": [
+        "circuit",
+        "physics"
+      ],
+      "prerequisites": [
+        "bjt_intro"
+      ],
+      "lensNotes": {
+        "circuit": "The gate voltage, not a gate current, controls a MOSFET. Above threshold, the drain current in saturation follows I_D = K(V_GS − V_t)²; with small V_DS the channel acts like a resistor.",
+        "physics": "The gate is a capacitor plate over a thin oxide. A positive gate voltage attracts electrons to the surface of p-type silicon until they form a conducting n-type channel, the 'inversion layer', between source and drain."
+      },
+      "formulas": [
+        {
+          "label": "Saturation (square law)",
+          "tex": "I_D = K\\,(V_{GS} - V_t)^2"
+        },
+        {
+          "label": "On when",
+          "tex": "V_{GS} > V_t"
+        },
+        {
+          "label": "Stays in saturation when",
+          "tex": "V_{DS} \\ge V_{GS} - V_t,\\quad V_{DS} = V_{DD} - I_D R_D"
+        },
+        {
+          "label": "Channel as a resistor",
+          "tex": "R_{DS} \\approx \\frac{1}{2K(V_{GS} - V_t)}\\ \\ (\\text{small } V_{DS})"
+        }
+      ],
+      "prerequisiteNotes": {
+        "bjt_intro": "A MOSFET does the transistor's job with a voltage-controlled gate instead of a base current, so it helps to compare it with the BJT you know."
+      },
+      "goals": [
+        "Tell whether an NMOS is in cutoff, triode or saturation from V_GS, V_t and V_DS",
+        "Find the saturation drain current with I_D = K(V_GS − V_t)², and the channel resistance at small V_DS with R_DS ≈ 1/(2K(V_GS − V_t))",
+        "Explain why only the overdrive V_GS − V_t counts, and why the threshold is where conduction barely starts, not where the transistor is fully on",
+        "Explain why the gate draws no steady current, yet needs current while its voltage changes"
+      ],
+      "intuition": "Once V_GS rises above the threshold V_t, the gate and the channel form a capacitor: the overdrive V_GS − V_t sets how much electron charge sits in the channel under the gate, and so how much current the transistor can pass.",
+      "why": "The gate is a conductor on a thin layer of oxide, an insulator, so gate and p-type silicon form a capacitor. A positive V_GS charges it: holes are pushed away and electrons gather under the oxide. At the threshold V_t there are just enough to form a thin n-type channel from source to drain; each volt of overdrive, V_GS − V_t, adds more channel charge. No steady current crosses the oxide; charge flows only while V_GS changes. Once V_DS reaches the overdrive, the channel pinches off at the drain end and the current nearly stops rising: saturation.",
+      "explanation": "A BJT is controlled by a base current. A MOSFET (metal-oxide-semiconductor field-effect transistor) is controlled by a voltage. Its gate sits on a thin oxide, an insulator, so gate and silicon form a small capacitor. In an n-channel MOSFET (NMOS), a positive gate-to-source voltage V_GS draws electrons under the gate. Below the threshold V_t there is no channel and the transistor is off (cutoff). Above it, the electrons form a channel from drain to source, and the overdrive V_GS − V_t sets how much charge it holds. The threshold is where conduction barely starts, not where the transistor is fully on. With V_DS below the overdrive it is in the triode region; for small V_DS the channel acts as a resistor, R_DS ≈ 1/(2K(V_GS − V_t)): more overdrive, lower resistance. With V_DS at or above the overdrive (saturation) the current levels off at I_D = K(V_GS − V_t)², nearly independent of V_DS. K is set by the transistor's size and process. Mind the names: MOSFET saturation, where the current levels off, is like a BJT's active region; a MOSFET used as a closed switch is in triode, while a BJT used as a closed switch is in what the BJT calls saturation: the same word for opposite uses. Some texts and datasheets nonetheless call a fully-on MOSFET switch 'saturated', borrowing the BJT meaning; if V_DS is a fraction of a volt and R_DS(on) applies, they mean triode. The gate draws current only while V_GS changes.",
+      "workedExample": {
+        "problem": "An NMOS transistor (assume V_t = 1.5 V and K = 2 mA/V²) has its source grounded and its drain connected through R_D = 1.0 kΩ to a 12 V supply. Find I_D and V_DS, and name the region, for V_GS = 1.0 V, 2.0 V, 3.5 V and 10 V.",
+        "steps": [
+          "V_GS = 1.0 V is below V_t = 1.5 V: no channel forms, so the transistor is in cutoff. I_D = 0, R_D drops nothing, and V_DS = 12 V.",
+          "V_GS = 2.0 V: the overdrive is 2.0 V − 1.5 V = 0.5 V. Assume saturation (square law): I_D = 2 mA/V² × (0.5 V)² = 0.5 mA. Then V_DS = 12 V − 0.5 mA × 1.0 kΩ = 11.5 V, above the 0.5 V overdrive, so saturation holds.",
+          "At 0.5 V above threshold it passes 0.5 mA, about 4% of the 12 V / 1.0 kΩ = 12 mA that R_D alone would allow: the threshold is where conduction starts, not where the transistor is fully on.",
+          "V_GS = 3.5 V: the overdrive is 2.0 V. Square law: I_D = 2 mA/V² × (2.0 V)² = 8 mA, so V_DS = 12 V − 8 mA × 1.0 kΩ = 4.0 V, above the 2.0 V overdrive: still saturation. Four times the overdrive gave 4² = 16 times the current.",
+          "V_GS = 10 V: the overdrive is 8.5 V. The square law would ask for 2 mA/V² × (8.5 V)² = 144.5 mA, which would need V_DS = 12 V − 144.5 mA × 1.0 kΩ = −132.5 V. That is impossible, so V_DS is below the overdrive: the transistor is in triode.",
+          "Triode, small-V_DS resistor model: R_DS ≈ 1 / (2 × 2 mA/V² × 8.5 V) = 29.4 Ω. Then I_D = 12 V / (1.0 kΩ + 29.4 Ω) = 11.66 mA and V_DS = 11.66 mA × 29.4 Ω = 0.343 V, far below 8.5 V, so the model fits. The MOSFET is a closed switch: R_D, not the transistor, sets the current.",
+          "In all four cases the steady gate current is zero. Whatever drives the gate supplies charge only while V_GS is changing from one value to the next."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Field-Effect Transistors\", ch. 4 \"Full Tutorial\", section 4.3 \"Insulated-gate field-effect transistors\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_fet.pdf",
+          "note": "The gate is insulated from the channel by oxide so no gate current flows, a positive gate on an n-channel enhancement MOSFET attracts electrons into an inversion layer that joins source and drain, and with too little gate-source voltage the transistor stays off."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Field-Effect Transistors\", ch. 4 \"Full Tutorial\", section 4.4 \"FET characteristics\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_fet.pdf",
+          "note": "At low V_DS the channel behaves like a gate-controlled resistance, at ample V_DS the drain current levels off, and above the threshold the current follows a square law, k(V_GS − V_TO)², so doubling the overdrive quadruples the current."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "mos_sat_current",
+      "topicId": "mosfet_intro",
+      "prompt": "An NMOS transistor has threshold V_t = {Vt} and K = {K} mA/V² (I_D = K(V_GS − V_t)² in saturation). With V_GS = {Vgs}, what is the drain current in saturation?",
+      "variables": [
+        {
+          "name": "K",
+          "unit": "",
+          "range": {
+            "min": 0.5,
+            "max": 5,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "Vt",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 2.5,
+            "step": 0.1
+          }
+        },
+        {
+          "name": "ov",
+          "unit": "V",
+          "values": [
+            0.5,
+            1.5,
+            2,
+            2.5,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vgs",
+          "formula": "Vt+ov",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "K*1e-3*ov^2",
+        "unit": "A"
+      },
+      "explanation": "The overdrive is V_GS − V_t = {Vgs} − {Vt} = {ov}. I_D = K (V_ov)² = {K} mA/V² × ({ov})² = {answer}.",
+      "hints": [
+        "Find the overdrive voltage V_GS − V_t first.",
+        "I_D = K (V_GS − V_t)²; square the overdrive."
+      ],
+      "misconceptions": [
+        {
+          "formula": "K*1e-3*ov",
+          "feedback": "Square the overdrive: the saturation current goes as (V_GS − V_t)²."
+        },
+        {
+          "formula": "K*1e-3*(Vt+ov)^2",
+          "feedback": "Subtract the threshold first: only the overdrive V_GS − V_t counts."
+        }
+      ],
+      "schematic": {
+        "netlist": "NMOS\nVDD vdd 0 10\nRD vdd d 1k\nM1 d g 0 NM\nVGS g 0 {Vgs:spice}\n.model NM NMOS\n",
+        "parts": [
+          {
+            "ref": "M1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "M1"
+          },
+          {
+            "ref": "RD",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "load"
+          },
+          {
+            "ref": "VGS",
+            "at": [
+              5,
+              8
+            ],
+            "rot": 90,
+            "label": "V_GS\n{Vgs}"
+          },
+          {
+            "ref": "VDD",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "VDD"
+          }
+        ],
+        "wires": [
+          [
+            [
+              5,
+              8
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              14,
+              2
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            8
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            14,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "steps": [
+        "Overdrive: V_GS − V_t = {Vgs} − {Vt} = {ov}.",
+        "In saturation, I_D = K(V_GS − V_t)².",
+        "I_D = {K} mA/V² × ({ov})² = {answer}."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does only the overdrive V_GS − V_t count, and not the whole gate voltage?",
+          "choices": [
+            {
+              "text": "The first V_t of gate voltage only gathers enough electrons under the gate to form the channel; only the voltage above that adds charge that can carry current",
+              "feedback": "Right: below threshold there is no channel at all, and the channel's charge grows with V_GS − V_t.",
+              "correct": true
+            },
+            {
+              "text": "V_t is dropped across a diode between gate and source, like a BJT's 0.7 V",
+              "feedback": "There is no junction in the gate path: the gate is insulated by oxide and no gate current flows. V_t is the gate voltage needed to form the channel, not a diode drop."
+            },
+            {
+              "text": "V_t is lost across the load resistor in the drain",
+              "feedback": "The load is in the drain circuit, not the gate circuit. V_t belongs to the transistor itself: it is how much gate voltage the channel needs before it exists."
+            },
+            {
+              "text": "The source sits at V_t, so the gate only sees the difference",
+              "feedback": "Here the source is at ground (0 V). V_t isn't a voltage at any terminal; it is the gate voltage at which the channel just forms."
+            }
+          ],
+          "explanation": "The gate, the oxide and the silicon form a capacitor. As the gate voltage rises it first pushes holes away; at V_t there are just enough electrons at the surface to form the inversion layer, the channel. Only the charge added above that, which grows with V_GS − V_t, can carry current, and in saturation the current also depends on how hard that charge is pulled along, which gives the square law. Compare the BJT from 'Bipolar transistor basics': its 0.7 V offset is a diode drop, and a base current flows through it."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "mos_region",
+      "topicId": "mosfet_intro",
+      "prompt": "An NMOS rated for V_DS up to 30 V, with V_t = {Vt}, has V_GS = {Vgs} and V_DS = {Vds}. Which region is it in?",
+      "variables": [
+        {
+          "name": "Vt",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 2,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "ov",
+          "unit": "V",
+          "range": {
+            "min": 0.5,
+            "max": 2,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "extra",
+          "unit": "V",
+          "range": {
+            "min": 0.5,
+            "max": 5,
+            "step": 0.5
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vgs",
+          "formula": "Vt+ov",
+          "unit": "V"
+        },
+        {
+          "name": "Vds",
+          "formula": "ov+extra",
+          "unit": "V"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Saturation (V_DS ≥ V_GS − V_t)",
+          "correct": true,
+          "feedback": "Yes: V_GS = {Vgs} is above V_t, and V_DS = {Vds} is at least the overdrive {ov}, so the channel is pinched off at the drain end."
+        },
+        {
+          "text": "Triode (V_DS < V_GS − V_t)",
+          "feedback": "Triode needs V_DS below the overdrive, V_GS − V_t = {ov}. Here V_DS = {Vds} is larger, so the channel pinches off at the drain end."
+        },
+        {
+          "text": "Cutoff (V_GS < V_t)",
+          "feedback": "V_GS = {Vgs} is above the threshold {Vt}, so the channel exists and current flows."
+        },
+        {
+          "text": "Breakdown (V_DS above its rating)",
+          "feedback": "V_DS = {Vds} is far below the 30 V rating. Breakdown is a failure limit, not one of the operating regions the gate controls."
+        }
+      ],
+      "schematic": {
+        "netlist": "NMOS bias\nVGS g 0 {Vgs:spice}\nVDS d 0 {Vds:spice}\nM1 d g 0 NM\n.model NM NMOS\n",
+        "parts": [
+          {
+            "ref": "M1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "M1"
+          },
+          {
+            "ref": "VGS",
+            "at": [
+              5,
+              8
+            ],
+            "rot": 90,
+            "label": "V_GS\n{Vgs}"
+          },
+          {
+            "ref": "VDS",
+            "at": [
+              14,
+              4
+            ],
+            "rot": 90,
+            "label": "V_DS\n{Vds}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              5,
+              8
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              10,
+              4
+            ],
+            [
+              14,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            8
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            14,
+            8
+          ]
+        ],
+        "labels": []
+      },
+      "explanation": "Check V_GS > V_t ({Vgs} > {Vt}): on. Then compare V_DS with the overdrive V_GS − V_t = {ov}: V_DS = {Vds} is larger, so it's in saturation.",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "mos_region_triode",
+      "topicId": "mosfet_intro",
+      "prompt": "An NMOS rated for V_DS up to 30 V, with V_t = {Vt}, has V_GS = {Vgs} and V_DS = {Vds}. Which region is it in?",
+      "variables": [
+        {
+          "name": "Vt",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 2,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "ov",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 3,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "dv",
+          "unit": "V",
+          "range": {
+            "min": 0.2,
+            "max": 0.9,
+            "step": 0.1
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vgs",
+          "formula": "Vt+ov",
+          "unit": "V"
+        },
+        {
+          "name": "Vds",
+          "formula": "ov-dv",
+          "unit": "V"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Saturation (V_DS ≥ V_GS − V_t)",
+          "feedback": "Saturation needs V_DS at least the overdrive, V_GS − V_t = {ov}. Here V_DS = {Vds} is smaller, so the channel reaches all the way to the drain without pinching off. Note the naming trap: a fully-on MOSFET switch is in triode, not saturation; MOSFET saturation corresponds to a BJT's active region."
+        },
+        {
+          "text": "Triode (V_DS < V_GS − V_t)",
+          "correct": true,
+          "feedback": "Yes: V_GS = {Vgs} is above V_t, and V_DS = {Vds} is below the overdrive {ov}, so the channel stays formed all the way to the drain."
+        },
+        {
+          "text": "Cutoff (V_GS < V_t)",
+          "feedback": "V_GS = {Vgs} is above the threshold {Vt}, so the channel exists. A small V_DS does not turn the transistor off; it only means little voltage pushes current along the channel."
+        },
+        {
+          "text": "Breakdown (V_DS above its rating)",
+          "feedback": "V_DS = {Vds} is far below the 30 V rating. Breakdown is a failure limit, not one of the operating regions the gate controls."
+        }
+      ],
+      "schematic": {
+        "netlist": "NMOS bias\nVGS g 0 {Vgs:spice}\nVDS d 0 {Vds:spice}\nM1 d g 0 NM\n.model NM NMOS\n",
+        "parts": [
+          {
+            "ref": "M1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "M1"
+          },
+          {
+            "ref": "VGS",
+            "at": [
+              5,
+              8
+            ],
+            "rot": 90,
+            "label": "V_GS\n{Vgs}"
+          },
+          {
+            "ref": "VDS",
+            "at": [
+              14,
+              4
+            ],
+            "rot": 90,
+            "label": "V_DS\n{Vds}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              5,
+              8
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              10,
+              4
+            ],
+            [
+              14,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            8
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            14,
+            8
+          ]
+        ],
+        "labels": []
+      },
+      "explanation": "Check V_GS > V_t ({Vgs} > {Vt}): the channel exists. Then compare V_DS with the overdrive V_GS − V_t = {ov}: V_DS = {Vds} is smaller, so the gate-to-channel voltage at the drain end, V_GS − V_DS, is still above V_t and the channel does not pinch off: triode. This is where a MOSFET switch sits when it is on.",
+      "review": "verified"
+    },
+    {
+      "id": "mos_region_cutoff",
+      "topicId": "mosfet_intro",
+      "prompt": "An NMOS rated for V_DS up to 30 V, with V_t = {Vt}, has V_GS = {Vgs} and V_DS = {Vds}. Which region is it in?",
+      "variables": [
+        {
+          "name": "Vt",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 2,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "ud",
+          "unit": "V",
+          "range": {
+            "min": 0.4,
+            "max": 0.9,
+            "step": 0.1
+          }
+        },
+        {
+          "name": "Vds",
+          "unit": "V",
+          "values": [
+            0.2,
+            0.5,
+            1,
+            2.5,
+            5,
+            9,
+            12,
+            15
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vgs",
+          "formula": "Vt-ud",
+          "unit": "V"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Saturation (V_DS ≥ V_GS − V_t)",
+          "feedback": "Check V_GS against V_t first: V_GS = {Vgs} is {ud} below V_t = {Vt}, so no channel forms between source and drain. The V_DS ≥ V_GS − V_t comparison only applies once a channel exists; saturation means a channel that pinches off at the drain end, and here there is no channel to pinch off. With V_GS − V_t = −{ud}, the inequality holds for every V_DS, so it can't decide anything here. Raising V_DS does not make current flow without one."
+        },
+        {
+          "text": "Triode (V_DS < V_GS − V_t)",
+          "feedback": "Check V_GS against V_t first: V_GS = {Vgs} is {ud} below V_t = {Vt}, so no channel forms between source and drain. Triode means a channel that reaches all the way from source to drain; the V_DS comparison only applies once that channel exists. Only the gate voltage creates the channel, so no value of V_DS can put the transistor in triode while V_GS is below V_t."
+        },
+        {
+          "text": "Cutoff (V_GS < V_t)",
+          "correct": true,
+          "feedback": "Yes: V_GS = {Vgs} is below V_t = {Vt}, so the gate has not pulled enough electrons to the surface to form an inversion layer. Source and drain stay two n-type regions separated by p-type body, and the drain–body pn junction is reverse-biased, so I_D is essentially zero: nanoamps at most, from the weak subthreshold current, which falls about tenfold for every 0.1 V below threshold, plus junction leakage. V_DS = {Vds} has no channel to push current through."
+        },
+        {
+          "text": "Breakdown (V_DS above its rating)",
+          "feedback": "V_DS = {Vds} is well below the 30 V rating. Breakdown is a failure limit, not one of the operating regions the gate controls."
+        }
+      ],
+      "schematic": {
+        "netlist": "NMOS bias\nVGS g 0 {Vgs:spice}\nVDS d 0 {Vds:spice}\nM1 d g 0 NM\n.model NM NMOS\n",
+        "parts": [
+          {
+            "ref": "M1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "M1"
+          },
+          {
+            "ref": "VGS",
+            "at": [
+              5,
+              8
+            ],
+            "rot": 90,
+            "label": "V_GS\n{Vgs}"
+          },
+          {
+            "ref": "VDS",
+            "at": [
+              14,
+              4
+            ],
+            "rot": 90,
+            "label": "V_DS\n{Vds}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              5,
+              8
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              10,
+              4
+            ],
+            [
+              14,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            8
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            14,
+            8
+          ]
+        ],
+        "labels": []
+      },
+      "explanation": "Check V_GS against V_t first: V_GS = {Vgs} is below V_t = {Vt}, so no conducting inversion layer forms and there is no channel: cutoff. Without a channel, the only path from drain to source is through the p-type body, and the drain–body pn junction (the body is tied to the source inside a three-terminal MOSFET) is reverse-biased, so I_D is essentially zero (nanoamps of subthreshold current and junction leakage) for any V_DS up to the rating, including V_DS = {Vds}. The comparison of V_DS with the overdrive V_GS − V_t only separates triode from saturation once the channel exists."
+    },
+    {
+      "id": "mos_gate_current",
+      "topicId": "mosfet_intro",
+      "prompt": "How much steady (DC) current does a MOSFET's gate draw once it has been switched on?",
+      "choices": [
+        {
+          "text": "Essentially none: the gate is insulated by a thin oxide",
+          "correct": true,
+          "feedback": "Yes: the gate is a capacitor. It takes a burst of charge to switch, then no steady current."
+        },
+        {
+          "text": "I_D / β, like a BJT base",
+          "feedback": "That's the bipolar transistor. A MOSFET gate is insulated from the channel."
+        },
+        {
+          "text": "About 0.7 V worth of diode current",
+          "feedback": "There's no junction between gate and channel, only an oxide layer."
+        },
+        {
+          "text": "The same as the drain current",
+          "feedback": "The drain current flows from drain to source; none of it goes through the gate."
+        }
+      ],
+      "noDrawing": "about the insulated gate of any MOSFET; no particular circuit",
+      "explanation": "The gate sits on silicon dioxide, so it acts like a capacitor. Switching needs charge (gate charge Q_g), but holding it on needs no DC current. That's why MOSFETs are easy to drive from logic.",
+      "level": "recall",
+      "review": "verified"
+    },
+    {
+      "id": "mos_triode_resistance",
+      "topicId": "mosfet_intro",
+      "prompt": "An NMOS with K = {K} mA/V² is driven with an overdrive of V_GS − V_t = {ov} and a very small V_DS. Its channel then acts as a resistor R_DS ≈ 1 / (2K(V_GS − V_t)). What is R_DS?",
+      "variables": [
+        {
+          "name": "K",
+          "unit": "",
+          "range": {
+            "min": 1,
+            "max": 10,
+            "step": 1
+          }
+        },
+        {
+          "name": "ov",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 5,
+            "step": 0.5
+          }
+        }
+      ],
+      "answer": {
+        "formula": "1/(2*K*1e-3*ov)",
+        "unit": "Ω"
+      },
+      "noDrawing": "a device formula for the channel's resistance; no circuit around the MOSFET",
+      "explanation": "For small V_DS, I_D ≈ 2K(V_GS − V_t)·V_DS, so R_DS = 1 / (2 × {K} mA/V² × {ov}) = {answer}. More gate drive, lower resistance: that's how a MOSFET switch is turned fully on.",
+      "hints": [
+        "In deep triode, the channel is a voltage-controlled resistor.",
+        "R_DS = 1 / (2K·V_ov)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "1/(K*1e-3*ov)",
+          "feedback": "Include the factor of 2: R_DS = 1 / (2K·V_ov)."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does a bigger overdrive make the channel's resistance smaller?",
+          "choices": [
+            {
+              "text": "More gate voltage above threshold puts more electrons in the channel, and a channel with more carriers has more conductance",
+              "feedback": "Right: the channel's charge is set by the gate capacitor, Q = C(V_GS − V_t), and conductance grows with the charge.",
+              "correct": true
+            },
+            {
+              "text": "A bigger gate voltage drives a gate current into the channel that adds to the drain current",
+              "feedback": "The gate is insulated by oxide: no DC gate current flows at any gate voltage."
+            },
+            {
+              "text": "The channel gets shorter as the gate voltage rises",
+              "feedback": "The channel length is fixed by the device (the distance from source to drain). The gate changes how many electrons are in it, not how long it is."
+            },
+            {
+              "text": "The resistance doesn't really change; only V_DS gets smaller",
+              "feedback": "At a fixed small V_DS the current rises in proportion to the overdrive, so V_DS / I_D, the resistance, really does fall."
+            }
+          ],
+          "explanation": "The channel is one plate of a capacitor with the gate as the other: its charge is C_ox(V_GS − V_t). A conductor's conductance is proportional to how many carriers it has, so R_DS ∝ 1/(V_GS − V_t). That is why a switch datasheet quotes R_DS(on) at a stated V_GS, and why a MOSFET switch is driven well above threshold (next: MOSFET switches and losses)."
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "gate_current_concept",
+      "topicId": "mosfet_intro",
+      "prompt": "Why does a MOSFET's gate draw almost no DC current?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "The gate is insulated from the channel by a thin oxide, so it acts like a small capacitor",
+          "feedback": "Right: current flows only while the gate charge changes.",
+          "correct": true
+        },
+        {
+          "text": "The gate is connected to the source internally",
+          "feedback": "Gate and source are separate terminals; V_GS controls the channel."
+        },
+        {
+          "text": "MOSFETs only work with AC",
+          "feedback": "They conduct DC fine; the gate just doesn't pass DC current."
+        },
+        {
+          "text": "The gate current flows into the drain instead",
+          "feedback": "No DC current flows through the gate oxide to anywhere."
+        }
+      ],
+      "noDrawing": "about the gate oxide's physics; no particular circuit",
+      "explanation": "The gate forms a capacitor with the channel through a thin oxide. Holding it at a steady voltage needs no current; switching it needs charge (Q_g), which is why gate drivers supply fast current pulses.",
+      "hints": [
+        "What sits between the gate and the channel?"
+      ],
+      "level": "recall",
+      "review": "verified"
+    },
+    {
+      "id": "mos_gate_floating_on",
+      "topicId": "mosfet_intro",
+      "prompt": "A 12 V lamp is switched by an NMOS M1 (V_t ≈ 2 V) on the low side. A 10 V gate driver, plugged in through a connector, is the only thing connected to the gate. With the driver output high and the lamp lit, the connector is unplugged, leaving the gate connected to nothing. The lamp stays lit for minutes. Why?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "The charge on the gate has no path to leave: the oxide insulates it and nothing else connects to the gate, so V_GS stays near 10 V and the channel stays formed",
+          "correct": true,
+          "feedback": "Right: the gate and the channel form a capacitor. Unplugging the driver removes the only path for its charge, so V_GS falls only as fast as leakage through the oxide and across the board removes it."
+        },
+        {
+          "text": "The lamp current flowing from drain to source keeps feeding the gate, so the gate holds itself on for as long as the lamp draws current",
+          "feedback": "No drain current reaches the gate: the oxide insulates it from the channel. The gate holds its voltage because its charge is trapped, not because anything feeds it."
+        },
+        {
+          "text": "Once the channel has formed, the MOSFET latches on like a thyristor and only turns off when the lamp current is interrupted",
+          "feedback": "A MOSFET does not latch: its channel follows V_GS at every instant. Connect the gate to the source and the lamp goes out at once, even though lamp current was flowing a moment before."
+        },
+        {
+          "text": "Once the channel has formed, the threshold falls to near zero, so the MOSFET no longer needs any gate voltage to stay on",
+          "feedback": "V_t is set by the device (oxide thickness, doping) and does not change with the channel. With V_GS brought to 0 V, below V_t, the channel would vanish."
+        }
+      ],
+      "explanation": "A MOSFET is controlled by V_GS, the voltage on the gate capacitor, not by a gate current. The driver charged that capacitor to 10 V; unplugged, the gate is connected to nothing, so the charge stays and so does the channel. The gate voltage falls only through leakage, typically picoamps on a clean board (a datasheet's I_GSS limit is a worst case far above that): with about a nanofarad of gate capacitance, that is millivolts per second. An open gate can also pick up charge capacitively from nearby wiring. That is why a gate is never left without a defined path: a pull-down resistor from gate to source (for example 100 kΩ) discharges it within milliseconds when the driver goes away. As the gate slowly leaks down through the threshold, M1 spends a long time half on, dimming the lamp and heating itself, which a pull-down prevents.",
+      "hints": [
+        "What does the gate form with the channel, and where could its charge go?"
+      ],
+      "followUps": [
+        {
+          "prompt": "Which addition makes the lamp go out within milliseconds when the driver is unplugged?",
+          "choices": [
+            {
+              "text": "A resistor, for example 100 kΩ, from the gate to the source",
+              "correct": true,
+              "feedback": "Right: it gives the gate charge a path to the source. With a gate capacitance of about a nanofarad, the time constant is 100 kΩ × 1 nF = 100 µs."
+            },
+            {
+              "text": "A resistor, for example 100 Ω, in series with the gate, between the connector and M1",
+              "feedback": "With the connector unplugged, the series resistor leads to nothing: the charge still has no path to leave the gate."
+            },
+            {
+              "text": "A capacitor, for example 10 nF, from the gate to the source",
+              "feedback": "A capacitor across the gate stores more charge at the same voltage and has no DC path, so the gate would hold its voltage just as long or longer."
+            },
+            {
+              "text": "A gate driver able to supply a larger current, for example 2 A",
+              "feedback": "A stronger driver charges and discharges the gate faster while it is connected. Once it is unplugged, its current rating does nothing."
+            }
+          ],
+          "explanation": "The gate needs a DC path to the source for its charge to leave. A pull-down resistor and the gate capacitance form an RC circuit (as in the capacitor topics): 100 kΩ with about 1 nF gives τ = 100 µs, so the gate falls below V_t within milliseconds. A large value draws only 10 V / 100 kΩ = 0.1 mA from the driver while it is connected."
+        }
+      ],
+      "schematic": {
+        "netlist": "Gate left unconnected\nVDD vdd 0 12\nRLAMP vdd d 24\nM1 d g 0 NM\nRS1 drv g 1e9\nVDRV drv 0 10\n.model NM NMOS\n",
+        "parts": [
+          {
+            "ref": "M1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "M1"
+          },
+          {
+            "ref": "RLAMP",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "lamp",
+            "symbol": "lamp"
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              2,
+              6
+            ],
+            "label": "connector\n(unplugged)",
+            "symbol": "switch"
+          },
+          {
+            "ref": "VDRV",
+            "at": [
+              0,
+              8
+            ],
+            "rot": 90,
+            "label": "10 V\ndriver"
+          },
+          {
+            "ref": "VDD",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              8
+            ],
+            [
+              0,
+              6
+            ],
+            [
+              2,
+              6
+            ]
+          ],
+          [
+            [
+              6,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              14,
+              2
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            8
+          ],
+          [
+            0,
+            12
+          ],
+          [
+            14,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "mos_what_if_overdrive",
+      "topicId": "mosfet_intro",
+      "prompt": "An NMOS (V_t = {Vt}, K = {K} mA/V²) is in saturation with V_GS = {Vgs}, an overdrive of {ov}. The gate voltage is raised by another {ov}, so the overdrive becomes {new_ov}; the transistor stays in saturation. What happens to the drain current?",
+      "variables": [
+        {
+          "name": "K",
+          "unit": "",
+          "range": {
+            "min": 0.5,
+            "max": 5,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "Vt",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 2.5,
+            "step": 0.1
+          }
+        },
+        {
+          "name": "ov",
+          "unit": "V",
+          "range": {
+            "min": 0.5,
+            "max": 1.5,
+            "step": 0.5
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vgs",
+          "formula": "Vt+ov",
+          "unit": "V"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the drain current",
+        "formula": "K*1e-3*ov^2",
+        "unit": "A",
+        "change": {
+          "ov": "2*ov"
+        },
+        "askFactor": true,
+        "feedback": {
+          "down": "More gate voltage pulls more electrons into the channel; it can't reduce the current. In saturation it is V_DS that hardly matters, not V_GS.",
+          "same": "In saturation the gate sets the current: I_D = K(V_GS − V_t)². It is V_DS that has little effect there; the gate voltage has a strong one."
+        },
+        "factorHint": "In saturation the drain current depends only on the overdrive: I_D = K(V_GS − V_t)², with V_DS out of the picture. Put the old and the new overdrive into it and compare."
+      },
+      "schematic": {
+        "netlist": "NMOS bias\nVGS g 0 {Vgs:spice}\nVDS d 0 5\nM1 d g 0 NM\n.model NM NMOS\n",
+        "parts": [
+          {
+            "ref": "M1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "M1"
+          },
+          {
+            "ref": "VGS",
+            "at": [
+              5,
+              8
+            ],
+            "rot": 90,
+            "label": "V_GS\n{Vgs}"
+          },
+          {
+            "ref": "VDS",
+            "at": [
+              14,
+              4
+            ],
+            "rot": 90,
+            "label": "V_DS"
+          }
+        ],
+        "wires": [
+          [
+            [
+              5,
+              8
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              10,
+              4
+            ],
+            [
+              14,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            8
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            14,
+            8
+          ]
+        ],
+        "labels": []
+      },
+      "explanation": "I_D = K(V_GS − V_t)². The overdrive doubles from {ov} to {new_ov}, so the current goes up 2² = 4 times: {before} → {after}. The gate voltage itself rose by less than double (from {Vgs}), because the first V_t = {Vt} only forms the channel. The square comes from two effects growing together: more charge in the channel, and a larger voltage pulling it along. In saturation the channel pinches off at V_DS = V_GS − V_t, so the voltage along the channel is also the overdrive: charge × voltage gives the square.",
+      "hints": [
+        "Which part of V_GS sets the current: all of it, or only what is above V_t?",
+        "I_D = K(V_GS − V_t)²: what happens to a square when its base doubles?"
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "mos_what_if_gate_drive",
+      "topicId": "mosfet_intro",
+      "prompt": "A power MOSFET switch (V_t = {Vt}, K = {K} A/V²) is driven from a logic pin at V_GS = {Vgs}, so its channel acts as a resistor R_DS ≈ 1/(2K(V_GS − V_t)). A gate driver now drives it at V_GS = {new_Vgs}, twice the voltage. What happens to the channel's conductance 1/R_DS, how easily it conducts?",
+      "variables": [
+        {
+          "name": "K",
+          "unit": "",
+          "range": {
+            "min": 2,
+            "max": 10,
+            "step": 1
+          }
+        },
+        {
+          "name": "Vt",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 2.5,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "Vgs",
+          "unit": "V",
+          "values": [
+            4.5,
+            5
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the channel's conductance 1/R_DS",
+        "formula": "2*K*(Vgs-Vt)",
+        "unit": "S",
+        "change": {
+          "Vgs": "2*Vgs"
+        },
+        "askFactor": true,
+        "feedback": {
+          "down": "More gate voltage doesn't choke the channel: the gate's field pulls more electrons into it, and a channel with more carriers conducts better, 1/R_DS = 2K(V_GS − V_t).",
+          "same": "R_DS isn't a fixed property of the part: the channel's conductance is set by how many electrons the gate holds in it, and that follows the overdrive V_GS − V_t, which grows with V_GS."
+        },
+        "factorHint": "At small V_DS the channel's conductance is 1/R_DS = 2K(V_GS − V_t). Work out the overdrive V_GS − V_t before and after; the threshold V_t = {Vt} doesn't move when V_GS does."
+      },
+      "schematic": {
+        "netlist": "NMOS switch\nVDD vdd 0 12\nRD vdd d 10\nM1 d g 0 NM\nVGS g 0 {Vgs:spice}\n.model NM NMOS\n",
+        "parts": [
+          {
+            "ref": "M1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "M1"
+          },
+          {
+            "ref": "RD",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "load"
+          },
+          {
+            "ref": "VGS",
+            "at": [
+              5,
+              8
+            ],
+            "rot": 90,
+            "label": "gate\n{Vgs}"
+          },
+          {
+            "ref": "VDD",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "supply"
+          }
+        ],
+        "wires": [
+          [
+            [
+              5,
+              8
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              14,
+              2
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            8
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            14,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "explanation": "1/R_DS = 2K(V_GS − V_t), in proportion to the overdrive. The overdrive goes from {Vgs} − {Vt} to {new_Vgs} − {Vt}: more than double, because V_t doesn't grow with V_GS. So the conductance more than doubles, {before} → {after}, and R_DS falls to less than half. This is why a power MOSFET driven from a 12 V gate driver runs cooler than the same part driven from a 5 V pin, and why datasheets state R_DS(on) at a given V_GS. In a real power MOSFET the drop is smaller than this model predicts, because part of R_DS(on) (drift region, bond wires) doesn't depend on the gate; datasheet curves flatten above about 10 V.",
+      "hints": [
+        "Only the overdrive V_GS − V_t sets the channel's charge.",
+        "Compare V_GS − V_t before and after. Does it exactly double?"
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "mos_vgs_for_current",
+      "topicId": "mosfet_intro",
+      "prompt": "An NMOS transistor has threshold V_t = {Vt} and K = {K} mA/V² (I_D = K(V_GS − V_t)² in saturation). Its load keeps it in saturation. What gate-to-source voltage V_GS makes it carry {Id}?",
+      "variables": [
+        {
+          "name": "K",
+          "unit": "",
+          "values": [
+            0.5,
+            1,
+            2,
+            4
+          ]
+        },
+        {
+          "name": "Vt",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 2.5,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "ov",
+          "unit": "V",
+          "values": [
+            0.5,
+            1.5,
+            2,
+            2.5
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Id",
+          "formula": "K*1e-3*ov^2",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "Vt+ov",
+        "unit": "V"
+      },
+      "explanation": "Solve the square law for the overdrive: the overdrive is V_GS − V_t = √(I_D/K) = √({Id} / {K} mA/V²) = {ov}. The gate must first reach the threshold before any channel exists, so V_GS = V_t + √(I_D/K) = {Vt} + {ov} = {answer}.",
+      "hints": [
+        "Solve I_D = K(V_GS − V_t)² for the overdrive first.",
+        "V_GS = V_t + √(I_D/K), with K in A/V² when I_D is in amps."
+      ],
+      "misconceptions": [
+        {
+          "formula": "ov",
+          "feedback": "√(I_D/K) is only the overdrive, the gate voltage above threshold. Add V_t: the first V_t of gate voltage only forms the channel."
+        },
+        {
+          "formula": "Vt+ov^2",
+          "feedback": "Take the square root: I_D/K is the overdrive squared, so V_GS − V_t = √(I_D/K)."
+        },
+        {
+          "formula": "Vt+ov*sqrt(1e-3)",
+          "feedback": "Check the units: K is in mA/V², so use the current in mA too (or K in A/V² with the current in A)."
+        }
+      ],
+      "steps": [
+        "Overdrive: V_GS − V_t = √(I_D/K) = √({Id} / {K} mA/V²) = {ov}.",
+        "V_GS = V_t + overdrive = {Vt} + {ov} = {answer}."
+      ],
+      "schematic": {
+        "netlist": "NMOS\nVDD vdd 0 10\nRD vdd d 1k\nM1 d g 0 NM\nVGS g 0 3\n.model NM NMOS\n",
+        "parts": [
+          {
+            "ref": "M1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "M1"
+          },
+          {
+            "ref": "RD",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "load"
+          },
+          {
+            "ref": "VGS",
+            "at": [
+              5,
+              8
+            ],
+            "rot": 90,
+            "label": "V_GS = ?"
+          },
+          {
+            "ref": "VDD",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "VDD"
+          }
+        ],
+        "wires": [
+          [
+            [
+              5,
+              8
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              14,
+              2
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            8
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            14,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "mos_design_rd",
+      "topicId": "mosfet_intro",
+      "prompt": "An NMOS stage runs from 12 V: R_D from the supply to the drain, source grounded. The gate is held at V_GS = {Vgs}. M1 has V_t = {Vt} and K = {K} mA/V² (I_D = K(V_GS − V_t)² in saturation). A larger R_D turns a change in drain current into a larger change in drain voltage, but M1 must stay in saturation while the drain swings. Choose R_D (an E24 value) so the drain sits midway between the saturation edge (V_GS − V_t) and the 12 V supply, within 15%.",
+      "variables": [
+        {
+          "name": "Vt",
+          "unit": "V",
+          "values": [
+            1,
+            1.5,
+            2
+          ]
+        },
+        {
+          "name": "K",
+          "unit": "",
+          "values": [
+            0.5,
+            1,
+            2
+          ]
+        },
+        {
+          "name": "ov",
+          "unit": "V",
+          "values": [
+            1,
+            1.5,
+            2
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vgs",
+          "formula": "Vt+ov",
+          "unit": "V"
+        },
+        {
+          "name": "Id",
+          "formula": "K*1e-3*ov^2",
+          "unit": "A"
+        },
+        {
+          "name": "Vrmax",
+          "formula": "12-ov",
+          "unit": "V"
+        },
+        {
+          "name": "Rmax",
+          "formula": "(12-ov)/(K*1e-3*ov^2)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Vrmid",
+          "formula": "(12-ov)/2",
+          "unit": "V"
+        },
+        {
+          "name": "Rmid",
+          "formula": "(12-ov)/2/(K*1e-3*ov^2)",
+          "unit": "Ω"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "RD",
+            "label": "R_D",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 100,
+            "max": 1000000
+          }
+        ],
+        "result": "K*1e-3*ov^2*RD",
+        "resultLabel": "voltage across R_D",
+        "resultUnit": "V",
+        "target": "(12-ov)/2",
+        "tolerance": 0.15,
+        "mode": "within"
+      },
+      "explanation": "In saturation the gate sets the current: the overdrive is {Vgs} − {Vt} = {ov}, so I_D = {K} mA/V² × ({ov})² = {Id}, whatever R_D is, as long as M1 stays in saturation. Saturation needs V_DS ≥ V_GS − V_t = {ov}, so R_D may drop at most 12 V − {ov} = {Vrmax}. Half of that, {Vrmid}, puts the drain midway and leaves it equal room to swing up and down: R_D ≈ {Vrmid}/{Id} = {Rmid}. Pick the nearest E24 value and check that I_D·R_D is within 15% of {Vrmid}.",
+      "hints": [
+        "What current does the gate set in saturation? R_D doesn't change it.",
+        "The drain can swing between V_GS − V_t (the saturation edge) and 12 V; put it halfway, so I_D·R_D = (12 V − (V_GS − V_t))/2."
+      ],
+      "followUps": [
+        {
+          "prompt": "Suppose R_D were twice the largest value that keeps M1 in saturation, with the gate unchanged. What would happen?",
+          "choices": [
+            {
+              "text": "M1 would enter the triode region: the drain falls below V_GS − V_t, the channel no longer pinches off, and the current settles below K(V_GS − V_t)²",
+              "correct": true,
+              "feedback": "Right: the square law holds only while V_DS ≥ V_GS − V_t. Below that the channel acts more like a resistor, and R_D and that channel share the 12 V at a lower current."
+            },
+            {
+              "text": "The current would stay at K(V_GS − V_t)² and the drain would go below 0 V",
+              "feedback": "Nothing can pull the drain below the grounded source. The current K(V_GS − V_t)² needs V_DS ≥ V_GS − V_t; with too large an R_D that isn't available, so the current falls instead."
+            },
+            {
+              "text": "The current would halve, because R_D doubled, and M1 would stay in saturation",
+              "feedback": "In saturation the current is set by V_GS alone, K(V_GS − V_t)², so with the gate unchanged it can't fall and stay in saturation. It does fall, but because M1 has left saturation, and not to exactly half."
+            },
+            {
+              "text": "The gate would draw current to make up for the extra resistance",
+              "feedback": "The gate sits on an insulating oxide: it draws no steady current whatever the drain does. Only V_GS and V_DS decide the drain current."
+            }
+          ],
+          "explanation": "The saturation current K(V_GS − V_t)² needs the channel pinched off at the drain end, which takes V_DS ≥ V_GS − V_t. R_D drops I_D·R_D, so a larger R_D pulls the drain lower. Past the limit the drain falls below the overdrive, M1 enters triode, and its current falls until R_D and the channel's resistance share the supply. That is why the largest useful R_D is set by the saturation edge, and why a real design biases the drain well away from it, often midway to the supply, so the signal can swing both ways."
+        }
+      ],
+      "schematic": {
+        "netlist": "NMOS stage\nVDD vdd 0 12\nRD vdd d 1k\nM1 d g 0 NM\nVGS g 0 {Vgs:spice}\n.model NM NMOS\n",
+        "parts": [
+          {
+            "ref": "M1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "M1"
+          },
+          {
+            "ref": "RD",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "R_D = ?"
+          },
+          {
+            "ref": "VGS",
+            "at": [
+              5,
+              8
+            ],
+            "rot": 90,
+            "label": "V_GS\n{Vgs}"
+          },
+          {
+            "ref": "VDD",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          }
+        ],
+        "wires": [
+          [
+            [
+              5,
+              8
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              14,
+              2
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            8
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            14,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    }
+  ]
+}

@@ -1,0 +1,2271 @@
+{
+  "topics": [
+    {
+      "id": "sources_emf",
+      "title": "Sources: EMF and internal resistance",
+      "summary": "A cell's chemistry does a fixed amount of work on each coulomb that passes through it: its EMF, E. The cell's own resistance r turns part of that into heat, a part that grows with the current, so the terminal voltage V = E − I·r falls under load.",
+      "lenses": [
+        "physics",
+        "circuit",
+        "math"
+      ],
+      "prerequisites": [
+        "ohms_law",
+        "power_heat"
+      ],
+      "prerequisiteNotes": {
+        "ohms_law": "The internal resistance obeys V = I·r like any resistor, and the current a source drives is Ohm's law for the whole loop: I = E/(R + r).",
+        "power_heat": "The power lost inside a source is I²r, which is why a source under heavy load or a short gets hot; the load receives V·I, with V the terminal voltage."
+      },
+      "lensNotes": {
+        "physics": "Inside a cell, reactions at the two electrodes move charge against the electric field between them, doing work on it; the work per coulomb is the EMF, set by the chemistry (about 1.5 V for alkaline, 3.6 to 3.7 V nominal for lithium-ion, about 2.0 V per lead-acid cell). The current must also cross the electrolyte, where ions drift and collide, and the electrodes and contacts: that is the internal resistance. A generator's EMF comes from its windings moving through a magnetic field, with the mechanical drive supplying the energy, and its r is mostly the windings' copper. As a cell discharges or gets cold, its reactions slow and its electrolyte conducts less well, so r rises.",
+        "circuit": "Model a cell as an ideal source E in series with r. Typical ranges (not datasheet values): a fresh alkaline AA around 0.1 to 0.3 Ω at room temperature, a 9 V alkaline battery 1 to 2 Ω, a lithium-ion 18650 cell a few tens of milliohms, a car battery a few milliohms. A worn or cold cell can be many times higher. Test a battery under load: an open-circuit reading shows E, not r. A bench supply's regulation holds its set voltage within millivolts up to its current limit, then holds the current instead.",
+        "math": "V = E − I·r is a straight line on a plot of terminal voltage against current: it starts at E (no current) and falls with slope −r, reaching zero at the short-circuit current E/r. Two readings give the line: r = ΔV/ΔI. The load's power E²R/(R + r)² is largest at R = r, where the efficiency R/(R + r) is only 50 %."
+      },
+      "formulas": [
+        {
+          "label": "EMF",
+          "tex": "E = \\frac{W}{Q}\\quad (\\text{work done by the source per coulomb})"
+        },
+        {
+          "label": "Terminal voltage",
+          "tex": "V = E - I\\,r"
+        },
+        {
+          "label": "Current into a load",
+          "tex": "I = \\frac{E}{R + r}"
+        },
+        {
+          "label": "Internal resistance from two readings",
+          "tex": "r = \\frac{V_\\text{oc} - V_\\text{L}}{I_\\text{L}} = \\frac{\\Delta V}{\\Delta I}"
+        },
+        {
+          "label": "Short-circuit current",
+          "tex": "I_\\text{sc} = \\frac{E}{r}"
+        },
+        {
+          "label": "Power lost inside",
+          "tex": "P_r = I^2 r"
+        },
+        {
+          "label": "Cells in series",
+          "tex": "E = E_1 + E_2 + \\dots,\\quad r = r_1 + r_2 + \\dots"
+        }
+      ],
+      "goals": [
+        "Find a source's terminal voltage, current and internal power loss from its EMF and internal resistance (V = E − I·r)",
+        "Measure internal resistance from an open-circuit reading and a reading under a known load, and find a weak cell in a pack from loaded readings",
+        "Explain why the voltage falls under load and with a cold or worn cell, and why a short across a lithium-ion cell is dangerous",
+        "Combine cells in series and parallel, and say when a bench supply acts as an ideal source"
+      ],
+      "intuition": "A battery is a fixed EMF with a small resistance of its own in series: the more current it delivers, the more of the chemistry's work per coulomb becomes heat inside it, so its terminal voltage falls in a straight line with current, and a short draws E/r.",
+      "why": "In a cell, chemical reactions at the two electrodes move charge against the electric field between them: the chemistry does work on every coulomb that passes through the cell, a fixed amount set by the reactions. That work per coulomb is the electromotive force (EMF), E, in volts. On the way through, the current also crosses the electrolyte between the electrodes, where ions drift and collide, and the electrodes and their contacts. These have resistance, the internal resistance r, so of the work E done on each coulomb, I·r is turned into heat inside the cell, and only E − I·r appears between the terminals. With no current there is no internal drop, which is why a voltmeter on an unloaded cell reads E whatever r is. As a cell discharges, and when it is cold, its reactions slow and its electrolyte conducts less well: r rises, and the terminal voltage falls further under the same load. A short across the terminals leaves r as the only resistance in the loop, so the current is E/r and all the power, E²/r, heats the cell.",
+      "explanation": "A cell's chemistry does work on the charge passing through it. The work per coulomb is its electromotive force (EMF), E: about 1.5 V for an alkaline cell, 3.6 to 3.7 V nominal for lithium-ion. The chemistry sets it, not the size.\n\nThe current also crosses the cell's electrolyte and electrodes, which have resistance: the internal resistance r. So a real cell acts as an ideal source E in series with r. With a load R the current is I = E/(R + r), and the terminal voltage, what the load and a voltmeter see, is V = E − I·r. With nothing connected, I = 0 and a meter reads E, so an open-circuit reading can't show r. To measure r, read the open-circuit voltage, then the voltage with a known load, and divide the difference by the load current.\n\nA short leaves only r to limit the current: I = E/r, with all the power heating the cell. A lithium-ion cell's r is tens of milliohms, so that is a hundred amperes or more. Never short a cell.\n\nCells in series add their EMFs and their internal resistances. In parallel, use only matched cells at the same charge. A bench supply holds its set voltage up to its current limit.",
+      "workedExample": {
+        "problem": "A 9 V alkaline battery reads 9.40 V on a multimeter with nothing connected. With a 100 Ω, 2 W resistor across it, it reads 9.22 V. Find its internal resistance, then the terminal voltage and the power lost inside the battery when it drives a 22 Ω load.",
+        "steps": [
+          "With no load there is no current and no I·r drop, so the open-circuit reading is the EMF: E = 9.40 V.",
+          "Loaded current, from the resistor's own voltage: I = 9.22 V / 100 Ω = 0.0922 A.",
+          "The difference between the two readings is the drop across r: 9.40 V − 9.22 V = 0.18 V, so r = 0.18 V / 0.0922 A = 1.95 Ω.",
+          "With the 22 Ω load: I = E/(R + r) = 9.40 V / (22 Ω + 1.95 Ω) = 9.40 V / 23.95 Ω = 0.392 A.",
+          "Terminal voltage: V = E − I·r = 9.40 V − 0.392 A × 1.95 Ω = 9.40 V − 0.77 V = 8.63 V. Check: I·R = 0.392 A × 22 Ω = 8.63 V.",
+          "Power lost inside: P = I²r = (0.392 A)² × 1.95 Ω = 0.30 W, against 3.39 W delivered to the load; the battery warms slightly, and its energy runs down faster than the load's share alone would suggest."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 11 \"Batteries and Power Systems\", sections \"Electron activity in chemical reactions\" and \"Battery construction\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_11.html#xtocid87971",
+          "note": "Checked that a cell's voltage (EMF) is set by its chemistry and not its size; that every cell has internal resistance from its electrodes and electrolyte, larger cells less; that the drop across it lowers the terminal voltage under load; that a short-circuit current is E/r; and that cells in series add their voltages while identical cells in parallel keep the voltage and divide the internal resistance."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 11 \"Batteries and Power Systems\", sections \"Battery ratings\" and \"Practical considerations\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_11.html#xtocid87972",
+          "note": "Checked that a discharging battery's internal resistance rises and its open-circuit voltage falls, that the best check of a battery is a voltage reading under load because an unloaded reading can look healthy, and that batteries connected in parallel must have equal voltages or large currents circulate between them. (The section calls the amp-hour a unit of energy capacity; it is a unit of charge, as this course uses it.)"
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Ideal and Real Sources\", sections 3.1 \"Source resistance\" and 3.2 \"Source strength\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_idealsource.pdf",
+          "note": "Checked the model of a real voltage source as an ideal source in series with an internal resistance (mostly the electrolyte in a battery, the windings in a generator), that the terminal voltage falls as load current rises, that a short draws a finite current, and that aging raises a battery's internal resistance in a way only a loaded test reveals."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Maximum Power Transfer Theorem\", section 1.2 \"Challenging concepts related to the Maximum Power Transfer Theorem\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_maxpower.pdf",
+          "note": "Checked that the load receives the most power when its resistance equals the source's, that the efficiency is then only 50 %, and that efficiency is highest when the load resistance is large compared with the source's."
+        }
+      ],
+      "analogy": {
+        "text": "Picture a closed loop of pipe already full of water, driven by a pump that adds the same pressure rise E whatever the flow, with a narrow pipe r built into the pump's own outlet. The water moves slowly and smoothly through that narrow pipe, so the pressure lost in it is proportional to the flow I, and a gauge across the pump's outlet and inlet reads V = E − I·r: the full E only when nothing flows. Join the outlet straight to the inlet with a wide pipe and only the narrow pipe limits the flow, to E/r, with all the pump's work turned to heat inside the pump.",
+        "breaksDown": "A cell's chemistry does work only on the charge passing through the cell, while in the wires and the load the electric field drives the charge; the energy reaches the load at once through the fields around the wires, while the electrons drift so slowly that those heating a lamp across the room have never been through the cell. A narrow pipe stays the same however long the pump runs, but as a cell discharges its r rises and its open-circuit voltage E falls. The laminar drop in the pipe stays proportional to flow, but under heavy or long load a cell's chemistry falls behind and its voltage drops further than I·r predicts, then recovers at rest."
+      }
+    }
+  ],
+  "templates": [
+    {
+      "id": "src_terminal_v",
+      "topicId": "sources_emf",
+      "prompt": "A battery pack has an EMF of {E} and an internal resistance of {r}. A {RL} power resistor (rated 10 W) is connected across its terminals. What does a voltmeter across the terminals read?",
+      "variables": [
+        {
+          "name": "E",
+          "unit": "V",
+          "values": [
+            6,
+            9
+          ]
+        },
+        {
+          "name": "r",
+          "unit": "Ω",
+          "values": [
+            1,
+            1.5,
+            2
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            10,
+            15,
+            22
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "I",
+          "formula": "E/(RL+r)",
+          "unit": "A"
+        },
+        {
+          "name": "Vr",
+          "formula": "E*r/(RL+r)",
+          "unit": "V"
+        },
+        {
+          "name": "Rt",
+          "formula": "RL+r",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "E*RL/(RL+r)",
+        "unit": "V"
+      },
+      "explanation": "The current crosses the pack's internal resistance and the load in series: I = E/(R + r) = {E} / {Rt} = {I}. E = {E} means the chemistry does that many joules of work on each coulomb; I·r = {I} × {r} = {Vr} of it becomes heat in the internal resistance, so the terminals have V = E − I·r = {E} − {Vr} = {answer} between them. Check: I·R = {I} × {RL} = {answer}, the same voltage across the load.",
+      "hints": [
+        "The current flows through the pack's own resistance as well as the load. What sets it?",
+        "I = E/(R + r), then V = E − I·r (or V = I·R)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "E",
+          "feedback": "{E} is what the meter reads with nothing connected. With the load drawing {I}, the internal resistance drops I·r = {Vr} inside the pack, and the terminals show less."
+        },
+        {
+          "formula": "E*r/(RL+r)",
+          "feedback": "That is the drop inside the pack, I·r. The terminal voltage is what is left: E − I·r."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does the voltmeter read less than {E} once the resistor is connected?",
+          "choices": [
+            {
+              "text": "The current also crosses the pack's internal resistance, so I·r of the work the chemistry does per coulomb becomes heat inside the pack",
+              "feedback": "Right: the chemistry still does E = {E} of work per coulomb (in joules per coulomb), and {Vr} of it heats the pack.",
+              "correct": true
+            },
+            {
+              "text": "The pack delivers a fixed current, and its voltage falls to whatever that current needs in the load",
+              "feedback": "A battery does not fix its current: the current is E/(R + r), set by the load. Connect a smaller load resistance and the current rises."
+            },
+            {
+              "text": "The load uses up part of the voltage, so less is left at the terminals for the meter",
+              "feedback": "The meter is across the load, so it reads the load's voltage itself. That voltage is below {E} because of the drop inside the pack, not because the load uses some of it up."
+            },
+            {
+              "text": "The voltmeter draws enough current to pull the reading down",
+              "feedback": "A multimeter draws around a microampere (10 MΩ input), far too little to matter here. The {I} through the load is what crosses the internal resistance."
+            }
+          ],
+          "explanation": "E is the work the chemistry does per coulomb; the terminal voltage is what remains after the internal resistance has taken I·r. No current, no drop: an unloaded pack reads {E}."
+        }
+      ],
+      "simCheck": {
+        "netlist": "t\nV1 e 0 {E:spice}\nR1 e t {r:spice}\nR2 t 0 {RL:spice}\n",
+        "probe": "v(t)"
+      },
+      "schematic": {
+        "netlist": "pack and load\nV1 e 0 {E:spice}\nR1 e t {r:spice}\nR2 t 0 {RL:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "E = {E}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 270,
+            "label": "r\n{r}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              10,
+              8
+            ],
+            [
+              0,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "terminal +",
+            "at": [
+              0,
+              0
+            ],
+            "left": true
+          }
+        ],
+        "noBuild": "r is the cells' internal resistance, not a part"
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "src_r_from_readings",
+      "topicId": "sources_emf",
+      "prompt": "To measure an AA alkaline cell's internal resistance, you read its terminals with a multimeter: {Voc} with nothing connected, then {VL} with a {RL} resistor (rated 1 W) across it. What is the cell's internal resistance?",
+      "variables": [
+        {
+          "name": "Voc",
+          "unit": "V",
+          "values": [
+            1.55,
+            1.58,
+            1.6
+          ]
+        },
+        {
+          "name": "d",
+          "unit": "V",
+          "values": [
+            0.05,
+            0.08,
+            0.1,
+            0.15,
+            0.2,
+            0.3
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            3.3,
+            4.7
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "VL",
+          "formula": "Voc-d",
+          "unit": "V"
+        },
+        {
+          "name": "IL",
+          "formula": "(Voc-d)/RL",
+          "unit": "A"
+        },
+        {
+          "name": "rd",
+          "formula": "d*RL/(Voc-d)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rtot",
+          "formula": "Voc*RL/(Voc-d)",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "(Voc-(Voc-d))*RL/(Voc-d)",
+        "unit": "Ω"
+      },
+      "explanation": "With nothing connected there is no current and no drop inside the cell, so the first reading is the EMF: E = {Voc}. Under load the current follows from the resistor's own voltage: I = {VL} / {RL} = {IL}. The difference between the readings, {Voc} − {VL} = {d}, is the drop across the internal resistance, so r = {d} / {IL} = {answer}.",
+      "hints": [
+        "What does the reading with nothing connected tell you, and what does the difference between the two readings tell you?",
+        "Current: the loaded reading divided by the resistor. r = (V_oc − V_load) / I."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(Voc-(Voc-d))/(Voc/RL)",
+          "feedback": "You used the open-circuit voltage for the current. The current through the resistor is set by the voltage across it, the loaded reading: I = {VL} / {RL} = {IL}."
+        },
+        {
+          "formula": "Voc*RL/(Voc-d)",
+          "feedback": "E/I = {Rtot} is the whole loop's resistance, R + r. Subtract the {RL} resistor to leave the cell's own."
+        },
+        {
+          "formula": "RL",
+          "feedback": "That is the load resistor, the loaded reading divided by its current. The cell's resistance comes from the drop the load causes: ({Voc} − {VL}) / I."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why can't the first reading, with nothing connected, tell you the internal resistance by itself?",
+          "choices": [
+            {
+              "text": "With no current through the cell there is no I·r drop, so the meter reads the EMF whatever r is",
+              "feedback": "Right: r only shows up as a drop when current flows, which is why the test needs a load.",
+              "correct": true
+            },
+            {
+              "text": "With nothing connected the chemistry isn't working, so the reading is not the EMF",
+              "feedback": "The reactions set the EMF whether or not current flows; an unloaded cell reads {Voc} because there is no internal drop, not because anything is off."
+            },
+            {
+              "text": "The multimeter's own current is too large and hides r",
+              "feedback": "A multimeter's 10 MΩ input draws about 0.15 µA at 1.5 V; across {rd} that is a fraction of a microvolt. The point is that without a real load there is no current to cause a drop."
+            },
+            {
+              "text": "A cell's internal resistance only appears after it has warmed up under load",
+              "feedback": "r is there all the time, in the electrolyte and electrodes. It is invisible in an unloaded reading because it carries no current, not because it is absent."
+            }
+          ],
+          "explanation": "The drop inside the cell is I·r. Read once at I = 0 (that gives E) and once at a known current (that gives E − I·r): the difference is the drop, and dividing by I gives r. This is why a battery is tested under load."
+        }
+      ],
+      "schematic": {
+        "netlist": "cell under test\nV1 e 0 {Voc:spice}\nR1 e t {rd:spice}\nR2 t 0 {RL:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "E",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 270,
+            "label": "r = ?"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              10,
+              8
+            ],
+            [
+              0,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "terminal +",
+            "at": [
+              0,
+              0
+            ],
+            "left": true
+          }
+        ],
+        "noBuild": "r is the cells' internal resistance, not a part"
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "src_r_two_loads",
+      "topicId": "sources_emf",
+      "prompt": "A bench test of a lithium-ion cell (3.7 V nominal) with an electronic load: at {I1} its terminals read {V1}; at {I2} they read {V2}. What is the cell's internal resistance?",
+      "variables": [
+        {
+          "name": "V1",
+          "unit": "V",
+          "values": [
+            3.9,
+            3.95,
+            4,
+            4.05
+          ]
+        },
+        {
+          "name": "dV",
+          "unit": "V",
+          "values": [
+            0.05,
+            0.08,
+            0.1,
+            0.12,
+            0.15
+          ]
+        },
+        {
+          "name": "I1",
+          "unit": "A",
+          "values": [
+            0.5,
+            1
+          ]
+        },
+        {
+          "name": "I2",
+          "unit": "A",
+          "values": [
+            2.5,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "V2",
+          "formula": "V1-dV",
+          "unit": "V"
+        },
+        {
+          "name": "dI",
+          "formula": "I2-I1",
+          "unit": "A"
+        },
+        {
+          "name": "Eoc",
+          "formula": "V1+I1*dV/(I2-I1)",
+          "unit": "V"
+        },
+        {
+          "name": "Rload2",
+          "formula": "(V1-dV)/I2",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "(V1-(V1-dV))/(I2-I1)",
+        "unit": "Ω"
+      },
+      "explanation": "Between the two readings only the current changed, so the change in terminal voltage is the change in the drop across r: ΔV = {V1} − {V2} = {dV} for ΔI = {I2} − {I1} = {dI}. r = ΔV/ΔI = {dV} / {dI} = {answer}. Extending the line back to zero current gives the EMF: E = {V1} + {I1} × {answer} = {Eoc}.",
+      "hints": [
+        "What changes between the two readings, and what stays the same?",
+        "V = E − I·r at both currents; subtract one from the other so E drops out."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(V1-dV)/I2",
+          "feedback": "V/I at one reading is the load's resistance at that moment, {Rload2}, not the cell's. The cell's r shows in how much the voltage falls as the current rises."
+        },
+        {
+          "formula": "dV/I2",
+          "feedback": "The cell was already delivering {I1} at the first reading, so the voltage fell by {dV} for a change of only {I2} − {I1} = {dI}. Divide by the change in current."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why not take the label's 3.7 V as the EMF and use a single reading: r = (3.7 V − {V2}) / {I2}?",
+          "choices": [
+            {
+              "text": "3.7 V is a nominal value for the chemistry; the actual EMF depends on the state of charge (about 4.2 V full, near 3 V empty), and two readings cancel it out",
+              "feedback": "Right: this cell's EMF is about {Eoc}, and the two-reading method never needs it.",
+              "correct": true
+            },
+            {
+              "text": "The label voltage is right, but a single reading includes the meter's own resistance",
+              "feedback": "The meter's resistance is megohms and draws almost nothing. The problem is the label: a lithium-ion cell's EMF changes with its state of charge, so 3.7 V is only a nominal value."
+            },
+            {
+              "text": "It would work, and give the same answer as two readings",
+              "feedback": "With 3.7 V the drop comes out negative here: the terminals read more than 3.7 V even under load, because this cell's EMF is about {Eoc}. The label is a nominal value, not the EMF."
+            },
+            {
+              "text": "The EMF falls as the current rises, so it has to be measured at each current",
+              "feedback": "The EMF is set by the chemistry and the state of charge, not by the current. What changes with current is the drop across r, which is exactly what the two readings measure."
+            }
+          ],
+          "explanation": "V = E − I·r is a straight line: two points fix both its slope (−r) and its intercept (E). A lithium-ion cell's EMF runs from about 4.2 V full to about 3 V empty, so the label can't stand in for it."
+        }
+      ],
+      "noDrawing": "readings from an electronic load at two settings; the test setup has nothing to analyze",
+      "review": "verified"
+    },
+    {
+      "id": "src_short_current",
+      "topicId": "sources_emf",
+      "prompt": "A lithium-ion cell rated {cap} has an EMF of {E} and an internal resistance of {r}. If a loose coin or a wire bridged its terminals (a short circuit: never do this), about how much current would flow? Ignore the bridge's own resistance, which would only lower the current somewhat.",
+      "variables": [
+        {
+          "name": "E",
+          "unit": "V",
+          "values": [
+            3.7,
+            3.9,
+            4.1
+          ]
+        },
+        {
+          "name": "r",
+          "unit": "Ω",
+          "values": [
+            0.02,
+            0.03,
+            0.05,
+            0.08
+          ]
+        },
+        {
+          "name": "cap",
+          "unit": "Ah",
+          "values": [
+            2.5,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Psc",
+          "formula": "E^2/r",
+          "unit": "W"
+        }
+      ],
+      "answer": {
+        "formula": "E/r",
+        "unit": "A"
+      },
+      "estimate": true,
+      "explanation": "With the terminals bridged, the only resistance left in the loop is the cell's own: I = E/r = {E} / {r} = {answer}. All the power, E²/r = {Psc}, is turned into heat inside the cell, inside a sealed metal can a few centimeters long. That is why a shorted lithium-ion cell can overheat, vent and catch fire, and why loose cells are carried with their terminals covered.",
+      "hints": [
+        "With the terminals shorted, what resistance is left in the loop?",
+        "I = E/r. Watch the prefix on r."
+      ],
+      "misconceptions": [
+        {
+          "formula": "E/(r*1000)",
+          "feedback": "Check the prefix: {r} is in milliohms. A few hundredths of an ohm lets a very large current through."
+        },
+        {
+          "formula": "cap",
+          "feedback": "{cap} is a charge rating: how long the cell can run, not a limit on the current. Nothing in the chemistry caps the current at that number; only the internal resistance limits it."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Where does the power go during such a short, and why is that the danger?",
+          "choices": [
+            {
+              "text": "Into the cell itself: its internal resistance is the only resistance in the loop, so it turns about {Psc} into heat inside a sealed can",
+              "feedback": "Right: the heat is released inside the cell, which can drive it into overheating, venting and fire.",
+              "correct": true
+            },
+            {
+              "text": "Into the coin or wire: it gets red hot, while the cell itself stays cool",
+              "feedback": "The bridge has almost no resistance, so almost no voltage appears across it and it takes little of the power. The cell's internal resistance takes nearly all of it."
+            },
+            {
+              "text": "Nowhere: a short has zero resistance, so nothing dissipates power",
+              "feedback": "The bridge has close to zero resistance, but the cell does not: its {r} carries the full {answer} and dissipates I²r = {Psc}."
+            },
+            {
+              "text": "Nowhere dangerous: the cell limits itself to its rated discharge current",
+              "feedback": "A bare cell's current is limited only by its internal resistance. Some cells have a thermal fuse in the cap and protected packs add a circuit that disconnects on a short, but neither is something to rely on."
+            }
+          ],
+          "explanation": "In a short the whole EMF appears across r: P = E·I = I²r = E²/r = {Psc}, all inside the cell. A low internal resistance is what makes a lithium-ion cell good at delivering current, and also what makes a short so violent."
+        }
+      ],
+      "schematic": {
+        "netlist": "cell with a short\nV1 e 0 {E:spice}\nR1 e t {r:spice}\nR2 t 0 1m\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "E = {E}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 270,
+            "label": "r\n{r}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "short\n(coin)",
+            "symbol": "switchClosed"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              10,
+              8
+            ],
+            [
+              0,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "terminal +",
+            "at": [
+              0,
+              0
+            ],
+            "left": true
+          }
+        ],
+        "noBuild": "r is the cells' internal resistance, not a part"
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "src_power_inside",
+      "topicId": "sources_emf",
+      "prompt": "A 9 V alkaline battery with an EMF of {E} and an internal resistance of {r} runs a load that behaves as a {RL} resistance. How much power is turned into heat inside the battery?",
+      "variables": [
+        {
+          "name": "E",
+          "unit": "V",
+          "values": [
+            9.2,
+            9.4,
+            9.6
+          ]
+        },
+        {
+          "name": "r",
+          "unit": "Ω",
+          "values": [
+            1,
+            1.5,
+            2
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            22,
+            33,
+            47,
+            68
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "I",
+          "formula": "E/(RL+r)",
+          "unit": "A"
+        },
+        {
+          "name": "Vt",
+          "formula": "E*RL/(RL+r)",
+          "unit": "V"
+        },
+        {
+          "name": "Ptot",
+          "formula": "E^2/(RL+r)",
+          "unit": "W"
+        },
+        {
+          "name": "PL",
+          "formula": "(E/(RL+r))^2*RL",
+          "unit": "W"
+        },
+        {
+          "name": "Vr",
+          "formula": "E*r/(RL+r)",
+          "unit": "V"
+        },
+        {
+          "name": "Rt",
+          "formula": "RL+r",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "(E/(RL+r))^2*r",
+        "unit": "W"
+      },
+      "explanation": "The current is I = E/(R + r) = {E} / {Rt} = {I}. It flows through the internal resistance too, so the heat inside the battery is P = I²r = ({I})² × {r} = {answer}. The chemistry does work at the rate E·I = {Ptot}; the load receives {PL} and the rest, {answer}, warms the battery.",
+      "hints": [
+        "Find the current first; the internal resistance carries all of it.",
+        "P = I²r with I = E/(R + r)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "E*E/(RL+r)",
+          "feedback": "E·I = {Ptot} is all the work the chemistry does each second. The load takes most of it; only I²r heats the battery."
+        },
+        {
+          "formula": "(E/(RL+r))^2*RL",
+          "feedback": "That is the load's power, I²R. Inside the battery use its own resistance: I²r."
+        },
+        {
+          "formula": "E*r/(RL+r)",
+          "feedback": "That is the voltage across the internal resistance, I·r = {Vr}, in volts. Power is that times the current: I²r."
+        }
+      ],
+      "noDrawing": "the power split between a battery and its load; the circuit is the same single loop as the terminal-voltage problems",
+      "review": "verified"
+    },
+    {
+      "id": "src_series_current",
+      "topicId": "sources_emf",
+      "prompt": "{n} alkaline AA cells in series, each with an EMF of {E} and an internal resistance of {r}, drive a {RL} power resistor (rated 10 W). What current flows?",
+      "variables": [
+        {
+          "name": "n",
+          "unit": "",
+          "values": [
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "name": "E",
+          "unit": "V",
+          "value": 1.5
+        },
+        {
+          "name": "r",
+          "unit": "Ω",
+          "values": [
+            0.2,
+            0.3
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            3.3,
+            4.7
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Etot",
+          "formula": "n*E",
+          "unit": "V"
+        },
+        {
+          "name": "rtot",
+          "formula": "n*r",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rtot",
+          "formula": "RL+n*r",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "n*E/(RL+n*r)",
+        "unit": "A"
+      },
+      "explanation": "In series, the chemistry of each cell does work on every coulomb that passes through the stack, so the EMFs add: {n} × {E} = {Etot}. The current also crosses every cell's electrolyte, so the internal resistances add too: {n} × {r} = {rtot}. I = {Etot} / ({RL} + {rtot}) = {Etot} / {Rtot} = {answer}.",
+      "hints": [
+        "In series, what adds: the EMFs, the internal resistances, or both?",
+        "I = (n·E) / (R + n·r)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "n*E/(RL+r)",
+          "feedback": "The current passes through every cell, so it crosses every cell's internal resistance: {n} × {r} = {rtot}, not one {r}."
+        },
+        {
+          "formula": "n*E/RL",
+          "feedback": "That ignores the cells' own resistance. The current also crosses {rtot} inside the stack, which is a noticeable part of the loop next to {RL}."
+        },
+        {
+          "formula": "E/(RL+r)",
+          "feedback": "That is one cell alone. In series every cell does work on each coulomb, so the EMFs add to {Etot}."
+        }
+      ],
+      "simCheck": {
+        "netlist": "t\nV1 e 0 {Etot:spice}\nR1 e t {rtot:spice}\nR2 t 0 {RL:spice}\n",
+        "probe": "i(R2)"
+      },
+      "schematic": {
+        "netlist": "cells in series and a load\nV1 e 0 {Etot:spice}\nR1 e t {rtot:spice}\nR2 t 0 {RL:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "{n} cells\n{Etot}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 270,
+            "label": "{n} × r\n{rtot}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              10,
+              8
+            ],
+            [
+              0,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "terminal +",
+            "at": [
+              0,
+              0
+            ],
+            "left": true
+          }
+        ],
+        "noBuild": "r is the cells' internal resistance, not a part"
+      },
+      "review": "verified"
+    },
+    {
+      "id": "src_parallel_mismatch",
+      "topicId": "sources_emf",
+      "prompt": "Two lithium-ion cells are about to be joined in parallel with nothing else connected. Cell A, fully charged, reads {Va}; cell B, discharged, reads {Vb}. Each has an internal resistance of {r}, and the wires and contacts between them add {Rw}. What current flows from A into B the moment they are joined?",
+      "variables": [
+        {
+          "name": "Va",
+          "unit": "V",
+          "values": [
+            4.1,
+            4.2
+          ]
+        },
+        {
+          "name": "Vb",
+          "unit": "V",
+          "values": [
+            3.4,
+            3.5,
+            3.6
+          ]
+        },
+        {
+          "name": "r",
+          "unit": "Ω",
+          "values": [
+            0.03,
+            0.05
+          ]
+        },
+        {
+          "name": "Rw",
+          "unit": "Ω",
+          "values": [
+            0.02,
+            0.04
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "dV",
+          "formula": "Va-Vb",
+          "unit": "V"
+        },
+        {
+          "name": "Rloop",
+          "formula": "2*r+Rw",
+          "unit": "Ω"
+        },
+        {
+          "name": "Pheat",
+          "formula": "(Va-Vb)^2/(2*r+Rw)",
+          "unit": "W"
+        }
+      ],
+      "answer": {
+        "formula": "(Va-Vb)/(2*r+Rw)",
+        "unit": "A"
+      },
+      "explanation": "The two cells form a loop with each other. Going around it, A's EMF and B's EMF oppose, so the net EMF is {Va} − {Vb} = {dV}. The loop's resistance is both internal resistances plus the wiring: 2 × {r} + {Rw} = {Rloop}. I = {dV} / {Rloop} = {answer}, flowing out of A's + terminal and into B's, charging B with no limit but these resistances. The loop turns {Pheat} into heat at first, until the two EMFs approach each other. This is why cells are paralleled only when matched and at the same charge.",
+      "hints": [
+        "With no load, is there still a closed loop? Which EMFs act around it?",
+        "I = (E_A − E_B) / (r_A + r_B + R_wires)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "0",
+          "feedback": "There is no load, but the two cells form a closed loop with each other, and their EMFs differ by {dV}. That difference drives a current around the loop."
+        },
+        {
+          "formula": "(Va-Vb)/(r+Rw)",
+          "feedback": "The current crosses both cells' electrolytes: the loop has 2 × {r} of internal resistance plus the wiring."
+        },
+        {
+          "formula": "Va/(2*r+Rw)",
+          "feedback": "B's EMF opposes A's around the loop, so only the difference, {dV}, drives the current."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why are cells joined in parallel only when they are matched and equally charged?",
+          "choices": [
+            {
+              "text": "Any difference in EMF drives a current around the loop the cells make with each other, limited only by their small internal resistances, so it can be large even with no load",
+              "feedback": "Right: here {answer} flows with nothing connected, heating both cells and charging B faster than a typical charger (about 0.5 to 1 A for such a cell), with nothing to control it.",
+              "correct": true
+            },
+            {
+              "text": "Mismatched cells in parallel add their EMFs, so the load would get too much voltage",
+              "feedback": "Parallel cells don't add EMFs; the terminals are tied together, so they share one voltage. The trouble is the current that flows between them when their EMFs differ."
+            },
+            {
+              "text": "Parallel cells must be matched so the load takes the same current from each; otherwise the load gets less power",
+              "feedback": "Unequal sharing is a side issue. The danger is the current that flows from one cell into the other even with no load, limited only by milliohms."
+            },
+            {
+              "text": "It doesn't matter: the stronger cell simply stops delivering until the other catches up",
+              "feedback": "A cell doesn't stop by itself. The difference in EMF drives a current around the loop at once, {answer} here."
+            }
+          ],
+          "explanation": "Two cells in parallel are a closed loop of EMF A, EMF B and their internal resistances. Equal EMFs, no current; a difference of {dV} across {Rloop} gives {answer}. Large banks also fuse each parallel string so one cell's internal short can't draw the others' current."
+        }
+      ],
+      "schematic": {
+        "netlist": "two cells joined in parallel\nV1 ea 0 {Va:spice}\nR1 ea a {r:spice}\nR3 a b {Rw:spice}\nV2 eb 0 {Vb:spice}\nR2 eb b {r:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "A\n{Va}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 270,
+            "label": "r\n{r}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              3,
+              0
+            ],
+            "label": "wires\n{Rw}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              10,
+              4
+            ],
+            "rot": 90,
+            "label": "B\n{Vb}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              4
+            ],
+            "rot": 270,
+            "label": "r\n{r}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          [
+            [
+              7,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              8
+            ],
+            [
+              10,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            8
+          ]
+        ],
+        "labels": [],
+        "noBuild": "r is the cells' internal resistance, not a part"
+      },
+      "review": "verified"
+    },
+    {
+      "id": "src_bench_limit",
+      "topicId": "sources_emf",
+      "prompt": "A bench supply is set to {Vset} with its current limit at {Ilim}. A {RL} resistor (rated 2 W) is connected across its output. What voltage does the supply put across the resistor?",
+      "variables": [
+        {
+          "name": "Vset",
+          "unit": "V",
+          "values": [
+            9,
+            12
+          ]
+        },
+        {
+          "name": "Ilim",
+          "unit": "A",
+          "values": [
+            0.1,
+            0.15
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            22,
+            33,
+            39
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Iwant",
+          "formula": "Vset/RL",
+          "unit": "A"
+        },
+        {
+          "name": "PL",
+          "formula": "Ilim^2*RL",
+          "unit": "W"
+        }
+      ],
+      "answer": {
+        "formula": "min(Vset, Ilim*RL)",
+        "unit": "V"
+      },
+      "explanation": "At the set voltage the resistor would draw {Vset} / {RL} = {Iwant}, more than the {Ilim} limit. So the supply leaves constant-voltage mode and holds the current at the limit (constant-current mode); the voltage is whatever that current gives across the load: V = {Ilim} × {RL} = {answer}. The resistor dissipates {PL}. Below the limit the supply would hold {Vset} within millivolts: an almost ideal voltage source.",
+      "hints": [
+        "First check: what current would {RL} draw at {Vset}? Is that within the limit?",
+        "Over the limit, the supply holds the current at {Ilim}; V = I·R."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vset",
+          "feedback": "{Vset} would need {Iwant}, more than the {Ilim} limit. Once the limit is reached the supply holds the current instead, and the voltage falls to I·R."
+        },
+        {
+          "formula": "0",
+          "feedback": "A current limit doesn't switch the output off the way a fuse or a trip would: the supply keeps delivering {Ilim}, at whatever voltage that takes across the load."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Below its current limit, why does a bench supply hold its set voltage while a battery's terminal voltage falls with load?",
+          "choices": [
+            {
+              "text": "Its regulator compares its output with the setting continuously and corrects within microseconds, so its output acts as if its internal resistance were only milliohms, up to the limit",
+              "feedback": "Right: feedback makes the supply an almost ideal voltage source, until the current limit takes over.",
+              "correct": true
+            },
+            {
+              "text": "Its internal resistance is zero, because it runs from the wall outlet rather than chemistry",
+              "feedback": "A supply's transformer, wiring and transistors have resistance. It holds its voltage because its regulator measures the output and corrects for the drop, not because nothing inside it has resistance."
+            },
+            {
+              "text": "It doesn't: its voltage falls with load just as much as a battery's, but the display hides it",
+              "feedback": "A good bench supply really does hold its output within millivolts from no load to its limit; a meter on the terminals confirms it. Its regulator corrects for the internal drop."
+            },
+            {
+              "text": "It supplies a fixed current, so the load can't change its voltage",
+              "feedback": "Below the limit the supply holds the voltage, and the current is whatever the load draws, V/R. It holds the current only once the limit is reached."
+            }
+          ],
+          "explanation": "A regulated supply compares its output with the setting continuously and corrects within microseconds, so the output barely moves as the load changes: an almost ideal voltage source. At the current limit the same circuit switches to holding the current, which is what protects a circuit under test from a short."
+        }
+      ],
+      "noDrawing": "a bench supply in current limit; the drawing's ideal source can't show the limit, and drawing it as a current source would give the answer away",
+      "review": "verified"
+    },
+    {
+      "id": "src_what_if_load_current",
+      "topicId": "sources_emf",
+      "prompt": "A battery with an EMF of {E} and an internal resistance of {r} drives a {RL} power resistor (rated 10 W). A second {RL} resistor is connected in parallel with the first, so the load becomes {new_RL}. What happens to the current the battery delivers?",
+      "variables": [
+        {
+          "name": "E",
+          "unit": "V",
+          "values": [
+            6,
+            9
+          ]
+        },
+        {
+          "name": "r",
+          "unit": "Ω",
+          "values": [
+            0.5,
+            1,
+            2
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            10,
+            22,
+            47
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the battery current",
+        "formula": "E/(RL+r)",
+        "unit": "A",
+        "change": {
+          "RL": "RL/2"
+        },
+        "askFactor": false,
+        "feedback": {
+          "same": "A battery does not deliver a fixed current. Its chemistry does a fixed amount of work per coulomb, and the current is whatever E/(R + r) allows: less resistance in the loop, more current.",
+          "down": "The load's resistance halved, so the loop has less resistance in it and the same EMF drives more current around it."
+        }
+      },
+      "explanation": "The current is I = E/(R + r). Halving R lowers the loop's resistance from {RL} + {r} to {new_RL} + {r}, so the current rises: {before} → {after}. It rises, but by less than double, because r didn't halve.",
+      "hints": [
+        "What sets the current: the battery, or the resistance of the whole loop?"
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does the current rise, but by less than double, even though the load's resistance halved exactly?",
+          "choices": [
+            {
+              "text": "The loop's resistance is R + r, and only the R part halved; the internal resistance stays the same",
+              "feedback": "Right: {before} → {after}. The bigger r is next to R, the further from double.",
+              "correct": true
+            },
+            {
+              "text": "The battery can only deliver a fixed maximum current, and it is getting close to it",
+              "feedback": "No fixed limit applies here: the current is E/(R + r). It would only reach E/r with the terminals shorted."
+            },
+            {
+              "text": "The second resistor takes some current away from the first, so the total doesn't double",
+              "feedback": "The two resistors share the total current, but the total is what the battery delivers: E/(R_parallel + r). It falls short of double because of r, not because of the sharing."
+            },
+            {
+              "text": "The EMF falls as the current rises, so it can't double",
+              "feedback": "The EMF is set by the chemistry and stays the same here. What grows with current is the drop across r, which is already in E/(R + r)."
+            }
+          ],
+          "explanation": "I = E/(R + r). With R → R/2, the total goes from R + r to R/2 + r, which is more than half of R + r, so the current less than doubles. Only an ideal source (r = 0) would double it exactly."
+        }
+      ],
+      "schematic": {
+        "netlist": "battery and load\nV1 e 0 {E:spice}\nR1 e t {r:spice}\nR2 t 0 {RL:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "E = {E}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 270,
+            "label": "r\n{r}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              10,
+              8
+            ],
+            [
+              0,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "terminal +",
+            "at": [
+              0,
+              0
+            ],
+            "left": true
+          }
+        ],
+        "noBuild": "r is the cells' internal resistance, not a part"
+      },
+      "review": "verified"
+    },
+    {
+      "id": "src_what_if_load_vt",
+      "topicId": "sources_emf",
+      "prompt": "A battery with an EMF of {E} and an internal resistance of {r} drives a {RL} power resistor (rated 10 W). A second {RL} resistor is connected in parallel with the first, so the load becomes {new_RL}. What happens to the voltage across the battery's terminals?",
+      "variables": [
+        {
+          "name": "E",
+          "unit": "V",
+          "values": [
+            6,
+            9
+          ]
+        },
+        {
+          "name": "r",
+          "unit": "Ω",
+          "values": [
+            0.5,
+            1,
+            2
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            10,
+            22,
+            47
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the terminal voltage",
+        "formula": "E*RL/(RL+r)",
+        "unit": "V",
+        "change": {
+          "RL": "RL/2"
+        },
+        "askFactor": false,
+        "feedback": {
+          "same": "The EMF stays at {E}, but the terminal voltage is E − I·r. The heavier load draws more current, so a larger I·r of the chemistry's work per coulomb becomes heat inside the battery and less is left between the terminals.",
+          "up": "A smaller load resistance doesn't raise the voltage: it draws more current, and the larger current makes a larger drop across r inside the battery."
+        }
+      },
+      "explanation": "V = E − I·r. The heavier load raises the current, so the drop across the internal resistance grows and the terminal voltage falls: {before} → {after}. The EMF only appears at the terminals when little or no current flows.",
+      "hints": [
+        "V = E − I·r. What happens to I when the load resistance halves?"
+      ],
+      "schematic": {
+        "netlist": "battery and load\nV1 e 0 {E:spice}\nR1 e t {r:spice}\nR2 t 0 {RL:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "E = {E}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 270,
+            "label": "r\n{r}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              10,
+              8
+            ],
+            [
+              0,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "terminal +",
+            "at": [
+              0,
+              0
+            ],
+            "left": true
+          }
+        ],
+        "noBuild": "r is the cells' internal resistance, not a part"
+      },
+      "review": "verified"
+    },
+    {
+      "id": "src_what_if_series_cell",
+      "topicId": "sources_emf",
+      "prompt": "One cell (EMF {E}, internal resistance {r}) drives a {RL} resistor. A second identical cell is added in series with the first. What happens to the current through the resistor?",
+      "variables": [
+        {
+          "name": "n",
+          "unit": "",
+          "value": 1
+        },
+        {
+          "name": "E",
+          "unit": "V",
+          "values": [
+            1.2,
+            1.5
+          ]
+        },
+        {
+          "name": "r",
+          "unit": "Ω",
+          "values": [
+            0.1,
+            0.2,
+            0.3
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            4.7,
+            10,
+            22
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the current",
+        "formula": "n*E/(RL+n*r)",
+        "unit": "A",
+        "change": {
+          "n": "2*n"
+        },
+        "askFactor": false,
+        "feedback": {
+          "same": "A battery is not a constant-current source. The second cell's chemistry does work on every coulomb too, so the EMF around the loop doubles, and the current is set by EMF over total resistance.",
+          "down": "The second cell does add its internal resistance, {r}, but it also adds its EMF. The driving EMF doubles, while the loop's resistance grows only from {RL} + {r} to {RL} + 2 × {r}, less than double, because the {RL} load, most of that resistance, doesn't change."
+        }
+      },
+      "explanation": "I = n·E/(R + n·r). The EMFs add (every coulomb passes through both cells) and so do the internal resistances. One cell: {E} / ({RL} + {r}) = {before}. Two cells: 2 × {E} / ({RL} + 2 × {r}) = {after}. The current nearly doubles, just short of it because the internal resistance doubled too.",
+      "hints": [
+        "In series, what adds: the EMFs, the internal resistances, or both? Which matters more next to {RL}?"
+      ],
+      "noDrawing": "one cell, then two in series; the circuit is the single loop of the other problems in this topic",
+      "review": "verified"
+    },
+    {
+      "id": "src_what_if_cold",
+      "topicId": "sources_emf",
+      "prompt": "An alkaline cell (EMF {E}, internal resistance {r} at room temperature) drives a {RL} load. On a winter morning well below freezing (about −20 °C) its electrolyte conducts less well and its internal resistance rises to {new_r}; its EMF barely changes. What happens to the voltage at its terminals under the same load?",
+      "variables": [
+        {
+          "name": "E",
+          "unit": "V",
+          "value": 1.5
+        },
+        {
+          "name": "r",
+          "unit": "Ω",
+          "values": [
+            0.15,
+            0.2,
+            0.3
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            2.2,
+            3.3,
+            4.7
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the terminal voltage",
+        "formula": "E*RL/(RL+r)",
+        "unit": "V",
+        "change": {
+          "r": "4*r"
+        },
+        "askFactor": false,
+        "feedback": {
+          "same": "The EMF barely changed, but a meter under load doesn't read the EMF: it reads E − I·r, and r is four times larger.",
+          "up": "More internal resistance means a larger share of the chemistry's work per coulomb becomes heat inside the cell, so less is left between the terminals. The current falls a little, but the I·r drop still grows."
+        }
+      },
+      "explanation": "V = E·R/(R + r). With r four times larger, the cell's own resistance takes a bigger share of the EMF: {before} → {after}. This is why a device with a heavy load stops working in the cold while a meter on the unloaded cell still reads about {E}: the EMF is fine, the internal resistance is not. Warmed up again, the cell recovers.",
+      "hints": [
+        "Which part of V = E − I·r changed, and does the drop inside the cell grow or shrink?"
+      ],
+      "schematic": {
+        "netlist": "cold cell and load\nV1 e 0 {E:spice}\nR1 e t {r:spice}\nR2 t 0 {RL:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "E = {E}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 270,
+            "label": "r\n{r}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              10,
+              8
+            ],
+            [
+              0,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "terminal +",
+            "at": [
+              0,
+              0
+            ],
+            "left": true
+          }
+        ],
+        "noBuild": "r is the cells' internal resistance, not a part"
+      },
+      "review": "verified"
+    },
+    {
+      "id": "src_constant_current_myth",
+      "topicId": "sources_emf",
+      "prompt": "A 9 V battery (EMF 9.4 V, internal resistance 1.5 Ω) runs a small motor that draws 0.3 A. A student says: \"This battery puts out 0.3 A, so a 10 Ω, 10 W resistor across it would take 0.3 A too.\" What current would the 10 Ω resistor really take?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "About 0.82 A: the battery sets a voltage, and I = E/(R + r) = 9.4 V / 11.5 Ω",
+          "feedback": "Right: the current is set by the whole loop's resistance. The motor drew 0.3 A because it acts as about 30 Ω.",
+          "correct": true
+        },
+        {
+          "text": "About 0.3 A: a battery delivers its own fixed current to whatever is connected",
+          "feedback": "A battery is not a constant-current source. Its chemistry does a fixed amount of work per coulomb, about 9.4 J; how many coulombs flow each second is set by the loop's resistance, E/(R + r)."
+        },
+        {
+          "text": "About 0.94 A: I = 9.4 V / 10 Ω",
+          "feedback": "The current crosses the battery's internal resistance too, so the loop has 10 Ω + 1.5 Ω = 11.5 Ω: 0.82 A."
+        },
+        {
+          "text": "About 0.15 A: a resistor is harder for the battery to drive than a motor",
+          "feedback": "The battery responds only to resistance. The motor acts as about 9.4 V / 0.3 A − 1.5 Ω ≈ 30 Ω, so a 10 Ω resistor draws more current, not less."
+        }
+      ],
+      "explanation": "A battery fixes, roughly, a voltage: its EMF, less the drop I·r. The current depends on what is connected: I = E/(R + r). The motor acts as about 30 Ω and draws 0.3 A; 10 Ω draws 9.4 V / 11.5 Ω = 0.82 A, and the terminals fall to 9.4 V − 0.82 A × 1.5 Ω = 8.2 V.",
+      "hints": [
+        "Does a battery fix the current or the voltage? What sets the current?"
+      ],
+      "schematic": {
+        "netlist": "9 V battery and 10 Ω\nV1 e 0 9.4\nR1 e t 1.5\nR2 t 0 10\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "E = 9.4 V",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 270,
+            "label": "r\n1.5 Ω"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "10 Ω"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              10,
+              8
+            ],
+            [
+              0,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "terminal +",
+            "at": [
+              0,
+              0
+            ],
+            "left": true
+          }
+        ],
+        "noBuild": "r is the cells' internal resistance, not a part"
+      },
+      "review": "verified"
+    },
+    {
+      "id": "src_load_test",
+      "topicId": "sources_emf",
+      "prompt": "Two AA cells from a drawer both read 1.52 V on a multimeter with nothing connected. With a 3.3 Ω resistor across each, cell A reads 1.45 V and cell B reads 1.05 V. What do the readings show?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "B's internal resistance is much higher, about 1.5 Ω against A's 0.16 Ω; the unloaded readings couldn't show it, because without current there is no I·r drop",
+          "feedback": "Right: r = (1.52 − 1.05) V / (1.05 V / 3.3 Ω) = 1.48 Ω for B and (1.52 − 1.45) V / (1.45 V / 3.3 Ω) = 0.16 Ω for A.",
+          "correct": true
+        },
+        {
+          "text": "Both are equally good: they have the same voltage, and that is what a cell's condition means",
+          "feedback": "The same open-circuit voltage only says the EMFs match. Under the same load B loses 0.47 V inside itself and A only 0.07 V: B's internal resistance is about nine times A's."
+        },
+        {
+          "text": "B's EMF is lower than A's; its internal resistance can't be told from these readings",
+          "feedback": "With nothing connected both read 1.52 V, and that reading is the EMF. The difference appears only under load, which is what internal resistance does."
+        },
+        {
+          "text": "A is the worn one: its reading barely changed, so it isn't delivering current",
+          "feedback": "A delivers 1.45 V / 3.3 Ω = 0.44 A, more than B's 0.32 A. A small drop under load is the sign of a healthy cell."
+        }
+      ],
+      "explanation": "An unloaded reading is the EMF, and it says nothing about r. A cell that has aged or dried out can keep most of its EMF while its internal resistance rises many times, and r only shows under load: r = (V_open − V_load) / I. This is why batteries are tested with a load, and why a cell that \"reads fine\" can still fail in a device that draws current.",
+      "hints": [
+        "What does a reading with nothing connected measure? What changes when current flows?"
+      ],
+      "noDrawing": "comparing two cells' readings; each test is the cell-and-resistor loop of the measuring problem",
+      "review": "verified"
+    },
+    {
+      "id": "src_r_matters",
+      "topicId": "sources_emf",
+      "prompt": "A 3 V lithium coin cell has an internal resistance of 20 Ω (coin cells of this size are typically around 10 to 30 Ω fresh, more as they discharge). It powers a sensor whose radio draws 15 mA bursts. A student says internal resistance only matters for big loads such as motors, so the bursts won't affect the supply voltage. What happens during a burst?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "The terminals fall by about 15 mA × 20 Ω = 0.3 V: what matters is r compared with the load's resistance, about 200 Ω here, not how big the current looks",
+          "feedback": "Right: 3 V − 0.3 V = 2.7 V during each burst, and more as the cell ages and r grows.",
+          "correct": true
+        },
+        {
+          "text": "Nothing noticeable: 15 mA is far too small a current for internal resistance to matter",
+          "feedback": "The drop is I·r. A 15 mA burst through 20 Ω is 0.3 V, 10 % of the cell's voltage; a lithium-ion cell's milliohms would make that negligible, but a coin cell's ohms do not."
+        },
+        {
+          "text": "Nothing: a lithium cell's voltage stays flat until it is nearly empty",
+          "feedback": "A flat discharge curve means the EMF changes little as charge is used. Under load the terminals still fall by I·r: 0.3 V here."
+        },
+        {
+          "text": "The voltage falls to zero: a coin cell can't supply a burst at all",
+          "feedback": "It can, at a reduced voltage: 3 V − 15 mA × 20 Ω = 2.7 V. It would only fall to zero with a short, at 3 V / 20 Ω = 150 mA."
+        }
+      ],
+      "explanation": "The drop inside a source is I·r, so what matters is r compared with the load: a 15 mA load on 3 V is about 200 Ω, and 20 Ω is a tenth of that. A motor on a car battery draws hundreds of amps through milliohms; a radio on a coin cell draws milliamps through tens of ohms. Both sag. Designs that run from coin cells often put a capacitor across the cell to supply the bursts.",
+      "hints": [
+        "Work out the drop I·r. Then compare it with 3 V."
+      ],
+      "noDrawing": "a coin cell feeding bursts; the point is the size of I·r, not a circuit to solve",
+      "review": "verified"
+    },
+    {
+      "id": "src_emf_meaning",
+      "topicId": "sources_emf",
+      "level": "recall",
+      "prompt": "An alkaline cell has an EMF of 1.5 V. What does that mean physically?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "Its chemical reactions do 1.5 J of work on each coulomb that passes through the cell",
+          "feedback": "Right: 1 V = 1 J/C. That work is done inside the cell; in the circuit outside, the electric field does work on the charge in each resistance it crosses.",
+          "correct": true
+        },
+        {
+          "text": "Each coulomb is filled with 1.5 J inside the cell, takes that energy to the load and drops it off there",
+          "feedback": "The energy does not travel inside the charge. When the circuit closes the load works at once, yet the charge drifts at well under a millimeter per second: the charge in the load then has never been through the cell. The chemistry does work on charge inside the cell; in the load and in r, the electric field set up along the wires does work on the charge already there, 1.5 J per coulomb across those resistances together."
+        },
+        {
+          "text": "It drives 1.5 C through the circuit every second",
+          "feedback": "Coulombs per second is a current, and the current is set by the loop: E/(R + r). The EMF is work per coulomb, not charge per second."
+        },
+        {
+          "text": "Its terminals always have 1.5 V across them, whatever is connected",
+          "feedback": "Only with no current. Under load the terminals read E − I·r, less than 1.5 V; the EMF is the work done per coulomb, not a promise about the terminal voltage."
+        }
+      ],
+      "explanation": "EMF is the work a source does per coulomb that passes through it, measured in volts (joules per coulomb). It is set by the chemistry: zinc and manganese dioxide give about 1.5 V whatever the cell's size. The terminal voltage equals it only when no current flows.",
+      "hints": [
+        "A volt is a joule per coulomb. Who does the work, and on what?"
+      ],
+      "noDrawing": "about what an EMF means, not a particular circuit",
+      "review": "verified"
+    },
+    {
+      "id": "src_max_power",
+      "topicId": "sources_emf",
+      "prompt": "A source has EMF E and internal resistance r, and you may choose the load resistance R. Which statement is right?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "The load gets the most power at R = r, but then as much power heats the source as reaches the load, so battery circuits use R much larger than r",
+          "feedback": "Right: at R = r the efficiency R/(R + r) is 50 % and the terminals sit at E/2. The Thevenin topic returns to this.",
+          "correct": true
+        },
+        {
+          "text": "The load gets the most power at R = 0, where the current is largest",
+          "feedback": "At R = 0 the current is largest, E/r, but the load has no voltage across it, so it gets no power: all of it heats the source."
+        },
+        {
+          "text": "The load gets the most power when R is as large as possible, where the terminal voltage is highest",
+          "feedback": "As R grows the terminal voltage approaches E, but the current approaches zero, and so does the power V·I."
+        },
+        {
+          "text": "The load gets the most power at R = r, and that is also the most efficient way to run a battery",
+          "feedback": "R = r gives the most power to the load, but at 50 % efficiency: the battery turns as much energy into its own heat as it delivers to the load. Efficiency rises with R."
+        }
+      ],
+      "explanation": "The load's power is I²R = E²R/(R + r)². It is zero at R = 0 (no voltage) and tends to zero for very large R (no current); in between it peaks at R = r, where the load gets E²/(4r). The efficiency is R/(R + r), only 50 % there. Power systems and batteries run with R ≫ r for efficiency; matching R = r is used where the signal is weak and efficiency doesn't matter, as with antennas and some signal sources.",
+      "hints": [
+        "Check the two extremes, R = 0 and R very large: how much power does the load get in each?"
+      ],
+      "noDrawing": "a general statement about any source and load, with no values to draw",
+      "review": "verified"
+    },
+    {
+      "id": "src_fault_weak_cell",
+      "topicId": "sources_emf",
+      "prompt": "A holder with three alkaline cells in series runs a small DC motor (it acts as about {RL} while running). Each cell has an EMF of about {E} and, when fresh, an internal resistance of about {r}. The motor turns sluggishly or not at all. With the motor switched on, a voltmeter (black lead on ground) reads the nodes between the cells, and an ammeter reads the motor current. Healthy readings would be n1 {h0}, n2 {h1}, top {h2} and {h3}. Which fault explains the readings below?",
+      "variables": [
+        {
+          "name": "E",
+          "unit": "V",
+          "value": 1.5
+        },
+        {
+          "name": "r",
+          "unit": "Ω",
+          "values": [
+            0.1,
+            0.15,
+            0.2
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            10,
+            15,
+            22
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "rw",
+          "formula": "20*r",
+          "unit": "Ω"
+        },
+        {
+          "name": "Iw",
+          "formula": "3*E/(RL+22*r)",
+          "unit": "A"
+        },
+        {
+          "name": "stepw",
+          "formula": "E-3*E/(RL+22*r)*20*r",
+          "unit": "V"
+        },
+        {
+          "name": "dropw",
+          "formula": "3*E/(RL+22*r)*20*r",
+          "unit": "V"
+        },
+        {
+          "name": "Ist",
+          "formula": "3*E/(RL/4+3*r)",
+          "unit": "A"
+        },
+        {
+          "name": "stepst",
+          "formula": "E-3*E/(RL/4+3*r)*r",
+          "unit": "V"
+        }
+      ],
+      "fault": {
+        "netlist": "three cells and a motor\nV1 e1 0 {E:spice}\nR1 e1 n1 {r:spice}\nV2 e2 n1 {E:spice}\nR2 e2 n2 {r:spice}\nV3 e3 n2 {E:spice}\nR3 e3 top {r:spice}\nRM top 0 {RL:spice}\n",
+        "probes": [
+          {
+            "label": "Voltage at n1 (black lead on ground)",
+            "probe": "v(n1)"
+          },
+          {
+            "label": "Voltage at n2 (black lead on ground)",
+            "probe": "v(n2)"
+          },
+          {
+            "label": "Voltage at the top (black lead on ground)",
+            "probe": "v(top)"
+          },
+          {
+            "label": "Motor current",
+            "probe": "i(RM)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "Cell 1 is worn (its internal resistance has risen about twentyfold)",
+            "value": {
+              "ref": "R1",
+              "formula": "20*r"
+            },
+            "feedback": "A worn cell 1 would make the first step, ground to n1, much smaller than a cell, about {stepw}, while the steps across cells 2 and 3 stayed near {E}; the current would fall to about {Iw}.",
+            "why": "the step from ground to n1 is only about {stepw}, while n1 to n2 and n2 to the top are close to a full cell. The current fell to about {Iw}, so the load is not to blame: cell 1's internal resistance (about {rw} now) turns {dropw} of its EMF into heat inside it."
+          },
+          {
+            "text": "Cell 2 is worn (its internal resistance has risen about twentyfold)",
+            "value": {
+              "ref": "R2",
+              "formula": "20*r"
+            },
+            "feedback": "A worn cell 2 would leave the step to n1 near {E} but make the step from n1 to n2 much smaller, about {stepw}; the current would fall to about {Iw}.",
+            "why": "ground to n1 and n2 to the top are close to a full cell each, but n1 to n2 is only about {stepw}. With the current down to about {Iw}, cell 2's internal resistance (about {rw} now) turns {dropw} of its EMF into heat inside it."
+          },
+          {
+            "text": "Cell 3 is worn (its internal resistance has risen about twentyfold)",
+            "value": {
+              "ref": "R3",
+              "formula": "20*r"
+            },
+            "feedback": "A worn cell 3 would leave n1 and n2 near their healthy steps but make the last step, n2 to the top, much smaller, about {stepw}; the current would fall to about {Iw}.",
+            "why": "the first two steps are close to a full cell, the last only about {stepw}, and the current fell to about {Iw}: cell 3's internal resistance (about {rw} now) turns {dropw} of its EMF into heat inside it."
+          },
+          {
+            "text": "The motor has stalled (with no back-EMF it acts as about a quarter of its running resistance), and the cells are fine",
+            "value": {
+              "ref": "RM",
+              "formula": "RL/4"
+            },
+            "feedback": "A stalled motor would draw much more current, about {Ist}, and every cell's step would fall by the same amount, to about {stepst} each.",
+            "why": "the current rose to about {Ist}, and all three steps fell equally, to about {stepst}: every cell's I·r grew by the same amount, which points at the load, not at one cell. A stalled motor has no back-EMF, so only its winding resistance limits the current."
+          }
+        ]
+      },
+      "explanation": "Read the step across each cell under load: n1 − 0, n2 − n1, top − n2. A healthy cell gives E − I·r, close to {E}. One step much smaller than the others, with the current down, is one cell whose internal resistance has risen: a worn cell. All three steps smaller by the same amount, with the current up, is the load drawing more. An unloaded check would have missed the worn cell: with no current, even a worn cell reads close to its EMF.",
+      "hints": [
+        "Work out the step across each cell: n1 − 0, n2 − n1, top − n2. Compare them with each other.",
+        "Did the current go up or down? One small step with less current points at a cell; equal small steps with more current point at the load."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V3",
+            "at": [
+              0,
+              8
+            ],
+            "rot": 90,
+            "label": "cell 3\n{E}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              0,
+              8
+            ],
+            "rot": 270,
+            "label": "r3"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              0,
+              16
+            ],
+            "rot": 90,
+            "label": "cell 2\n{E}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              0,
+              16
+            ],
+            "rot": 270,
+            "label": "r2"
+          },
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              24
+            ],
+            "rot": 90,
+            "label": "cell 1\n{E}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              0,
+              24
+            ],
+            "rot": 270,
+            "label": "r1"
+          },
+          {
+            "ref": "RM",
+            "at": [
+              10,
+              12
+            ],
+            "rot": 90,
+            "label": "motor",
+            "symbol": "motor"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              10,
+              2
+            ],
+            [
+              10,
+              12
+            ]
+          ],
+          [
+            [
+              10,
+              16
+            ],
+            [
+              10,
+              30
+            ],
+            [
+              0,
+              30
+            ],
+            [
+              0,
+              28
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            30
+          ]
+        ],
+        "labels": [
+          {
+            "text": "top",
+            "at": [
+              0,
+              2
+            ],
+            "left": true
+          },
+          {
+            "text": "n2",
+            "at": [
+              0,
+              12
+            ],
+            "left": true
+          },
+          {
+            "text": "n1",
+            "at": [
+              0,
+              20
+            ],
+            "left": true
+          }
+        ],
+        "noBuild": "r1-r3 are the cells' internal resistances, not parts"
+      },
+      "review": "verified"
+    }
+  ]
+}

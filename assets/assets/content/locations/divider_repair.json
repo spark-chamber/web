@@ -1,0 +1,51 @@
+{
+  "id": "divider_repair",
+  "number": "4",
+  "region": "repair",
+  "title": "Repair ticket: a divider that reads wrong",
+  "kind": "repair",
+  "brief": "A divider on a returned board reads wrong. One fault is hidden in it: the drawing shows the circuit as designed, and the meter reads the board as it is. Measure with the power on (V to ground, V between, or a part's current), then name the fault. A good technician splits the suspects in half with each reading; the budget is the worst case of that route over every suspect, plus two.",
+  "topics": [
+    "dividers",
+    "kirchhoff"
+  ],
+  "neighbors": [],
+  "faultTemplates": [
+    "div_fault"
+  ],
+  "spec": [
+    {
+      "id": "fault_named",
+      "quantity": "The fault named",
+      "how": "Your call, after your readings",
+      "measure": {
+        "kind": "faultNamed"
+      },
+      "unit": "",
+      "note": "A call no reading with the power on can tell from the hidden fault counts as right."
+    },
+    {
+      "id": "readings_used",
+      "quantity": "Readings taken",
+      "how": "Each distinct probe placement counts once; reading the same place again is free.",
+      "measure": {
+        "kind": "readings",
+        "extra": 2
+      },
+      "unit": ""
+    }
+  ],
+  "clearing": {
+    "lights": [],
+    "features": [
+      {
+        "id": "meter_ohms",
+        "label": "Power-off resistance and continuity on the meter"
+      },
+      {
+        "id": "dead_part_modifier",
+        "label": "The dead-part modifier on later locations"
+      }
+    ]
+  }
+}

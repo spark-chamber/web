@@ -1,0 +1,34 @@
+{
+  "regions": [
+    {
+      "id": "indicators",
+      "title": "Indicators and sensing"
+    },
+    {
+      "id": "power",
+      "title": "Power"
+    },
+    {
+      "id": "signals",
+      "title": "Signals"
+    },
+    {
+      "id": "drivers",
+      "title": "Drivers"
+    },
+    {
+      "id": "amplifiers",
+      "title": "Amplifiers"
+    },
+    {
+      "id": "repair",
+      "title": "Repair"
+    }
+  ],
+  "files": [
+    "first_light.json",
+    "usb_status_led.json",
+    "battery_monitor.json",
+    "divider_repair.json"
+  ]
+}

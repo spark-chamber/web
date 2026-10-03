@@ -1,0 +1,119 @@
+{
+  "id": "first_light",
+  "number": "0",
+  "region": "indicators",
+  "title": "First light",
+  "brief": "A 9 V battery, a 1 kΩ resistor and a red LED are on the Bench, wired except for the return from the LED's cathode to the battery's negative terminal. Before you run anything, predict the LED's current: the resistor drops what the LED leaves of the 9 V, and a red LED drops about 1.9 V when lit. Close the loop with one wire (W), press Run (F5) and read the current with the meter's A and W tool on the LED. Then submit the design.",
+  "revealedAtStart": true,
+  "topics": [],
+  "neighbors": [
+    "usb_status_led"
+  ],
+  "supply": {
+    "ref": "V1",
+    "label": "9 V battery",
+    "volts": 9
+  },
+  "start": {
+    "parts": [
+      {
+        "ref": "V1",
+        "type": "dcSource",
+        "at": [
+          0,
+          2
+        ],
+        "rot": 90,
+        "value": "9"
+      },
+      {
+        "ref": "R1",
+        "type": "resistor",
+        "at": [
+          2,
+          0
+        ],
+        "value": "1k"
+      },
+      {
+        "ref": "D1",
+        "type": "led",
+        "at": [
+          8,
+          2
+        ],
+        "rot": 90
+      }
+    ],
+    "wires": [
+      [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      [
+        [
+          6,
+          0
+        ],
+        [
+          8,
+          0
+        ],
+        [
+          8,
+          2
+        ]
+      ]
+    ],
+    "grounds": [
+      [
+        0,
+        6
+      ]
+    ]
+  },
+  "parts": [],
+  "spec": [
+    {
+      "id": "led_current",
+      "quantity": "LED current",
+      "how": "Meter in series with the LED (the A and W tool on D1), after Run",
+      "measure": {
+        "kind": "current",
+        "type": "led"
+      },
+      "min": 0.005,
+      "max": 0.01,
+      "unit": "A",
+      "note": "With the loop open, no current flows and the LED stays dark. The window fails a loop that bypasses the LED or shorts the resistor."
+    },
+    {
+      "id": "led_voltage",
+      "quantity": "Voltage across the LED",
+      "how": "V between, red lead on the anode, black on the cathode",
+      "measure": {
+        "kind": "voltageAcross",
+        "type": "led"
+      },
+      "unit": "V",
+      "note": "A reading, not a limit: the LED's forward voltage at this current, from the Bench's red LED model (DRED)."
+    }
+  ],
+  "clearing": {
+    "lights": [],
+    "features": []
+  },
+  "notes": [
+    "The given parts can be wired but not changed or removed."
+  ]
+}

@@ -1,0 +1,2611 @@
+{
+  "topics": [
+    {
+      "id": "opamp_single_supply",
+      "title": "Single-supply op-amp circuits",
+      "summary": "With one supply, bias signals at mid-rail and AC-couple them in and out so they can swing both ways.",
+      "lenses": [
+        "circuit",
+        "signals"
+      ],
+      "prerequisites": [
+        "opamp_noninverting",
+        "rc_lowpass_cutoff"
+      ],
+      "lensNotes": {
+        "circuit": "With one supply, bias the signal at about Vcc/2 so it can swing both ways, and use coupling capacitors to keep that DC bias out of the source and load. Rail-to-rail op amps get closest to the supply.",
+        "signals": "The coupling capacitor and bias resistance form a high-pass filter: choose f_c well below your lowest signal frequency, or the bass disappears."
+      },
+      "formulas": [
+        {
+          "label": "Mid-rail bias",
+          "tex": "V_{bias} = \\frac{V_{CC}}{2}"
+        },
+        {
+          "label": "Coupling cutoff",
+          "tex": "f_c = \\frac{1}{2\\pi (R_s + R_1 \\parallel R_2) C}"
+        },
+        {
+          "label": "Bias divider",
+          "tex": "V_{bias} = V_{CC}\\,\\frac{R_2}{R_1 + R_2}"
+        }
+      ],
+      "prerequisiteNotes": {
+        "opamp_noninverting": "Single-supply circuits are mostly non-inverting stages biased at mid-supply instead of at ground.",
+        "rc_lowpass_cutoff": "Coupling capacitors that block the DC bias form RC high-pass filters, and their cutoff decides the lowest frequency that gets through."
+      },
+      "goals": [
+        "Bias an op amp's input at mid-rail with a divider, and explain why mid-rail leaves the most room to swing",
+        "Find the high-pass corner set by a coupling capacitor and the bias resistance it works against",
+        "Work out the largest undistorted output and input swing from the supply and how close the op amp gets to each rail",
+        "Explain what each capacitor in a single-supply AC amplifier does at DC and at signal frequencies"
+      ],
+      "intuition": "On a single supply, picture the signal riding on a DC level at mid-rail so it can swing both ways without hitting ground or V_CC, with coupling capacitors passing the signal but blocking that DC from the source and the load, at frequencies well above their corners.",
+      "why": "An op amp's output can only move between its two supply rails, and in practice only to somewhat inside them. On a single supply the lower rail is ground, so a sine centered on 0 V would lose its whole negative half. A DC bias of about V_CC/2 lifts the resting point to the middle, with equal room above and below. A capacitor passes no steady current, so it keeps the bias out of the source and load, but its reactance 1/(2πfC) is small at signal frequencies, so the signal passes. With the resistance it drives, it forms a high-pass filter.",
+      "explanation": "On ± supplies the signal rests at 0 V. On a single supply, say 0 V and 12 V, the output cannot go below ground, so such a signal loses its negative half. Bias the input at mid-rail instead. Two equal resistors from V_CC to ground put the + input at V_CC/2. An input coupling capacitor passes the signal but keeps the bias away from the source. With the bias resistors it forms a high-pass filter: a decoupled V_CC is an AC ground, so the capacitor sees R1 ∥ R2 (plus any source resistance), and f_c = 1/(2πC · R1∥R2). Put f_c below the lowest signal frequency. With Rg straight to ground, the gain 1 + Rf/Rg would amplify the bias too: a gain of 3 turns 6 V into 18 V, past the rail. A capacitor Cg in series with Rg blocks DC, so the DC gain is 1: the output rests at the bias and only the signal is amplified. An output capacitor keeps it off the load.  A rail-to-rail op amp gets within a few tens of millivolts of each rail at light load; many general-purpose parts stop a volt or more below V_CC, inputs too.",
+      "workedExample": {
+        "problem": "An audio preamplifier runs from a single 12 V supply. The op amp's output (and its inputs) work from 0.1 V up to 1.5 V below V_CC; it is not rail-to-rail at the top. The + input is biased by R1 = R2 = 100 kΩ, the signal comes in through Cin = 1 µF, the gain is set by Rf = 22 kΩ and Rg = 10 kΩ with Cg = 10 µF in series with Rg, and Cout = 10 µF couples the output to a 10 kΩ load. Find the bias point, the input corner, the gain, and the largest input sine that comes out unclipped.",
+        "steps": [
+          "Bias: the + input draws no current, so the divider is unloaded: 12 V × 100 kΩ / (100 kΩ + 100 kΩ) = 6 V.",
+          "Input corner: 12 V is an AC ground, so Cin sees 100 kΩ ∥ 100 kΩ = 50 kΩ. f_c = 1 / (2π × 1 µF × 50 kΩ) = 3.18 Hz, well below the 20 Hz bottom of the audio band.",
+          "Signal gain: 1 + Rf/Rg = 1 + 22 kΩ / 10 kΩ = 3.2. Cg's reactance equals Rg at 1 / (2π × 10 kΩ × 10 µF) = 1.59 Hz, so at audio frequencies Cg is close to a short.",
+          "DC gain: at DC Cg is open, so Rg carries no current and the stage is a follower with gain 1. The output rests at 6 V. Without Cg the 6 V bias would be multiplied by 3.2 to 19.2 V, above the 12 V supply, and the output would sit at its upper limit.",
+          "Room above: the output can rise from 6 V to 12 V − 1.5 V = 10.5 V, which is 4.5 V. Room below: it can fall from 6 V to 0.1 V, which is 5.9 V. A sine swings equally both ways, so the smaller, 4.5 V, is the largest output peak.",
+          "Largest input: 4.5 V / 3.2 = 1.41 V peak. The + input then swings from 6 V − 1.41 V = 4.59 V to 6 V + 1.41 V = 7.41 V, inside its 0.1 V to 10.5 V range.",
+          "Output coupling: Cout and the 10 kΩ load give 1 / (2π × 10 kΩ × 10 µF) = 1.59 Hz, and the load sees the signal centered on 0 V, with no 6 V bias."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 4 \"Bipolar Junction Transistors\", section \"Input and output coupling\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_4.html#xtocid903614",
+          "note": "A coupling capacitor lets a divider-biased amplifier take an AC signal while keeping the bias away from the source, acts as a high-pass filter so low frequencies are lost, and an output capacitor keeps DC off the load."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. II (AC), ch. 8 \"Filters\", section \"High-pass filters\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/AC/AC_8.html#xtocid89302",
+          "note": "A series capacitor into a resistance is a high-pass filter with cutoff f = 1/(2πRC), the frequency where the output is 70.7% of the input."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Operational Amplifiers\" (last update 23 September 2026), section 5.7.1 \"Output voltage limits\" and 5.7.2 \"Input voltage limits and latch-up\" (pp. 181–183)",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_opamp.pdf",
+          "note": "The output cannot pass the supply rails, bipolar output stages stop roughly 0.7 V short while rail-to-rail FET outputs come within millivolts, and inputs must stay inside a common-mode range that can be narrower than the rails."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "ss_bias_point",
+      "topicId": "opamp_single_supply",
+      "prompt": "A single {Vcc} supply biases an op amp's non-inverting input through a divider of R1 = {R1} (to Vcc) and R2 = {R2} (to ground). What DC voltage sits at the input?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            10000,
+            15000,
+            22000,
+            33000,
+            47000,
+            68000
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            12000,
+            18000,
+            27000,
+            39000,
+            56000,
+            82000
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "Vcc*R2/(R1+R2)",
+        "unit": "V"
+      },
+      "explanation": "The input draws no current, so it's an unloaded divider: V = {Vcc} × {R2} / ({R1} + {R2}) = {answer}. Here R1 ≠ R2, so the bias sits off mid-rail; equal resistors would give Vcc/2, which leaves the most room to swing both ways.",
+      "hints": [
+        "The op-amp input draws no current.",
+        "Use the divider formula."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vcc/2",
+          "feedback": "Only equal resistors give exactly Vcc/2. Use Vcc · R2 / (R1 + R2)."
+        }
+      ],
+      "schematic": {
+        "netlist": "Bias\nVCC vcc 0 {Vcc:spice}\nR1 vcc p {R1:spice}\nR2 p 0 {R2:spice}\nX1 p out out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              -2,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              -1
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              2,
+              3
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "flip": true,
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              -2,
+              2
+            ],
+            [
+              -2,
+              -1
+            ],
+            [
+              2,
+              -1
+            ]
+          ],
+          [
+            [
+              2,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ],
+            [
+              13,
+              7
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            -2,
+            6
+          ],
+          [
+            2,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "The bias voltage depends only on the ratio R2/(R1 + R2). Why, then, are bias resistors usually tens of kilohms rather than a few hundred ohms?",
+          "choices": [
+            {
+              "text": "Their size sets the supply current wasted and the resistance the signal source has to drive, and the input draws too little to upset the bias",
+              "feedback": "Right: Vcc/(R1 + R2) flows all the time, and the source has to drive R1 ∥ R2, so bigger is better as long as the input current stays negligible.",
+              "correct": true
+            },
+            {
+              "text": "Larger resistors give a more accurate bias voltage, because small ones let the supply voltage sag under the extra current",
+              "feedback": "The voltage comes from the ratio alone: 1 kΩ/1 kΩ and 100 kΩ/100 kΩ both give exactly Vcc/2 into an input that draws no current, and a stiff supply doesn't sag at these currents."
+            },
+            {
+              "text": "Small bias resistors would raise the amplifier's gain, because more signal current flows into the + input",
+              "feedback": "The gain is set by the feedback resistors around the op amp, not by the bias divider, and the + input draws no signal current either way."
+            },
+            {
+              "text": "Large resistors keep the DC bias from reaching the signal source, which would otherwise be shorted by it",
+              "feedback": "Resistors pass DC whatever their size. The coupling capacitor is what keeps the bias out of the source."
+            }
+          ],
+          "explanation": "The + input draws no current, so the divider is unloaded (Voltage and current dividers) and only the ratio sets the bias. The size sets two other things: the current wasted from Vcc to ground, Vcc/(R1 + R2), and the resistance the signal source must drive, R1 ∥ R2 (Vcc counts as ground for AC). That resistance, with the input coupling capacitor, also sets the lowest frequency that gets through, so larger resistors let a smaller capacitor keep the bass."
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "ss_coupling_cutoff",
+      "topicId": "opamp_single_supply",
+      "prompt": "An input coupling capacitor of {C} feeds a mid-rail bias divider of two {R} resistors (one to Vcc, one to ground). The signal source is ideal (no output resistance), Vcc is well decoupled, and the op amp's + input draws no current. What is the high-pass cutoff frequency?",
+      "variables": [
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -7,
+            -6
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            5
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rin",
+          "formula": "R/2",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "1/(2*pi*C*R/2)",
+        "unit": "Hz"
+      },
+      "explanation": "For AC signals the supply is a ground, so the two bias resistors are in parallel: {R} || {R} = {Rin}. The coupling capacitor and that resistance form a high-pass: f_c = 1 / (2π × {C} × {Rin}) = {answer}.",
+      "hints": [
+        "What resistance does the capacitor see? The supply rail counts as AC ground.",
+        "The two resistors are in parallel, so use R/2 in f_c = 1/(2πRC)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "1/(2*pi*C*R)",
+          "feedback": "Both bias resistors go to AC ground (Vcc is a ground for signals), so they're in parallel: use R/2."
+        },
+        {
+          "formula": "1/(2*pi*C*2*R)",
+          "feedback": "The bias resistors aren't in series for the signal: Vcc acts as AC ground, so they're in parallel (R/2)."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "For the signal, why do the two bias resistors count as in parallel, even though one goes to Vcc and the other to ground?",
+          "choices": [
+            {
+              "text": "For signals the Vcc rail is as good as ground, because the supply holds it steady, so both resistors run from the input node to AC ground",
+              "feedback": "Right: the signal sees one resistor to one AC ground and one to another, which is parallel.",
+              "correct": true
+            },
+            {
+              "text": "Because the two resistors are equal, and only equal resistors from the same node count as parallel",
+              "feedback": "Equal values only make the answer R/2. Unequal resistors are still in parallel for the signal: R1 ∥ R2."
+            },
+            {
+              "text": "Because the op amp's + input joins the two resistors and returns their currents to ground",
+              "feedback": "The op amp input draws no current, so it adds no path; the Vcc rail being an AC ground is what matters."
+            },
+            {
+              "text": "They aren't in parallel: for the signal they are in series, from the Vcc rail down to ground",
+              "feedback": "Series is the DC current path from Vcc to ground. The signal enters at the middle node and leaves through both resistors to AC ground, so for it they are in parallel."
+            }
+          ],
+          "explanation": "A stiff supply (with its decoupling capacitor) carries no AC voltage, just like ground. So the signal at the bias node sees R to one AC ground and R to another: {R} ∥ {R} = {Rin}, the Thévenin resistance of the divider (Thevenin and Norton equivalents). The coupling capacitor charges through that resistance, so f_c = 1/(2π·{Rin}·{C}) = {answer}: the RC low-pass cutoff rule with R and C swapped round into a high-pass."
+        }
+      ],
+      "schematic": {
+        "netlist": "input coupling\nVCC vcc 0 5\nVS in 0 SIN(0 1 1k)\nCIN in b {C:spice}\nR1 vcc b {R:spice}\nR2 b 0 {R:spice}\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              -4,
+              4
+            ],
+            "rot": 90,
+            "label": "Vcc"
+          },
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 90,
+            "label": "signal"
+          },
+          {
+            "ref": "CIN",
+            "at": [
+              2,
+              4
+            ],
+            "label": "C {C}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              0
+            ],
+            "rot": 90,
+            "label": "{R}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              5
+            ],
+            "rot": 90,
+            "label": "{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              -4,
+              4
+            ],
+            [
+              -4,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              8,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              4
+            ],
+            [
+              8,
+              5
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              11,
+              5
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            -4,
+            8
+          ],
+          [
+            0,
+            10
+          ],
+          [
+            8,
+            9
+          ]
+        ],
+        "labels": [
+          {
+            "text": "to + input",
+            "at": [
+              11,
+              5
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "ss_max_swing",
+      "topicId": "opamp_single_supply",
+      "prompt": "A single-supply amplifier runs from {Vcc} with its output biased at mid-rail. The output can get within {h} of either rail. What is the largest undistorted peak amplitude of the output sine wave?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "h",
+          "unit": "V",
+          "range": {
+            "min": 0.2,
+            "max": 1.0,
+            "step": 0.1
+          }
+        }
+      ],
+      "answer": {
+        "formula": "Vcc/2-h",
+        "unit": "V"
+      },
+      "explanation": "The output sits at Vcc/2. It can rise to Vcc − {h} and fall to {h}, so the peak swing either way is Vcc/2 − {h} = {answer}.",
+      "hints": [
+        "Where does the output rest, and how close can it get to each rail?",
+        "Peak = Vcc/2 − headroom."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vcc-2*h",
+          "feedback": "That's the full peak-to-peak range, Vcc − 2 × headroom. The output rests at mid-rail and can move only Vcc/2 − headroom each way, so the peak is half of it."
+        },
+        {
+          "formula": "Vcc/2",
+          "feedback": "Remember the output can't reach the rails: subtract the headroom."
+        }
+      ],
+      "noDrawing": "headroom arithmetic for any single-supply stage; no stage described",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "ss_why_midrail",
+      "topicId": "opamp_single_supply",
+      "level": "reason",
+      "prompt": "A unity-gain buffer runs from a single {Vcc} supply. Its + input is biased by R1 = {R1} (to Vcc) and R2 = {R2} (to ground), with the signal coupled in through Cin (the signal frequency is well above its corner). The resistors are unequal, so the output rests at {Vb} instead of mid-rail. The op amp's output (and input) can get within {h} of either rail, so the output can swing from {lo} to {hi}. The input sine is turned up slowly. At what output peak amplitude does the sine start to clip?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "values": [
+            5,
+            9,
+            12
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            10000,
+            15000
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            18000,
+            22000,
+            27000
+          ]
+        },
+        {
+          "name": "h",
+          "unit": "V",
+          "range": {
+            "min": 0.3,
+            "max": 0.8,
+            "step": 0.1
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vb",
+          "formula": "Vcc*R2/(R1+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "lo",
+          "formula": "h",
+          "unit": "V"
+        },
+        {
+          "name": "hi",
+          "formula": "Vcc-h",
+          "unit": "V"
+        },
+        {
+          "name": "up",
+          "formula": "Vcc-h-Vcc*R2/(R1+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "down",
+          "formula": "Vcc*R2/(R1+R2)-h",
+          "unit": "V"
+        },
+        {
+          "name": "best",
+          "formula": "Vcc/2-h",
+          "unit": "V"
+        },
+        {
+          "name": "pp",
+          "formula": "2*min(Vcc-h-Vcc*R2/(R1+R2), Vcc*R2/(R1+R2)-h)",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "min(Vcc-h-Vcc*R2/(R1+R2), Vcc*R2/(R1+R2)-h)",
+        "unit": "V"
+      },
+      "explanation": "A sine swings the same distance above and below its resting point, so it clips as soon as either side runs out of room. Room above: {hi} − {Vb} = {up}. Room below: {Vb} − {lo} = {down}. The smaller one wins: the positive peaks flatten against {hi} once the peak reaches {answer}, while the negative peaks still have room to spare. Had the bias been at mid-rail, Vcc/2, both sides would have {best} of room. That is the largest clean swing the stage can give, which is why single-supply stages bias at mid-rail with two equal divider resistors.",
+      "hints": [
+        "A sine goes equally far above and below where the output rests.",
+        "Work out the room from {Vb} up to {hi} and down to {lo}; which is smaller?"
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vcc/2-h",
+          "feedback": "That's the room a mid-rail bias would give (Vcc/2 − h). This output rests at {Vb}, above mid-rail, so the room above it, {hi} − {Vb}, is smaller than that."
+        },
+        {
+          "formula": "Vcc*R2/(R1+R2)-h",
+          "feedback": "That's the room below the resting point, down to {lo}. The sine swings up by the same amount, and there is less room above {Vb}: the top clips first."
+        },
+        {
+          "formula": "Vcc-2*h",
+          "feedback": "That's the whole range from {lo} to {hi}, a peak-to-peak value. A sine centered on {Vb} uses equal room each way, so its peak is limited by the smaller side."
+        },
+        {
+          "formula": "Vcc-Vcc*R2/(R1+R2)",
+          "feedback": "That's the distance from the resting point to the supply itself. The output can only get within {h} of the rail, so subtract it."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "As the sine grows past that amplitude, which part of the output flattens first, and why?",
+          "choices": [
+            {
+              "text": "The positive peaks: the bias sits above mid-rail, so the output reaches {hi} before it reaches {lo}",
+              "correct": true,
+              "feedback": "Right: the sine needs equal room each way, and the room above {Vb} is the smaller side."
+            },
+            {
+              "text": "The negative peaks: with a single supply the output can't go below 0 V, so the bottom always clips first",
+              "feedback": "The bottom only clips first when the bias is below mid-rail. Here the output rests above mid-rail, closer to {hi} than to {lo}, so the top runs out of room first; the negative peaks still have room left."
+            },
+            {
+              "text": "Both at once: a sine is symmetric, so it clips equally at the top and the bottom",
+              "feedback": "The sine is symmetric about its resting point, but the resting point isn't midway between the limits. Equal swings meet the nearer limit first."
+            },
+            {
+              "text": "Neither: at that amplitude the sine is only {pp} peak-to-peak, which fits inside the {lo} to {hi} range",
+              "feedback": "Fitting the peak-to-peak into the range isn't enough: the sine is centered on {Vb}, not on the middle of the range, so it goes {answer} up and {answer} down from there. Any larger and the top reaches {hi} while the bottom is still clear of {lo}."
+            }
+          ],
+          "explanation": "The op amp's output can move only between {lo} and {hi}. A sine centered on {Vb} goes the same distance up as down, so the side with less room, here the top, clips first. Biasing at mid-rail makes the two sides equal and gives the largest clean swing."
+        }
+      ],
+      "schematic": {
+        "netlist": "single-supply buffer\nVCC vcc 0 {Vcc:spice}\nVS in 0 SIN(0 1 1k)\nCIN in b 1u\nR1 vcc b {R1:spice}\nR2 b 0 {R2:spice}\nX1 b out out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              -2,
+              1
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          },
+          {
+            "ref": "VS",
+            "at": [
+              3,
+              5
+            ],
+            "rot": 90,
+            "label": "signal"
+          },
+          {
+            "ref": "CIN",
+            "at": [
+              6,
+              5
+            ],
+            "label": "Cin"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              10,
+              1
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              6
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "X1",
+            "at": [
+              14,
+              7
+            ],
+            "flip": true,
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              -2,
+              1
+            ],
+            [
+              -2,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              1
+            ]
+          ],
+          [
+            [
+              3,
+              5
+            ],
+            [
+              6,
+              5
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              14,
+              6
+            ]
+          ],
+          [
+            [
+              14,
+              8
+            ],
+            [
+              13,
+              8
+            ],
+            [
+              13,
+              10
+            ],
+            [
+              19,
+              10
+            ],
+            [
+              19,
+              7
+            ]
+          ],
+          [
+            [
+              18,
+              7
+            ],
+            [
+              21,
+              7
+            ]
+          ],
+          [
+            [
+              10,
+              5
+            ],
+            [
+              10,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            -2,
+            5
+          ],
+          [
+            3,
+            9
+          ],
+          [
+            10,
+            10
+          ]
+        ],
+        "labels": [
+          {
+            "text": "b",
+            "at": [
+              12,
+              6
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              21,
+              7
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "ss_why_midrail_low",
+      "topicId": "opamp_single_supply",
+      "level": "reason",
+      "prompt": "A unity-gain buffer runs from a single {Vcc} supply. Its + input is biased by R1 = {R1} (to Vcc) and R2 = {R2} (to ground), with the signal coupled in through Cin (the signal frequency is well above its corner). The resistors are unequal, so the output rests at {Vb} instead of mid-rail. The op amp's output (and input) can get within {h} of either rail, so the output can swing from {lo} to {hi}. The input sine is turned up slowly. At what output peak amplitude does the sine start to clip?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "values": [
+            5,
+            9,
+            12
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            18000,
+            22000,
+            27000
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            10000,
+            15000
+          ]
+        },
+        {
+          "name": "h",
+          "unit": "V",
+          "range": {
+            "min": 0.3,
+            "max": 0.8,
+            "step": 0.1
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vb",
+          "formula": "Vcc*R2/(R1+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "lo",
+          "formula": "h",
+          "unit": "V"
+        },
+        {
+          "name": "hi",
+          "formula": "Vcc-h",
+          "unit": "V"
+        },
+        {
+          "name": "up",
+          "formula": "Vcc-h-Vcc*R2/(R1+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "down",
+          "formula": "Vcc*R2/(R1+R2)-h",
+          "unit": "V"
+        },
+        {
+          "name": "best",
+          "formula": "Vcc/2-h",
+          "unit": "V"
+        },
+        {
+          "name": "pp",
+          "formula": "2*min(Vcc-h-Vcc*R2/(R1+R2), Vcc*R2/(R1+R2)-h)",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "min(Vcc-h-Vcc*R2/(R1+R2), Vcc*R2/(R1+R2)-h)",
+        "unit": "V"
+      },
+      "explanation": "A sine swings the same distance above and below its resting point, so it clips as soon as either side runs out of room. R1 (to Vcc) is the larger resistor, so the divider pulls the bias below mid-rail, to {Vb}. Room above: {hi} − {Vb} = {up}. Room below: {Vb} − {lo} = {down}. The smaller one wins: the negative peaks flatten against {lo} once the peak reaches {answer}, while the positive peaks still have room to spare. Had the bias been at mid-rail, Vcc/2, both sides would have {best} of room. That is the largest clean swing the stage can give, which is why single-supply stages bias at mid-rail with two equal divider resistors.",
+      "hints": [
+        "A sine goes equally far above and below where the output rests.",
+        "Work out the room from {Vb} up to {hi} and down to {lo}; which is smaller?"
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vcc/2-h",
+          "feedback": "That's the room a mid-rail bias would give (Vcc/2 − h). This output rests at {Vb}, below mid-rail, so the room below it, {Vb} − {lo}, is smaller than that."
+        },
+        {
+          "formula": "Vcc-h-Vcc*R2/(R1+R2)",
+          "feedback": "That's the room above the resting point, up to {hi}. The sine swings down by the same amount, and there is less room below {Vb}: the bottom clips first."
+        },
+        {
+          "formula": "Vcc-2*h",
+          "feedback": "That's the whole range from {lo} to {hi}, a peak-to-peak value. A sine centered on {Vb} uses equal room each way, so its peak is limited by the smaller side."
+        },
+        {
+          "formula": "Vcc*R2/(R1+R2)",
+          "feedback": "That's the distance from the resting point down to 0 V. The output can only get within {h} of the ground rail, so subtract it."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "As the sine grows past that amplitude, which part of the output flattens first, and why?",
+          "choices": [
+            {
+              "text": "The negative peaks: the bias sits below mid-rail, so the output reaches {lo} before it reaches {hi}",
+              "correct": true,
+              "feedback": "Right: the sine needs equal room each way, and the room below {Vb} is the smaller side."
+            },
+            {
+              "text": "The negative peaks: with a single supply the output can't go below 0 V, so the bottom always clips first",
+              "feedback": "The bottom does clip first here, but not for that reason. The output stops at {lo}, not 0 V, and it stops {h} short of the top rail just the same; a stage biased above mid-rail clips at the top first. What decides it is where the output rests: {Vb} is below mid-rail, nearer {lo} than {hi}."
+            },
+            {
+              "text": "The positive peaks: the output can't reach the supply rail, so the top always runs out of room first",
+              "feedback": "The output stops {h} short of ground as well as of the supply, so the headroom favors neither side. This output rests at {Vb}, below mid-rail: the room above it is larger than the room below, so the bottom reaches its limit first."
+            },
+            {
+              "text": "Both at once: a sine is symmetric, so it clips equally at the top and the bottom",
+              "feedback": "The sine is symmetric about its resting point, but the resting point isn't midway between the limits. Equal swings meet the nearer limit first."
+            },
+            {
+              "text": "Neither: at that amplitude the sine is only {pp} peak-to-peak, which fits inside the {lo} to {hi} range",
+              "feedback": "Fitting the peak-to-peak into the range isn't enough: the sine is centered on {Vb}, not on the middle of the range, so it goes {answer} up and {answer} down from there. Any larger and the bottom reaches {lo} while the top is still clear of {hi}."
+            }
+          ],
+          "explanation": "The op amp's output can move only between {lo} and {hi}. A sine centered on {Vb} goes the same distance up as down, so the side with less room, here the bottom, clips first. Biasing at mid-rail makes the two sides equal and gives the largest clean swing."
+        }
+      ],
+      "schematic": {
+        "netlist": "single-supply buffer\nVCC vcc 0 {Vcc:spice}\nVS in 0 SIN(0 1 1k)\nCIN in b 1u\nR1 vcc b {R1:spice}\nR2 b 0 {R2:spice}\nX1 b out out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              -2,
+              1
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          },
+          {
+            "ref": "VS",
+            "at": [
+              3,
+              5
+            ],
+            "rot": 90,
+            "label": "signal"
+          },
+          {
+            "ref": "CIN",
+            "at": [
+              6,
+              5
+            ],
+            "label": "Cin"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              10,
+              1
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              6
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "X1",
+            "at": [
+              14,
+              7
+            ],
+            "flip": true,
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              -2,
+              1
+            ],
+            [
+              -2,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              1
+            ]
+          ],
+          [
+            [
+              3,
+              5
+            ],
+            [
+              6,
+              5
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              14,
+              6
+            ]
+          ],
+          [
+            [
+              14,
+              8
+            ],
+            [
+              13,
+              8
+            ],
+            [
+              13,
+              10
+            ],
+            [
+              19,
+              10
+            ],
+            [
+              19,
+              7
+            ]
+          ],
+          [
+            [
+              18,
+              7
+            ],
+            [
+              21,
+              7
+            ]
+          ],
+          [
+            [
+              10,
+              5
+            ],
+            [
+              10,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            -2,
+            5
+          ],
+          [
+            3,
+            9
+          ],
+          [
+            10,
+            10
+          ]
+        ],
+        "labels": [
+          {
+            "text": "b",
+            "at": [
+              12,
+              6
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              21,
+              7
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ss_midrail_concept",
+      "topicId": "opamp_single_supply",
+      "prompt": "Why is the input of a single-supply AC amplifier biased at half the supply?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "So the signal can swing both up and down without hitting 0 V or the supply",
+          "feedback": "Right: centered at mid-rail, the signal (and, with unity DC gain, the output) has room on both sides.",
+          "correct": true
+        },
+        {
+          "text": "To double the gain",
+          "feedback": "Biasing sets the DC level; the gain still comes from the resistors."
+        },
+        {
+          "text": "So no coupling capacitor is needed",
+          "feedback": "The coupling capacitor is still needed to block the DC bias from the source."
+        },
+        {
+          "text": "Because op amps can't work above half their supply",
+          "feedback": "They can; the bias is about leaving room for the signal."
+        }
+      ],
+      "explanation": "With only 0 V and V_CC available, an AC signal centered on 0 V would clip its negative half. Biasing at V_CC/2 puts the quiet point in the middle, so the signal can swing both ways.",
+      "hints": [
+        "What happens to the negative half of a sine centered on 0 V with a single supply?"
+      ],
+      "noDrawing": "why single-supply stages bias at mid-rail in general; no particular circuit",
+      "review": "verified"
+    },
+    {
+      "id": "ss_what_if_coupling_c",
+      "topicId": "opamp_single_supply",
+      "prompt": "An input coupling capacitor of {C} feeds a mid-rail bias divider of two {R} resistors (one to Vcc, one to ground). The signal source is ideal (no output resistance), Vcc is well decoupled, and the op amp's + input draws no current. The capacitor is swapped for {new_C}. What happens to the high-pass −3 dB corner, below which the signal is increasingly cut?",
+      "variables": [
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -7,
+            -7
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the cutoff frequency",
+        "formula": "1/(2*pi*C*R/2)",
+        "unit": "Hz",
+        "change": {
+          "C": "10*C"
+        },
+        "askFactor": true,
+        "feedback": {
+          "up": "A bigger capacitor has less reactance at every frequency (X_C = 1/(2πfC)), so it passes low frequencies more easily than the old one did.",
+          "same": "The corner is where the capacitor's reactance equals the bias resistance R/2. A bigger C has a different reactance at every frequency, so it equals R/2 at a different frequency."
+        }
+      },
+      "explanation": "The capacitor works against the bias resistors in parallel, R/2 (Vcc is an AC ground). f_c = 1/(2π·C·R/2) goes as 1/C: ten times the capacitance has a tenth of the reactance at any frequency, so it only falls to R/2 at a tenth of the frequency: {before} → {after}. This is the RC low-pass cutoff turned into a high-pass: a bigger coupling capacitor keeps the bass.",
+      "hints": [
+        "Does a bigger capacitor pass low frequencies more easily or less easily?",
+        "f_c = 1/(2π·C·R/2): how does it depend on C?"
+      ],
+      "schematic": {
+        "netlist": "input coupling\nVCC vcc 0 5\nVS in 0 SIN(0 1 1k)\nCIN in b {C:spice}\nR1 vcc b {R:spice}\nR2 b 0 {R:spice}\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              -4,
+              4
+            ],
+            "rot": 90,
+            "label": "Vcc"
+          },
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 90,
+            "label": "signal"
+          },
+          {
+            "ref": "CIN",
+            "at": [
+              2,
+              4
+            ],
+            "label": "C {C}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              0
+            ],
+            "rot": 90,
+            "label": "{R}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              5
+            ],
+            "rot": 90,
+            "label": "{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              -4,
+              4
+            ],
+            [
+              -4,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              8,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              4
+            ],
+            [
+              8,
+              5
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              11,
+              5
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            -4,
+            8
+          ],
+          [
+            0,
+            10
+          ],
+          [
+            8,
+            9
+          ]
+        ],
+        "labels": [
+          {
+            "text": "to + input",
+            "at": [
+              11,
+              5
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ss_what_if_bias_scale",
+      "topicId": "opamp_single_supply",
+      "prompt": "A single {Vcc} supply biases an op amp's + input through R1 = {R1} (to Vcc) and R2 = {R2} (to ground). To waste less supply current, both are swapped for ten times their value: {new_R1} and {new_R2}. What happens to the DC voltage at the + input?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the DC voltage at the + input",
+        "formula": "Vcc*R2/(R1+R2)",
+        "unit": "V",
+        "change": {
+          "R1": "10*R1",
+          "R2": "10*R2"
+        },
+        "feedback": {
+          "up": "Each bigger resistor would drop more only if the current stayed the same. The current falls to a tenth too, so each resistor's share of Vcc is unchanged.",
+          "down": "Less current flows, but the + input draws none, so nothing is lost to it: the voltage depends only on the ratio R2/(R1 + R2), and that hasn't changed."
+        }
+      },
+      "explanation": "The + input draws no current, so this is an unloaded divider (Voltage and current dividers): V = Vcc·R2/(R1 + R2). Scaling both resistors by 10 keeps the ratio, so it stays at {after}. What does change: the supply current falls tenfold, and the resistance the signal sees, R1 ∥ R2, rises tenfold, which would lower an input coupling capacitor's cutoff tenfold too.",
+      "hints": [
+        "Which does the divider output depend on: the resistor sizes or their ratio?"
+      ],
+      "schematic": {
+        "netlist": "Bias\nV1 vcc 0 {Vcc:spice}\nR1 vcc p {R1:spice}\nR2 p 0 {R2:spice}\nX1 p out out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              -2,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              -1
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              2,
+              3
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "flip": true,
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              -2,
+              2
+            ],
+            [
+              -2,
+              -1
+            ],
+            [
+              2,
+              -1
+            ]
+          ],
+          [
+            [
+              2,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ],
+            [
+              13,
+              7
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            -2,
+            6
+          ],
+          [
+            2,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ss_fault_bias",
+      "topicId": "opamp_single_supply",
+      "prompt": "This single-supply amplifier runs from {Vcc}; X1 has rail-to-rail inputs and output. The input capacitor Cin feeds node b, which R1 (to Vcc) and R2 (to ground), both {R}, bias at mid-rail. X1 is a non-inverting stage: Rf = {Rf} from the output to the − input, and Rg = {Rg} in series with Cg from the − input to ground. Cout couples the output to the load, RL = {RL}. With no signal, node b and the output should both read {h0} and the load 0 V. The DC readings are below. Which fault explains them?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "range": {
+            "min": 9,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "Rg",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "fault": {
+        "netlist": "single-supply amplifier\nVCC vcc 0 {Vcc:spice}\nVS in 0 0\nCIN in b 1u\nR1 vcc b {R:spice}\nR2 b 0 {R:spice}\nX1 b inv out OA\nRF out inv {Rf:spice}\nRG inv g {Rg:spice}\nCG g 0 10u\nCOUT out load 10u\nRL load 0 {RL:spice}\n.model OA OPAMP(VPOS={Vcc:spice} VNEG=0)\n",
+        "probes": [
+          {
+            "label": "Bias node b",
+            "probe": "v(b)"
+          },
+          {
+            "label": "Op-amp output",
+            "probe": "v(out)"
+          },
+          {
+            "label": "Load voltage",
+            "probe": "v(load)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "R1 is open",
+            "open": "R1",
+            "feedback": "With R1 open nothing would feed node b from the supply: R2 would pull it to 0 V, and the output, which copies b at DC, would sit at the bottom rail, about 0 V.",
+            "why": "Node b reads 0 V, so the bias is gone before the op amp: only R2 is left, pulling b to ground. At DC the stage has a gain of 1 (Cg blocks DC through Rg), so the output copies it and sits at the bottom rail, just above 0 V ({m1} here). Every negative half of the signal would now be clipped."
+          },
+          {
+            "text": "R2 is open",
+            "open": "R2",
+            "feedback": "With R2 open nothing would pull node b down: it would rise to the full supply ({Vcc}; the meter reads slightly less because its 10 MΩ loads the node), and the output would follow it to the top rail.",
+            "why": "Node b reads the full supply. With R2 gone, no current flows in R1, so it drops nothing, and b sits at the full supply ({Vcc}; the meter reads slightly less because its 10 MΩ loads the node). The output follows b to the top rail, so every positive half of the signal would be clipped."
+          },
+          {
+            "text": "Cg is shorted",
+            "short": "CG",
+            "feedback": "A shorted Cg would leave node b at mid-rail, but the stage would then amplify the DC bias by 1 + Rf/Rg, so the output would clip at the top rail (a rail-to-rail output gets within a few tens of mV of it) while the load still read 0 V.",
+            "why": "Node b is normal but the output sits at the {Vcc} rail. Healthy, Cg blocks DC, so the stage has a DC gain of 1 and the output rests at the bias. With Cg shorted, the full gain 1 + Rf/Rg acts on the {h0} bias too, which asks for more than the supply can give, so the output clips at the top rail (a rail-to-rail output gets within a few tens of mV of it)."
+          },
+          {
+            "text": "Cout is shorted",
+            "short": "COUT",
+            "feedback": "A shorted Cout would leave node b and the output normal, but the load would no longer be shielded from the bias: it would read {h0} instead of 0 V.",
+            "why": "Node b and the output are both normal, so the amplifier itself works; only the load is wrong. Healthy, Cout blocks the DC bias and the load sits at 0 V. With Cout shorted, the load reads the bias, {m2}, and a DC current flows through it all the time."
+          }
+        ]
+      },
+      "explanation": "At DC every healthy capacitor is open, so read the circuit that is left: R1 and R2 set node b to Vcc/2 (an unloaded divider), the stage has a DC gain of 1 because Cg cuts Rg off from ground (the Non-inverting amplifier with Rg missing is a follower), and Cout keeps the bias off the load. That is why a single-supply amplifier needs each part: the mid-rail bias lets the signal swing both ways, Cg stops the gain from amplifying the bias into the rail, and Cin and Cout keep the bias out of the source and the load. Read node b first: 0 V or the full supply points at the divider. If b is right, the output shows whether the DC gain has gone wrong, and the load shows whether Cout still blocks DC. An open capacitor would read healthy on a DC meter; finding it needs a signal test.",
+      "hints": [
+        "At DC, what does each healthy capacitor look like? Redraw the circuit without them.",
+        "Start at node b: is the bias still at mid-rail?"
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              -2,
+              1
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          },
+          {
+            "ref": "VS",
+            "at": [
+              3,
+              5
+            ],
+            "rot": 90,
+            "label": "signal\n0 V"
+          },
+          {
+            "ref": "CIN",
+            "at": [
+              6,
+              5
+            ],
+            "label": "Cin"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              10,
+              1
+            ],
+            "rot": 90,
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              6
+            ],
+            "rot": 90,
+            "label": "R2\n{R}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "X1",
+            "at": [
+              14,
+              7
+            ],
+            "flip": true,
+            "label": ""
+          },
+          {
+            "ref": "RG",
+            "at": [
+              13,
+              12
+            ],
+            "rot": 90,
+            "label": "Rg\n{Rg}"
+          },
+          {
+            "ref": "CG",
+            "at": [
+              13,
+              16
+            ],
+            "rot": 90,
+            "label": "Cg"
+          },
+          {
+            "ref": "RF",
+            "at": [
+              19,
+              12
+            ],
+            "rot": 180,
+            "label": "Rf {Rf}"
+          },
+          {
+            "ref": "COUT",
+            "at": [
+              22,
+              7
+            ],
+            "label": "Cout"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              28,
+              7
+            ],
+            "rot": 90,
+            "label": "RL\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              -2,
+              1
+            ],
+            [
+              -2,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              1
+            ]
+          ],
+          [
+            [
+              3,
+              5
+            ],
+            [
+              6,
+              5
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              14,
+              6
+            ]
+          ],
+          [
+            [
+              14,
+              8
+            ],
+            [
+              13,
+              8
+            ],
+            [
+              13,
+              12
+            ]
+          ],
+          [
+            [
+              15,
+              12
+            ],
+            [
+              13,
+              12
+            ]
+          ],
+          [
+            [
+              18,
+              7
+            ],
+            [
+              22,
+              7
+            ]
+          ],
+          [
+            [
+              19,
+              7
+            ],
+            [
+              19,
+              12
+            ]
+          ],
+          [
+            [
+              26,
+              7
+            ],
+            [
+              28,
+              7
+            ]
+          ],
+          [
+            [
+              10,
+              5
+            ],
+            [
+              10,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            -2,
+            5
+          ],
+          [
+            3,
+            9
+          ],
+          [
+            10,
+            10
+          ],
+          [
+            13,
+            20
+          ],
+          [
+            28,
+            11
+          ]
+        ],
+        "labels": [
+          {
+            "text": "b",
+            "at": [
+              12,
+              6
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              20,
+              7
+            ]
+          },
+          {
+            "text": "load",
+            "at": [
+              27,
+              7
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ss_syn_source_coupling",
+      "topicId": "opamp_single_supply",
+      "connects": [
+        "series_parallel",
+        "rc_lowpass_cutoff",
+        "opamp_single_supply"
+      ],
+      "prompt": "A single-supply non-inverting amplifier (ideal op amp, {Vcc} supply, well decoupled) biases its + input with R1 = {R1} to Vcc and R2 = {R2} to ground. The signal comes from a previous stage with {Rs} output resistance, through a coupling capacitor Cin = {C} into the + input. The gain is set by Rf = {Rf} and Rg = {Rg}, with a large capacitor in series with Rg so the output rests at the bias voltage. Where is the low-frequency −3 dB corner set by Cin?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            22000,
+            27000,
+            33000,
+            39000
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            22000,
+            27000,
+            33000,
+            39000
+          ]
+        },
+        {
+          "name": "Rs",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -7,
+            -7
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "Rg",
+          "unit": "Ω",
+          "value": 10000
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rp",
+          "formula": "R1*R2/(R1+R2)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rtot",
+          "formula": "Rs+Rp",
+          "unit": "Ω"
+        },
+        {
+          "name": "G",
+          "formula": "1+Rf/Rg",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "1/(2*pi*C*Rtot)",
+        "unit": "Hz"
+      },
+      "explanation": "Series and parallel resistance: for the signal, the decoupled Vcc rail is an AC ground, so R1 and R2 both run from the + input to ground: {R1} ∥ {R2} = {Rp}. An ideal op amp's + input draws no current, so it adds nothing. The source's {Rs} is in series with Cin, so the capacitor charges through Rs + R1 ∥ R2 = {Rtot}. RC low-pass cutoff frequency: here C is in series and the resistance runs to ground, the low-pass with its parts swapped. That makes a high-pass with the same corner, f_c = 1/(2π × {C} × {Rtot}) = {answer}, but below it the signal falls away instead of above it. Single-supply op-amp circuits: the bias divider that sets the DC level is also the resistance the coupling capacitor sees. Rf and Rg set the gain above the corner ({G}); they don't move it.",
+      "hints": [
+        "What resistance does Cin charge through? Count everything in its path, on both sides.",
+        "Vcc is an AC ground, so the bias resistors are R1 ∥ R2; add the source's Rs in series; f_c = 1/(2π·C·R)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "1/(2*pi*C*Rp)",
+          "feedback": "That leaves out the source's {Rs}. The signal current into Cin also flows through the previous stage's output resistance, in series with R1 ∥ R2."
+        },
+        {
+          "formula": "1/(2*pi*C*(Rs+R2))",
+          "feedback": "R1 counts too: the decoupled Vcc rail is an AC ground, so R1 and R2 are in parallel for the signal: R1 ∥ R2."
+        },
+        {
+          "formula": "1/(2*pi*C*(Rs+R1+R2))",
+          "feedback": "R1 and R2 are in series only for DC from Vcc to ground. The signal enters at their junction and leaves through both to AC ground, so they are in parallel."
+        },
+        {
+          "formula": "G/(2*pi*C*Rtot)",
+          "feedback": "The gain 1 + Rf/Rg scales the whole response after the + input; it doesn't move the input corner."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why doesn't changing the gain (Rf or Rg) move this corner?",
+          "choices": [
+            {
+              "text": "The + input draws no current, so the input RC is complete on its own; Rf and Rg act only after it",
+              "feedback": "Right: the input network and the feedback network meet only at the op amp, which draws no current from the + input.",
+              "correct": true
+            },
+            {
+              "text": "The gain is set by a ratio of two resistors, and a ratio has no units, so it can't change a frequency",
+              "feedback": "A ratio can still move a corner in other circuits. Here the reason is that no current flows from the + input into the feedback network."
+            },
+            {
+              "text": "It does move it: more gain means Cin has to charge faster, so the corner moves up in frequency",
+              "feedback": "Cin charges through Rs + R1 ∥ R2 only. The gain is applied afterwards, to whatever voltage reaches the + input."
+            },
+            {
+              "text": "Rf and Rg only matter at DC, while Cin only matters for AC, so the two parts never interact",
+              "feedback": "Rf and Rg set the AC gain too. They don't touch the corner because the + input draws no current, not because they are DC-only."
+            }
+          ],
+          "explanation": "The + input of an ideal op amp draws no current, so the input RC (Cin with Rs + R1 ∥ R2 = {Rtot}) is complete on its own and sets f_c = {answer}. The op amp then multiplies the voltage at the + input by 1 + Rf/Rg = {G} at every frequency. The gain lifts the whole response curve; it doesn't slide the corner."
+        }
+      ],
+      "schematic": {
+        "netlist": "single-supply amplifier\nVCC vcc 0 {Vcc:spice}\nVS in 0 SIN(0 1 1k)\nRS in s {Rs:spice}\nCIN s b {C:spice}\nR1 vcc b {R1:spice}\nR2 b 0 {R2:spice}\nX1 b inv out OA\nRF out inv {Rf:spice}\nRG inv g {Rg:spice}\nCG g 0 100u\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              -5,
+              1
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          },
+          {
+            "ref": "VS",
+            "at": [
+              -1,
+              7
+            ],
+            "rot": 90,
+            "label": "signal"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              1,
+              5
+            ],
+            "label": "Rs {Rs}"
+          },
+          {
+            "ref": "CIN",
+            "at": [
+              6,
+              5
+            ],
+            "label": "Cin {C}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              12,
+              1
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              12,
+              6
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              17,
+              7
+            ],
+            "flip": true,
+            "label": ""
+          },
+          {
+            "ref": "RG",
+            "at": [
+              16,
+              12
+            ],
+            "rot": 90,
+            "label": "Rg\n{Rg}"
+          },
+          {
+            "ref": "CG",
+            "at": [
+              16,
+              16
+            ],
+            "rot": 90,
+            "label": "Cg"
+          },
+          {
+            "ref": "RF",
+            "at": [
+              22,
+              12
+            ],
+            "rot": 180,
+            "label": "Rf {Rf}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              -5,
+              1
+            ],
+            [
+              -5,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              1
+            ]
+          ],
+          [
+            [
+              -1,
+              7
+            ],
+            [
+              -1,
+              5
+            ],
+            [
+              1,
+              5
+            ]
+          ],
+          [
+            [
+              5,
+              5
+            ],
+            [
+              6,
+              5
+            ]
+          ],
+          [
+            [
+              10,
+              5
+            ],
+            [
+              12,
+              5
+            ]
+          ],
+          [
+            [
+              12,
+              6
+            ],
+            [
+              17,
+              6
+            ]
+          ],
+          [
+            [
+              17,
+              8
+            ],
+            [
+              16,
+              8
+            ],
+            [
+              16,
+              12
+            ]
+          ],
+          [
+            [
+              18,
+              12
+            ],
+            [
+              16,
+              12
+            ]
+          ],
+          [
+            [
+              21,
+              7
+            ],
+            [
+              24,
+              7
+            ]
+          ],
+          [
+            [
+              22,
+              7
+            ],
+            [
+              22,
+              12
+            ]
+          ],
+          [
+            [
+              12,
+              5
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            -5,
+            5
+          ],
+          [
+            -1,
+            11
+          ],
+          [
+            12,
+            10
+          ],
+          [
+            16,
+            20
+          ]
+        ],
+        "labels": [
+          {
+            "text": "b",
+            "at": [
+              14,
+              6
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              24,
+              7
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ss_syn_input_headroom",
+      "topicId": "opamp_single_supply",
+      "connects": [
+        "opamp_noninverting",
+        "opamp_single_supply"
+      ],
+      "prompt": "A non-inverting amplifier runs from a single {Vcc} supply. Its + input is biased by R1 = {R1} (to Vcc) and R2 = {R2} (to ground), with the signal coupled in through a capacitor. The gain is set by Rf = {Rf} and Rg = {Rg}, with a large capacitor in series with Rg so the output rests at the bias voltage. The signal frequency is well above the corners of both capacitors. The op amp's output can go down to 0.1 V but only up to 1.5 V below Vcc (its inputs work over the same range). What is the largest input sine (peak) that comes out without clipping?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "values": [
+            6,
+            11,
+            12,
+            20,
+            24
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            10000,
+            22000
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            12000,
+            15000
+          ]
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "Rg",
+          "unit": "Ω",
+          "value": 10000
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vb",
+          "formula": "Vcc*R2/(R1+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "up",
+          "formula": "Vcc-1.5-Vb",
+          "unit": "V"
+        },
+        {
+          "name": "down",
+          "formula": "Vb-0.1",
+          "unit": "V"
+        },
+        {
+          "name": "room",
+          "formula": "min(up, down)",
+          "unit": "V"
+        },
+        {
+          "name": "G",
+          "formula": "1+Rf/Rg",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "room/G",
+        "unit": "V"
+      },
+      "explanation": "Single-supply op-amp circuits: R1 and R2 put the + input, and so the resting output, at V_b = {Vcc} × {R2} / ({R1} + {R2}) = {Vb}. From there the output can rise {up} before it reaches Vcc − 1.5 V, and fall {down} before it reaches 0.1 V. A sine swings equally both ways, so the smaller of the two, {room}, is the most the output can swing. Non-inverting amplifier and follower: the signal gain is 1 + Rf/Rg = 1 + {Rf}/{Rg} = {G}, so the input peak can be at most {room} / {G} = {answer}.",
+      "hints": [
+        "Where does the output rest, and how far can it go each way from there?",
+        "Output room = the smaller of (Vcc − 1.5 V − V_b) and (V_b − 0.1 V); divide by the gain 1 + Rf/Rg."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(Vcc/2-1.5)/G",
+          "feedback": "That assumes the output rests at Vcc/2. It rests at the divider voltage V_b = Vcc·R2/(R1 + R2) = {Vb}, so work out the room on each side from there."
+        },
+        {
+          "formula": "room",
+          "feedback": "That's how far the output can swing. The input gets multiplied by the gain {G}, so the input peak is the output room divided by {G}."
+        },
+        {
+          "formula": "max(up, down)/G",
+          "feedback": "That's the side with more room. The sine swings equally both ways, so it clips first on the side with less room."
+        },
+        {
+          "formula": "room/(Rf/Rg)",
+          "feedback": "The gain of a non-inverting amplifier is 1 + Rf/Rg, not Rf/Rg."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why is the smaller of the two rooms the limit, rather than their average?",
+          "choices": [
+            {
+              "text": "A sine swings equally above and below its resting point, so either side running out clips it",
+              "feedback": "Right: the side with less room clips first, and then the output is no longer a clean sine.",
+              "correct": true
+            },
+            {
+              "text": "The op amp can only drive its output in the direction with less room, so only that side counts",
+              "feedback": "The output moves both ways equally. It's the sine's symmetry, not the op amp, that makes the smaller side the limit."
+            },
+            {
+              "text": "Averaging would work too, because the clipping on one side is canceled by extra room on the other",
+              "feedback": "Clipping isn't canceled: once one peak is flattened the waveform is distorted, whatever room is left on the other side."
+            },
+            {
+              "text": "The resting point moves toward the side with more room as the signal grows, so that side ends up with less",
+              "feedback": "The resting point is fixed by the divider at {Vb}; the signal swings about it without moving it."
+            }
+          ],
+          "explanation": "The output is {Vb} plus the amplified sine, which swings ±{G}·v_in about it. It stays clean only while both peaks fit: {G}·v_in ≤ {up} above and {G}·v_in ≤ {down} below. Both must hold, so the smaller one wins: v_in ≤ {room}/{G} = {answer}. Biasing at the middle of the output range, (0.1 V + Vcc − 1.5 V)/2, would give the most room."
+        }
+      ],
+      "schematic": {
+        "netlist": "single-supply amplifier\nVCC vcc 0 {Vcc:spice}\nVS in 0 SIN(0 1 1k)\nCIN in b 1u\nR1 vcc b {R1:spice}\nR2 b 0 {R2:spice}\nX1 b inv out OA\nRF out inv {Rf:spice}\nRG inv g {Rg:spice}\nCG g 0 100u\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              -2,
+              1
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          },
+          {
+            "ref": "VS",
+            "at": [
+              3,
+              5
+            ],
+            "rot": 90,
+            "label": "signal"
+          },
+          {
+            "ref": "CIN",
+            "at": [
+              6,
+              5
+            ],
+            "label": "Cin"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              10,
+              1
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              6
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "X1",
+            "at": [
+              14,
+              7
+            ],
+            "flip": true,
+            "label": ""
+          },
+          {
+            "ref": "RG",
+            "at": [
+              13,
+              12
+            ],
+            "rot": 90,
+            "label": "Rg\n{Rg}"
+          },
+          {
+            "ref": "CG",
+            "at": [
+              13,
+              16
+            ],
+            "rot": 90,
+            "label": "Cg"
+          },
+          {
+            "ref": "RF",
+            "at": [
+              19,
+              12
+            ],
+            "rot": 180,
+            "label": "Rf {Rf}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              -2,
+              1
+            ],
+            [
+              -2,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              1
+            ]
+          ],
+          [
+            [
+              3,
+              5
+            ],
+            [
+              6,
+              5
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              14,
+              6
+            ]
+          ],
+          [
+            [
+              14,
+              8
+            ],
+            [
+              13,
+              8
+            ],
+            [
+              13,
+              12
+            ]
+          ],
+          [
+            [
+              15,
+              12
+            ],
+            [
+              13,
+              12
+            ]
+          ],
+          [
+            [
+              18,
+              7
+            ],
+            [
+              21,
+              7
+            ]
+          ],
+          [
+            [
+              19,
+              7
+            ],
+            [
+              19,
+              12
+            ]
+          ],
+          [
+            [
+              10,
+              5
+            ],
+            [
+              10,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            -2,
+            5
+          ],
+          [
+            3,
+            9
+          ],
+          [
+            10,
+            10
+          ],
+          [
+            13,
+            20
+          ]
+        ],
+        "labels": [
+          {
+            "text": "b",
+            "at": [
+              12,
+              6
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              21,
+              7
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    }
+  ]
+}

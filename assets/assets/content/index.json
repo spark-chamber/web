@@ -1,0 +1,169 @@
+{
+  "courses": [
+    {
+      "id": "electronics",
+      "title": "Electronics",
+      "summary": "Circuits, op amps, diodes and transistors, from Ohm's law to working designs.",
+      "units": [
+        {
+          "title": "Electricity and components",
+          "topics": [
+            "charge_current",
+            "voltage_energy",
+            "ohms_law",
+            "power_heat",
+            "sources_emf",
+            "capacitors",
+            "inductors",
+            "real_components"
+          ]
+        },
+        {
+          "title": "Foundations",
+          "topics": [
+            "si_prefixes",
+            "series_parallel",
+            "dividers",
+            "kirchhoff",
+            "thevenin",
+            "decibels",
+            "rc_time_constant",
+            "rc_lowpass_cutoff",
+            "reactance_impedance"
+          ],
+          "tree": "Circuit analysis"
+        },
+        {
+          "title": "Op amps",
+          "topics": [
+            "opamp_ideal",
+            "opamp_inverting",
+            "opamp_noninverting",
+            "opamp_summing_difference",
+            "opamp_comparator",
+            "opamp_single_supply",
+            "opamp_bandwidth",
+            "opamp_slew_rate",
+            "active_filters"
+          ],
+          "tree": "Electronics"
+        },
+        {
+          "title": "Diodes",
+          "topics": [
+            "pn_junction",
+            "ideal_diode",
+            "diode_models",
+            "diode_rectifiers",
+            "diode_clippers_logic",
+            "diode_practical"
+          ],
+          "tree": "Electronics"
+        },
+        {
+          "title": "Bipolar transistors",
+          "topics": [
+            "bjt_intro",
+            "bjt_bias",
+            "bjt_amplifiers",
+            "bjt_switch",
+            "bjt_class_a"
+          ],
+          "tree": "Electronics"
+        },
+        {
+          "title": "MOSFETs",
+          "topics": [
+            "mosfet_intro",
+            "mosfet_switching",
+            "h_bridge",
+            "switching_supplies"
+          ],
+          "tree": "Electronics"
+        },
+        {
+          "title": "Applications",
+          "topics": [
+            "app_power_supply",
+            "app_opamp_transistor",
+            "app_led_driver"
+          ],
+          "tree": "Electronics"
+        },
+        {
+          "title": "Reading schematics",
+          "topics": [
+            "schem_nodes",
+            "schem_passive_blocks",
+            "schem_opamp_blocks",
+            "schem_part_purpose",
+            "schem_signal_path"
+          ],
+          "tree": "Workshop",
+          "area": "workshop"
+        },
+        {
+          "title": "SPICE modeling",
+          "topics": [
+            "circuit_modeling"
+          ],
+          "tree": "Workshop",
+          "area": "workshop"
+        }
+      ]
+    }
+  ],
+  "files": [
+    "charge_current.json",
+    "voltage_energy.json",
+    "ohms_law.json",
+    "power_heat.json",
+    "sources_emf.json",
+    "capacitors.json",
+    "inductors.json",
+    "real_components.json",
+    "si_prefixes.json",
+    "series_parallel.json",
+    "dividers.json",
+    "kirchhoff.json",
+    "thevenin.json",
+    "decibels.json",
+    "rc_time_constant.json",
+    "rc_lowpass.json",
+    "reactance_impedance.json",
+    "opamp_ideal.json",
+    "opamp_inverting.json",
+    "opamp_noninverting.json",
+    "opamp_summing_difference.json",
+    "opamp_comparator.json",
+    "opamp_single_supply.json",
+    "opamp_bandwidth.json",
+    "opamp_slew_rate.json",
+    "active_filters.json",
+    "pn_junction.json",
+    "ideal_diode.json",
+    "diode_models.json",
+    "diode_rectifiers.json",
+    "diode_clippers_logic.json",
+    "diode_practical.json",
+    "bjt_intro.json",
+    "bjt_bias.json",
+    "bjt_amplifiers.json",
+    "bjt_switch.json",
+    "bjt_class_a.json",
+    "mosfet_intro.json",
+    "mosfet_switching.json",
+    "h_bridge.json",
+    "switching_supplies.json",
+    "app_power_supply.json",
+    "app_opamp_transistor.json",
+    "app_led_driver.json",
+    "schem_nodes.json",
+    "schem_passive_blocks.json",
+    "schem_opamp_blocks.json",
+    "schem_part_purpose.json",
+    "schem_signal_path.json",
+    "circuit_modeling.json",
+    "glossary.json"
+  ]
+}

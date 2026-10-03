@@ -1,0 +1,2172 @@
+{
+  "topics": [
+    {
+      "id": "opamp_comparator",
+      "title": "Comparators and Schmitt triggers",
+      "summary": "Without negative feedback the output slams to a rail depending on which input is higher; positive feedback adds hysteresis.",
+      "lenses": [
+        "circuit",
+        "signals"
+      ],
+      "prerequisites": [
+        "opamp_ideal",
+        "dividers"
+      ],
+      "lensNotes": {
+        "circuit": "Without negative feedback the op amp's huge gain slams the output to a rail. Real designs often use dedicated comparator chips, which switch faster and have open-collector outputs.",
+        "signals": "A comparator turns an analog signal into a digital one. Positive feedback (a Schmitt trigger) adds two thresholds, so noise near the switching point can't make the output chatter."
+      },
+      "formulas": [
+        {
+          "label": "Threshold",
+          "tex": "V_{th} = V_{CC}\\,\\frac{R_2}{R_1 + R_2}"
+        },
+        {
+          "label": "Non-inverting Schmitt thresholds (input via R1, feedback via R2)",
+          "tex": "V_{T\\pm} = \\pm V_{sat}\\,\\frac{R_1}{R_2}"
+        }
+      ],
+      "prerequisiteNotes": {
+        "opamp_ideal": "A comparator is an op amp without negative feedback: the golden rules no longer hold, and the output swings to a rail.",
+        "dividers": "The threshold of a comparator and the hysteresis of a Schmitt trigger are set by resistor dividers."
+      },
+      "goals": [
+        "Predict a comparator's output from which input is higher, and explain why it sits at a rail rather than in between",
+        "Set a comparator's switching point with a divider on its reference input",
+        "Work out a Schmitt trigger's two thresholds from its resistors and its output levels",
+        "Explain why hysteresis stops a slow, noisy input from making the output chatter, and how wide it must be"
+      ],
+      "intuition": "Without negative feedback, an op amp's enormous open-loop gain drives its output to a rail as soon as its inputs differ by more than a fraction of a millivolt, so the output reports only which input is higher, not by how much.",
+      "why": "An op amp's output is its open-loop gain, around 100 000, times V+ − V−. With negative feedback, the output moves until that difference is tiny. With no feedback, nothing pulls the difference back: 1 mV of difference asks for 100 V, so the output stops at the highest or lowest voltage its supplies allow. Positive feedback returns part of the output to the + input, so each switch pushes V+ further in the direction it just moved. The switching point jumps away from the input, which must travel back past a second threshold before the output can switch again.",
+      "explanation": "With negative feedback, an op amp moves its output until its two inputs are equal. Without feedback, the output is the open-loop gain, about 100 000, times V+ − V−, so a millivolt of difference already drives it to a rail. That is a comparator: the output is high when V+ is above V− and low when it is below. To set the switching point, put a reference on one input, often from a divider: V_ref = V_CC · R2 / (R1 + R2). A slow, noisy signal near the reference makes a plain comparator chatter: every wiggle across the threshold flips the output. The cure is positive feedback, which makes a Schmitt trigger. A resistor from the output to the + input makes the threshold depend on the output: two thresholds. In the non-inverting version (input through R1, feedback through R2, − input grounded; R1 and R2 now mean these two) they are ±V_sat · R1/R2, where the output swings between +V_sat and −V_sat. Noise whose peak-to-peak is smaller than the gap cannot switch the output back. Dedicated comparator chips, such as the LM393, switch faster and have open-collector outputs that need a pull-up resistor.",
+      "workedExample": {
+        "problem": "A slow sensor signal swings between −3 V and +3 V with 0.3 V peak-to-peak of noise on it. It drives a non-inverting Schmitt trigger: an op amp on ±12 V supplies whose output saturates at +11 V and −11 V, the − input grounded, R1 = 4.7 kΩ from the signal to the + input and R2 = 100 kΩ from the output to the + input. Find the two thresholds and check that the noise cannot cause chatter.",
+        "steps": [
+          "Without R2 this would be a plain comparator switching at 0 V, and the 0.3 V of noise would carry the signal back and forth across 0 V several times on each slow crossing, so the output would chatter.",
+          "With R2 in place, V+ is a weighted average of the input and the output: V+ = (Vin × R2 + Vout × R1) / (R1 + R2) = (Vin × 100 kΩ + Vout × 4.7 kΩ) / 104.7 kΩ.",
+          "Output low (−11 V): V+ reaches 0 V, the switching point, when Vin × 100 kΩ = 11 V × 4.7 kΩ, so Vin = 11 V × 4.7 kΩ / 100 kΩ = +0.517 V. That is the rising threshold.",
+          "At that moment the output jumps to +11 V, and V+ jumps to (0.517 V × 100 kΩ + 11 V × 4.7 kΩ) / 104.7 kΩ = 0.988 V. The feedback pushed V+ further positive, so the switch completes and the input would have to fall a long way to undo it.",
+          "Output high (+11 V): by the same working V+ reaches 0 V when Vin = −11 V × 4.7 kΩ / 100 kΩ = −0.517 V. That is the falling threshold.",
+          "Hysteresis width: 0.517 V − (−0.517 V) = 1.03 V. The noise is 0.3 V peak-to-peak, less than a third of the gap, so once the output switches the noise cannot bring the input back past the other threshold: one clean edge per crossing.",
+          "Levels check: the output's ±11 V stays inside the ±12 V supplies, and the ±3 V signal crosses both thresholds, so the output does switch each way."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 8 \"Operational Amplifiers\", section \"The \"operational\" amplifier\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_8.html#xtocid90722",
+          "note": "Without feedback an op amp's very large open-loop gain saturates its output with a differential input of only microvolts, high when the + input is above the − input and low when below, and a reference voltage on one input sets the switching point."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 8 \"Operational Amplifiers\", section \"Positive feedback\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_8.html#xtocid907211",
+          "note": "Feeding part of the output back to the + input gives two output-dependent thresholds (hysteresis), and a disturbance smaller than the gap between them cannot make the output switch back and forth."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Comparators\" (last update 30 September 2026), section 3.4 \"Comparator internal circuitry\" (p. 35)",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_comparator.pdf",
+          "note": "Common comparator ICs of the LM339 family have open-collector outputs that can only sink current, so a pull-up resistor supplies the high level."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "cmp_output_state",
+      "topicId": "opamp_comparator",
+      "prompt": "An op amp (open-loop gain about 10⁵, inputs and output work up to its rails) with no feedback runs from ±{Vs}. Its non-inverting input is at {Vp} and its inverting input at {Vn}. Roughly what is the output?",
+      "variables": [
+        {
+          "name": "Vs",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 15,
+            "step": 5
+          }
+        },
+        {
+          "name": "Vp",
+          "unit": "V",
+          "range": {
+            "min": 2.5,
+            "max": 4,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "Vn",
+          "unit": "V",
+          "range": {
+            "min": 0.5,
+            "max": 2,
+            "step": 0.5
+          }
+        }
+      ],
+      "choices": [
+        {
+          "text": "Near +{Vs} (positive saturation)",
+          "correct": true,
+          "feedback": "Yes: V+ is above V−, and the huge open-loop gain drives the output to the positive rail."
+        },
+        {
+          "text": "Near −{Vs} (negative saturation)",
+          "feedback": "That happens when V− is above V+. Here V+ = {Vp} is higher."
+        },
+        {
+          "text": "{Vp} − {Vn}",
+          "feedback": "Without feedback the gain is enormous, so even a tiny difference saturates the output."
+        },
+        {
+          "text": "0 V",
+          "feedback": "Only a tiny window of input difference, well under a millivolt, keeps the output off the rails. Here V+ is {d} above V−, so the output is saturated."
+        }
+      ],
+      "explanation": "Without negative feedback, the output is the difference times the open-loop gain (around 10⁵), which saturates it. V+ > V− gives the positive rail.",
+      "schematic": {
+        "netlist": "open loop\nVP p 0 {Vp:spice}\nVN n 0 {Vn:spice}\nX1 p n out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "VN",
+            "at": [
+              2,
+              5
+            ],
+            "rot": 90,
+            "label": "{Vn}"
+          },
+          {
+            "ref": "VP",
+            "at": [
+              6,
+              7
+            ],
+            "rot": 90,
+            "label": "{Vp}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              2,
+              5
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              7
+            ],
+            [
+              6,
+              5
+            ],
+            [
+              8,
+              5
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              14,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            2,
+            9
+          ],
+          [
+            6,
+            11
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              14,
+              4
+            ]
+          }
+        ]
+      },
+      "derived": [
+        {
+          "name": "d",
+          "formula": "Vp-Vn",
+          "unit": "V"
+        }
+      ],
+      "review": "verified",
+      "hints": [
+        "Which input is higher, V+ or V−?",
+        "Multiply that difference by about 100 000: can the output get there?"
+      ],
+      "placement": true
+    },
+    {
+      "id": "cmp_output_state_low",
+      "topicId": "opamp_comparator",
+      "prompt": "An op amp (open-loop gain about 10⁵, inputs and output work up to its rails) with no feedback runs from ±{Vs}. Its non-inverting input is at {Vp} and its inverting input at {Vn}. Roughly what is the output?",
+      "variables": [
+        {
+          "name": "Vs",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 15,
+            "step": 5
+          }
+        },
+        {
+          "name": "Vp",
+          "unit": "V",
+          "range": {
+            "min": 0.5,
+            "max": 2,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "Vn",
+          "unit": "V",
+          "range": {
+            "min": 2.5,
+            "max": 4,
+            "step": 0.5
+          }
+        }
+      ],
+      "choices": [
+        {
+          "text": "Near +{Vs} (positive saturation)",
+          "feedback": "That needs V+ above V−. Here the inverting input, {Vn}, is the higher one, so the open-loop gain drives the output the other way. Both inputs being positive doesn't matter: only their difference, V+ − V− = −{d}, counts."
+        },
+        {
+          "text": "Near −{Vs} (negative saturation)",
+          "correct": true,
+          "feedback": "Yes: V+ is {d} below V−, so A·(V+ − V−) is about −10⁵ × {d}, far beyond the supply. The output stops as low as it can go, at the negative rail, even though both inputs are positive."
+        },
+        {
+          "text": "{Vp} − {Vn}",
+          "feedback": "That's a difference gain of 1, which takes negative feedback through a resistor network (a unity-gain difference amplifier). With no feedback the gain is about 10⁵, so −{d} asks for many kilovolts and the output saturates at the negative rail."
+        },
+        {
+          "text": "0 V",
+          "feedback": "Both inputs being positive doesn't pull the output toward 0 V, and 0 V isn't a resting point either: only an input difference well under a millivolt keeps the output off the rails. Here V+ is {d} below V−, so the output is saturated low."
+        }
+      ],
+      "explanation": "Without negative feedback, the output is the open-loop gain (around 10⁵) times V+ − V− = {Vp} − {Vn} = −{d}, which asks for far more than the supply can give. The output saturates at the negative rail, near −{Vs}. What matters is which input is higher, not whether the inputs are positive: here the inverting input is higher, so the output goes low.",
+      "schematic": {
+        "netlist": "open loop\nVP p 0 {Vp:spice}\nVN n 0 {Vn:spice}\nX1 p n out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "VN",
+            "at": [
+              2,
+              5
+            ],
+            "rot": 90,
+            "label": "{Vn}"
+          },
+          {
+            "ref": "VP",
+            "at": [
+              6,
+              7
+            ],
+            "rot": 90,
+            "label": "{Vp}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              2,
+              5
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              7
+            ],
+            [
+              6,
+              5
+            ],
+            [
+              8,
+              5
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              14,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            2,
+            9
+          ],
+          [
+            6,
+            11
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              14,
+              4
+            ]
+          }
+        ]
+      },
+      "derived": [
+        {
+          "name": "d",
+          "formula": "Vn-Vp",
+          "unit": "V"
+        }
+      ],
+      "hints": [
+        "Which input is higher, V+ or V−?",
+        "Multiply that difference by about 100 000: can the output get there?"
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "cmp_threshold",
+      "topicId": "opamp_comparator",
+      "prompt": "An ideal comparator (inputs work from 0 V to {Vcc}) has its inverting input set by a divider from {Vcc}: R1 = {R1} on top, R2 = {R2} on the bottom. The signal goes to the non-inverting input. At what input voltage does the output switch?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500,
+            2200,
+            3300,
+            4700,
+            6800,
+            10000,
+            15000,
+            22000,
+            33000,
+            47000,
+            68000
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            1200,
+            1800,
+            2700,
+            3900,
+            5600,
+            8200,
+            12000,
+            18000,
+            27000,
+            39000,
+            56000,
+            82000
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "Vcc*R2/(R1+R2)",
+        "unit": "V"
+      },
+      "explanation": "The output flips when the signal crosses the reference on the other input: V_ref = {Vcc} × {R2} / ({R1} + {R2}) = {answer}.",
+      "hints": [
+        "The comparator switches when both inputs are equal.",
+        "Find the reference voltage from the divider."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vcc*R1/(R1+R2)",
+          "feedback": "That's the voltage across R1. The reference is taken across R2, the bottom resistor."
+        }
+      ],
+      "schematic": {
+        "netlist": "CMP\nVCC vcc 0 {Vcc:spice}\nR1 vcc ref {R1:spice}\nR2 ref 0 {R2:spice}\nVS in 0 SIN(0 1 1k)\nX1 in ref out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              6,
+              4
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "VS",
+            "at": [
+              9,
+              9
+            ],
+            "rot": 90,
+            "label": "signal"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              10,
+              6
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              8,
+              4
+            ],
+            [
+              8,
+              5
+            ],
+            [
+              10,
+              5
+            ]
+          ],
+          [
+            [
+              9,
+              9
+            ],
+            [
+              9,
+              7
+            ],
+            [
+              10,
+              7
+            ]
+          ],
+          [
+            [
+              14,
+              6
+            ],
+            [
+              16,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            6,
+            8
+          ],
+          [
+            9,
+            13
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              9,
+              8
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              16,
+              6
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "This comparator has no feedback resistor. Why does its output jump to a rail instead of settling in between?",
+          "choices": [
+            {
+              "text": "With no feedback nothing pulls the inputs together, and a gain of about 100 000 turns a millivolt into more than the supply",
+              "feedback": "Right: 1 mV × 100 000 = 100 V, which the output can't reach, so it sits at a rail. Which rail depends only on which input is higher.",
+              "correct": true
+            },
+            {
+              "text": "The divider on the − input pulls the output up or down to the nearest rail",
+              "feedback": "The divider only sets the reference voltage on the − input. It isn't connected to the output."
+            },
+            {
+              "text": "Without feedback the gain is exactly 1, so the output copies whichever input is higher",
+              "feedback": "A gain of 1 needs full negative feedback (the follower). With no feedback the gain is the huge open-loop gain."
+            },
+            {
+              "text": "Negative feedback built inside the op amp pushes the output to the nearest rail",
+              "feedback": "Negative feedback would do the opposite: hold the output in between, where the inputs are equal. Pushing to a rail is what happens without feedback."
+            }
+          ],
+          "explanation": "The golden rule V− = V+ holds only with negative feedback. Without it, the output is A·(V+ − V−) with A ≈ 100 000, so any real difference saturates it. The threshold is simply the reference from the divider (from Foundations): above it, one rail; below it, the other."
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "cmp_schmitt_threshold",
+      "topicId": "opamp_comparator",
+      "prompt": "A non-inverting Schmitt trigger has its inverting input grounded. The input goes through R1 = {R1} to the non-inverting input, and R2 = {R2} feeds back from the output, which saturates at ±{Vsat} (set by its supplies, not drawn). At what input voltage does a low output switch high?",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            2700,
+            3300,
+            3900,
+            4700,
+            5600,
+            6800,
+            8200
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            10000,
+            12000,
+            15000,
+            18000,
+            22000,
+            27000,
+            33000,
+            39000,
+            47000
+          ]
+        },
+        {
+          "name": "Vsat",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 13,
+            "step": 1
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "width",
+          "formula": "2*Vsat*R1/R2",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "Vsat*R1/R2",
+        "unit": "V"
+      },
+      "explanation": "V+ is a weighted average of the input and the output: V+ = (Vin·R2 + Vout·R1)/(R1 + R2). With Vout = −{Vsat}, V+ reaches 0 V when Vin = {Vsat} × R1/R2 = {answer}. The falling threshold is the negative of this, so the hysteresis is {width} wide.",
+      "hints": [
+        "Superpose the input and the output at the non-inverting input.",
+        "Set V+ = 0 with Vout = −Vsat and solve for Vin."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vsat*R1/(R1+R2)",
+          "feedback": "That's the voltage the output alone puts on V+. The switching point is where the input cancels it: Vin = Vsat · R1 / R2."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Once the output has switched high, why can't noise at this threshold switch it straight back?",
+          "choices": [
+            {
+              "text": "Through R2 the high output now holds V+ up, so the input must fall to the other, negative threshold to switch back",
+              "feedback": "Right: the output's own state moves the threshold. Noise smaller than the gap between the two thresholds can't reach the other one.",
+              "correct": true
+            },
+            {
+              "text": "The op amp waits a fixed time after switching before it is allowed to switch again",
+              "feedback": "An op amp has no built-in delay like that. It's the moved threshold, not time, that stops the chatter."
+            },
+            {
+              "text": "Positive feedback lowers the op amp's gain, so the noise is too small to amplify",
+              "feedback": "Positive feedback does the opposite: it helps the output snap all the way to the rail. The noise is ignored because the threshold has moved."
+            },
+            {
+              "text": "R1 and R2 form a filter that removes the noise before it reaches the op amp",
+              "feedback": "Resistors alone don't filter; the noise still reaches V+. It just isn't big enough to cross the moved threshold."
+            }
+          ],
+          "explanation": "V+ is a weighted average of the input and the output (Kirchhoff at the + input, like a divider between them). When the output flips, its share of V+ flips too, so the switching point jumps to the other side. That gap is the hysteresis, and it is why a Schmitt trigger switches once per crossing even with noise."
+        }
+      ],
+      "schematic": {
+        "netlist": "schmitt\nVIN in 0 1\nR1 in p {R1:spice}\nR2 p out {R2:spice}\nX1 p 0 out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "R1 {R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "R2 {R2}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "flip": true,
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "cmp_hysteresis_why",
+      "topicId": "opamp_comparator",
+      "prompt": "A non-inverting Schmitt trigger (− input grounded, R1 = {R1} from the input to the + input, R2 = {R2} from the output back to it, output saturating at ±{Vsat}) switches at +{Vt} on the way up and −{Vt} on the way down. Its input is a slow signal rising steadily from well below −{Vt} to well above +{Vt}, with fast interference riding on it that spans up to {Vn} peak-to-peak; the slow part moves much less than that during one swing of the interference. The op amp is fast enough to follow the interference. Can the output chatter (switch back and forth more than once) as the signal crosses, or is one clean edge guaranteed?",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1200,
+            1500,
+            1800,
+            2200
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            47000,
+            56000,
+            68000,
+            82000,
+            100000
+          ]
+        },
+        {
+          "name": "Vsat",
+          "unit": "V",
+          "range": {
+            "min": 10,
+            "max": 13,
+            "step": 1
+          }
+        },
+        {
+          "name": "k",
+          "unit": "",
+          "values": [
+            1.2,
+            1.4,
+            1.6,
+            1.8
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vt",
+          "formula": "Vsat*R1/R2",
+          "unit": "V"
+        },
+        {
+          "name": "width",
+          "formula": "2*Vsat*R1/R2",
+          "unit": "V"
+        },
+        {
+          "name": "Vn",
+          "formula": "k*Vsat*R1/R2",
+          "unit": "V"
+        },
+        {
+          "name": "dip",
+          "formula": "k*Vsat*R1/R2-Vsat*R1/R2",
+          "unit": "V"
+        }
+      ],
+      "choices": [
+        {
+          "text": "No, one clean edge is guaranteed: after switching at +{Vt}, the input would have to fall to −{Vt}, {width} lower, and the noise can't carry it that far",
+          "correct": true,
+          "feedback": "Right. At the moment of switching the noise may be at its highest, so from there it can pull the input down by at most its full {Vn} peak-to-peak, to −{dip} at the lowest, while the slow part only rises. To switch back it would need −{Vt}: the noise would have to be bigger than the {width} band, and it isn't."
+        },
+        {
+          "text": "Yes, it can chatter: after switching at +{Vt}, a noise dip can carry the input on down past −{Vt}, {width} lower, and switch it back",
+          "feedback": "That would need the noise to be bigger than the band. From the switching point at +{Vt}, a dip of the full {Vn} peak-to-peak takes the input no lower than −{dip}, and the slow part only rises meanwhile. −{dip} is still above −{Vt}, so the output can't switch back."
+        },
+        {
+          "text": "Yes: every time the noise carries the input back below +{Vt}, the output switches back low",
+          "feedback": "That treats the trigger as if it still switched at a single point. Once the output flips high, R2 pulls V+ up and the switching point jumps to −{Vt}. Wiggling back below +{Vt} does nothing; the noise would have to span the whole {width} gap, and {Vn} doesn't."
+        },
+        {
+          "text": "No: the signal rises slowly, so the op amp has time to settle on each side and ignores the fast noise",
+          "feedback": "The slow rise is what makes chatter possible in a plain comparator: the input lingers near the threshold while the noise crosses it many times, and an op amp fast enough to follow the noise switches at every crossing. The prompt also says the op amp follows the interference, so it doesn't ignore it. What stops it here is the second threshold: {Vn} of noise can't bridge the {width} between them."
+        },
+        {
+          "text": "Yes, a few times: hysteresis only slows the chatter down, so it dies out after a few extra edges",
+          "feedback": "Hysteresis isn't a delay or a filter. After each switch the threshold moves to the other side, so either the noise can reach the other threshold or it can't. Here {Vn} is less than the {width} gap, so it can't: exactly one edge, with no extra ones to die out."
+        }
+      ],
+      "explanation": "The thresholds are ±V_sat·R1/R2 = ±{Vt}, so the band is {width} wide. Rising, the output switches high when the input first touches +{Vt}, perhaps on a noise peak. The positive feedback through R2 then moves the switching point to −{Vt}. The noise can drag the input down by at most its peak-to-peak, {Vn}, which leaves it no lower than −{dip}, still above −{Vt}. So there is one clean edge. The rule: for a signal that keeps moving one way through the band, a Schmitt trigger rejects noise whose peak-to-peak is smaller than its hysteresis width; bigger noise can, but need not, cause extra edges. Note that {Vn} is bigger than {Vt}: comparing the noise with one threshold's distance from zero would wrongly predict chatter. What matters is the full {width} gap between the thresholds. (A plain comparator at 0 V would chatter on this signal however small the noise.)",
+      "hints": [
+        "After the output switches high, which threshold must the input cross to switch it back?",
+        "Compare the noise's peak-to-peak with the gap between the two thresholds."
+      ],
+      "schematic": {
+        "netlist": "schmitt\nVIN in 0 1\nR1 in p {R1:spice}\nR2 p out {R2:spice}\nX1 p 0 out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "R1 {R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "R2 {R2}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "flip": true,
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "cmp_hysteresis_why_chatter",
+      "topicId": "opamp_comparator",
+      "prompt": "A non-inverting Schmitt trigger (− input grounded, R1 = {R1} from the input to the + input, R2 = {R2} from the output back to it, output saturating at ±{Vsat}) switches at +{Vt} on the way up and −{Vt} on the way down. Its input is a slow signal rising steadily from well below −{Vt} to well above +{Vt}, with fast interference riding on it that spans up to {Vn} peak-to-peak; the slow part moves much less than that during one swing of the interference. The op amp is fast enough to follow the interference. Can the output chatter (switch back and forth more than once) as the signal crosses, or is one clean edge guaranteed?",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1200,
+            1500,
+            1800,
+            2200
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            47000,
+            56000,
+            68000,
+            82000,
+            100000
+          ]
+        },
+        {
+          "name": "Vsat",
+          "unit": "V",
+          "range": {
+            "min": 10,
+            "max": 13,
+            "step": 1
+          }
+        },
+        {
+          "name": "k",
+          "unit": "",
+          "values": [
+            2.4,
+            2.8,
+            3.2,
+            3.6
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vt",
+          "formula": "Vsat*R1/R2",
+          "unit": "V"
+        },
+        {
+          "name": "width",
+          "formula": "2*Vsat*R1/R2",
+          "unit": "V"
+        },
+        {
+          "name": "Vn",
+          "formula": "k*Vsat*R1/R2",
+          "unit": "V"
+        },
+        {
+          "name": "dip",
+          "formula": "k*Vsat*R1/R2-Vsat*R1/R2",
+          "unit": "V"
+        },
+        {
+          "name": "past",
+          "formula": "k*Vsat*R1/R2-2*Vsat*R1/R2",
+          "unit": "V"
+        }
+      ],
+      "choices": [
+        {
+          "text": "No, one clean edge is guaranteed: after switching at +{Vt}, the input would have to fall to −{Vt}, {width} lower, and the noise can't carry it that far",
+          "feedback": "That would be true if the noise were smaller than the band, but it isn't: {Vn} of noise is more than the {width} gap. If the switch happens on a noise peak, the next dip can take the input down by the full {Vn}, to −{dip}, which is {past} past −{Vt}. So the output can switch back."
+        },
+        {
+          "text": "Yes, it can chatter: after switching at +{Vt}, a noise dip can carry the input on down past −{Vt}, {width} lower, and switch it back",
+          "correct": true,
+          "feedback": "Right. If the output switches on a noise peak at +{Vt}, the next dip can take the input down by the full {Vn} peak-to-peak, to −{dip}: {past} past −{Vt}, while the slow part has barely moved. The output can flip back low, then high again on the next peak. Hysteresis only guarantees one edge when the noise is smaller than the {width} band."
+        },
+        {
+          "text": "Yes: every time the noise carries the input back below +{Vt}, the output switches back low",
+          "feedback": "Dipping back below +{Vt} doesn't switch it back: that treats the trigger as if it still switched at a single point. Once the output flips high, R2 pulls V+ up and the switching point jumps to −{Vt}. Extra edges are possible here for a different reason: {Vn} of noise is more than the whole {width} gap, so a dip can reach −{Vt}."
+        },
+        {
+          "text": "No: the signal rises slowly, so the op amp has time to settle on each side and ignores the fast noise",
+          "feedback": "The slow rise is what makes chatter possible: the input lingers near the thresholds while the noise sweeps across them, and an op amp fast enough to follow the noise switches whenever it reaches one. The prompt also says the op amp follows the interference, so it doesn't ignore it. The second threshold only helps if the noise can't bridge the gap, but {Vn} is more than the {width} between them."
+        },
+        {
+          "text": "Yes, a few times: hysteresis only slows the chatter down, so it dies out after a few extra edges",
+          "feedback": "Hysteresis isn't a delay or a filter, and it doesn't wear the chatter down. After each switch the threshold moves to the other side, and while the slow part is near the band, {Vn} of noise is enough to reach it again. The extra edges stop only once the slow part has risen far enough that the lowest dip stays above −{Vt}. That window is {past} of slow travel (it would be the full {Vn} without hysteresis), and the number of edges inside it depends on how many noise cycles fit in it, which can be many, not a few."
+        }
+      ],
+      "explanation": "The thresholds are ±V_sat·R1/R2 = ±{Vt}, so the band is {width} wide. Rising, the output switches high when the input first touches +{Vt}, perhaps on a noise peak. The positive feedback through R2 then moves the switching point to −{Vt}. But the noise spans up to {Vn} peak-to-peak, more than the band: from that peak the next dip can take the input to −{dip}, {past} past −{Vt}, so the output can switch back low, and then high again on the next peak. Whether it actually does depends on the noise (interference that really swings the full {Vn} will do it), so the hysteresis no longer guarantees one edge. The rule: a Schmitt trigger rejects noise whose peak-to-peak is smaller than its hysteresis width. Here the cure is a wider band (a larger R1/R2 ratio, so 2·V_sat·R1/R2 exceeds {Vn}) or filtering the interference before the trigger.",
+      "hints": [
+        "After the output switches high, which threshold must the input cross to switch it back?",
+        "Compare the noise's peak-to-peak with the gap between the two thresholds."
+      ],
+      "schematic": {
+        "netlist": "schmitt\nVIN in 0 1\nR1 in p {R1:spice}\nR2 p out {R2:spice}\nX1 p 0 out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "R1 {R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "R2 {R2}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "flip": true,
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "cmp_chatter_concept",
+      "topicId": "opamp_comparator",
+      "prompt": "A slow, noisy signal drives a plain comparator, and the output chatters many times at each crossing. What cures it?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "Positive feedback, which adds hysteresis (a Schmitt trigger)",
+          "feedback": "Right: two thresholds mean the noise must be bigger than the gap to switch the output back.",
+          "correct": true
+        },
+        {
+          "text": "Negative feedback from the output to the inverting input",
+          "feedback": "That would make it a linear amplifier, not a switch; it wouldn't give clean edges."
+        },
+        {
+          "text": "A higher supply voltage",
+          "feedback": "The output swings further, but still switches every time the noise crosses the threshold."
+        },
+        {
+          "text": "A slower comparator only",
+          "feedback": "A slower part still switches at every threshold crossing that lasts longer than its response time. The cause, one threshold that noise keeps crossing, remains."
+        }
+      ],
+      "explanation": "Near the threshold, noise crosses it back and forth, and a fast comparator follows every crossing. Positive feedback moves the threshold once the output switches, so the input must come back past a second threshold: hysteresis.",
+      "hints": [
+        "How many thresholds does the circuit need?"
+      ],
+      "noDrawing": "about the general cure for comparator chatter; no particular circuit",
+      "review": "verified"
+    },
+    {
+      "id": "cmp_what_if_hysteresis_r2",
+      "topicId": "opamp_comparator",
+      "prompt": "A non-inverting Schmitt trigger has its − input grounded. The input goes through R1 = {R1} to the + input, and R2 = {R2} feeds back from the output. The op amp is a rail-to-rail type on ±12 V supplies (not drawn), so its output swings to ±{Vsat}. R2 is swapped for {new_R2}. What happens to the width of the hysteresis band (the gap between the two thresholds)?",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "Vsat",
+          "unit": "V",
+          "value": 12
+        }
+      ],
+      "whatIf": {
+        "quantity": "the width of the hysteresis band",
+        "formula": "2*Vsat*R1/R2",
+        "unit": "V",
+        "change": {
+          "R2": "10*R2"
+        },
+        "askFactor": false,
+        "feedback": {
+          "up": "R2 is the feedback resistor, so a bigger R2 means weaker feedback: the output's share of V+ shrinks, and the thresholds move less when it switches.",
+          "same": "The thresholds are ±Vsat·R1/R2, so R2 sets how far the output can pull V+. V+ is a weighted average of the input and the output, and a bigger R2 gives the output less weight in it."
+        }
+      },
+      "explanation": "The band is 2·Vsat·R1/R2, from {before} to {after}. V+ is a weighted average of the input and the output, weighted by the opposite resistors; a bigger R2 gives the output less say, so each switch moves the threshold less. A narrower band rejects less noise; a wider one needs a bigger input swing.",
+      "hints": [
+        "Which resistor carries the output's influence back to the + input?"
+      ],
+      "schematic": {
+        "netlist": "schmitt\nVIN in 0 1\nR1 in p {R1:spice}\nR2 p out {R2:spice}\nX1 p 0 out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "R1 {R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "R2 {R2}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "flip": true,
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "placement": true,
+      "followUps": [
+        {
+          "prompt": "Why does a bigger R2 narrow the hysteresis band?",
+          "choices": [
+            {
+              "text": "V+ averages input and output, and a bigger R2 gives the output less weight in that average",
+              "correct": true,
+              "feedback": "Right: V+ = (Vin·R2 + Vout·R1)/(R1 + R2), so the output's weight is R1/(R1 + R2). With R2 ten times bigger, the thresholds ±Vsat·R1/R2 fall to a tenth."
+            },
+            {
+              "text": "Less feedback current flows, so the output saturates at a lower voltage than ±Vsat",
+              "feedback": "The output is rail-to-rail and reaches ±{Vsat} with either resistor; a bigger R2 draws less current from it, which makes reaching the rail easier, not harder. The band narrows because that same ±{Vsat} pulls on V+ through a bigger resistor."
+            },
+            {
+              "text": "The stage's gain 1 + R2/R1 goes up, as in a non-inverting amplifier, so a smaller input change flips it",
+              "feedback": "1 + R2/R1 is the non-inverting amplifier's gain, which needs R2 back to the − input. Here R2 goes to the + input: positive feedback, so the output never settles between the rails; it sits at +{Vsat} or −{Vsat}. It flips where V+ crosses 0 V, and R2 sets how far the output pulls V+ from there."
+            },
+            {
+              "text": "A bigger R2 slows the output's edge, so less of the swing is fed back before it settles",
+              "feedback": "The thresholds are DC levels: once the output has settled, its full ±{Vsat} reaches V+ through R2 whatever the edge speed. The band is set by the resistor ratio R1/R2, not by timing."
+            }
+          ],
+          "explanation": "The − input is grounded, so the output flips where V+ crosses 0 V. V+ is a weighted average of the input and the output, V+ = (Vin·R2 + Vout·R1)/(R1 + R2). Setting V+ = 0 gives Vin = −Vout·R1/R2, so the thresholds are ±{Vsat}·R1/R2. Ten times the R2 gives the output a tenth of the pull on V+, and the band goes from {before} to {after}."
+        }
+      ]
+    },
+    {
+      "id": "cmp_what_if_overdrive",
+      "topicId": "opamp_comparator",
+      "prompt": "An op amp with a rail-to-rail output, used as a comparator (no feedback, on ±{Vr} supplies, not drawn, so its output swings between −{Vr} and +{Vr}), has {Vref} on its − input and the signal on its + input. The signal is at {Vin}, so the output is high. The signal rises further, to {new_Vin}. What happens to the output voltage?",
+      "variables": [
+        {
+          "name": "Vref",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 4,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 8,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "Vr",
+          "unit": "V",
+          "value": 12
+        }
+      ],
+      "whatIf": {
+        "quantity": "the output voltage",
+        "formula": "Vr",
+        "unit": "V",
+        "change": {
+          "Vin": "Vin+2"
+        },
+        "feedback": {
+          "up": "The difference between the inputs did grow, but the output was already at the rail: the open-loop gain had pushed it as high as the supply allows. It can't go higher.",
+          "down": "A bigger input can't lower the output: V+ is still above V−, so the op amp still drives its output to the positive rail."
+        }
+      },
+      "explanation": "The output stays at +{Vr}. Without feedback the op amp multiplies V+ − V− by about 100 000, so even a few millivolts drives it to the rail. More difference changes nothing: a comparator only reports which input is higher, not by how much.",
+      "hints": [
+        "Where was the output already, before the change?"
+      ],
+      "schematic": {
+        "netlist": "comparator\nVIN p 0 {Vin:spice}\nVREF n 0 {Vref:spice}\nX1 p n out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "VREF",
+            "at": [
+              2,
+              5
+            ],
+            "rot": 90,
+            "label": "{Vref}"
+          },
+          {
+            "ref": "VIN",
+            "at": [
+              6,
+              7
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              2,
+              5
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              7
+            ],
+            [
+              6,
+              5
+            ],
+            [
+              8,
+              5
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              14,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            2,
+            9
+          ],
+          [
+            6,
+            11
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              14,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "cmp_fault",
+      "topicId": "opamp_comparator",
+      "prompt": "A comparator runs from ±12 V supplies (rail-to-rail output, not drawn). Its − input gets a reference from a divider (R1 = {R1} from {Vs} to the − input, R2 = {R2} from there to ground), and its + input is held at {Vin} for the test. The output should be {h0}. The meter readings are below. Which fault explains them?",
+      "variables": [
+        {
+          "name": "Vs",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 0.1,
+            "max": 0.4,
+            "step": 0.1
+          }
+        }
+      ],
+      "fault": {
+        "netlist": "comparator\nVS vs 0 {Vs:spice}\nR1 vs ref {R1:spice}\nR2 ref 0 {R2:spice}\nVIN in 0 {Vin:spice}\nX1 in ref out OA\n.model OA OPAMP(VPOS=12 VNEG=-12)\n",
+        "probes": [
+          {
+            "label": "Output voltage",
+            "probe": "v(out)"
+          },
+          {
+            "label": "Reference (− input)",
+            "probe": "v(ref)"
+          },
+          {
+            "label": "Current through R1",
+            "probe": "i(R1)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "R1 is open (a dry joint)",
+            "open": "R1",
+            "feedback": "With R1 open nothing would feed the divider: 0 A in R1, R2 would pull the reference down to 0 V, and with the input above 0 V the output would flip to +12 V.",
+            "why": "No current flows in R1 and the reference has fallen to 0 V: R2 has nothing to divide. The input is now above the reference, so the output has flipped to +12 V. The divider has lost its top."
+          },
+          {
+            "text": "R2 is open",
+            "open": "R2",
+            "feedback": "With R2 open no current could flow down the divider, so R1 would drop nothing and the reference would rise to the full {Vs}. The input would still be below it, so the output would stay low.",
+            "why": "The reference reads the full {Vs} and no current flows in R1: with no path to ground, R1 drops nothing. The output is still low because the input is below the (now higher) reference, so only the meters on the divider show the fault."
+          },
+          {
+            "text": "R1 is shorted (a solder bridge across it)",
+            "short": "R1",
+            "feedback": "With R1 shorted the reference would be tied to {Vs}, while a larger current than normal, Vs/R2, flowed through R1's position into R2. The output would stay low.",
+            "why": "The reference reads the full {Vs}, yet current still flows (more than normal: Vs/R2), so the path to ground through R2 is intact and the drop across R1 is missing. R1 is bridged."
+          },
+          {
+            "text": "R2 is shorted",
+            "short": "R2",
+            "feedback": "With R2 shorted the reference would be tied to 0 V while R1 carried the whole supply, Vs/R1, more current than normal; with the input above 0 V the output would flip to +12 V.",
+            "why": "The reference reads 0 V, yet R1 carries more current than normal (Vs/R1): the bottom of the divider is a dead short. The input is now above the reference, so the output has flipped to +12 V."
+          }
+        ]
+      },
+      "explanation": "The comparator itself is fine: it still reports which input is higher. The fault is in the divider from Foundations, so read it like a divider fault: a reference at 0 V or at the full supply says which half has failed, and the current through R1 says whether a part is open (no current) or shorted (more current than normal).",
+      "hints": [
+        "Is the reference still somewhere between 0 V and the supply?",
+        "Then look at the current: zero means something is open; more than normal means something is shorted."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vs}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              6,
+              4
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "VIN",
+            "at": [
+              9,
+              9
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              10,
+              6
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              8,
+              4
+            ],
+            [
+              8,
+              5
+            ],
+            [
+              10,
+              5
+            ]
+          ],
+          [
+            [
+              9,
+              9
+            ],
+            [
+              9,
+              7
+            ],
+            [
+              10,
+              7
+            ]
+          ],
+          [
+            [
+              14,
+              6
+            ],
+            [
+              16,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            6,
+            8
+          ],
+          [
+            9,
+            13
+          ]
+        ],
+        "labels": [
+          {
+            "text": "ref",
+            "at": [
+              7,
+              4
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              16,
+              6
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "cmp_hysteresis_width",
+      "topicId": "opamp_comparator",
+      "prompt": "A non-inverting Schmitt trigger has its inverting input grounded. The input goes through R1 = {R1} to the non-inverting input, and R2 = {R2} feeds back from the output, which saturates at ±{Vsat} (set by its supplies, not drawn). How wide is the hysteresis band, the gap between its two switching thresholds?",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            2700,
+            3300,
+            3900,
+            4700,
+            5600,
+            6800,
+            8200
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            10000,
+            12000,
+            15000,
+            18000,
+            22000,
+            27000,
+            33000,
+            39000,
+            47000
+          ]
+        },
+        {
+          "name": "Vsat",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 13,
+            "step": 1
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vth",
+          "formula": "Vsat*R1/R2",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "2*Vsat*R1/R2",
+        "unit": "V"
+      },
+      "explanation": "The thresholds are ±V_sat·R1/R2 = ±{Vth}: with the output low, the input must rise past +{Vth} to switch it high; with the output high, it must fall below −{Vth} to switch it back. The band between them is 2·V_sat·R1/R2 = 2 × {Vsat} × {R1}/{R2} = {answer}.",
+      "hints": [
+        "The two thresholds sit symmetrically either side of 0 V.",
+        "Each threshold is V_sat·R1/R2 from 0 V; the band spans both."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vsat*R1/R2",
+          "feedback": "That's one threshold, +{Vth}. The other is −{Vth}, so the band between them is twice as wide."
+        },
+        {
+          "formula": "2*Vsat*R1/(R1+R2)",
+          "feedback": "R1/(R1 + R2) is the share of the output that reaches V+ with the input at 0 V. A threshold is where the input cancels the output's pull, which takes V_sat·R1/R2 on each side."
+        },
+        {
+          "formula": "2*Vsat*R2/R1",
+          "feedback": "The ratio is upside down. R2 carries the output back, so a bigger R2 weakens the feedback and narrows the band: the width is 2·V_sat·R1/R2."
+        }
+      ],
+      "schematic": {
+        "netlist": "schmitt\nVIN in 0 1\nR1 in p {R1:spice}\nR2 p out {R2:spice}\nX1 p 0 out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "R1 {R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "R2 {R2}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "flip": true,
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

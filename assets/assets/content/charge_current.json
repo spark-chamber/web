@@ -1,0 +1,1049 @@
+{
+  "topics": [
+    {
+      "id": "charge_current",
+      "title": "Charge and current",
+      "summary": "Charge comes in whole electrons; current is the number of coulombs passing a point each second, and in a single loop it is the same everywhere.",
+      "lenses": [
+        "physics",
+        "circuit",
+        "math"
+      ],
+      "prerequisites": [],
+      "lensNotes": {
+        "physics": "Charge is conserved, and in a steady DC circuit it can't keep piling up anywhere: a growing excess of charge would set up a field that pushes it back out. So the current into any piece of a circuit equals the current out. The drift speed is v = I/(nAe); copper's n ≈ 8.5 × 10²⁸ free electrons per cubic meter makes it tiny, typically 0.01 to 1 mm/s. A change in the circuit (a switch closing) travels along the wires as an electromagnetic wave at a large fraction of the speed of light, which is why every electron in the loop starts drifting almost at once.",
+        "circuit": "An ammeter goes in series, so it counts the charge passing that one point; in a single loop it reads the same wherever it is placed. If two meters in what should be one loop disagree, charge is leaving through another path. A battery's mAh rating is a charge: divide it by the load current for an ideal run time, and expect less at high currents or low temperatures.",
+        "math": "I = Q/t for a steady current. When the current varies, I = dQ/dt, and the charge is the area under the current–time plot, Q = ∫ I dt. Electron counts need powers of ten: dividing by e = 1.602 × 10⁻¹⁹ C is the same as multiplying by 6.24 × 10¹⁸."
+      },
+      "formulas": [
+        {
+          "label": "Current",
+          "tex": "I = \\frac{Q}{t} \\quad (1\\ \\text{A} = 1\\ \\text{C/s})"
+        },
+        {
+          "label": "Elementary charge",
+          "tex": "e = 1.602 \\times 10^{-19}\\ \\text{C}"
+        },
+        {
+          "label": "Electrons per second",
+          "tex": "\\frac{N}{t} = \\frac{I}{e}"
+        },
+        {
+          "label": "Battery rating as charge",
+          "tex": "Q = (\\text{rating in Ah}) \\times 3600\\ \\text{s/h}"
+        },
+        {
+          "label": "Drift speed",
+          "tex": "v_d = \\frac{I}{n\\,A\\,e}"
+        }
+      ],
+      "goals": [
+        "Find a current from the charge that passes in a given time (I = Q/t), and turn a battery's mAh rating into coulombs",
+        "Convert a current into the number of electrons passing each second",
+        "Explain why the current is the same at every point of a single loop, and use that to read ammeters and find faults",
+        "Explain why electrons drift at well under a millimeter per second while a lamp lights almost at once"
+      ],
+      "intuition": "A metal wire is already full of free electrons, and a current is all of them drifting together, so the same number of coulombs passes every point of a loop each second even though each electron drifts slowly.",
+      "why": "Matter is made of positive nuclei and negative electrons, and charge is conserved: it is never created or destroyed, only moved. In a metal about one electron per atom is not bound to any single atom; copper has about 8.5 × 10²⁸ of these free electrons per cubic meter. A battery sets up an electric field along the whole circuit, and that field pushes on every free electron in the loop at once. In the steady state charge can't keep accumulating anywhere (a growing excess would repel further charge), so whatever charge enters a part each second leaves it each second: the current is the same at every point of the loop. Because the free electrons are so numerous, even an ampere needs only a slow net drift, typically well under a millimeter per second, on top of their fast random motion (around 10⁶ m/s), which averages to zero. The change in the field travels along the wires at a large fraction of the speed of light, so the whole loop starts conducting almost at once. In an insulator the electrons are held in their atoms and bonds, so there are almost no carriers to move.",
+      "explanation": "Electric charge is measured in coulombs (C). Every electron carries the same tiny charge, −1.602 × 10⁻¹⁹ C, so one coulomb is about 6.24 × 10¹⁸ electrons. Current is the rate at which charge passes a point: I = Q/t. One ampere is one coulomb per second. Metals conduct because some electrons in each atom are free to move through the whole metal; in an insulator such as PVC or glass they are held by their atoms. A current needs a closed path. In a single loop the same current passes every point: a lamp converts energy, not charge, so the charge leaving it each second equals the charge entering it. Schematics draw conventional current, flowing from + through the circuit to −, the way positive charge would move. In a metal the carriers are electrons, which drift the other way; the current is the same, and formulas and simulators all use the conventional direction. Each electron drifts slowly, well under a millimeter per second, yet a lamp lights at once, because the change in the electric field travels along the wire at a large fraction of the speed of light. A battery's mAh rating is a charge: 1 mAh = 3.6 C.",
+      "workedExample": {
+        "problem": "A phone battery is rated 3000 mAh, and the phone draws an average of 250 mA. How much charge can the battery deliver, how long does it last, and how many electrons pass through the battery each second?",
+        "steps": [
+          "Rating as charge: 3000 mAh = 3 A × 1 h = 3 A × 3600 s = 10 800 C (an ampere-second is a coulomb).",
+          "Run time: t = Q/I = 10 800 C / 0.25 A = 43 200 s = 12 h. Shortcut: 3000 mAh / 250 mA = 12 h.",
+          "Electrons per second: I/e = 0.25 C/s / (1.602 × 10⁻¹⁹ C) = 1.56 × 10¹⁸ electrons each second.",
+          "The same 0.25 A flows back into the other terminal and through the battery itself (carried by ions inside it): the battery moves charge around the loop and runs down when its chemical reactants are used up, not when it runs out of charge.",
+          "Size check: about 12 h is plausible for a phone in moderate use; 12 s or 12 000 h would mean a lost factor of 3600 or 1000. In practice expect somewhat less, because a cell's usable capacity falls at high current and low temperature."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 1 \"Basic Concepts of Electricity\", section \"Conductors, insulators, and electron flow\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_1.html#xtocid87071",
+          "note": "Free electrons in metals versus bound electrons in insulators such as glass; the effect travels along a conductor almost at once while each electron moves slowly."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 1 \"Basic Concepts of Electricity\", section \"Voltage and current\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_1.html#xtocid87073",
+          "note": "The rate of charge flow is the same at every point of a simple circuit, and a break anywhere stops the current in the whole loop."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 1 \"Basic Concepts of Electricity\", section \"Conventional versus electron flow\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_1.html#xtocid87076",
+          "note": "Conventional flow is drawn as positive charge moving from + to −; electrons in a metal move the opposite way."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 2 \"Ohm's Law\", section \"How voltage, current, and resistance relate\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_2.html#xtocid87160",
+          "note": "One coulomb is about 6.25 × 10¹⁸ electrons, and one ampere is one coulomb passing a point per second."
+        }
+      ],
+      "visuals": [
+        "charge_flow"
+      ],
+      "analogy": {
+        "text": "A bicycle chain is a closed loop of links that all move at once: the same number of links passes every point each second, and no link is used up at the rear sprocket. The pedals deliver energy to the wheel through the chain while the links themselves come back around to the front. Current in a single loop behaves the same way: the same coulombs per second pass every point, and what the load receives is energy, not charge.",
+        "breaksDown": "Links push each other by contact, while each electron is pushed by the electric field where it is; a start travels along a chain at about the speed of sound in steel (km/s), along a circuit at a large fraction of the speed of light. A chain's links all move at one speed, but electrons drift at well under a millimeter per second and faster where the conductor is thinner or has fewer free carriers, and inside the battery ions carry the charge; the same current does not mean the same drift speed. A chain has no part where the links give up energy in collisions with a lattice, which is how a resistor turns electrical energy into heat."
+      }
+    }
+  ],
+  "templates": [
+    {
+      "id": "cc_current_from_charge",
+      "topicId": "charge_current",
+      "level": "recall",
+      "prompt": "A coulomb-counting fuel gauge in a battery pack measures {Q} of charge passing through the battery's negative lead in {t}. What is the average current?",
+      "variables": [
+        {
+          "name": "Q",
+          "unit": "C",
+          "series": "E12",
+          "decades": [
+            1,
+            1
+          ]
+        },
+        {
+          "name": "t",
+          "unit": "s",
+          "values": [
+            20,
+            30,
+            60,
+            120
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "Q/t",
+        "unit": "A",
+        "tolerance": 0.02
+      },
+      "estimate": true,
+      "explanation": "Current is the rate at which charge passes a point: I = Q/t = {Q} / {t} = {answer}. One ampere is one coulomb per second, so coulombs divided by seconds give amps directly.",
+      "hints": [
+        "Current is charge per unit time.",
+        "I = Q/t, with Q in coulombs and t in seconds, gives amps."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Q*t",
+          "feedback": "You multiplied. Charge is current × time (Q = I·t), so current is charge ÷ time: I = Q/t."
+        },
+        {
+          "formula": "t/Q",
+          "feedback": "That's seconds per coulomb, upside down. Current is coulombs per second: I = Q/t."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "An identical gauge is fitted in the battery's positive lead. Over the same {t}, how much charge does it count passing through the positive lead?",
+          "choices": [
+            {
+              "text": "The same {Q}: the charge through one terminal equals the charge through the other",
+              "correct": true,
+              "feedback": "Right: charge is conserved and can't keep accumulating in the load, so the charge through the + terminal each second equals the charge through the − terminal."
+            },
+            {
+              "text": "Less than {Q}, because the load used some of the charge",
+              "feedback": "The load converts energy, not charge. The charge gives up potential energy in the load, but none of it is lost, so the count is the same."
+            },
+            {
+              "text": "More than {Q}, because the battery's chemistry adds charge as it discharges",
+              "feedback": "The chemistry does work on the charges but creates none; charge is conserved. The charge through the + terminal each second equals the charge through the − terminal."
+            },
+            {
+              "text": "Nothing: charge only passes the negative terminal",
+              "feedback": "Current needs a closed loop. If no charge passed the + terminal, none could keep passing the − terminal either."
+            }
+          ],
+          "explanation": "In a single loop the current is the same at every point, including both battery terminals. Inside the battery the same current is carried by ions through the electrolyte. What the load takes is energy, which shows up as a voltage drop across it (the next topic)."
+        }
+      ],
+      "noDrawing": "about charge passing a point over time; no circuit to analyze",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "cc_electrons_per_second",
+      "topicId": "charge_current",
+      "level": "recall",
+      "prompt": "A wire carries a steady {I}. How many electrons pass through any cross-section of the wire each second? (Enter a power of ten as 2.5e18 or 2.5 × 10^18.)",
+      "variables": [
+        {
+          "name": "I",
+          "unit": "A",
+          "series": "E12",
+          "decades": [
+            -1,
+            0
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "I/1.602e-19",
+        "unit": "",
+        "unitless": true,
+        "tolerance": 0.02
+      },
+      "explanation": "Each electron carries 1.602 × 10⁻¹⁹ C, and a current of I amps moves I coulombs each second, so the number per second is I/e = {I} / (1.602 × 10⁻¹⁹ C) = {answer} electrons per second. One ampere is about 6.24 × 10¹⁸ electrons per second.",
+      "hints": [
+        "One ampere is one coulomb per second. How many electrons make a coulomb?",
+        "Divide the current by the electron's charge, e = 1.602 × 10⁻¹⁹ C."
+      ],
+      "misconceptions": [
+        {
+          "formula": "I*1.602e-19",
+          "feedback": "You multiplied by the electron's charge. Each electron carries only 1.602 × 10⁻¹⁹ C, so it takes a huge number of them to make up the coulombs: divide the current by e."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "So many electrons pass each second. Does that mean each one moves along the wire quickly?",
+          "choices": [
+            {
+              "text": "No: copper holds about 8.5 × 10²⁸ free electrons per cubic meter, so this many per second needs only a slow net drift",
+              "correct": true,
+              "feedback": "Right: the count per second is large because the number of free electrons is enormous, not because any one of them moves fast along the wire."
+            },
+            {
+              "text": "Yes: to get this many through each second they must travel at close to the speed of light",
+              "feedback": "Only the change in the field travels at a large fraction of the speed of light. The electrons' net drift is slow; there are simply a great many of them crossing the section at once."
+            },
+            {
+              "text": "Yes: electrons have almost no mass, so nothing slows them down",
+              "feedback": "Free electrons collide constantly with the vibrating atoms of the metal; those collisions keep their net drift slow, and they are what heat a wire carrying current."
+            },
+            {
+              "text": "No: electrons don't move along a wire at all in DC; only energy moves",
+              "feedback": "The electrons do drift steadily along a DC circuit; that net drift is the current. It is slow, but it isn't zero."
+            }
+          ],
+          "explanation": "The drift speed is v = I/(nAe). With n ≈ 8.5 × 10²⁸ m⁻³ for copper, a few amps in a wire of about 1 mm² gives a drift of a fraction of a millimeter per second. Each electron also moves randomly at around 10⁶ m/s, but that random motion averages to zero and carries no current."
+        }
+      ],
+      "noDrawing": "about the number of electrons in a current; no circuit to analyze",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "cc_battery_charge",
+      "topicId": "charge_current",
+      "prompt": "A battery is rated {cap}h. How much charge can it move through a circuit before it is flat? Take the rating at face value.",
+      "variables": [
+        {
+          "name": "cap",
+          "unit": "A",
+          "values": [
+            0.22,
+            0.6,
+            1.2,
+            2.5,
+            3
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "cap*3600",
+        "unit": "C",
+        "tolerance": 0.02
+      },
+      "estimate": true,
+      "explanation": "An mAh or Ah rating is a current multiplied by a time, which is a charge. One hour is 3600 s and an ampere-second is a coulomb, so Q = {cap} × 3600 s = {answer}.",
+      "hints": [
+        "A current multiplied by a time is a charge. What is an hour in seconds?",
+        "Q = I·t: write the rating as amps times one hour, and the hour as 3600 s."
+      ],
+      "misconceptions": [
+        {
+          "formula": "cap",
+          "feedback": "That's the rating in ampere-hours. A coulomb is an ampere-second, and an hour is 3600 s, so multiply by 3600."
+        },
+        {
+          "formula": "cap*60",
+          "feedback": "You converted with 60, which turns hours into minutes. An hour is 3600 seconds, and a coulomb is an ampere-second."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "A 1.2 V NiMH cell and a 3.7 V lithium-ion cell are both rated 2000 mAh. Which one stores more energy?",
+          "choices": [
+            {
+              "text": "The lithium-ion cell: both move the same charge, but each coulomb gives up more energy",
+              "correct": true,
+              "feedback": "Right: energy = charge × voltage, so the same 7200 C gives about 3.7 V × 7200 C ≈ 27 kJ from the lithium-ion cell and 1.2 V × 7200 C ≈ 8.6 kJ from the NiMH cell."
+            },
+            {
+              "text": "Neither: they have the same mAh rating, so they store the same energy",
+              "feedback": "mAh measures charge, not energy. Each coulomb a 3.7 V cell moves gives up more energy in the load than one from a 1.2 V cell."
+            },
+            {
+              "text": "The NiMH cell: a lower voltage drains it more slowly",
+              "feedback": "The rating already counts the charge each cell can deliver; at the lower voltage each of those coulombs gives up less energy."
+            },
+            {
+              "text": "It can't be told without knowing the load current",
+              "feedback": "The load affects how fast the energy is used, not how much is stored. With the same charge, the higher-voltage cell stores more energy."
+            }
+          ],
+          "explanation": "An mAh rating counts charge. The energy each coulomb gives up is set by the cell's voltage (one volt is one joule per coulomb, the next topic), so the stored energy is roughly rating × voltage."
+        }
+      ],
+      "noDrawing": "about a battery's rating; no circuit to analyze",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "cc_drift_time",
+      "topicId": "charge_current",
+      "prompt": "A 12 V DC cable feeding an LED light strip has copper conductors of {Amm} mm² cross-section and carries a steady {I}. Copper has about 8.5 × 10²⁸ free electrons per cubic meter. On average, how long does one electron take to drift {L} along the cable?",
+      "variables": [
+        {
+          "name": "I",
+          "unit": "A",
+          "values": [
+            0.5,
+            1,
+            2
+          ]
+        },
+        {
+          "name": "Amm",
+          "unit": "",
+          "values": [
+            0.5,
+            0.75,
+            1
+          ]
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "values": [
+            2,
+            5,
+            10
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "v",
+          "formula": "I/(8.5e28*Amm*1e-6*1.602e-19)",
+          "unit": "m/s"
+        },
+        {
+          "name": "hours",
+          "formula": "L/v/3600",
+          "unit": "h"
+        },
+        {
+          "name": "tprop",
+          "formula": "L/2e8",
+          "unit": "s"
+        }
+      ],
+      "answer": {
+        "formula": "L/v",
+        "unit": "s",
+        "tolerance": 0.03
+      },
+      "estimate": true,
+      "explanation": "First the drift speed: v = I/(nAe) = {I} / (8.5 × 10²⁸ m⁻³ × {Amm} × 10⁻⁶ m² × 1.602 × 10⁻¹⁹ C) = {v}. Then the time: t = L/v = {L} / {v} = {answer}, about {hours}. The drift is slow; the current is large only because so many electrons drift together.",
+      "hints": [
+        "Find the drift speed first: the current equals the charge in the free electrons crossing a section per second, I = nAve.",
+        "v = I/(nAe), with A in square meters (1 mm² = 10⁻⁶ m²); then t = L/v."
+      ],
+      "misconceptions": [
+        {
+          "formula": "L*8.5e28*Amm*1.602e-19/I",
+          "feedback": "The area must be in square meters: 1 mm² = 10⁻⁶ m². Leaving it in mm² makes the drift a million times too slow."
+        },
+        {
+          "formula": "L*8.5e28*Amm*1e-6/I",
+          "feedback": "You left out the electron's charge. n·A·v counts electrons per second; multiply by e to get coulombs per second, which is the current."
+        },
+        {
+          "formula": "v",
+          "feedback": "That's the drift speed v = I/(nAe), in meters per second. The question asks for the time to cover {L}: t = L/v."
+        },
+        {
+          "formula": "v*1e6",
+          "feedback": "That's the drift speed, {v}, typed as a number in micrometers per second; it isn't a time. Convert it to m/s and divide the length by it: t = L/v."
+        },
+        {
+          "formula": "I/(8.5e28*Amm*1.602e-19)",
+          "feedback": "Two slips here. That's the drift speed v = I/(nAe), not a time, and its area is still in mm², so it comes out a million times too small. Convert the area to m² first (1 mm² = 10⁻⁶ m²), which gives v in m/s, then divide the length by it: t = L/v."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Yet when a switch at the supply end of this cable is closed, current starts flowing in the LED strip at the far end within a fraction of a microsecond. Why?",
+          "choices": [
+            {
+              "text": "The cable and the LED strip are already full of free carriers, and closing the switch sets up the field along the whole loop at a large fraction of the speed of light",
+              "correct": true,
+              "feedback": "Right: the carriers at the far end were already there. What travels fast is the change in the electric field, not the electrons."
+            },
+            {
+              "text": "Electrons near the switch rush to the strip right after it closes; the slow drift only applies once the current is steady",
+              "feedback": "Even at switch-on the drift stays a small fraction of a millimeter per second: hours to cross the cable. The carriers in the LED strip don't need to come from the switch; they are already there."
+            },
+            {
+              "text": "Electrons from the switch race to the strip at nearly the speed of light, then slow down to the drift speed",
+              "feedback": "No electron makes that trip quickly. It is the field, set up along the wires as an electromagnetic wave, that arrives at a large fraction of the speed of light, and it moves the carriers already at the far end."
+            },
+            {
+              "text": "The LED strip holds a store of charge that lights it until the electrons from the switch arrive",
+              "feedback": "An LED strip doesn't run on stored charge, and electrons from the switch would take hours to arrive. The carriers already in the strip and the cable start moving as soon as the field reaches them."
+            }
+          ],
+          "explanation": "Two speeds are at work. The change in the field travels along the cable as an electromagnetic wave at a large fraction of the speed of light (about two-thirds of it in a plastic-insulated cable, so {L} takes about {tprop}). The electrons themselves drift at a fraction of a millimeter per second. Current flows in the strip as soon as the field reaches it, and its LEDs emit light essentially at once."
+        }
+      ],
+      "noDrawing": "about the motion of electrons in a wire; no circuit to analyze",
+      "review": "verified"
+    },
+    {
+      "id": "cc_what_if_battery_time",
+      "topicId": "charge_current",
+      "prompt": "A sensor runs from a battery rated {cap}h and draws a steady {I}. A firmware change cuts its current to {new_I}. What happens to how long the battery lasts? Assume the battery delivers its full rated charge at either current.",
+      "variables": [
+        {
+          "name": "cap",
+          "unit": "A",
+          "values": [
+            1.2,
+            2.5,
+            3
+          ]
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "values": [
+            0.01,
+            0.02,
+            0.05,
+            0.1
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the run time",
+        "formula": "cap/I",
+        "unit": "h",
+        "change": {
+          "I": "I/2"
+        },
+        "askFactor": true,
+        "feedback": {
+          "down": "The battery holds a fixed charge, and the current is the rate at which the load draws it out: run time = charge ÷ current. Drawing the same charge at a lower rate can't empty the battery sooner.",
+          "same": "The rating is a charge (current × time), not a fixed run time. How long that charge lasts depends on how fast the load draws it: run time = charge ÷ current."
+        }
+      },
+      "explanation": "Run time = rated charge / current = {cap}h / {I} = {before}. At {new_I} the same charge lasts twice as long: {after}. Real cells can do a little better than double, because usable capacity rises somewhat at lower current (most for alkaline and lead-acid; barely for lithium-ion, and not at all once the current is well below the rating's test current).",
+      "hints": [
+        "The rating is a fixed amount of charge. How fast is it being drawn?",
+        "t = Q/I: halve I and see what happens to t."
+      ],
+      "noDrawing": "about a battery's rating and a load current; no particular circuit",
+      "review": "verified"
+    },
+    {
+      "id": "cc_what_if_drift_area",
+      "topicId": "charge_current",
+      "prompt": "A copper wire of {Amm} mm² cross-section carries {I}. It is replaced by a copper wire with twice the cross-section, carrying the same {I}. What happens to the electrons' drift speed?",
+      "variables": [
+        {
+          "name": "I",
+          "unit": "A",
+          "values": [
+            0.5,
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "name": "Amm",
+          "unit": "",
+          "values": [
+            0.5,
+            0.75,
+            1,
+            1.5
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the drift speed",
+        "formula": "I/(8.5e28*Amm*1e-6*1.602e-19)",
+        "unit": "m/s",
+        "change": {
+          "Amm": "2*Amm"
+        },
+        "askFactor": true,
+        "feedback": {
+          "up": "A thicker wire doesn't push its electrons harder. Each meter of it holds more free electrons, so the same coulombs per second are shared among more carriers, and each one needs to drift more slowly.",
+          "same": "The current is the same, but each slice of the thicker wire holds more free electrons to share it, so each one carries less of the flow and drifts more slowly."
+        }
+      },
+      "explanation": "The current is the charge crossing a section each second: I = nAve, so v = I/(nAe). With the same current and twice the area, v halves: {before} → {after}. Either way the drift is under half a millimeter per second.",
+      "hints": [
+        "The same current must cross every section. How many free electrons share it in the thicker wire?",
+        "v = I/(nAe): the current and n are unchanged, A doubles."
+      ],
+      "noDrawing": "about electrons in a wire; no circuit to analyze",
+      "review": "verified"
+    },
+    {
+      "id": "cc_series_meters",
+      "topicId": "charge_current",
+      "prompt": "A {V} battery drives a current through R1 and a lamp in a single loop. Ammeter A1, in the wire between R1 and the lamp, reads {I}. What does ammeter A2, in the wire between the lamp and the battery's negative terminal, read?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            6,
+            9
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            330,
+            470,
+            680,
+            1000
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "I",
+          "formula": "V/(R1+100)",
+          "unit": "A"
+        }
+      ],
+      "choices": [
+        {
+          "text": "{I}, the same as A1",
+          "correct": true,
+          "feedback": "Right: every coulomb that enters the lamp leaves it. The lamp converts energy, not charge."
+        },
+        {
+          "text": "Less than {I}, because the lamp turns some of the current into light and heat",
+          "feedback": "The lamp turns energy into light and heat, not charge. Every electron that goes in comes out. The potential energy per coulomb falls across the lamp, which is the voltage across it."
+        },
+        {
+          "text": "Less than {I}, because some electrons stay in the filament to heat it",
+          "feedback": "Charge can't keep piling up in the filament: a growing excess of electrons would repel the next ones and stop the current. The filament is heated by the electrons' collisions with its atoms, not by keeping electrons."
+        },
+        {
+          "text": "More than {I}, because electrons flow from − to +, so A2 catches them before the lamp uses any",
+          "feedback": "The direction doesn't change anything: the lamp uses up no charge, so meters on either side of it read the same, whichever way you count the flow."
+        }
+      ],
+      "explanation": "Charge is conserved and can't accumulate in a steady circuit, so the same current, {I}, passes every point of the loop: through R1, the lamp, the wires and the battery. What changes around the loop is the potential energy per coulomb, which the next topic measures as voltage.",
+      "hints": [
+        "Can charge pile up inside the lamp, or disappear in it?",
+        "In a single loop there is only one path. What enters each part every second must leave it."
+      ],
+      "schematic": {
+        "netlist": "single loop\nV1 a 0 {V:spice}\nR1 a b {R1:spice}\nRL1 b 0 100\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "RL1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "lamp\n100 Ω",
+            "symbol": "lamp"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              6
+            ],
+            [
+              0,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            2,
+            6
+          ]
+        ],
+        "meters": [
+          {
+            "text": "A1",
+            "at": [
+              7,
+              0
+            ],
+            "kind": "ammeter"
+          },
+          {
+            "text": "A2",
+            "at": [
+              6,
+              6
+            ],
+            "kind": "ammeter"
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "cc_electron_direction",
+      "topicId": "charge_current",
+      "level": "recall",
+      "prompt": "In this loop, conventional current flows out of the {V} battery's + terminal, through R1 and the lamp, and back into the − terminal. In the copper wire between the + terminal and R1, which way do the electrons drift?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            6,
+            9
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            330,
+            470,
+            680,
+            1000
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "text": "Toward the battery's + terminal, opposite to the conventional current",
+          "correct": true,
+          "feedback": "Right: conventional current is the direction positive charge would move. Electrons are negative, so they drift the other way, from − around the loop to +."
+        },
+        {
+          "text": "Away from the + terminal, the same way as the conventional current",
+          "feedback": "Conventional current is defined as the direction positive charge would move. Electrons are negative, so to make the same current they drift the opposite way."
+        },
+        {
+          "text": "Neither: in a metal wire the positive ions carry the current",
+          "feedback": "The positive ions are fixed in the metal's crystal lattice; they vibrate in place but don't travel. In a metal the carriers are the free electrons."
+        },
+        {
+          "text": "Neither: in DC the electrons only jiggle in place, with no net motion",
+          "feedback": "Electrons do have fast random motion (around 10⁶ m/s), which averages to zero, but a DC current adds a steady net drift in one direction. That drift is slow, but it is the current."
+        }
+      ],
+      "explanation": "Conventional current dates from before the electron was discovered: charge flow was defined as going from + to −. In metals the carriers turned out to be negative electrons, drifting from − through the circuit to +. Positive charge moving one way and negative charge moving the other way are the same current, so the convention never changes a calculated value.",
+      "hints": [
+        "Conventional current is the direction a positive charge would move.",
+        "Electrons are negative. Which way must a negative charge move to make the same current?"
+      ],
+      "followUps": [
+        {
+          "prompt": "Schematics, datasheets and SPICE all use conventional current. Does that give wrong answers in a circuit where the carriers are electrons?",
+          "choices": [
+            {
+              "text": "No: negative charge moving one way is the same current as positive charge moving the other way",
+              "correct": true,
+              "feedback": "Right: only the direction of the drawn arrow is a convention. The magnitude, the voltages and the power are all unchanged."
+            },
+            {
+              "text": "Yes: the voltage signs come out reversed, so engineers flip them at the end of a calculation",
+              "feedback": "Nothing needs flipping. A current is a rate of charge transfer; −Q moving left transfers charge exactly as +Q moving right does."
+            },
+            {
+              "text": "Yes, but only in semiconductors, where the carriers differ; in plain wires it makes no difference",
+              "feedback": "In semiconductors both electrons and holes (which act as positive carriers) carry current, and conventional current covers both without any change."
+            },
+            {
+              "text": "No, because in a metal the electrons really do flow from the + terminal to the − terminal",
+              "feedback": "In a metal, electrons drift from − through the circuit to +. The convention gives right answers because direction and sign of charge flip together, not because electrons go from + to −."
+            }
+          ],
+          "explanation": "Current is the net charge crossing a section per second. Reversing both the sign of the carrier and its direction leaves that number unchanged, so conventional current is a consistent bookkeeping choice, used by every circuit simulator and datasheet."
+        }
+      ],
+      "schematic": {
+        "netlist": "single loop\nV1 a 0 {V:spice}\nR1 a b {R1:spice}\nRL1 b 0 100\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "RL1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "lamp\n100 Ω",
+            "symbol": "lamp"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              6
+            ],
+            [
+              0,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            2,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "cc_metals_insulators",
+      "topicId": "charge_current",
+      "level": "recall",
+      "prompt": "A copper wire is covered in PVC insulation. With the circuit running, the copper carries amps along its length, while the current leaking through the PVC is far below a nanoamp. What is the main physical difference between the two materials?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "Copper has free electrons, about one per atom, that can move through the whole metal; PVC's electrons are all held in atoms and bonds",
+          "correct": true,
+          "feedback": "Right: a current needs mobile charge carriers. Copper has about 8.5 × 10²⁸ free electrons per cubic meter; PVC has almost none."
+        },
+        {
+          "text": "PVC has no electrons, so there is nothing in it that could carry a current",
+          "feedback": "PVC is made of atoms like any material and has plenty of electrons. They are bound in its chemical bonds and can't move through the material."
+        },
+        {
+          "text": "Copper's electrons are smaller and lighter, so they slip through the gaps between its atoms",
+          "feedback": "Every electron is identical: same mass, same charge. What differs is whether an electron is bound to its atom or free to move through the material."
+        },
+        {
+          "text": "PVC absorbs the current flowing into it and turns it into heat inside the insulation",
+          "feedback": "An insulator doesn't take in and keep charge (if it did, it would become charged). It has almost no free carriers, so hardly any current flows in it at all."
+        },
+        {
+          "text": "A copper atom has more electrons in total than the atoms in PVC, so more of them can flow",
+          "feedback": "The total number of electrons doesn't matter; most of copper's 29 electrons per atom are tightly bound too. What counts is the outermost one, which in a metal is shared by the whole crystal and free to move."
+        }
+      ],
+      "explanation": "Conduction needs mobile charge. In a metal the outermost electron of each atom is shared by the whole crystal, so a field moves these free electrons readily. In an insulator every electron is held in an atom or a bond, and freeing one takes far more energy than room-temperature heat provides, so only a tiny leakage current flows.",
+      "hints": [
+        "What has to be present in a material for charge to flow through it?",
+        "Compare how tightly the electrons are held in each material."
+      ],
+      "noDrawing": "about the physics of materials; no circuit to analyze",
+      "review": "verified"
+    },
+    {
+      "id": "cc_battery_flat",
+      "topicId": "charge_current",
+      "prompt": "A flashlight's battery goes flat after a few hours. A student says it has run out of electrons. What has actually been used up?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "The chemical reactants that supply its energy; the charge itself just circulates around the loop",
+          "correct": true,
+          "feedback": "Right: the battery is an energy source, not a store of charge. Its reactions keep a voltage across its terminals, which drives charge around the circuit until the reactants are exhausted."
+        },
+        {
+          "text": "The electrons: the battery held a fixed store and has pushed them all out into the circuit",
+          "feedback": "Every electron that leaves the − terminal is matched by one arriving at the + terminal, so the battery never runs short of charge. A battery that had pushed out a store of electrons would be strongly charged, and it isn't."
+        },
+        {
+          "text": "The current: the bulb used some of it up, so less returned each time around",
+          "feedback": "The current is the same everywhere in the loop, including both sides of the bulb. The bulb converts energy, not charge."
+        },
+        {
+          "text": "The wire's free electrons: they have all passed through the bulb and can't be used again",
+          "feedback": "The wire's free electrons are never used up; they drift around the loop and stay in the circuit. The energy the bulb turns into light and heat comes from the battery's chemistry, through the field in the circuit."
+        }
+      ],
+      "explanation": "Charge is conserved, so the battery can't run out of it. Its chemical reactions do work on the charge passing through it, and the potential energy each coulomb gives up in the bulb becomes light and heat. When the reactants are used up, the battery can no longer keep up its voltage. The mAh rating counts how much charge it can drive around the circuit before that happens.",
+      "hints": [
+        "Does any charge leave the circuit while the flashlight is on?",
+        "Compare the charge leaving the − terminal with the charge arriving at the + terminal."
+      ],
+      "noDrawing": "about what a battery does, not a particular circuit",
+      "review": "verified"
+    },
+    {
+      "id": "cc_fault_meters",
+      "topicId": "charge_current",
+      "prompt": "A {V} battery drives current through R1 = {R1} and a lamp (treat the lamp as a fixed 100 Ω). Ammeter A1 is in the wire from the battery's + terminal to R1; ammeter A2 is in the wire from R1 to the lamp. Healthy, both read {h0}. The readings are below. Which fault explains them?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            4.5,
+            6
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            220,
+            330,
+            470,
+            680
+          ]
+        }
+      ],
+      "fault": {
+        "netlist": "single loop\nV1 a 0 {V:spice}\nR1 a b {R1:spice}\nRL1 b 0 100\n",
+        "probes": [
+          {
+            "label": "A1: in the wire from the battery's + terminal to R1",
+            "probe": "i(R1)"
+          },
+          {
+            "label": "A2: in the wire from R1 to the lamp",
+            "probe": "i(RL1)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "The lamp's filament is broken (open)",
+            "open": "RL1",
+            "feedback": "A broken filament opens the only path, so no current would flow anywhere: both meters would read 0 A.",
+            "why": "With the filament open there is no closed path, so both meters read 0 A: a break anywhere in a single loop stops the current everywhere in it."
+          },
+          {
+            "text": "A solder bridge directly across the lamp's two terminals (on the lamp side of A2)",
+            "short": "RL1",
+            "feedback": "A bridge across the lamp's terminals would leave only R1 to limit the current, so both meters would rise, and they would still agree: A2 sits between R1 and the bridge, so the bridge's current passes through it and the circuit is still one loop.",
+            "why": "Both meters rise and still agree. The bridge across the lamp's terminals leaves only R1 to limit the current, and A2, between R1 and the bridge, carries all of it: it is still one loop."
+          },
+          {
+            "text": "R1 is ten times its marked value (a misread color band)",
+            "value": {
+              "ref": "R1",
+              "formula": "R1*10"
+            },
+            "feedback": "A larger R1 would cut the current, but the circuit is still one loop, so both meters would read the same, smaller value.",
+            "why": "Both meters read the same, much smaller current: R1 limits the current far more, and in a single loop the current is the same at every point."
+          },
+          {
+            "text": "A 100 Ω resistor was fitted by mistake from the wire between R1 and A2 to the battery's − terminal",
+            "add": "Rx b 0 100",
+            "feedback": "An extra path from the junction would let part of the current bypass the lamp: A1 would read more than A2, the difference flowing in the extra resistor.",
+            "why": "A1 and A2 disagree, which a single loop never allows: the difference, A1 − A2, is the current leaving through the extra 100 Ω path. A1 rises because two paths now share the return, and A2 falls."
+          }
+        ]
+      },
+      "explanation": "In a single loop the current is the same at every point, so two series ammeters must agree. Both at zero means a break; both equal but changed means a part in the loop changed (a shorted part raises the current, a high-value part lowers it); unequal readings mean a second path branches off between the two meters; a path that bypasses a part but not a meter (like a bridge across the lamp's terminals, on the lamp side of A2) changes both readings equally.",
+      "hints": [
+        "First compare A1 with A2. When can two meters in one loop disagree?",
+        "Zero means no closed path; equal but changed means the one loop changed; unequal means a second path branches off between the two meters."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "RL1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "lamp\n100 Ω",
+            "symbol": "lamp"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              6
+            ],
+            [
+              0,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            2,
+            6
+          ]
+        ],
+        "meters": [
+          {
+            "text": "A1",
+            "at": [
+              1,
+              0
+            ],
+            "kind": "ammeter"
+          },
+          {
+            "text": "A2",
+            "at": [
+              8,
+              1
+            ],
+            "kind": "ammeter"
+          }
+        ]
+      },
+      "review": "verified"
+    }
+  ]
+}

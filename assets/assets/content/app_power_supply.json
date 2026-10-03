@@ -1,0 +1,2908 @@
+{
+  "topics": [
+    {
+      "id": "app_power_supply",
+      "title": "Building a DC power supply",
+      "summary": "Transformer, bridge, reservoir capacitor and a Zener or regulator: follow the voltage through each stage.",
+      "lenses": [
+        "circuit"
+      ],
+      "prerequisites": [
+        "diode_rectifiers",
+        "diode_practical"
+      ],
+      "lensNotes": {
+        "circuit": "Follow the voltage through the stages: RMS to peak, minus diode drops, minus ripple, then whatever headroom the regulator needs. Design every stage for the worst case: low line voltage, full load."
+      },
+      "formulas": [
+        {
+          "label": "Bridge + capacitor",
+          "tex": "V_{DC} \\approx V_p - 2V_D - \\tfrac{1}{2}\\Delta V,\\quad \\Delta V \\approx \\frac{I}{2 f C}"
+        },
+        {
+          "label": "RMS to peak (sine)",
+          "tex": "V_p = \\sqrt{2}\\,V_{rms}"
+        },
+        {
+          "label": "Linear regulator loss",
+          "tex": "P = (V_{in} - V_{out})\\,I"
+        },
+        {
+          "label": "Linear regulator efficiency",
+          "tex": "\\eta \\approx \\frac{V_{out}}{V_{in}}"
+        }
+      ],
+      "prerequisiteNotes": {
+        "diode_rectifiers": "A DC supply starts with a rectifier and smoothing capacitor, which set the raw voltage and its ripple.",
+        "diode_practical": "A Zener (or regulator) then holds the output steady despite the ripple and changes in load."
+      },
+      "goals": [
+        "Follow the voltage through a linear supply: the secondary's RMS to its peak (×√2), minus two bridge diode drops, minus the ripple I/(2fC), and check that the lowest point still clears the regulator's minimum input",
+        "Find a linear regulator's heat, (V_in − V_out)·I, and its efficiency, V_out/V_in, and explain why a higher input only adds heat",
+        "Size a Zener regulator's series resistor for the worst case, lowest input and heaviest load: R = (V_min − V_Z)/(I_L + I_Z(min))",
+        "Explain why a supply is designed at low line voltage and full load, and tell an open bridge diode or a failed reservoir capacitor from the ripple"
+      ],
+      "intuition": "Follow the voltage down the chain: the capacitor charges to the secondary's peak less two diode drops and sags by the ripple between peaks; the regulator works only while that lowest point stays above its minimum input, and every volt of input above its output is burned in it as heat.",
+      "why": "The secondary is rated in RMS; its peak is √2 times that. The two conducting bridge diodes pass current only while the winding is about 1.4 V above the capacitor, so the capacitor charges to near the peak in short pulses, then alone feeds the load until the next peak, about 1/(2f) later. Losing charge I/(2f) from capacitance C, it sags by ΔV ≈ I/(2fC). A linear regulator is a transistor in series with the load, adjusted by feedback: it passes the whole load current and drops the difference between input and output, so it dissipates (V_in − V_out)·I. It can regulate only while its input stays above its output plus its dropout.",
+      "explanation": "Rectifiers ended with a raw DC: a capacitor charged to the peak, sagging by the ripple between peaks. A supply adds a stage that removes the ripple. Work down the chain. A secondary rated V_rms peaks at V_rms·√2. A bridge puts two diodes in each path, so the capacitor charges to about V_rms·√2 − 1.4 V. Between peaks it alone feeds the load and sags by ΔV ≈ I/(2fC), where f is the line frequency, 60 Hz from a US wall outlet (full-wave recharges twice per cycle, 120 times a second). The regulator's limit is that waveform's lowest point: a 5 V linear regulator may need 7 V in, and below that the ripple passes straight to the output. So design for the worst case: low line voltage (take 10 % down, 108 V instead of 120 V, the usual low end for US equipment) and full load. For small currents a Zener regulator does the same job; its series resistor must still pass the load current plus a few milliamps for the Zener at the lowest input: R = (V_min − V_Z)/(I_L + I_Z(min)). A linear regulator turns its excess voltage into heat. It carries the full load current and drops everything above its output: P = (V_in − V_out)·I, efficiency V_out/V_in. Extra transformer voltage is not a safety margin; it is heat. Check the heat at the other extreme, high line (10 % up, 132 V), where the regulator drops the most. Choose the smallest secondary that still clears the regulator's minimum at low line voltage and full load. Safety: a transformer's primary is at line voltage, 120 V RMS (about 170 V peak) from the wall outlet, enough to kill. Study these supplies on paper and in the simulator; for anything you build, power it from a ready-made, enclosed adapter of 12 V DC or less.",
+      "workedExample": {
+        "problem": "A 5 V linear regulator (assume it needs at least 7 V at its input) must supply a steady 0.5 A. It is fed by a silicon bridge (0.7 V per diode) and a 3300 µF reservoir capacitor on 120 V, 60 Hz line power. Transformers with 9 V and 12 V RMS secondaries are on the shelf, and the line voltage can be 10 % low or high. Check that each keeps the regulator working, and find the regulator's heat with each.",
+        "steps": [
+          "9 V secondary: the peak is 9 V × √2 = 12.73 V. Two diodes conduct on each half-cycle, so the capacitor charges to 12.73 V − 1.4 V = 11.33 V.",
+          "Ripple: ΔV = I/(2fC) = 0.5 A / (2 × 60 Hz × 3300 µF) = 1.26 V. The trough is 11.33 V − 1.26 V = 10.07 V, 3.07 V above the 7 V the regulator needs.",
+          "Low line, 10 % down (108 V instead of 120 V): the secondary gives 8.1 V RMS, so the capacitor peaks at 8.1 V × √2 − 1.4 V = 10.06 V and falls to 10.06 V − 1.26 V = 8.80 V: still 1.80 V of headroom. The line voltage fell 10 %, but the headroom fell about 41 % (from 3.07 V to 1.80 V), because the diode drops, the ripple and the 7 V don't shrink with it.",
+          "Heat with the 9 V transformer at nominal line voltage: the capacitor averages about the middle of the ripple, 11.33 V − 1.26 V/2 = 10.70 V, so P = (10.70 V − 5 V) × 0.5 A = 2.85 W. Efficiency: 5 V / 10.70 V = 47 %.",
+          "High line, 10 % up (132 V): the secondary gives 9.9 V RMS, so the capacitor peaks at 9.9 V × √2 − 1.4 V = 12.60 V and averages 12.60 V − 0.63 V = 11.97 V: P = (11.97 V − 5 V) × 0.5 A ≈ 3.5 W. That is the heat to size the heatsink for.",
+          "12 V secondary: 12 V × √2 − 1.4 V = 15.57 V at the peak, 15.57 V − 1.26 V = 14.31 V at the trough (7.31 V of headroom; at low line 10.8 V × √2 − 1.4 V − 1.26 V = 12.61 V, so 5.61 V). Average 15.57 V − 0.63 V = 14.94 V, so P = (14.94 V − 5 V) × 0.5 A = 4.97 W. Efficiency: 5 V / 14.94 V = 33 %.",
+          "Both regulate, even at 108 V. The 12 V transformer gives headroom the regulator doesn't need, at the cost of 4.97 W − 2.85 W = 2.12 W more heat, about 75 % more. Choose the 9 V one: the regulator's heatsink can be smaller."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Rectifier Circuits\", ch. 3 \"Tutorial\", section 3.3 \"Simple rectifier circuits\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_rectifier.pdf",
+          "note": "A bridge conducts through two diodes at a time, so its peak output is the RMS voltage times √2 less about 1.4 V for silicon, and full-wave ripple runs at twice the line frequency (section 3.6)."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Linear Voltage Regulators\", ch. 2 \"Case Tutorial\", section 2.2 \"Example: 7805 power dissipation\"; ch. 3 \"Tutorial\", section 3.4 \"Automatic series regulation\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_linvreg.pdf",
+          "note": "A series regulator passes the full load current and dissipates (V_in − V_out)·I, its efficiency is P_out/P_in, worst-case heat comes at maximum input and full load, and the input must exceed the output by at least the dropout voltage."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 3 \"Diodes and Rectifiers\", section \"Zener diodes\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_3.html#xtocid902712",
+          "note": "The Zener's series resistor carries the load current plus the Zener current, and the Zener stops regulating once the load draws so much that too little voltage is left across it."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "ps_min_voltage",
+      "topicId": "app_power_supply",
+      "prompt": "A transformer with a {Vrms} RMS secondary feeds a silicon bridge rectifier with a {C} reservoir capacitor on {f} line power. The load draws {I}. What is the lowest voltage on the capacitor (the bottom of the ripple)?",
+      "variables": [
+        {
+          "name": "Vrms",
+          "unit": "V",
+          "range": {
+            "min": 12,
+            "max": 18,
+            "step": 1
+          }
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            0.0022,
+            0.0033
+          ]
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "value": 60
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "range": {
+            "min": 0.5,
+            "max": 1,
+            "step": 0.1
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vpk",
+          "formula": "Vrms*sqrt(2)-1.4",
+          "unit": "V"
+        },
+        {
+          "name": "Vr",
+          "formula": "I/(2*f*C)",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "Vrms*sqrt(2)-1.4-I/(2*f*C)",
+        "unit": "V"
+      },
+      "explanation": "Peak: {Vrms} × √2 − 1.4 V = {Vpk}. Full-wave ripple: I / (2fC) = {Vr}. The capacitor sags to {Vpk} − {Vr} = {answer} before the next peak. That minimum is what the regulator after it must work with.",
+      "hints": [
+        "Find the peak first, then subtract the ripple.",
+        "V_min = V_rms·√2 − 1.4 − I / (2fC)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vrms*sqrt(2)-1.4",
+          "feedback": "That's the peak. Subtract the ripple to get the lowest point."
+        },
+        {
+          "formula": "Vrms*sqrt(2)-1.4-I/(f*C)",
+          "feedback": "A bridge is full-wave: the ripple is I / (2fC)."
+        }
+      ],
+      "steps": [
+        "Peak of the secondary minus two diode drops: {Vrms} × √2 − 1.4 V = {Vpk}.",
+        "Full-wave ripple: ΔV ≈ I/(2fC) = {Vr}.",
+        "The lowest point is the peak minus the ripple: {Vpk} − {Vr} = {answer}."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why is the lowest point of the ripple, rather than the peak or the average, the number to check against what the regulator after the capacitor needs?",
+          "choices": [
+            {
+              "text": "The regulator needs its minimum input at every instant; a trough below it makes the output dip",
+              "correct": true,
+              "feedback": "Right: a regulator reacts to its input moment by moment. It can hold the output steady only while its input stays above V_out plus its dropout, so the worst instant, the trough, is what counts."
+            },
+            {
+              "text": "The regulator only sees the average, because the capacitor averages the ripple out before it reaches the regulator",
+              "feedback": "The capacitor voltage is the ripple waveform: nothing averages it before the regulator. The regulator follows its input instant by instant, so a trough below its minimum shows up at the output."
+            },
+            {
+              "text": "The trough is when the diodes conduct and recharge the capacitor, so that is when the regulator draws its current",
+              "feedback": "The diodes conduct near the peaks, not at the trough. The trough comes at the end of the gap in which the capacitor alone has fed the regulator; the regulator draws its current all the time."
+            },
+            {
+              "text": "The lowest point sets how much heat the regulator makes, so it is the limit for the heatsink",
+              "feedback": "At a steady load current the heat follows the average voltage the regulator drops, (V_avg − V_out)·I, so the trough is not the heatsink figure. The trough matters because it is when the regulator is closest to dropping out."
+            }
+          ],
+          "explanation": "Between peaks the capacitor alone feeds the load and loses charge I·Δt, so its voltage sags by I/(2fC) (the full-wave ripple from Rectifiers). A linear regulator needs V_out plus its dropout (assume about 7 V in total for a 7805) at every instant. Design so the trough, at low line voltage and full load, stays above that."
+        }
+      ],
+      "schematic": {
+        "netlist": "Bridge supply (drawing)\nV1 a b SIN(0 1 60)\nD1 a out DS\nD2 b out DS\nD3 0 a DS\nD4 0 b DS\nC1 out 0 {C:spice}\nI1 out 0 10m\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 270,
+            "label": "{Vrms} rms\n{f}",
+            "symbol": "transformer"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              13,
+              4
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "D3",
+            "at": [
+              13,
+              8
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "D2",
+            "at": [
+              9,
+              4
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "D4",
+            "at": [
+              9,
+              8
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "C1",
+            "at": [
+              18,
+              2
+            ],
+            "rot": 90,
+            "label": "{C}"
+          },
+          {
+            "ref": "I1",
+            "at": [
+              24,
+              2
+            ],
+            "rot": 90,
+            "label": "load\n{I}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              7,
+              2
+            ],
+            [
+              7,
+              4
+            ],
+            [
+              9,
+              4
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              10
+            ],
+            [
+              15,
+              10
+            ],
+            [
+              15,
+              4
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              18,
+              2
+            ]
+          ],
+          [
+            [
+              18,
+              6
+            ],
+            [
+              18,
+              8
+            ]
+          ],
+          [
+            [
+              9,
+              0
+            ],
+            [
+              24,
+              0
+            ],
+            [
+              24,
+              2
+            ]
+          ],
+          [
+            [
+              9,
+              8
+            ],
+            [
+              24,
+              8
+            ],
+            [
+              24,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            22,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              16,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "ps_zener_resistor",
+      "topicId": "app_power_supply",
+      "prompt": "A {Vz} Zener regulator must supply up to {IL} to its load from an input that can sag to {Vmin}. With the input at its lowest and the load at its largest, what series resistance leaves exactly {Izmin} in the Zener at that corner? (Choosing the next lower standard part comes after.)",
+      "variables": [
+        {
+          "name": "Vmin",
+          "unit": "V",
+          "range": {
+            "min": 9,
+            "max": 14,
+            "step": 1
+          }
+        },
+        {
+          "name": "Vz",
+          "unit": "V",
+          "values": [
+            4.7,
+            5.1,
+            5.6,
+            6.2,
+            6.8
+          ]
+        },
+        {
+          "name": "IL",
+          "unit": "A",
+          "range": {
+            "min": 0.01,
+            "max": 0.03,
+            "step": 0.005
+          }
+        },
+        {
+          "name": "Izmin",
+          "unit": "A",
+          "value": 0.005
+        }
+      ],
+      "derived": [
+        {
+          "name": "Itot",
+          "formula": "IL+Izmin",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "(Vmin-Vz)/(IL+Izmin)",
+        "unit": "Ω"
+      },
+      "explanation": "Design for the worst case: lowest input and highest load. The resistor must pass I_L + I_Z(min) = {Itot} with only {Vmin} − {Vz} across it: R = ({Vmin} − {Vz}) / {Itot} = {answer}. A larger R would leave the Zener less than I_Z(min) at that corner, and it would drop out of breakdown. So work out R at that corner, then pick the next lower E12 value.",
+      "hints": [
+        "Which conditions give the least current through the series resistor?",
+        "R_max = (V_in(min) − V_Z) / (I_L(max) + I_Z(min))."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(Vmin-Vz)/IL",
+          "feedback": "The Zener needs some current too, or it stops regulating: divide by I_L + I_Z(min)."
+        },
+        {
+          "formula": "Vmin/(IL+Izmin)",
+          "feedback": "Only V_in − V_Z appears across the series resistor."
+        }
+      ],
+      "steps": [
+        "Design at the worst case: the lowest input, {Vmin}, and the largest load, {IL}.",
+        "The resistor must carry the load current plus the minimum Zener current: {IL} + {Izmin} = {Itot}.",
+        "It drops the difference between input and Zener voltage: R = ({Vmin} − {Vz})/{Itot} = {answer}."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why is R worked out at the lowest input and the largest load, and not at typical conditions?",
+          "choices": [
+            {
+              "text": "Then R passes the least current and the load takes the most, so the Zener's share is smallest",
+              "correct": true,
+              "feedback": "Right: R's current is (V_in − V_Z)/R, smallest at the lowest input, and the load takes its share first. Any other condition leaves more for the Zener."
+            },
+            {
+              "text": "That is when the Zener dissipates the most, so R must be sized to protect it",
+              "feedback": "The Zener runs hottest in the opposite corner: highest input and no load, when it takes all of R's current. That is a second check on the chosen R, not how R is found."
+            },
+            {
+              "text": "At the lowest input the Zener voltage sags, so R must be small enough to hold V_Z up",
+              "feedback": "While it conducts at least I_Z(min), the Zener holds V_Z nearly constant whatever the input. The risk at low input is not a lower V_Z but too little current to keep it in breakdown."
+            },
+            {
+              "text": "The load draws the most current when the input is lowest, because it then sees less voltage",
+              "feedback": "While the Zener regulates, the load always sees V_Z, so its current doesn't depend on the input. Low input and full load are two separate conditions; each one leaves the Zener less current, so the design takes both at once."
+            }
+          ],
+          "explanation": "R carries I_R = (V_in − V_Z)/R, and KCL at the output (the Zener regulator from LEDs, Zener regulators and flyback diodes) splits it: the load takes I_L and the Zener the rest. The Zener's share is smallest when I_R is smallest (lowest input) and I_L is largest (full load). Size R for that corner, then check the Zener's power at the other corner: highest input, no load."
+        }
+      ],
+      "schematic": {
+        "netlist": "Zener regulator (drawing)\nVIN in 0 {Vmin:spice}\nRS in out 1k\nDZ 0 out ZD\nI1 out 0 10m\n.model ZD D(BV=5)\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vmin}\nmin"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R_S"
+          },
+          {
+            "ref": "DZ",
+            "at": [
+              8,
+              6
+            ],
+            "rot": 270,
+            "label": "{Vz}"
+          },
+          {
+            "ref": "I1",
+            "at": [
+              13,
+              2
+            ],
+            "rot": 90,
+            "label": "load\n{IL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              13,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              10,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "ps_why_capacitor",
+      "topicId": "app_power_supply",
+      "prompt": "A supply on 60 Hz line power has a bridge rectifier, a reservoir capacitor and a linear regulator. What happens if the reservoir capacitor is much too small?",
+      "choices": [
+        {
+          "text": "The troughs fall below the regulator's minimum input, so the output dips at each trough, 120 times a second",
+          "correct": true,
+          "feedback": "Yes: every regulator needs a minimum input (V_out plus its dropout). A small capacitor sags further between peaks, and wherever the trough falls below that minimum the ripple passes through to the output."
+        },
+        {
+          "text": "The peaks rise above the regulator's maximum input, so the output jumps at each peak, 120 times a second",
+          "feedback": "A smaller capacitor doesn't raise the peak: it still charges to the secondary's peak less two diode drops. It only sags further between peaks."
+        },
+        {
+          "text": "The regulator removes the ripple whatever its depth, so the output stays at a steady voltage",
+          "feedback": "A regulator can hold its output only while its input stays above its minimum. Below that it has no voltage to drop, and the ripple passes through."
+        },
+        {
+          "text": "The diodes stop conducting between peaks, so the output falls to zero at each trough",
+          "feedback": "The diodes conduct briefly near every peak with any capacitor, and the capacitor feeds the load in between. A small one sags further before the next peak; the output only falls to zero with no capacitor at all."
+        }
+      ],
+      "explanation": "The capacitor must keep the rectified voltage above the regulator's minimum input (for a Zener, enough to keep I_Z flowing; for a linear regulator, V_out + dropout) even at the bottom of the ripple.",
+      "schematic": {
+        "netlist": "Bridge supply (drawing)\nV1 a b SIN(0 1 60)\nD1 a out DS\nD2 b out DS\nD3 0 a DS\nD4 0 b DS\nC1 out 0 1m\nI1 out 0 10m\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 270,
+            "label": "60 Hz",
+            "symbol": "transformer"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              13,
+              4
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "D3",
+            "at": [
+              13,
+              8
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "D2",
+            "at": [
+              9,
+              4
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "D4",
+            "at": [
+              9,
+              8
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "C1",
+            "at": [
+              18,
+              2
+            ],
+            "rot": 90,
+            "label": "C1"
+          },
+          {
+            "ref": "I1",
+            "at": [
+              24,
+              2
+            ],
+            "rot": 90,
+            "label": "regulator"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              7,
+              2
+            ],
+            [
+              7,
+              4
+            ],
+            [
+              9,
+              4
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              10
+            ],
+            [
+              15,
+              10
+            ],
+            [
+              15,
+              4
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              18,
+              2
+            ]
+          ],
+          [
+            [
+              18,
+              6
+            ],
+            [
+              18,
+              8
+            ]
+          ],
+          [
+            [
+              9,
+              0
+            ],
+            [
+              24,
+              0
+            ],
+            [
+              24,
+              2
+            ]
+          ],
+          [
+            [
+              9,
+              8
+            ],
+            [
+              24,
+              8
+            ],
+            [
+              24,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            22,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              16,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "level": "recall"
+    },
+    {
+      "id": "ps_regulator_loss",
+      "topicId": "app_power_supply",
+      "prompt": "A linear regulator makes {Vout} from an input of {Vin} and supplies {I}. How much power does it dissipate as heat?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "values": [
+            7,
+            8,
+            9,
+            11,
+            12,
+            13,
+            14,
+            15
+          ]
+        },
+        {
+          "name": "Vout",
+          "unit": "V",
+          "value": 5
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "series": "E12",
+          "decades": [
+            -2,
+            -2
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "(Vin-Vout)*I",
+        "unit": "W",
+        "tolerance": 0.02
+      },
+      "explanation": "A linear regulator drops the difference across itself while passing the full load current: P = ({Vin} − {Vout}) × {I} = {answer}.",
+      "hints": [
+        "What voltage is across the regulator itself?",
+        "P = (V_in − V_out)·I."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vin*I",
+          "feedback": "That's the input power. The regulator only dissipates the part it drops: (V_in − V_out)·I."
+        },
+        {
+          "formula": "Vout*I",
+          "feedback": "That's the power the load receives. The regulator's loss is (V_in − V_out)·I."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why is the regulator's heat (V_in − V_out)·I, and not V_out·I or V_in·I?",
+          "choices": [
+            {
+              "text": "It sits in series with the load, so it carries the full load current while dropping the excess voltage",
+              "correct": true,
+              "feedback": "Right: power in any part is the voltage across it times the current through it. Across the pass element is V_in − V_out; through it is the full load current."
+            },
+            {
+              "text": "It turns the extra voltage into extra output current, like a transformer, so only conversion losses become heat",
+              "feedback": "That is how a switching regulator behaves. A linear regulator passes the same current in and out; the extra voltage has nowhere to go but heat."
+            },
+            {
+              "text": "The load current passes straight through; the heat is only the small ground current times the input voltage",
+              "feedback": "The ground current adds a little, but the main loss is the load current flowing through the pass element while it drops V_in − V_out."
+            },
+            {
+              "text": "The heat comes from removing the ripple; with a perfectly smooth input the regulator would stay cool",
+              "feedback": "A smooth input above V_out still has to be dropped across the regulator at the full load current. The loss is (V_in − V_out)·I, ripple or not."
+            }
+          ],
+          "explanation": "Series circuit, as in Foundations: the regulator and the load carry the same current, and their voltages add up to V_in (KVL). The load gets V_out·I; the regulator gets the rest, (V_in − V_out)·I, as heat. That is why a linear supply wants just enough input headroom and no more."
+        }
+      ],
+      "schematic": {
+        "netlist": "Linear regulator\nVIN in 0 {Vin:spice}\nXU1 in 0 out REG\nILOAD out 0 {I:spice}\n.model REG VREG(V={Vout:spice} DROP=2)\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "XU1",
+            "at": [
+              3,
+              0
+            ],
+            "label": "regulator\n{Vout} out"
+          },
+          {
+            "ref": "ILOAD",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "load\n{I}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          [
+            [
+              9,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              6,
+              6
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              6,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "ps_regulator_efficiency",
+      "topicId": "app_power_supply",
+      "prompt": "A linear regulator makes {Vout} from {Vin}. Ignoring its small ground current, what is its efficiency, in percent?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "values": [
+            7,
+            8,
+            9,
+            11,
+            12,
+            13,
+            14,
+            15
+          ]
+        },
+        {
+          "name": "Vout",
+          "unit": "V",
+          "value": 5
+        }
+      ],
+      "answer": {
+        "formula": "100*Vout/Vin",
+        "unit": "",
+        "unitless": true,
+        "tolerance": 0.01
+      },
+      "explanation": "The same current flows in and out, so efficiency = P_out/P_in = V_out/V_in = {Vout}/{Vin} = {answer} %. Dropping a lot of voltage wastes a lot: that's why switching supplies exist.",
+      "hints": [
+        "The input and output currents are the same.",
+        "Efficiency = V_out/V_in × 100 %."
+      ],
+      "misconceptions": [
+        {
+          "formula": "100*(Vin-Vout)/Vin",
+          "feedback": "That's the share lost as heat. Efficiency is the share delivered: V_out/V_in."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does the efficiency of a linear regulator come down to just V_out/V_in?",
+          "choices": [
+            {
+              "text": "The input current equals the output current (apart from a tiny ground current), so it cancels from P_out/P_in",
+              "correct": true,
+              "feedback": "Right: P_out/P_in = (V_out·I)/(V_in·I) = V_out/V_in. The current in is the current out."
+            },
+            {
+              "text": "A linear regulator draws less input current as the input voltage rises, keeping the input power the same",
+              "feedback": "That is what a switching regulator does. A linear one draws the load current from its input whatever the input voltage, so a higher input just means more heat."
+            },
+            {
+              "text": "A higher input pushes more current through the load, and that extra current cancels in the ratio",
+              "feedback": "The output is regulated at V_out, so the load current is set by V_out and the load, not by the input. The same current flows in and out, and that is why it cancels."
+            },
+            {
+              "text": "Every linear regulator is built to about the same efficiency, and V_out/V_in is how that figure is quoted",
+              "feedback": "There is no fixed figure: the efficiency depends on how much voltage is dropped. 5 V from 6 V is 83 %; 5 V from 15 V is 33 %."
+            }
+          ],
+          "explanation": "The pass element sits in series with the load, so one current flows through both (KCL). Input power is V_in·I, output power V_out·I, and the ratio is V_out/V_in. Every volt of headroom above what the regulator needs is wasted, which is why a supply is designed with just enough input voltage at low line voltage and why switching regulators exist."
+        }
+      ],
+      "schematic": {
+        "netlist": "Linear regulator\nVIN in 0 {Vin:spice}\nXU1 in 0 out REG\nRL out 0 100\n.model REG VREG(V={Vout:spice} DROP=2)\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "XU1",
+            "at": [
+              3,
+              0
+            ],
+            "label": "regulator\n{Vout} out"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "load"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          [
+            [
+              9,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              6,
+              6
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              6,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ps_what_if_load_double",
+      "topicId": "app_power_supply",
+      "prompt": "A {Vrms} RMS transformer feeds a silicon bridge rectifier and a {C} reservoir capacitor on {f} line power, followed by a linear regulator. The regulator draws a steady {I}. A second identical board is plugged into the same supply, so the current becomes {new_I}. What happens to the lowest voltage on the capacitor (the bottom of the ripple)?",
+      "variables": [
+        {
+          "name": "Vrms",
+          "unit": "V",
+          "values": [
+            12,
+            15
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            0.0022,
+            0.0033,
+            0.0047
+          ]
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "value": 60
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "range": {
+            "min": 0.1,
+            "max": 0.4,
+            "step": 0.05
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vpk",
+          "formula": "Vrms*sqrt(2)-1.4",
+          "unit": "V"
+        },
+        {
+          "name": "Vr",
+          "formula": "I/(2*f*C)",
+          "unit": "V"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the lowest capacitor voltage",
+        "formula": "Vrms*sqrt(2)-1.4-I/(2*f*C)",
+        "unit": "V",
+        "change": {
+          "I": "2*I"
+        },
+        "feedback": {
+          "up": "More current doesn't hold the capacitor up. Between peaks the capacitor alone feeds the load, and the load's current drains charge from it until the next peak: more current, more charge drained in the same time.",
+          "same": "The peak stays at {Vpk}, but the trough is the peak minus the sag, and the sag, I/(2fC), is set by how much charge the load drains from the capacitor between peaks."
+        }
+      },
+      "explanation": "The peak is set by the transformer and the diodes, {Vrms} × √2 − 1.4 V = {Vpk}, and doesn't change. The sag between peaks is I/(2fC): {Vr} before, twice that after. So the trough falls by one more {Vr}: {before} → {after}. It does not halve with the doubled current; it drops by the extra ripple only. For a 7805 (assume it needs at least 7 V in) it still stays above 7 V here, but every extra amp lowers the trough by another 1 A/(2fC).",
+      "hints": [
+        "Which part of the lowest voltage depends on the current: the peak or the sag?"
+      ],
+      "schematic": {
+        "netlist": "Bridge supply (drawing)\nV1 a b SIN(0 1 60)\nD1 a out DS\nD2 b out DS\nD3 0 a DS\nD4 0 b DS\nC1 out 0 {C:spice}\nI1 out 0 10m\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 270,
+            "label": "{Vrms} rms\n{f}",
+            "symbol": "transformer"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              13,
+              4
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "D3",
+            "at": [
+              13,
+              8
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "D2",
+            "at": [
+              9,
+              4
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "D4",
+            "at": [
+              9,
+              8
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "C1",
+            "at": [
+              18,
+              2
+            ],
+            "rot": 90,
+            "label": "{C}"
+          },
+          {
+            "ref": "I1",
+            "at": [
+              24,
+              2
+            ],
+            "rot": 90,
+            "label": "regulator\n{I}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              7,
+              2
+            ],
+            [
+              7,
+              4
+            ],
+            [
+              9,
+              4
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              10
+            ],
+            [
+              15,
+              10
+            ],
+            [
+              15,
+              4
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              18,
+              2
+            ]
+          ],
+          [
+            [
+              18,
+              6
+            ],
+            [
+              18,
+              8
+            ]
+          ],
+          [
+            [
+              9,
+              0
+            ],
+            [
+              24,
+              0
+            ],
+            [
+              24,
+              2
+            ]
+          ],
+          [
+            [
+              9,
+              8
+            ],
+            [
+              24,
+              8
+            ],
+            [
+              24,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            22,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              16,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ps_what_if_input_double",
+      "topicId": "app_power_supply",
+      "prompt": "A linear regulator makes {Vout} from a {Vin} adapter and supplies a steady {I}. The adapter is swapped for a {new_Vin} one; the load is unchanged. What happens to the heat in the regulator?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "values": [
+            12,
+            15
+          ]
+        },
+        {
+          "name": "Vout",
+          "unit": "V",
+          "value": 5
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "range": {
+            "min": 0.05,
+            "max": 0.15,
+            "step": 0.05
+          }
+        }
+      ],
+      "whatIf": {
+        "quantity": "the heat in the regulator",
+        "formula": "(Vin-Vout)*I",
+        "unit": "W",
+        "change": {
+          "Vin": "2*Vin"
+        },
+        "askFactor": true,
+        "factorHint": "The heat is (V_in − V_out)·I, and the current stays {I}: work out the voltage the regulator drops before and after. The first {Vout} of the input always goes to the load.",
+        "feedback": {
+          "down": "A higher input doesn't make the regulator's job easier. The output stays at {Vout} and the load still draws {I}, so the regulator must drop more voltage at the same current.",
+          "same": "The load still gets the same power, {Vout} at {I}, but the input now delivers more: the same current drawn from a higher voltage. Whatever power the load doesn't take, the regulator turns into heat."
+        }
+      },
+      "explanation": "The regulator carries the full {I} and drops V_in − V_out. Before: ({Vin} − {Vout}) × {I} = {before}. After: ({new_Vin} − {Vout}) × {I} = {after}. The input doubled, but the voltage the regulator drops more than doubled, because the first {Vout} of the input always goes to the load. That is why a linear supply is fed with just enough headroom, and why a heatsink sized for one input overheats on a higher one. At the top of this problem's range (30 V in, 150 mA) it would be 3.75 W, far more than a bare TO-220 can shed without a heatsink.",
+      "hints": [
+        "The output and the load current don't change. Which voltage does?"
+      ],
+      "schematic": {
+        "netlist": "Linear regulator\nVIN in 0 {Vin:spice}\nXU1 in 0 out REG\nILOAD out 0 {I:spice}\n.model REG VREG(V={Vout:spice} DROP=2)\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}\nadapter"
+          },
+          {
+            "ref": "XU1",
+            "at": [
+              3,
+              0
+            ],
+            "label": "regulator\n{Vout} out"
+          },
+          {
+            "ref": "ILOAD",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "load\n{I}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          [
+            [
+              9,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              6,
+              6
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              6,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ps_what_if_low_mains",
+      "topicId": "app_power_supply",
+      "prompt": "A supply for a 7805 regulator (5 V out; assume it needs at least 7 V in) uses an ideal {Vrms} RMS transformer, a silicon bridge and a {C} reservoir capacitor on 120 V, {f} line power. The load draws {I}. The line voltage sags by 10 % (to 108 V at the outlet), so the secondary becomes {new_Vrms} RMS. What happens to the headroom: how far the lowest capacitor voltage stays above 7 V?",
+      "variables": [
+        {
+          "name": "Vrms",
+          "unit": "V",
+          "values": [
+            9,
+            12
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            0.0022,
+            0.0033,
+            0.0047
+          ]
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "value": 60
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "range": {
+            "min": 0.1,
+            "max": 0.3,
+            "step": 0.05
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vr",
+          "formula": "I/(2*f*C)",
+          "unit": "V"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the headroom",
+        "formula": "Vrms*sqrt(2)-1.4-I/(2*f*C)-7",
+        "unit": "V",
+        "change": {
+          "Vrms": "0.9*Vrms"
+        },
+        "askFactor": true,
+        "factorHint": "Only the peak, V_rms·√2, falls by 10 %. The diode drops (1.4 V), the ripple ({Vr}) and the 7 V the regulator needs stay the same, so the whole loss comes out of a much smaller margin.",
+        "feedback": {
+          "up": "A lower line voltage means a lower secondary and a lower peak on the capacitor. Nothing else changes to make up for it, and the headroom is measured from that capacitor voltage.",
+          "same": "The regulator still makes 5 V, but its input doesn't: the capacitor's peak follows the line voltage through the transformer, while the sag, I/(2fC) with the load still drawing {I}, and the 7 V the regulator needs stay where they were. The headroom is the gap between the trough and that 7 V."
+        }
+      },
+      "explanation": "Headroom = V_rms·√2 − 1.4 V − I/(2fC) − 7 V. Only the first term scales with the line voltage: it drops by 10 % of {Vrms} × √2. The diode drops, the ripple {Vr} and the 7 V are fixed, so the headroom falls by much more than 10 %: {before} → {after}. That's why supplies are designed at low line voltage and full load: a margin that looks comfortable at a nominal 120 V can vanish when the line sags.",
+      "hints": [
+        "Which terms in the lowest capacitor voltage scale with the line voltage, and which stay fixed?"
+      ],
+      "schematic": {
+        "netlist": "Bridge supply (drawing)\nV1 a b SIN(0 1 60)\nD1 a out DS\nD2 b out DS\nD3 0 a DS\nD4 0 b DS\nC1 out 0 {C:spice}\nI1 out 0 10m\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 270,
+            "label": "{Vrms} rms\n{f}",
+            "symbol": "transformer"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              13,
+              4
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "D3",
+            "at": [
+              13,
+              8
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "D2",
+            "at": [
+              9,
+              4
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "D4",
+            "at": [
+              9,
+              8
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "C1",
+            "at": [
+              18,
+              2
+            ],
+            "rot": 90,
+            "label": "{C}"
+          },
+          {
+            "ref": "I1",
+            "at": [
+              24,
+              2
+            ],
+            "rot": 90,
+            "label": "7805\n{I}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              7,
+              2
+            ],
+            [
+              7,
+              4
+            ],
+            [
+              9,
+              4
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              10
+            ],
+            [
+              15,
+              10
+            ],
+            [
+              15,
+              4
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              18,
+              2
+            ]
+          ],
+          [
+            [
+              18,
+              6
+            ],
+            [
+              18,
+              8
+            ]
+          ],
+          [
+            [
+              9,
+              0
+            ],
+            [
+              24,
+              0
+            ],
+            [
+              24,
+              2
+            ]
+          ],
+          [
+            [
+              9,
+              8
+            ],
+            [
+              24,
+              8
+            ],
+            [
+              24,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            22,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              16,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ps_fault",
+      "topicId": "app_power_supply",
+      "prompt": "A bench supply runs from a {Vrms} RMS transformer secondary on 60 Hz line power. A bridge of four silicon diodes (D1–D4) charges a reservoir capacitor C1 = {C}, which feeds a resistive load R_L = {RL}. Healthy, the meter reads about {h0} at the output, the scope shows {h1} of ripple, and the load takes {h2}. Now the supply reads as below. Which fault explains it?",
+      "variables": [
+        {
+          "name": "Vrms",
+          "unit": "V",
+          "values": [
+            12,
+            15
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            0.0033,
+            0.0047
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            220,
+            330
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vpk",
+          "formula": "Vrms*sqrt(2)",
+          "unit": "V"
+        }
+      ],
+      "fault": {
+        "netlist": "bridge supply\nV1 a b SIN(0 {Vpk:spice} 60)\nD1 a out DSIL\nD2 b out DSIL\nD3 0 a DSIL\nD4 0 b DSIL\nC1 out 0 {C:spice}\nRL out 0 {RL:spice}\n.model DSIL D(IS=2.5n N=1.75)\n.tran 50u 100m\n",
+        "probes": [
+          {
+            "label": "DC voltage at the output (meter)",
+            "probe": "avg:v(out)"
+          },
+          {
+            "label": "Ripple at the output (scope, peak to peak)",
+            "probe": "pp:v(out)"
+          },
+          {
+            "label": "Load current (meter)",
+            "probe": "avg:i(RL)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "One bridge diode (D1) has failed open",
+            "open": "D1",
+            "feedback": "An open bridge diode turns the supply into a half-wave rectifier: the DC reading would dip only a little, the load current would barely change, but the ripple would roughly double, because C1 is topped up once per cycle instead of twice.",
+            "why": "The ripple has roughly doubled while the DC reading and the load current barely moved. With D1 open, one half-cycle has no path to the output, so C1 is recharged 60 times a second instead of 120 and sags for twice as long: ΔV ≈ I/(fC) instead of I/(2fC). The peak it charges to is unchanged, so the meter hardly notices; only the scope does."
+          },
+          {
+            "text": "C1 has failed open",
+            "open": "C1",
+            "feedback": "With no reservoir at all, the output would follow the rectified sine down to zero every half-cycle: the scope would show ripple of nearly the full peak, and the meter would read well below the healthy value: the average of the humps, about 0.9 × {Vrms} minus the two diode drops.",
+            "why": "The scope shows ripple of almost the whole peak: nothing holds the output up between peaks, so it falls to zero every half-cycle. The meter shows the average of the rectified humps, about 0.9 × {Vrms} − 1.4 V (that is, (2/π) of the peak, less the diodes), well below the healthy {h0}, and the load current falls with it."
+          },
+          {
+            "text": "C1 has dried out and lost about 90 % of its capacitance",
+            "value": {
+              "ref": "C1",
+              "formula": "C/10"
+            },
+            "feedback": "A dried-out capacitor would leave the load current near normal but make the ripple about ten times larger, since ΔV = I/(2fC) with a tenth of C; the DC reading would dip only a little, by less than half that extra ripple.",
+            "why": "The ripple is about ten times the healthy value, but the load current is close to normal, so the load is not asking for more. Same current, a tenth of the capacitance: ΔV = I/(2fC) grows tenfold, and the DC reading dips by a little less than half the extra ripple, since C1 still sits near the peak while it recharges. Dried-out electrolytics are one of the commonest faults in old supplies."
+          }
+        ]
+      },
+      "explanation": "Read the instruments together. The ripple says how well C1 holds up between peaks: doubled means it is recharged half as often (a bridge diode open, so the bridge works half-wave), about ten times means a tenth of the capacitance at the same load current, and nearly the whole peak means no reservoir at all. The load current confirms the load hasn't changed. The DC meter alone can miss a half-wave fault; the scope can't. This is the ripple ΔV ≈ I/(2fC) from Rectifiers, read backwards.",
+      "hints": [
+        "Compare the ripple with the healthy {h1}: roughly doubled, about ten times, or almost the whole peak?",
+        "Which part sets how often C1 is recharged, and which sets how far it sags each time?"
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 270,
+            "label": "{Vrms} rms",
+            "symbol": "transformer"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              13,
+              4
+            ],
+            "rot": 270,
+            "label": "D1"
+          },
+          {
+            "ref": "D3",
+            "at": [
+              13,
+              8
+            ],
+            "rot": 270,
+            "label": "D3"
+          },
+          {
+            "ref": "D2",
+            "at": [
+              9,
+              4
+            ],
+            "rot": 270,
+            "label": "D2"
+          },
+          {
+            "ref": "D4",
+            "at": [
+              9,
+              8
+            ],
+            "rot": 270,
+            "label": "D4"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              20,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              26,
+              2
+            ],
+            "rot": 90,
+            "label": "R_L\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              7,
+              2
+            ],
+            [
+              7,
+              4
+            ],
+            [
+              9,
+              4
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              10
+            ],
+            [
+              17,
+              10
+            ],
+            [
+              17,
+              4
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              20,
+              0
+            ],
+            [
+              20,
+              2
+            ]
+          ],
+          [
+            [
+              20,
+              6
+            ],
+            [
+              20,
+              8
+            ]
+          ],
+          [
+            [
+              9,
+              0
+            ],
+            [
+              26,
+              0
+            ],
+            [
+              26,
+              2
+            ]
+          ],
+          [
+            [
+              9,
+              8
+            ],
+            [
+              26,
+              8
+            ],
+            [
+              26,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            24,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              22,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ps_syn_regulator_heat",
+      "topicId": "app_power_supply",
+      "connects": [
+        "diode_rectifiers",
+        "app_power_supply"
+      ],
+      "prompt": "A {Vrms} RMS transformer feeds a silicon bridge rectifier (0.7 V per diode) and a {C} reservoir capacitor on {f} line power. A 7805 regulator after it makes 5 V for a load that draws a steady {I}. Taking the capacitor's average voltage as the middle of the ripple, and ignoring the regulator's small ground current, how much power does the 7805 turn into heat?",
+      "variables": [
+        {
+          "name": "Vrms",
+          "unit": "V",
+          "values": [
+            9,
+            10
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            0.0022,
+            0.0033
+          ]
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "value": 60
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "values": [
+            0.3,
+            0.4,
+            0.5
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vpk",
+          "formula": "Vrms*sqrt(2)-1.4",
+          "unit": "V"
+        },
+        {
+          "name": "Vr",
+          "formula": "I/(2*f*C)",
+          "unit": "V"
+        },
+        {
+          "name": "Vavg",
+          "formula": "Vrms*sqrt(2)-1.4-I/(4*f*C)",
+          "unit": "V"
+        },
+        {
+          "name": "Vmin",
+          "formula": "Vrms*sqrt(2)-1.4-I/(2*f*C)",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "(Vavg-5)*I",
+        "unit": "W"
+      },
+      "explanation": "Rectifiers and ripple: the capacitor charges to the peak minus two diode drops, {Vrms} × √2 − 1.4 V = {Vpk}, and sags by ΔV = I/(2fC) = {Vr} between peaks. Its average sits half the ripple below the peak: {Vavg}. Its lowest point, {Vmin}, stays above 7 V (assume a 7805 needs at least 7 V in), so it regulates all the time. Building a DC power supply: the regulator passes the whole {I} and drops the rest of its input: P = ({Vavg} − 5 V) × {I} = {answer}. That needs a heatsink. The heat is set mainly by how far the transformer's peak sits above 5 V; the capacitor only has to keep the trough above 7 V.",
+      "hints": [
+        "Find the capacitor's average voltage first: peak minus diode drops, minus half the ripple.",
+        "P = (V_avg − 5 V) × I, with V_avg = V_rms·√2 − 1.4 V − I/(4fC)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(Vpk-5)*I",
+          "feedback": "You used the peak. The capacitor sags by {Vr} between peaks, so on average the regulator's input is half of that lower."
+        },
+        {
+          "formula": "(Vmin-5)*I",
+          "feedback": "You used the bottom of the ripple. That is the worst case for headroom, but the heat is set by the average input, half the ripple higher."
+        },
+        {
+          "formula": "(Vrms*sqrt(2)-I/(4*f*C)-5)*I",
+          "feedback": "Two diodes of the bridge conduct at a time, each dropping about 0.7 V, so the capacitor charges to 1.4 V below the transformer's peak."
+        },
+        {
+          "formula": "(Vrms-5)*I",
+          "feedback": "{Vrms} is the RMS value. The capacitor charges to the peak, V_rms × √2, minus the diode drops."
+        },
+        {
+          "formula": "(Vrms*sqrt(2)-0.7-I/(4*f*C)-5)*I",
+          "feedback": "In a bridge, two diodes conduct on every half-cycle, one on each side of the capacitor, so the peak loses 2 × 0.7 V."
+        }
+      ],
+      "steps": [
+        "Peak on the capacitor: {Vrms} × √2 − 1.4 V = {Vpk}.",
+        "Ripple: I/(2fC) = {Vr}; average = {Vpk} − ½ × {Vr} = {Vavg}.",
+        "Heat: ({Vavg} − 5 V) × {I} = {answer}."
+      ],
+      "followUps": [
+        {
+          "prompt": "A bigger reservoir capacitor makes the ripple smaller. What does it do to the regulator's heat?",
+          "choices": [
+            {
+              "text": "It raises it a little: the average input moves up toward the peak, so the regulator drops more at the same current",
+              "feedback": "Right: less sag means a higher average input, and the regulator burns off the extra.",
+              "correct": true
+            },
+            {
+              "text": "It lowers it, because a smoother input is easier for the regulator to hold at a steady 5 V, so it has less correcting to do",
+              "feedback": "The heat is (V_in − V_out) × I. Less ripple lifts the average input, so the regulator drops more voltage, not less."
+            },
+            {
+              "text": "It cuts it roughly in half, because the ripple and so the voltage the regulator has to remove both halve",
+              "feedback": "Only the ½ΔV term changes; the peak and the 5 V output stay put, so the heat changes by at most ½ΔV × I."
+            },
+            {
+              "text": "It makes no difference at all, because only the load current decides how much heat the regulator makes",
+              "feedback": "The current is the same, but the heat is the voltage the regulator drops times that current, and that voltage depends on the average input."
+            }
+          ],
+          "explanation": "P = (V_p − 2V_D − ½ΔV − V_out)·I. A bigger C shrinks ΔV, raising the average input by up to ½ΔV and adding up to ½ΔV × I of heat. The capacitor's job is to keep the trough above the regulator's minimum input. Cutting heat is the transformer's job: choose the lowest secondary voltage whose trough still clears 7 V at low line voltage and full load."
+        }
+      ],
+      "schematic": {
+        "netlist": "Bridge supply (drawing)\nV1 a b SIN(0 1 60)\nD1 a out DS\nD2 b out DS\nD3 0 a DS\nD4 0 b DS\nC1 out 0 {C:spice}\nI1 out 0 10m\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 270,
+            "label": "{Vrms} rms\n{f}",
+            "symbol": "transformer"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              13,
+              4
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "D3",
+            "at": [
+              13,
+              8
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "D2",
+            "at": [
+              9,
+              4
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "D4",
+            "at": [
+              9,
+              8
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "C1",
+            "at": [
+              18,
+              2
+            ],
+            "rot": 90,
+            "label": "{C}"
+          },
+          {
+            "ref": "I1",
+            "at": [
+              24,
+              2
+            ],
+            "rot": 90,
+            "label": "7805\n{I}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              7,
+              2
+            ],
+            [
+              7,
+              4
+            ],
+            [
+              9,
+              4
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              10
+            ],
+            [
+              15,
+              10
+            ],
+            [
+              15,
+              4
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              18,
+              2
+            ]
+          ],
+          [
+            [
+              18,
+              6
+            ],
+            [
+              18,
+              8
+            ]
+          ],
+          [
+            [
+              9,
+              0
+            ],
+            [
+              24,
+              0
+            ],
+            [
+              24,
+              2
+            ]
+          ],
+          [
+            [
+              9,
+              8
+            ],
+            [
+              24,
+              8
+            ],
+            [
+              24,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            22,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              16,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ps_syn_zener_led",
+      "topicId": "app_power_supply",
+      "connects": [
+        "diode_rectifiers",
+        "diode_practical",
+        "app_power_supply"
+      ],
+      "prompt": "A {Vrms} RMS transformer on {f} line power feeds a silicon bridge rectifier (0.7 V per diode) and a {C} reservoir capacitor; the board draws {Itot} from the capacitor in total. The capacitor feeds a {Vz} Zener through R_S = {Rs} (a ½ W resistor), and the Zener's output powers a status LED (V_f = {Vf}) through R_LED = {Rled}. Taking the Zener voltage as exactly {Vz}, how much current flows in the Zener at the bottom of the ripple?",
+      "variables": [
+        {
+          "name": "Vrms",
+          "unit": "V",
+          "value": 9
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "value": 60
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "value": 0.0022
+        },
+        {
+          "name": "Itot",
+          "unit": "A",
+          "values": [
+            0.3,
+            0.4,
+            0.5
+          ]
+        },
+        {
+          "name": "Vz",
+          "unit": "V",
+          "values": [
+            5.1,
+            5.6
+          ]
+        },
+        {
+          "name": "Rs",
+          "unit": "Ω",
+          "values": [
+            100,
+            120
+          ]
+        },
+        {
+          "name": "Vf",
+          "unit": "V",
+          "values": [
+            1.8,
+            2,
+            2.2
+          ]
+        },
+        {
+          "name": "Rled",
+          "unit": "Ω",
+          "values": [
+            390,
+            470
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vpk",
+          "formula": "Vrms*sqrt(2)-1.4",
+          "unit": "V"
+        },
+        {
+          "name": "Vr",
+          "formula": "Itot/(2*f*C)",
+          "unit": "V"
+        },
+        {
+          "name": "Vmin",
+          "formula": "Vrms*sqrt(2)-1.4-Itot/(2*f*C)",
+          "unit": "V"
+        },
+        {
+          "name": "Is",
+          "formula": "(Vmin-Vz)/Rs",
+          "unit": "A"
+        },
+        {
+          "name": "Iled",
+          "formula": "(Vz-Vf)/Rled",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "Is-Iled",
+        "unit": "A"
+      },
+      "explanation": "Rectifiers and ripple: the capacitor charges to {Vrms} × √2 − 1.4 V = {Vpk} and sags by I/(2fC) = {Vr} between peaks, so its lowest point is {Vmin}. LEDs, Zener regulators and flyback diodes: the Zener holds its node at {Vz}, so at the trough R_S has {Vmin} − {Vz} across it and carries I_S = {Is}; the LED branch loses V_f = {Vf} in the LED and the rest across R_LED, so I_LED = ({Vz} − {Vf})/{Rled} = {Iled}. Building a DC power supply: by Kirchhoff's current law at the Zener node, the Zener gets what the LED doesn't take: I_Z = {Is} − {Iled} = {answer}. This is the worst moment for the regulator: if the trough fell far enough for I_S to drop below the LED current, the Zener would stop conducting and the output would sag with the ripple.",
+      "hints": [
+        "First find the lowest capacitor voltage: peak minus two diode drops, minus the ripple.",
+        "I_Z = (V_min − V_Z)/R_S − (V_Z − V_f)/R_LED."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(Vpk-Vz)/Rs-Iled",
+          "feedback": "You used the peak. The question is about the bottom of the ripple: the capacitor sags by {Vr} between peaks, so R_S has less voltage across it and less current to share."
+        },
+        {
+          "formula": "(Vpk-Itot/(4*f*C)-Vz)/Rs-Iled",
+          "feedback": "That uses the average capacitor voltage. At the bottom of the ripple it is a whole ripple, {Vr}, below the peak, not half of it."
+        },
+        {
+          "formula": "Is",
+          "feedback": "That is the whole current in R_S. The LED branch takes part of it, and only what is left flows in the Zener (Kirchhoff's current law at the node)."
+        },
+        {
+          "formula": "Is-Vz/Rled",
+          "feedback": "The LED current isn't V_Z/R_LED: the LED itself takes V_f = {Vf}, leaving only V_Z − V_f across R_LED."
+        },
+        {
+          "formula": "Iled",
+          "feedback": "That is the LED's current. The Zener carries the rest of what R_S delivers."
+        }
+      ],
+      "steps": [
+        "Peak: {Vrms} × √2 − 1.4 V = {Vpk}; ripple {Vr}; trough {Vmin}.",
+        "Current in R_S at the trough: ({Vmin} − {Vz})/{Rs} = {Is}.",
+        "LED current: ({Vz} − {Vf})/{Rled} = {Iled}.",
+        "KCL: I_Z = {Is} − {Iled} = {answer}."
+      ],
+      "followUps": [
+        {
+          "prompt": "The LED is unplugged. What happens to the current in R_S at the bottom of the ripple?",
+          "choices": [
+            {
+              "text": "It stays the same: the Zener still holds V_Z, so R_S still has V_min − V_Z across it, and the Zener takes the LED's share",
+              "feedback": "Right: the Zener fixes the voltage, so the current in R_S is fixed too.",
+              "correct": true
+            },
+            {
+              "text": "It falls by the LED's current, because the circuit now has less load to supply from the capacitor, so less has to flow through R_S",
+              "feedback": "Without the Zener, the current in R_S would follow the load. Here the Zener fixes the node voltage, so the current in R_S stays at (V_min − V_Z)/R_S and the Zener absorbs the LED's share."
+            },
+            {
+              "text": "It rises, because the Zener now conducts harder and pulls extra current in from the capacitor through R_S",
+              "feedback": "The Zener does conduct harder, but only by taking over the LED's share; the total through R_S is still (V_min − V_Z)/R_S."
+            },
+            {
+              "text": "It falls to zero, because nothing is left connected at the regulator's output to use that current",
+              "feedback": "The Zener is still connected and still in breakdown, so it carries all of (V_min − V_Z)/R_S."
+            }
+          ],
+          "explanation": "In a Zener (shunt) regulator the series resistor's current is set by the input and the Zener voltage only. The load and the Zener share it: whatever the load stops taking, the Zener takes. So the Zener runs hottest with no load, at the top of the ripple."
+        }
+      ],
+      "schematic": {
+        "netlist": "Bridge supply (drawing)\nV1 a b SIN(0 1 60)\nD1 a out DS\nD2 b out DS\nD3 0 a DS\nD4 0 b DS\nC1 out 0 {C:spice}\nI1 out 0 10m\nRS out z {Rs:spice}\nDZ 0 z ZD\nRLED z l {Rled:spice}\nD5 l 0 DL\n.model DS D\n.model ZD D(BV=5)\n.model DL D(N=2)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 270,
+            "label": "{Vrms} rms\n{f}",
+            "symbol": "transformer"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              13,
+              4
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "D3",
+            "at": [
+              13,
+              8
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "D2",
+            "at": [
+              9,
+              4
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "D4",
+            "at": [
+              9,
+              8
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "C1",
+            "at": [
+              18,
+              2
+            ],
+            "rot": 90,
+            "label": "{C}"
+          },
+          {
+            "ref": "I1",
+            "at": [
+              23,
+              2
+            ],
+            "rot": 90,
+            "label": "rest of\nboard"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              28,
+              0
+            ],
+            "label": "R_S {Rs}"
+          },
+          {
+            "ref": "DZ",
+            "at": [
+              33,
+              8
+            ],
+            "rot": 270,
+            "label": "{Vz}"
+          },
+          {
+            "ref": "RLED",
+            "at": [
+              38,
+              0
+            ],
+            "rot": 90,
+            "label": "R_LED\n{Rled}"
+          },
+          {
+            "ref": "D5",
+            "at": [
+              38,
+              4
+            ],
+            "rot": 90,
+            "label": "{Vf}",
+            "symbol": "led"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              7,
+              2
+            ],
+            [
+              7,
+              4
+            ],
+            [
+              9,
+              4
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              10
+            ],
+            [
+              15,
+              10
+            ],
+            [
+              15,
+              4
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              18,
+              2
+            ]
+          ],
+          [
+            [
+              18,
+              6
+            ],
+            [
+              18,
+              8
+            ]
+          ],
+          [
+            [
+              9,
+              0
+            ],
+            [
+              28,
+              0
+            ]
+          ],
+          [
+            [
+              23,
+              0
+            ],
+            [
+              23,
+              2
+            ]
+          ],
+          [
+            [
+              23,
+              6
+            ],
+            [
+              23,
+              8
+            ]
+          ],
+          [
+            [
+              9,
+              8
+            ],
+            [
+              38,
+              8
+            ]
+          ],
+          [
+            [
+              32,
+              0
+            ],
+            [
+              38,
+              0
+            ]
+          ],
+          [
+            [
+              33,
+              0
+            ],
+            [
+              33,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            21,
+            8
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ps_ripple",
+      "topicId": "app_power_supply",
+      "prompt": "A {Vrms} RMS transformer on {f} line power feeds a silicon bridge rectifier and a {C} reservoir capacitor. The load draws a steady {I}. Roughly how much peak-to-peak ripple is on the capacitor?",
+      "variables": [
+        {
+          "name": "Vrms",
+          "unit": "V",
+          "values": [
+            9,
+            12,
+            15
+          ]
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "value": 60
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            0.0022,
+            0.0033,
+            0.0047
+          ]
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "range": {
+            "min": 0.25,
+            "max": 0.5,
+            "step": 0.25
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "fr",
+          "formula": "2*f",
+          "unit": "Hz"
+        }
+      ],
+      "answer": {
+        "formula": "I/(2*f*C)",
+        "unit": "V"
+      },
+      "explanation": "A bridge is full-wave, so the capacitor is recharged at every peak of the rectified waveform: twice per line cycle, {fr}. Between peaks it alone feeds the load and loses charge I·Δt with Δt ≈ 1/(2f), so its voltage sags by ΔV ≈ I/(2fC) = {I}/(2 × {f} × {C}) = {answer}. To this approximation the transformer voltage doesn't enter: the ripple depends only on the current, the capacitance and how often the capacitor is refilled. It slightly overstates the ripple, because the capacitor starts recharging a little before the next peak, which errs on the safe side for a design.",
+      "hints": [
+        "How often does a bridge recharge the capacitor, and what feeds the load in between?",
+        "ΔV ≈ I/(2fC) for a full-wave rectifier."
+      ],
+      "misconceptions": [
+        {
+          "formula": "I/(f*C)",
+          "feedback": "That is the half-wave ripple. A bridge recharges the capacitor on both half-cycles, every 1/(2f), so the ripple is I/(2fC)."
+        },
+        {
+          "formula": "I/(4*f*C)",
+          "feedback": "That is half the ripple, the sag from the peak to the middle. Peak to peak is the whole sag between recharges, I/(2fC)."
+        }
+      ],
+      "steps": [
+        "A bridge recharges the capacitor every 1/(2f) = 1/{fr}.",
+        "ΔV ≈ I/(2fC) = {I}/(2 × {f} × {C}) = {answer}."
+      ],
+      "schematic": {
+        "netlist": "Bridge supply (drawing)\nV1 a b SIN(0 1 60)\nD1 a out DS\nD2 b out DS\nD3 0 a DS\nD4 0 b DS\nC1 out 0 {C:spice}\nI1 out 0 10m\n.model DS D\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 270,
+            "label": "{Vrms} rms\n{f}",
+            "symbol": "transformer"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              13,
+              4
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "D3",
+            "at": [
+              13,
+              8
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "D2",
+            "at": [
+              9,
+              4
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "D4",
+            "at": [
+              9,
+              8
+            ],
+            "rot": 270,
+            "label": ""
+          },
+          {
+            "ref": "C1",
+            "at": [
+              18,
+              2
+            ],
+            "rot": 90,
+            "label": "{C}"
+          },
+          {
+            "ref": "I1",
+            "at": [
+              24,
+              2
+            ],
+            "rot": 90,
+            "label": "load\n{I}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              7,
+              2
+            ],
+            [
+              7,
+              4
+            ],
+            [
+              9,
+              4
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              10
+            ],
+            [
+              15,
+              10
+            ],
+            [
+              15,
+              4
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              18,
+              2
+            ]
+          ],
+          [
+            [
+              18,
+              6
+            ],
+            [
+              18,
+              8
+            ]
+          ],
+          [
+            [
+              9,
+              0
+            ],
+            [
+              24,
+              0
+            ],
+            [
+              24,
+              2
+            ]
+          ],
+          [
+            [
+              9,
+              8
+            ],
+            [
+              24,
+              8
+            ],
+            [
+              24,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            22,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              16,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    }
+  ]
+}

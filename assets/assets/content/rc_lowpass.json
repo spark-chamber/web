@@ -1,0 +1,1579 @@
+{
+  "topics": [
+    {
+      "id": "rc_lowpass_cutoff",
+      "title": "RC low-pass cutoff frequency",
+      "summary": "An RC low-pass passes slow signals and attenuates fast ones; at f_c = 1/(2πRC) the output is down 3 dB.",
+      "lenses": [
+        "circuit",
+        "signals"
+      ],
+      "prerequisites": [
+        "rc_time_constant",
+        "decibels",
+        "thevenin"
+      ],
+      "lensNotes": {
+        "circuit": "At low frequency the capacitor is nearly open and the output follows the input; at high frequency it shorts the output to ground. The crossover, where the resistor and capacitor voltages have equal amplitudes, is f_c = 1/(2πRC).",
+        "signals": "A first-order low-pass has one pole: flat below f_c, −3 dB and −45° at f_c, then −20 dB per decade. In time, the same circuit's step response is the RC exponential; the two views are one fact."
+      },
+      "formulas": [
+        {
+          "label": "Cutoff",
+          "tex": "f_c = \\frac{1}{2\\pi R C}"
+        },
+        {
+          "label": "Gain",
+          "tex": "|H| = \\frac{1}{\\sqrt{1 + (f/f_c)^2}}"
+        },
+        {
+          "label": "Cutoff to time constant",
+          "tex": "\\tau = \\frac{1}{2\\pi f_c},\\quad t_{1\\%} = \\tau \\ln 100 \\approx 4.6\\tau"
+        }
+      ],
+      "prerequisiteNotes": {
+        "rc_time_constant": "The cutoff frequency is the time constant seen in the frequency domain: f_c = 1/(2πRC). A slow circuit is a low-pass circuit.",
+        "decibels": "\"Cutoff\" is defined as the −3 dB point, where the output has fallen to 0.707 of the input.",
+        "thevenin": "The capacitor charges through the Thevenin resistance of whatever drives it: a source's output resistance adds to R, and a load across C puts RL in parallel with R. Both move f_c."
+      },
+      "goals": [
+        "Find the cutoff frequency f_c = 1/(2πRC) of an RC low-pass in hertz, and choose standard R and C values to meet a required cutoff",
+        "Find the gain in dB at any frequency, and explain why it is −3 dB at f_c and falls about 20 dB per decade well above it",
+        "Convert between the time constant and the cutoff frequency, and use either to predict how long the output takes to settle after a step",
+        "Predict how the source's output resistance and a resistive load shift the cutoff"
+      ],
+      "intuition": "An RC low-pass passes signals slow enough for the capacitor to keep up through R and shrinks those that change faster than it can follow, with the crossover at f_c = 1/(2πRC) (for a low-resistance source and a light load).",
+      "why": "The output is the capacitor voltage, which changes only as fast as current through R brings it charge. For a slow input, each cycle lasts many time constants, the capacitor keeps up, and the output follows the input. For a fast input, the input reverses before the capacitor has charged far, so the output swings only a little. A capacitor's current is i = C·dv/dt, so it passes more current the faster the voltage changes: its opposition to a sine falls as 1/f. At f_c that opposition equals R. The voltages across R and C peak a quarter cycle apart, so they add like the sides of a right triangle: equal sides make each 1/√2 = 0.707 of the input, and the output lags by 45°.",
+      "explanation": "From the RC time constant you know a capacitor charged through R needs a few τ to catch up with a change. Now drive the same R and C with a sine wave and take the output across the capacitor. If the sine is slow, one period lasts many τ, the capacitor keeps up, and the output almost equals the input. If the sine is fast, it reverses long before the capacitor has charged far, and the output is small. That is a low-pass filter. The boundary is the cutoff frequency f_c = 1/(2πRC). The corner in angular frequency is ω_c = 1/RC, in rad/s; dividing by 2π converts it to hertz, and forgetting that gives an answer 6.28 times too high. At f_c the output is 0.707 of the input: −3 dB, the half-power point. At any frequency the gain is |H| = 1/√(1 + (f/f_c)²); well above f_c it falls by 10× in voltage (−20 dB) for every 10× in frequency. The formula assumes an ideal source and no load. A source's output resistance adds to R and lowers f_c; a resistive load across C lowers the output level and raises f_c.",
+      "workedExample": {
+        "problem": "A 10 kΩ resistor and a 100 nF capacitor filter a sensor signal before an ADC input. Assume a low-resistance source and nothing loading the output. Find the cutoff frequency, the gain at f_c and at 1.6 kHz, and how long after a step the output is within 1% of its new value. Then find the cutoff if the sensor has 4.7 kΩ of output resistance.",
+        "steps": [
+          "τ = RC = 10 kΩ × 100 nF = 10⁴ Ω × 10⁻⁷ F = 1.0 ms.",
+          "The corner in angular frequency is ω_c = 1/τ = 1000 rad/s. In hertz: f_c = ω_c / 2π = 1 / (2π × 1.0 ms) = 159 Hz.",
+          "At f_c: |H| = 1/√(1 + 1²) = 0.707, and gain = 20·log₁₀(0.707) = −3.01 dB.",
+          "At 1.6 kHz: f/f_c = 1600 Hz / 159 Hz = 10.05, so |H| = 1/√(1 + 10.05²) = 0.0990, and gain = 20·log₁₀(0.0990) = −20.1 dB. Ten times the cutoff frequency is about 20 dB down.",
+          "After a step, the gap to the final value shrinks as e^(−t/τ). Within 1% means e^(−t/τ) = 0.01, so t = τ × ln 100 = 1.0 ms × 4.61 = 4.61 ms.",
+          "With a 4.7 kΩ source resistance, the capacitor charges through 4.7 kΩ + 10 kΩ = 14.7 kΩ: f_c = 1 / (2π × 14.7 kΩ × 100 nF) = 108 Hz, about a third lower than intended."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. II (AC), ch. 8 \"Filters\", section \"Low-pass filters\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/AC/AC_8.html#xtocid89301",
+          "note": "For one R and one C the cutoff is f = 1/(2πRC), where the capacitive reactance equals R and the output is 70.7% of the input, and that formula holds only with no load on the output."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Elementary Filter Circuits\", ch. 3 \"Tutorial\", section 3.4 \"Bode plots\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_filters.pdf",
+          "note": "The cutoff is conventionally the −3 dB (half-power) point, where the output voltage is √2/2 of the input and X = R, giving f_c = 1/(2πRC) for an RC filter."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Elementary Filter Circuits\", ch. 3 \"Tutorial\", section 3.3 \"Reactive filtering\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_filters.pdf",
+          "note": "Taking the capacitor as an open at zero frequency and a short at very high frequency shows the series-R, shunt-C network passes slow signals and blocks fast ones."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "rc_cutoff",
+      "topicId": "rc_lowpass_cutoff",
+      "prompt": "An RC low-pass filter uses R = {R} and C = {C}. What is its cutoff frequency in hertz?",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            4
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -9,
+            -6
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "tau",
+          "formula": "R*C",
+          "unit": "s"
+        },
+        {
+          "name": "omega",
+          "formula": "1/(R*C)",
+          "unit": "rad/s"
+        }
+      ],
+      "answer": {
+        "formula": "1/(2*pi*R*C)",
+        "unit": "Hz",
+        "tolerance": 0.02
+      },
+      "explanation": "f_c = 1 / (2πRC). Here τ = RC = {tau}, so the corner is at ω = 1/τ = {omega}, and f_c = ω / 2π = {answer}.",
+      "hints": [
+        "The corner is set by the time constant τ = RC; the question asks for it in hertz.",
+        "f_c = 1 / (2π·R·C). Don't forget the 2π when the answer is in hertz."
+      ],
+      "misconceptions": [
+        {
+          "formula": "R*C",
+          "feedback": "That's τ in seconds, not a frequency."
+        }
+      ],
+      "schematic": {
+        "netlist": "RC\nV1 in 0 AC 1\nR1 in out {R:spice}\nC1 out 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R\n{R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "estimate": true,
+      "followUps": [
+        {
+          "prompt": "At f_c the resistor and the capacitor have voltage swings of equal amplitude. Why is each 0.707 of the input, not half?",
+          "choices": [
+            {
+              "text": "The two voltages peak a quarter cycle apart, so their amplitudes combine as √(V_R² + V_C²), not V_R + V_C",
+              "feedback": "Right: Vin² = V_R² + V_C². With V_R = V_C, each is Vin/√2 = 0.707·Vin, which is −3 dB, half power.",
+              "correct": true
+            },
+            {
+              "text": "The two voltages peak at the same moment, so equal amplitudes must each be half the input",
+              "feedback": "That's how two resistors would split. v_R peaks with the current, v_C a quarter cycle later, so they never peak together. Half each would be −6 dB."
+            },
+            {
+              "text": "Part of the input is used up charging the capacitor, so the two voltages need not add up to it",
+              "feedback": "At every instant v_R + v_C = v_in (KVL). Their amplitudes do not add because the two peaks happen at different moments."
+            },
+            {
+              "text": "0.707 is a rounded convention; the true split at f_c is half each",
+              "feedback": "It is exact: 1/√2 = 0.7071, and 20·log₁₀(0.7071) = −3.01 dB. Half each would need the two voltages to peak together."
+            }
+          ],
+          "explanation": "The same current flows through R and C. v_R = i·R peaks with the current. The capacitor's current is i = C·dv/dt, so its voltage changes fastest when the current peaks and itself peaks a quarter cycle later; its amplitude is I/(2πfC). At every instant v_R + v_C = v_in, but two sines a quarter cycle apart add to a sine of amplitude √(V_R² + V_C²). The amplitudes I·R and I/(2πfC) are equal when f = 1/(2πRC), and there each is Vin/√2 = 0.707·Vin, which is −3 dB (Decibels for voltage and power)."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "rc_design_capacitor",
+      "topicId": "rc_lowpass_cutoff",
+      "prompt": "You need an RC low-pass filter with a cutoff of {f} using a {R} resistor. What capacitance gives exactly this cutoff? (Choosing a standard part comes after.)",
+      "variables": [
+        {
+          "name": "f",
+          "unit": "Hz",
+          "series": "E12",
+          "decades": [
+            1,
+            3
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "1/(2*pi*R*f)",
+        "unit": "F",
+        "tolerance": 0.02
+      },
+      "explanation": "Rearrange f_c = 1 / (2πRC) for C: C = 1 / (2π·R·f_c) = 1 / (2π × {R} × {f}) = {answer}. In practice you'd pick the nearest standard value.",
+      "hints": [
+        "Start from f_c = 1 / (2πRC) and solve for C.",
+        "C = 1 / (2π·R·f_c)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "2*pi*R*f",
+          "feedback": "Solve for C carefully: C = 1 / (2πRf). What you have is the reciprocal."
+        }
+      ],
+      "schematic": {
+        "netlist": "RC low-pass\nV1 in 0 SIN(0 1 {f:spice})\nR1 in out {R:spice}\nC1 out 0 1u\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R\n{R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C = ?"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "rc_gain_db_at_f",
+      "topicId": "rc_lowpass_cutoff",
+      "prompt": "An RC low-pass filter has a cutoff frequency of {fc}. What is its gain in dB at {f}?",
+      "variables": [
+        {
+          "name": "fc",
+          "unit": "Hz",
+          "series": "E12",
+          "decades": [
+            2,
+            3
+          ]
+        },
+        {
+          "name": "x",
+          "unit": "",
+          "range": {
+            "min": 0.5,
+            "max": 2.5,
+            "step": 0.5
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "f",
+          "formula": "fc*x",
+          "unit": "Hz"
+        }
+      ],
+      "answer": {
+        "formula": "-10*log10(1+x^2)",
+        "unit": "dB",
+        "tolerance": 0.035
+      },
+      "explanation": "|H| = 1 / √(1 + (f/f_c)²). Here f/f_c = {x}, so gain = 20·log₁₀|H| = −10·log₁₀(1 + {x}²) = {answer}. At f = f_c this is −3.01 dB; far above f_c it falls 20 dB per decade.",
+      "hints": [
+        "Find f/f_c first, then use the magnitude of a first-order low-pass.",
+        "|H| = 1 / √(1 + (f/f_c)²); in dB that is −10·log₁₀(1 + (f/f_c)²)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "-20*log10(x)",
+          "feedback": "−20·log₁₀(f/f_c) is the straight-line asymptote, which is only accurate well above f_c. Use the exact −10·log₁₀(1 + (f/f_c)²)."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Far above f_c, the gain falls by 20 dB for every ×10 in frequency. Why?",
+          "choices": [
+            {
+              "text": "X_C falls ×10, so the capacitor's share of Vin falls about ×10, and ×0.1 in voltage is −20 dB",
+              "feedback": "Right: far above f_c, Vout ≈ Vin·X_C/R, which is proportional to 1/f.",
+              "correct": true
+            },
+            {
+              "text": "The power falls ×10 per decade",
+              "feedback": "The voltage falls ×10, so the power falls ×100. Either way it's −20 dB: 10·log₁₀(0.01) = 20·log₁₀(0.1)."
+            },
+            {
+              "text": "The resistor's value grows with frequency",
+              "feedback": "A resistor is the same at every frequency. It's the capacitor's reactance that changes."
+            },
+            {
+              "text": "Every RC filter loses exactly 20 dB above f_c, then levels off",
+              "feedback": "It doesn't level off: −20 dB at 10·f_c, −40 dB at 100·f_c. It's a slope, not a step."
+            }
+          ],
+          "explanation": "Far above f_c, X_C is much smaller than R, so nearly all of Vin is across R and the current is about Vin/R. The output is that current times X_C: Vout ≈ Vin·X_C/R. X_C = 1/(2πfC) falls ×10 per decade, so Vout does too, and ×0.1 in voltage is 20·log₁₀(0.1) = −20 dB."
+        }
+      ],
+      "schematic": {
+        "netlist": "RC low-pass\nV1 in 0 SIN(0 1 {f:spice})\nR1 in out 1k\nC1 out 0 1u\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "sine\n{f}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "rc_design_pair",
+      "topicId": "rc_lowpass_cutoff",
+      "prompt": "Design an RC low-pass filter with a cutoff within 10% of {fc}. Choose R (1 kΩ to 100 kΩ) and C, both standard E12 values.",
+      "variables": [
+        {
+          "name": "fc",
+          "unit": "Hz",
+          "series": "E12",
+          "decades": [
+            2,
+            4
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Cex",
+          "formula": "1/(2*pi*10000*fc)",
+          "unit": "F"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "R",
+            "label": "R",
+            "unit": "Ω",
+            "series": "E12",
+            "min": 1000,
+            "max": 100000
+          },
+          {
+            "name": "C",
+            "label": "C",
+            "unit": "F",
+            "series": "E12",
+            "min": 1e-12,
+            "max": 0.001
+          }
+        ],
+        "result": "1/(2*pi*R*C)",
+        "resultLabel": "f_c",
+        "resultUnit": "Hz",
+        "target": "fc",
+        "tolerance": 0.1
+      },
+      "explanation": "f_c = 1/(2πRC), so you need RC = 1/(2π × {fc}). One way: pick R = 10 kΩ, then C = 1/(2π × 10 kΩ × {fc}) = {Cex}. Round C to the nearest E12 value, then check f_c again; if it's out, try a neighboring R.",
+      "hints": [
+        "Fix one component first (10 kΩ is a good start), then solve for the other.",
+        "C = 1/(2π·R·f_c); round to the nearest E12 value and check."
+      ],
+      "schematic": {
+        "netlist": "RC low-pass\nV1 in 0 SIN(0 1 {fc:spice})\nR1 in out {R:spice}\nC1 out 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R\n{R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "bridge_tau_to_fc",
+      "topicId": "rc_lowpass_cutoff",
+      "bridge": [
+        "circuit",
+        "signals"
+      ],
+      "prompt": "An RC circuit's step response has τ = {tau}. Where is its −3 dB frequency?",
+      "variables": [
+        {
+          "name": "tau",
+          "unit": "s",
+          "series": "E12",
+          "decades": [
+            -5,
+            -3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "fc",
+          "formula": "1/(2*pi*tau)",
+          "unit": "Hz"
+        },
+        {
+          "name": "wrong",
+          "formula": "1/tau",
+          "unit": "Hz"
+        },
+        {
+          "name": "wrong2",
+          "formula": "2*pi/tau",
+          "unit": "Hz"
+        }
+      ],
+      "choices": [
+        {
+          "text": "{fc}",
+          "correct": true,
+          "feedback": "Yes: f_c = 1/(2πτ). The time view and the frequency view are the same circuit."
+        },
+        {
+          "text": "{wrong}",
+          "feedback": "1/τ is the corner in rad/s (ω). In hertz, divide by 2π."
+        },
+        {
+          "text": "{wrong2}",
+          "feedback": "The 2π goes in the denominator: f_c = 1/(2πτ)."
+        },
+        {
+          "text": "It can't be found from the step response",
+          "feedback": "For a first-order circuit, τ determines the whole frequency response: f_c = 1/(2πτ)."
+        }
+      ],
+      "explanation": "A first-order system has one number that sets both views: τ in time and ω_c = 1/τ in frequency, so f_c = 1/(2πτ) = {fc}. A slow step response means a low cutoff.",
+      "noDrawing": "converting a time constant to a corner frequency; no specific circuit",
+      "review": "verified"
+    },
+    {
+      "id": "rc_lp_what_if_c",
+      "topicId": "rc_lowpass_cutoff",
+      "prompt": "An RC low-pass filter uses R = {R} and C = {C}. A second {C} capacitor is connected in parallel with C. What happens to the cutoff frequency?",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -9,
+            -7
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the cutoff frequency",
+        "formula": "1/(2*pi*R*C)",
+        "unit": "Hz",
+        "change": {
+          "C": "2*C"
+        },
+        "askFactor": true,
+        "feedback": {
+          "up": "A bigger capacitor takes longer to charge through R, so the circuit gets slower, and a slower circuit has a lower corner.",
+          "same": "The corner is where the capacitor stops keeping up with the input through R, f_c = 1/(2πRC). A larger C needs more charge for each volt it follows, and R limits how fast that charge arrives, so the frequency it can keep up with is not the same."
+        }
+      },
+      "explanation": "Capacitors in parallel add, so the capacitance doubles. f_c = 1/(2πRC) goes as 1/C: twice the capacitance doubles the time constant (τ = RC, from RC time constant) and halves the corner: {before} → {after}.",
+      "hints": [
+        "Is a circuit with a bigger capacitor faster or slower?",
+        "f_c = 1/(2πRC): how does it depend on C?"
+      ],
+      "schematic": {
+        "netlist": "RC low-pass\nV1 in 0 SIN(0 1 1k)\nR1 in out {R:spice}\nC1 out 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R\n{R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "rc_lp_what_if_source",
+      "topicId": "rc_lowpass_cutoff",
+      "prompt": "An RC low-pass filter uses R = {R} and C = {C}. On the bench it was driven from a generator with {Rs} output resistance. In the product it is driven by a sensor whose output resistance is {new_Rs}. What happens to the cutoff frequency?",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -8,
+            -7
+          ]
+        },
+        {
+          "name": "Rs",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            1,
+            1
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the cutoff frequency",
+        "formula": "1/(2*pi*(R+Rs)*C)",
+        "unit": "Hz",
+        "change": {
+          "Rs": "100*Rs"
+        },
+        "feedback": {
+          "up": "More resistance in the charging path lets less current into the capacitor, so it takes longer to follow a change at the input than before. The cutoff is the frequency where the capacitor stops keeping up with the input.",
+          "same": "The capacitor charges through every resistance in its path, not only the one drawn in the filter. The source's resistance is in series with R."
+        }
+      },
+      "explanation": "The capacitor sees the source's resistance in series with R. That is the source's Thevenin resistance (see Thevenin and Norton equivalents), so f_c = 1/(2π(Rs + R)C): {before} → {after}. A generator's few tens of ohms barely matter next to kilohms, but a high-resistance source moves the corner. Buffer the source, or count Rs as part of R.",
+      "hints": [
+        "Which resistances does the capacitor charge through?"
+      ],
+      "schematic": {
+        "netlist": "RC low-pass driven from a source with output resistance\nV1 src 0 SIN(0 1 1k)\nRS src in {Rs:spice}\nR1 in out {R:spice}\nC1 out 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "source"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              2,
+              0
+            ],
+            "label": "Rs (source)\n{Rs}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              0
+            ],
+            "label": "R\n{R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "C\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              10,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            6,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              6,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              12,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "rc_lp_fault_dc",
+      "topicId": "rc_lowpass_cutoff",
+      "prompt": "An RC low-pass (R1 = {R1}, C1 = {C1}) feeds a load RL = {RL}. You check it on the bench with a {Vin} DC supply and a multimeter. Healthy, the output should read {h0}. The readings are below. Which fault explains them?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 9,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "C1",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -7,
+            -7
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "fault": {
+        "netlist": "rc lowpass with load\nV1 in 0 {Vin:spice}\nR1 in out {R1:spice}\nC1 out 0 {C1:spice}\nRL out 0 {RL:spice}\n",
+        "probes": [
+          {
+            "label": "Output voltage",
+            "probe": "v(out)"
+          },
+          {
+            "label": "Current through R1",
+            "probe": "i(R1)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "R1 is open",
+            "open": "R1",
+            "feedback": "An open R1 would stop all current: R1 would read 0 A and the output would fall to 0 V.",
+            "why": "Nothing reaches the output through an open R1, so RL pulls it to 0 V and R1 reads 0 A."
+          },
+          {
+            "text": "C1 is shorted",
+            "short": "C1",
+            "feedback": "A shorted C1 would pull the output to 0 V while R1 carried Vin/R1, far more current than normal.",
+            "why": "The short ties the output to ground, so it reads 0 V, and R1 alone limits the current to Vin/R1, well above normal."
+          },
+          {
+            "text": "The load RL is disconnected",
+            "open": "RL",
+            "feedback": "With the load gone, no DC current could flow (C1 blocks DC), so R1 would read 0 A and the output would rise to the full {Vin}.",
+            "why": "Only RL carried DC current. Without it the capacitor blocks DC, the current is 0 A, R1 drops nothing and the output sits at {Vin}."
+          },
+          {
+            "text": "C1 is leaky (cracked, conducting about 3.3 kΩ)",
+            "add": "Rleak out 0 3.3k",
+            "feedback": "A leaky C1 adds a resistive path to ground: the output would drop well below normal but not to zero, and the current would rise.",
+            "why": "The leak acts like a resistor in parallel with RL. Less resistance to ground takes a smaller share of Vin, so the output falls part-way, and the total current rises."
+          }
+        ]
+      },
+      "explanation": "At DC a healthy capacitor is open, so the circuit is just the divider R1–RL (see Voltage and current dividers): out = Vin·RL/(R1 + RL). The current tells open from short; the output voltage tells which part. Notice the fault that isn't listed: an open C1 reads exactly like a healthy circuit on a DC meter, because a good capacitor is already open at DC. To catch it you need an AC test, such as a sine well above f_c, which should come out much smaller. With RL fitted, that corner is f_c = 1/(2π(R1 ∥ RL)C1).",
+      "hints": [
+        "At DC, what does a healthy capacitor look like?",
+        "Look at the current first: zero means the DC path is broken; more than normal means something shorts to ground."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C1}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "RL\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              10,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "rc_syn_settle_from_fc",
+      "topicId": "rc_lowpass_cutoff",
+      "connects": [
+        "rc_time_constant",
+        "rc_lowpass_cutoff"
+      ],
+      "prompt": "A sensor's output goes through an RC low-pass whose −3 dB frequency is {fc}. The sensor reading suddenly jumps to a new value (a step). How long after the step does the output first get within 1% of the new value?",
+      "variables": [
+        {
+          "name": "fc",
+          "unit": "Hz",
+          "series": "E12",
+          "decades": [
+            1,
+            2
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "tau",
+          "formula": "1/(2*pi*fc)",
+          "unit": "s"
+        }
+      ],
+      "answer": {
+        "formula": "ln(100)*tau",
+        "unit": "s"
+      },
+      "explanation": "RC low-pass cutoff frequency: f_c = 1/(2πRC), so the filter's time constant is τ = RC = 1/(2π × {fc}) = {tau}. You don't need R and C separately. RC time constant: after a step, the gap between the output and its final value shrinks as e^(−t/τ). Within 1% means e^(−t/τ) = 0.01, so t = τ × ln(100) ≈ 4.6τ = {answer}.",
+      "hints": [
+        "Turn the cutoff into a time constant first.",
+        "τ = 1/(2π·f_c); the remaining gap is e^(−t/τ), so solve e^(−t/τ) = 0.01."
+      ],
+      "misconceptions": [
+        {
+          "formula": "tau",
+          "feedback": "That's one time constant. After τ the output has covered only 63% of the jump, with 37% still to go. Within 1% needs e^(−t/τ) = 0.01, which is about 4.6τ."
+        },
+        {
+          "formula": "5*tau",
+          "feedback": "5τ is the rule of thumb for 'fully settled' (within 0.7%). This asks for within 1%: e^(−t/τ) = 0.01 gives t = ln(100)·τ ≈ 4.6τ."
+        },
+        {
+          "formula": "1/fc",
+          "feedback": "1/f_c is the period of a sine at the cutoff, not a settling time. Turn f_c into τ = 1/(2π·f_c), then use e^(−t/τ) = 0.01."
+        },
+        {
+          "formula": "ln(100)/fc",
+          "feedback": "The time constant is 1/(2π·f_c), not 1/f_c: you left out the 2π."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does a lower cutoff frequency make the filter settle more slowly?",
+          "choices": [
+            {
+              "text": "f_c = 1/(2πRC), so a lower f_c means a bigger RC, and the whole step response stretches with RC",
+              "correct": true,
+              "feedback": "Right: τ = 1/(2π·f_c). Halve the cutoff and τ doubles, and so does the 4.6τ settling time."
+            },
+            {
+              "text": "A lower cutoff blocks more of the step, so less voltage reaches the capacitor and it charges more slowly",
+              "feedback": "A step's final value is DC, which the low-pass passes fully. How fast it gets there is set by τ, not by how much gets through."
+            },
+            {
+              "text": "Settling always takes about five time constants, and the cutoff frequency doesn't change the time constant",
+              "feedback": "The cutoff is the time constant in another form: τ = 1/(2π·f_c). Lower f_c means bigger τ."
+            },
+            {
+              "text": "A lower cutoff needs a bigger capacitor, and a bigger capacitor always takes longer whatever R is",
+              "feedback": "Only the product RC matters. A bigger C with a smaller R can keep the same f_c and the same settling time."
+            }
+          ],
+          "explanation": "τ and f_c describe the same filter: τ = 1/(2π·f_c). The time to get within 1% is ln(100)·τ ≈ 4.6τ, so a filter that removes more noise (lower f_c) always takes longer to follow a real change."
+        }
+      ],
+      "schematic": {
+        "netlist": "Sensor into an RC low-pass\nV1 in 0 PULSE(0 1 0 1n 1n 1 2)\nR1 in out 1k\nC1 out 0 1u\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "sensor\n(step)"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "rc_syn_db_spec_r",
+      "topicId": "rc_lowpass_cutoff",
+      "connects": [
+        "decibels",
+        "rc_lowpass_cutoff"
+      ],
+      "prompt": "An RC low-pass uses C = {C} (fed from a low-resistance source, nothing loading its output). It must cut interference at {fn} by exactly {A} (the output there is {A} below the input). What resistance R does that?",
+      "variables": [
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -7,
+            -7
+          ]
+        },
+        {
+          "name": "fn",
+          "unit": "Hz",
+          "values": [
+            1000,
+            2000,
+            5000,
+            10000
+          ]
+        },
+        {
+          "name": "A",
+          "unit": "dB",
+          "values": [
+            20,
+            30,
+            40
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "An",
+          "formula": "A",
+          "unit": ""
+        },
+        {
+          "name": "k",
+          "formula": "10^(A/20)",
+          "unit": ""
+        },
+        {
+          "name": "x",
+          "formula": "sqrt(10^(A/10)-1)",
+          "unit": ""
+        },
+        {
+          "name": "fc",
+          "formula": "fn/x",
+          "unit": "Hz"
+        }
+      ],
+      "answer": {
+        "formula": "1/(2*pi*fc*C)",
+        "unit": "Ω"
+      },
+      "explanation": "Decibels for voltage and power: {A} down in voltage means the output is 1/10^({An}/20) = 1/{k} of the input (20·log₁₀ for a voltage ratio). RC low-pass cutoff frequency: |H| = 1/√(1 + (f/f_c)²), so (f/f_c)² = {k}² − 1 and f_c = {fn} / √({k}² − 1) = {fc}. Then f_c = 1/(2πRC) gives R = 1/(2π × {fc} × {C}) = {answer}. Because {k}² is much bigger than 1, f_c ≈ {fn}/{k}: the −20 dB-per-decade slope gives almost the same answer.",
+      "hints": [
+        "Turn the dB figure into a voltage ratio, then ask where the cutoff must be for the filter to give that ratio at the interference frequency.",
+        "Ratio = 10^(A/20); f_c = f/√(ratio² − 1); R = 1/(2π·f_c·C)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "sqrt(10^(A/5)-1)/(2*pi*fn*C)",
+          "feedback": "That uses 10^(A/10), the power ratio, as the voltage ratio. For a voltage, dB = 20·log₁₀, so {A} is ×{k} in voltage."
+        },
+        {
+          "formula": "1/(2*pi*fn*C)",
+          "feedback": "That puts the cutoff at {fn}, where the filter is only 3 dB down. To be {A} down there, the cutoff has to sit well below {fn}."
+        },
+        {
+          "formula": "1/(2*pi*fn*x*C)",
+          "feedback": "That puts the cutoff above {fn}. A low-pass attenuates frequencies above its cutoff, so f_c must be {fn}/√(ratio² − 1), below the interference."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does asking for more dB at {fn} push the cutoff so far below it?",
+          "choices": [
+            {
+              "text": "Above f_c the gain falls only about 20 dB per decade, so each 20 dB needs ×10 more distance",
+              "feedback": "Right: 20 dB needs f_c about a decade below {fn}, 40 dB about two decades.",
+              "correct": true
+            },
+            {
+              "text": "Most of the attenuation happens right at f_c, so the cutoff must sit close to where the interference is",
+              "feedback": "At f_c the filter is only 3 dB down. The attenuation builds up gradually above it, 20 dB per decade."
+            },
+            {
+              "text": "A lower cutoff gives the capacitor more time to charge, and a charged capacitor blocks more of the interference",
+              "feedback": "The capacitor doesn't block by being charged. It shunts fast signals to ground because its reactance falls as frequency rises."
+            },
+            {
+              "text": "Each decade above f_c adds only 3 dB more attenuation, so it takes many decades to reach the target",
+              "feedback": "3 dB is the loss at f_c itself. Well above f_c, each decade adds 20 dB, not 3 dB."
+            }
+          ],
+          "explanation": "Well above f_c, |H| ≈ f_c/f: the gain falls ×10 (−20 dB) for every ×10 in frequency. So {A} of attenuation needs f/f_c ≈ 10^({An}/20) = {k}, which puts f_c near {fn}/{k}. The exact value, from 1/√(1 + (f/f_c)²), is {fc}."
+        }
+      ],
+      "schematic": {
+        "netlist": "RC low-pass\nV1 in 0 SIN(0 1 {fn:spice})\nR1 in out 1k\nC1 out 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R = ?"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    }
+  ]
+}

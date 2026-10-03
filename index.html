@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Replaced by `flutter build web` (default "/": the site's root). -->
+  <base href="/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <title>Spark Chamber</title>
+  <meta name="description" content="Learn electricity, circuits and electronics with problems built from real component values, checked answers and a circuit simulator. Free; your progress stays in this browser.">
+  <!-- The default look's surface (blueprint), in the reader's color scheme. -->
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#102036">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FAFCFE">
+  <meta name="color-scheme" content="dark light">
+
+  <!-- Installing (Add to Home Screen / Add to Dock / Install app). -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Spark Chamber">
+  <link rel="apple-touch-icon" href="icons/Icon-maskable-192.png">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    html, body { margin: 0; height: 100%; background: #0D0F0E; }
+    @media (prefers-color-scheme: light) { html, body { background: #F1F5F9; } }
+  </style>
+
+  <!--
+    Everything this page loads comes from the site that serves it: no other
+    host, no server of our own (docs/RELEASE.md, "Publishing the browser
+    version"). Progress is kept in this browser's storage.
+  -->
+  <script>
+    // Ask the browser to keep this site's storage (the student's progress)
+    // instead of clearing it when space runs low. Safari and Chrome decide
+    // by themselves; Firefox may ask the student. Never fatal.
+    try {
+      if (navigator.storage && navigator.storage.persist) {
+        navigator.storage.persisted()
+          .then(function (kept) { return kept || navigator.storage.persist(); })
+          .catch(function () {});
+      }
+    } catch (e) {}
+
+    // The app's own keys (docs/RELEASE.md, "Keys in the browser"): Ctrl+F
+    // (formulas), Ctrl+K (calculator) and Ctrl+Enter (run the simulation) go
+    // to the app, not to the browser's find bar or search box. While the
+    // Bench is open (the app sets sparkChamberBenchKeys), so do F5 (run),
+    // F6 (run the scope or Bode plotter) and Ctrl+R (rotate), which would
+    // otherwise reload the page and lose the circuit, and Ctrl+S (save as
+    // blueprint), not "Save page as". Only these, and only
+    // while the keyboard is in the app; every other key (Ctrl+C, Ctrl+V,
+    // Ctrl+L, Ctrl+T, and F5 outside the Bench...) keeps its browser
+    // meaning. The key still reaches the app: preventDefault stops only the
+    // browser's own action.
+    window.addEventListener('keydown', function (e) {
+      if (e.altKey || e.metaKey || e.shiftKey) return;
+      var k = e.key;
+      var bench = window.sparkChamberBenchKeys === true;
+      var ours = e.ctrlKey
+        ? k === 'f' || k === 'F' || k === 'k' || k === 'K' || k === 'Enter' || (bench && (k === 'r' || k === 'R' || k === 's' || k === 'S'))
+        : bench && (k === 'F5' || k === 'F6');
+      if (!ours) return;
+      var t = e.target;
+      var inApp = t === document.body || t === document.documentElement ||
+        (t && t.closest && t.closest('flutter-view, flt-glass-pane'));
+      if (inApp) e.preventDefault();
+    }, true);
+  </script>
+</head>
+<body>
+  <noscript>Spark Chamber needs JavaScript to run in the browser.</noscript>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

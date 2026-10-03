@@ -1,0 +1,1858 @@
+{
+  "topics": [
+    {
+      "id": "thevenin",
+      "title": "Thevenin and Norton equivalents",
+      "summary": "Any linear two-terminal circuit looks like one voltage source with one series resistor (or a current source with a parallel resistor).",
+      "lenses": [
+        "circuit"
+      ],
+      "prerequisites": [
+        "dividers",
+        "kirchhoff"
+      ],
+      "lensNotes": {
+        "circuit": "Any linear circuit, seen from two terminals, behaves like one source and one resistor. That's why you can analyze a sensor, a divider or a whole amplifier stage as V_th in series with R_th and then just add the load."
+      },
+      "formulas": [
+        {
+          "label": "Thevenin voltage",
+          "tex": "V_{th} = V_{\\text{open circuit}}"
+        },
+        {
+          "label": "Thevenin resistance",
+          "tex": "R_{th} = \\frac{V_{oc}}{I_{sc}}"
+        },
+        {
+          "label": "Norton current",
+          "tex": "I_N = \\frac{V_{th}}{R_{th}}"
+        },
+        {
+          "label": "Loaded source",
+          "tex": "I_L = \\frac{V_{th}}{R_{th} + R_L},\\quad V_L = V_{th}\\,\\frac{R_L}{R_{th} + R_L}"
+        },
+        {
+          "label": "Divider's Thevenin resistance",
+          "tex": "R_{th} = R_1 \\parallel R_2\\ \\ (\\text{sources zeroed})"
+        },
+        {
+          "label": "Maximum power transfer",
+          "tex": "P_{max} = \\frac{V_{th}^2}{4R_{th}}\\ \\ (R_L = R_{th})"
+        }
+      ],
+      "prerequisiteNotes": {
+        "dividers": "The Thevenin voltage of a divider is its unloaded output, and loading it is exactly the divider-with-a-load problem.",
+        "kirchhoff": "Finding an equivalent circuit means solving for an open-circuit voltage and a short-circuit current, which takes KCL and KVL."
+      },
+      "goals": [
+        "Find the Thevenin voltage and resistance of a divider or small resistor network seen from two terminals",
+        "Predict the voltage and current any load gets from V_th and R_th, without solving the whole circuit again",
+        "Convert between the Thevenin and Norton forms",
+        "Find the load resistance that takes the most power, and explain why a power supply is not run that way"
+      ],
+      "intuition": "Seen from two terminals, any circuit of resistors and sources is one ideal source behind one resistor: V_th is what a meter reads with nothing connected, and R_th is how much the voltage sags per amp drawn (this holds only while every part inside is linear).",
+      "why": "In a circuit of resistors and fixed sources, every part obeys a straight-line law, and Kirchhoff's laws only add and subtract voltages and currents, so the whole circuit obeys one too: the voltage at the terminals falls in a straight line as the load draws more current: V = V_th − I·R_th. A straight line is fixed by two numbers. V_th is where it starts, at zero current. R_th is its slope: how many volts the output loses per amp drawn, which is the resistance seen looking back into the terminals with the sources turned off. Norton describes the same line by its other end, the short-circuit current. A diode or transistor inside bends the line, and the equivalent then holds only near one operating point.",
+      "explanation": "A divider's output drops under load. Thevenin's theorem says any linear circuit, seen from two terminals, behaves like a single source V_th in series with a single resistance R_th. V_th is the open-circuit voltage; for a divider, Vin · R2 / (R1 + R2). R_th is the resistance you see looking back into the terminals with the sources turned off: an ideal voltage source becomes a short, an ideal current source an open. For a divider the short joins the top of R1 to ground, so R_th = R1 ∥ R2. Or: R_th = V_oc / I_sc. Any load then forms a two-resistor divider: V_L = V_th · R_L / (R_th + R_L). Norton's form is a current source I_N = V_th / R_th with R_th in parallel. The load takes the most power when R_L = R_th, but then only half of V_th reaches it; supplies are run with R_L much larger than R_th so the output stays close to V_th. Where R_th is a real internal resistance, as in a battery, a matched load would also waste as much power inside the source as it delivers. The equivalent describes only the terminals, not the power lost inside.",
+      "workedExample": {
+        "problem": "A divider runs from an ideal 12 V source: R1 = 6.8 kΩ on top, R2 = 3.3 kΩ on the bottom. Find its Thevenin and Norton equivalents, the voltage across a 10 kΩ load, and the most power any load could take from it.",
+        "steps": [
+          "V_th is the open-circuit output: 12 V × 3.3 kΩ / (6.8 kΩ + 3.3 kΩ) = 12 V × 3.3 kΩ / 10.1 kΩ = 3.92 V.",
+          "R_th: replace the 12 V source by a short, so R1 and R2 both run from the output to ground: 6.8 kΩ ∥ 3.3 kΩ = (6.8 kΩ × 3.3 kΩ) / 10.1 kΩ = 2.22 kΩ.",
+          "Load: the 10 kΩ load and R_th form a divider. I = 3.92 V / (2.22 kΩ + 10 kΩ) = 0.321 mA, and V_L = 0.321 mA × 10 kΩ = 3.21 V.",
+          "Cross-check on the full circuit: R2 ∥ R_L = 3.3 kΩ ∥ 10 kΩ = 2.48 kΩ, and 12 V × 2.48 kΩ / (6.8 kΩ + 2.48 kΩ) = 3.21 V, the same.",
+          "Norton: I_N = V_th / R_th = 3.92 V / 2.22 kΩ = 1.76 mA, with 2.22 kΩ in parallel. Check: shorting the output also shorts R2, so the short-circuit current is 12 V / 6.8 kΩ = 1.76 mA.",
+          "Most power: with R_L = R_th = 2.22 kΩ, the load gets V_th / 2 = 1.96 V, and P = V_th² / (4 R_th) = (3.92 V)² / (4 × 2.22 kΩ) = 1.73 mW."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 10 \"DC Network Analysis\", section \"Thevenin's Theorem\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_10.html#xtocid87889",
+          "note": "V_th is the open-circuit voltage; R_th is the resistance seen at the terminals with voltage sources shorted and current sources opened; linear circuits only."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 10 \"DC Network Analysis\", section \"Thevenin-Norton equivalencies\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_10.html#xtocid878811",
+          "note": "Thevenin and Norton resistances are equal and I_N = V_th / R_th, the short-circuit current."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 10 \"DC Network Analysis\", section \"Maximum Power Transfer Theorem\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_10.html#xtocid878813",
+          "note": "Load power peaks at R_L = R_th, and that matched condition is not the most efficient one."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "th_vth_divider",
+      "topicId": "thevenin",
+      "prompt": "Find the Thevenin voltage at the output of a divider: {Vin} source, R1 = {R1} on top, R2 = {R2} on the bottom, output across R2 with nothing connected.",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 24,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "Vin*R2/(R1+R2)",
+        "unit": "V"
+      },
+      "explanation": "V_th is the open-circuit output voltage: the plain divider result, {Vin} × {R2} / ({R1} + {R2}) = {answer}.",
+      "hints": [
+        "V_th is the voltage at the terminals with no load.",
+        "With no load, it's just the divider output."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vin",
+          "feedback": "The source voltage appears at the output only if R1 is zero. With no load, the output is the divider voltage."
+        }
+      ],
+      "simCheck": {
+        "netlist": "thevenin\nV1 in 0 {Vin:spice}\nR1 in out {R1:spice}\nR2 out 0 {R2:spice}\n",
+        "probe": "v(out)"
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "th_rth_divider",
+      "topicId": "thevenin",
+      "prompt": "Find the Thevenin resistance seen at the output of a divider with R1 = {R1} (top) and R2 = {R2} (bottom), fed from an ideal voltage source.",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "R1*R2/(R1+R2)",
+        "unit": "Ω"
+      },
+      "explanation": "Turn the source off: an ideal voltage source becomes a short, which connects the top of R1 to ground. Looking into the output you then see R1 and R2 in parallel: {R1} || {R2} = {answer}.",
+      "hints": [
+        "Replace the voltage source with a short circuit.",
+        "From the output, R1 and R2 are then in parallel."
+      ],
+      "misconceptions": [
+        {
+          "formula": "R1+R2",
+          "feedback": "With the source zeroed (a short), R1 and R2 both run from the output to ground, so they are in parallel, not series."
+        },
+        {
+          "formula": "R2",
+          "feedback": "R1 matters too: with the source shorted, it also connects the output to ground, in parallel with R2."
+        }
+      ],
+      "schematic": {
+        "netlist": "Rth\nV1 in 0 1\nR1 in out {R1:spice}\nR2 out 0 {R2:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "source\n(set to 0)"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              11,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              11,
+              0
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "Why do you replace the voltage source with a short to find R_th?",
+          "choices": [
+            {
+              "text": "An ideal voltage source holds its voltage at any current, so it adds no resistance: set to 0 V, it's just a wire",
+              "feedback": "Right: R_th describes how the output changes with load current, and an ideal source contributes nothing to that change.",
+              "correct": true
+            },
+            {
+              "text": "Shorting it makes the circuit safe to measure",
+              "feedback": "Never short a real supply. Zeroing the source is a step in the calculation, not something you do on the bench."
+            },
+            {
+              "text": "It should be replaced by an open circuit, because no current may flow",
+              "feedback": "An open is what a zeroed current source becomes. A zeroed voltage source has 0 V across it at any current: a short."
+            },
+            {
+              "text": "The source's voltage adds to R_th",
+              "feedback": "Volts and ohms can't be added. R_th comes only from the resistances, seen from the output."
+            }
+          ],
+          "explanation": "R_th is how much the output voltage falls per unit of load current. An ideal voltage source keeps its voltage whatever current flows, so it adds nothing to that fall; set to 0 V it behaves as a wire. With the top of R1 then on ground, R1 and R2 both run from the output to ground: in parallel, as in Series and parallel. Equivalently, R_th = V_oc / I_sc: here V_oc = Vin·R2/(R1 + R2) and I_sc = Vin/R1, whose ratio is R1·R2/(R1 + R2) = R1 ∥ R2, the same answer."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "th_load_current",
+      "topicId": "thevenin",
+      "prompt": "A circuit has Thevenin voltage {Vth} and Thevenin resistance {Rth}. How much current flows into a {RL} load?",
+      "variables": [
+        {
+          "name": "Vth",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 15,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "Rth",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            3
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "Vth/(Rth+RL)",
+        "unit": "A"
+      },
+      "explanation": "The equivalent is a source {Vth} in series with {Rth}; the load completes the loop. I = {Vth} / ({Rth} + {RL}) = {answer}.",
+      "hints": [
+        "Draw the equivalent: V_th, then R_th, then the load, in one loop.",
+        "I = V_th / (R_th + R_L)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vth/RL",
+          "feedback": "The Thevenin resistance is in series with the load, so include it: I = V_th / (R_th + R_L)."
+        }
+      ],
+      "simCheck": {
+        "netlist": "thevenin load\nVTH a 0 {Vth:spice}\nRTH a b {Rth:spice}\nRL b 0 {RL:spice}\n",
+        "probe": "i(RL)"
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "VTH",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "Vth\n{Vth}"
+          },
+          {
+            "ref": "RTH",
+            "at": [
+              2,
+              0
+            ],
+            "label": "Rth\n{Rth}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "RL\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "steps": [
+        "Replace the circuit by its Thevenin equivalent: {Vth} in series with {Rth}.",
+        "The load completes a single loop, so the resistances add: {Rth} + {RL}.",
+        "Ohm's law around the loop: I = {Vth}/({Rth} + {RL}) = {answer}."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why is the load current less than V_th / R_L?",
+          "choices": [
+            {
+              "text": "The same current also flows through R_th, which drops part of V_th before it reaches the load",
+              "feedback": "Right: one series loop, so the load sees V_th − I·R_th.",
+              "correct": true
+            },
+            {
+              "text": "Part of the current flows through R_th instead of the load",
+              "feedback": "R_th is in series with the load, not beside it. Every bit of the current goes through both."
+            },
+            {
+              "text": "V_th is only reached with the output shorted",
+              "feedback": "V_th is the open-circuit voltage: what you'd measure with nothing connected. Shorting the output gives the Norton current."
+            },
+            {
+              "text": "R_th and R_L are in parallel, so the current divides",
+              "feedback": "In the equivalent, V_th, R_th and R_L form one loop: R_th and R_L are in series."
+            }
+          ],
+          "explanation": "In the equivalent, V_th, R_th and the load form one series loop (KVL from Kirchhoff). One current flows through R_th and R_L, and it drops I·R_th inside the source, so the load sees only V_th − I·R_th. That internal drop is why an output sags under load."
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "th_norton_current",
+      "topicId": "thevenin",
+      "prompt": "A circuit has Thevenin voltage {Vth} and Thevenin resistance {Rth}. What is its Norton current?",
+      "variables": [
+        {
+          "name": "Vth",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 15,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "Rth",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            4
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "Vth/Rth",
+        "unit": "A"
+      },
+      "explanation": "The Norton current is the short-circuit current: short the output and I_N = V_th / R_th = {Vth} / {Rth} = {answer}. The Norton resistance equals R_th.",
+      "hints": [
+        "The Norton current is what flows if you short the output.",
+        "I_N = V_th / R_th."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vth*Rth",
+          "feedback": "Divide, don't multiply: I_N = V_th / R_th."
+        }
+      ],
+      "schematic": {
+        "netlist": "Thevenin equivalent\nVTH a 0 {Vth:spice}\nRTH a out {Rth:spice}\n",
+        "parts": [
+          {
+            "ref": "VTH",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "Vth\n{Vth}"
+          },
+          {
+            "ref": "RTH",
+            "at": [
+              2,
+              0
+            ],
+            "label": "Rth\n{Rth}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "th_max_power",
+      "topicId": "thevenin",
+      "prompt": "A source has Thevenin voltage {Vth} and resistance {Rth}. What is the most power it can deliver to a resistive load?",
+      "variables": [
+        {
+          "name": "Vth",
+          "unit": "V",
+          "range": {
+            "min": 1,
+            "max": 12,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "Rth",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            1,
+            3
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "Vth^2/(4*Rth)",
+        "unit": "W"
+      },
+      "explanation": "Maximum power transfer happens when R_L = R_th. Then half of V_th appears across the load: P = (V_th/2)² / R_th = V_th² / (4 R_th) = {answer}.",
+      "hints": [
+        "Maximum power transfer: which load resistance?",
+        "With R_L = R_th, the load gets V_th/2, so P = V_th² / (4 R_th)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vth^2/Rth",
+          "feedback": "That's the power if the whole V_th appeared across R_th. With a matched load only V_th/2 is across it: P = V_th² / (4 R_th)."
+        },
+        {
+          "formula": "Vth^2/(2*Rth)",
+          "feedback": "Close: the load voltage is V_th/2, and squaring that gives a factor of 4, not 2."
+        }
+      ],
+      "schematic": {
+        "netlist": "Thevenin source with a load\nVTH a 0 {Vth:spice}\nRTH a out {Rth:spice}\nRL out 0 1k\n",
+        "parts": [
+          {
+            "ref": "VTH",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "Vth\n{Vth}"
+          },
+          {
+            "ref": "RTH",
+            "at": [
+              2,
+              0
+            ],
+            "label": "Rth\n{Rth}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "load\nRL"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "th_what_if_load_vth",
+      "topicId": "thevenin",
+      "prompt": "A divider (R1 = {R1} on top, R2 = {R2} on the bottom, fed from {Vin}) drives a load of {RL}. The load is swapped for a heavier one, {new_RL}. What happens to the Thevenin voltage of the divider?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the Thevenin voltage",
+        "formula": "Vin*R2/(R1+R2)",
+        "unit": "V",
+        "change": {
+          "RL": "RL/10"
+        },
+        "feedback": {
+          "down": "The voltage across the load does fall, but V_th is the open-circuit voltage: the divider with nothing connected. Changing the load doesn't change the source.",
+          "up": "V_th is set by Vin, R1 and R2 alone, and none of them changed."
+        }
+      },
+      "explanation": "V_th = {Vin} × {R2} / ({R1} + {R2}) = {before}, whatever load is connected. The load voltage does drop, because the heavier load draws more current through R_th = R1 ∥ R2. Keeping the source (V_th, R_th) separate from the load is the whole point of the equivalent.",
+      "hints": [
+        "Is V_th measured with the load connected, or without it?"
+      ],
+      "followUps": [
+        {
+          "prompt": "So what does change when the heavier load is connected?",
+          "choices": [
+            {
+              "text": "The load current rises, so more voltage drops across R_th and less is left across the load",
+              "feedback": "Right: V_L = V_th − I·R_th, and I went up.",
+              "correct": true
+            },
+            {
+              "text": "V_th falls, because the load draws power from the source",
+              "feedback": "V_th is defined with nothing connected, so no load can change it. The drop happens across R_th."
+            },
+            {
+              "text": "R_th falls, because the load is in parallel with R2",
+              "feedback": "R_th is found with the load removed; it belongs to the source. The load is what R_th drives."
+            },
+            {
+              "text": "Nothing: the equivalent circuit ignores the load",
+              "feedback": "The equivalent is built so you can add any load afterwards and see its effect: here, a lower load voltage."
+            }
+          ],
+          "explanation": "The equivalent splits the problem in two: the source (V_th, R_th), fixed, and the load, which you connect afterwards. A heavier load draws more current, I = V_th / (R_th + R_L), and the drop I·R_th inside the source grows."
+        }
+      ],
+      "schematic": {
+        "netlist": "Loaded divider\nV1 in 0 {Vin:spice}\nR1 in out {R1:spice}\nR2 out 0 {R2:spice}\nRL out 0 {RL:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "load\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              10,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "th_what_if_rl_up",
+      "topicId": "thevenin",
+      "prompt": "A source with V_th = {Vth} and R_th = {Rth} drives a load of {RL}. The load is swapped for one ten times bigger, {new_RL}. What happens to the voltage across the load?",
+      "variables": [
+        {
+          "name": "Vth",
+          "unit": "V",
+          "range": {
+            "min": 3,
+            "max": 12,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "Rth",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the load voltage",
+        "formula": "Vth*RL/(Rth+RL)",
+        "unit": "V",
+        "change": {
+          "RL": "10*RL"
+        },
+        "askFactor": true,
+        "factorHint": "V_L = V_th·R_L/(R_th + R_L). Ten times R_L also draws less current, so V_L can only approach V_th, never pass it; how close it gets depends on how R_L compares with R_th.",
+        "feedback": {
+          "down": "A bigger load resistance draws less current. Less current drops less voltage across R_th, so more of V_th is left for the load.",
+          "same": "The load and R_th form a divider. A bigger load resistance draws less current, I = V_th/(R_th + R_L), so less of V_th is dropped across R_th before it reaches the load."
+        }
+      },
+      "explanation": "The load and R_th form a divider: V_L = V_th·R_L / (R_th + R_L), {before} → {after}. It rises, but by less than ten times: the bigger load resistance also draws less current, I = V_th / (R_th + R_L), so V_L = I·R_L grows less than R_L does. It can never pass V_th. This is the divider from Voltage and current dividers, with R_th on top.",
+      "hints": [
+        "Treat R_th and the load as a voltage divider."
+      ],
+      "schematic": {
+        "netlist": "Thevenin source with a load\nVTH a 0 {Vth:spice}\nRTH a out {Rth:spice}\nRL out 0 {RL:spice}\n",
+        "parts": [
+          {
+            "ref": "VTH",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "Vth\n{Vth}"
+          },
+          {
+            "ref": "RTH",
+            "at": [
+              2,
+              0
+            ],
+            "label": "Rth\n{Rth}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "RL\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "th_fault",
+      "topicId": "thevenin",
+      "prompt": "A module contains a divider (R1 = {R1} on top, R2 = {R2} on the bottom, fed from {Vin}) whose output drives a load of {RL}. Healthy, the output should read {h0}. The readings are below. Which fault inside the module explains them?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 6,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "fault": {
+        "netlist": "loaded source\nV1 in 0 {Vin:spice}\nR1 in out {R1:spice}\nR2 out 0 {R2:spice}\nRL out 0 {RL:spice}\n",
+        "probes": [
+          {
+            "label": "Output voltage (across the load)",
+            "probe": "v(out)"
+          },
+          {
+            "label": "Current from the supply (through R1)",
+            "probe": "i(R1)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "R1 is open",
+            "open": "R1",
+            "feedback": "An open R1 would cut the supply off: 0 A from it and 0 V at the output.",
+            "why": "No current comes from the supply and the output is dead, so V_th has become 0 V. Only a break in R1 cuts the supply off completely."
+          },
+          {
+            "text": "R2 is open",
+            "open": "R2",
+            "feedback": "An open R2 would raise the output, because V_th becomes the full {Vin}, while the supply current falls.",
+            "why": "The output is higher than normal but the supply current is lower. Without R2 the equivalent becomes V_th = {Vin} with R_th = R1, and R1 now carries only the load current."
+          },
+          {
+            "text": "R2 is shorted",
+            "short": "R2",
+            "feedback": "A shorted R2 would pull the output to 0 V while the supply current rises to {Vin} / R1.",
+            "why": "The output is at 0 V, yet the supply delivers more current than normal: it flows through R1 into a short to ground. V_th is now 0 V."
+          },
+          {
+            "text": "R1 was fitted ten times too big",
+            "value": {
+              "ref": "R1",
+              "formula": "10*R1"
+            },
+            "feedback": "A too-big R1 would lower both readings, but neither to zero.",
+            "why": "Both readings are lower but neither is zero, so nothing is open or shorted. A bigger R1 lowers V_th = Vin·R2 / (R1 + R2) and raises R_th = R1 ∥ R2, so the output sags on both counts."
+          }
+        ]
+      },
+      "explanation": "Read the output and the supply current together: an open part stops current, a short passes current with no voltage across it. Then think in Thevenin terms: each fault changes V_th, R_th or both, and the load just shows the result. The load is the loaded divider from Voltage and current dividers.",
+      "hints": [
+        "Is the supply current zero, lower or higher than normal? And the output?",
+        "An output of 0 V with more supply current than normal means a short to ground."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "RL\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              10,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "th_syn_loaded_divider",
+      "topicId": "thevenin",
+      "connects": [
+        "dividers",
+        "series_parallel",
+        "thevenin"
+      ],
+      "prompt": "A divider (R1 = {R1} on top, R2 = {R2} on the bottom, fed from an ideal {Vin} source) drives a load RL = {RL} connected across R2. What voltage appears across the load?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            10000,
+            15000,
+            22000
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            10000,
+            15000,
+            22000,
+            33000
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            10000,
+            15000,
+            22000
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vth",
+          "formula": "Vin*R2/(R1+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "Rth",
+          "formula": "R1*R2/(R1+R2)",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "Vth*RL/(Rth+RL)",
+        "unit": "V"
+      },
+      "explanation": "Three ideas meet here. Voltage and current dividers: with nothing connected, the output is V_th = {Vin} × {R2} / ({R1} + {R2}) = {Vth}. Series and parallel resistance: replace the ideal source by a short (it has no resistance), and R1 and R2 both run from the output to ground, so R_th = {R1} ∥ {R2} = {Rth}. Thevenin and Norton equivalents: the load and R_th now form a second, simple divider: V_L = {Vth} × {RL} / ({Rth} + {RL}) = {answer}. Check: R2 ∥ RL as the bottom of the original divider gives the same answer.",
+      "hints": [
+        "Replace everything the load sees by V_th in series with R_th.",
+        "V_th is the unloaded divider output; R_th is R1 ∥ R2 (source shorted). Then divide V_th between R_th and RL."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vth",
+          "feedback": "That's V_th, the output with nothing connected. The load's current flows through R_th = R1 ∥ R2 and drops some of it, so the load sees less."
+        },
+        {
+          "formula": "Vth*RL/(R1+R2+RL)",
+          "feedback": "R_th isn't R1 + R2. With the source shorted, R1 and R2 both run from the output to ground, so seen from the load they are in parallel: R1 ∥ R2."
+        },
+        {
+          "formula": "Vth*RL/(R1+RL)",
+          "feedback": "R1 alone isn't R_th: with the source shorted, R2 also connects the output to ground, in parallel with R1. Use R1 ∥ R2."
+        },
+        {
+          "formula": "Vin*RL/(R1+RL)",
+          "feedback": "That leaves R2 out. R2 is still there, in parallel with the load, so the bottom of the divider is R2 ∥ RL."
+        }
+      ],
+      "simCheck": {
+        "netlist": "loaded divider\nV1 in 0 {Vin:spice}\nR1 in out {R1:spice}\nR2 out 0 {R2:spice}\nRL out 0 {RL:spice}\n",
+        "probe": "v(out)"
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "RL\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              10,
+              0
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "Why does connecting RL pull the output below the unloaded {Vth}?",
+          "choices": [
+            {
+              "text": "RL draws extra current through R1, so R1 drops more; in Thevenin terms the output loses I_L × R_th (R1 ∥ R2)",
+              "feedback": "Right: any current drawn from the output flows through the divider's own resistance, R_th.",
+              "correct": true
+            },
+            {
+              "text": "RL is in series with R2, so the two of them have to share the output voltage between them, half each",
+              "feedback": "RL connects across R2, from the output to ground: that is parallel, so both have the same voltage. Nothing is shared between them."
+            },
+            {
+              "text": "The extra load current flows back into the ideal source and pulls the source voltage down a little with it",
+              "feedback": "The source is ideal: it stays at {Vin} whatever current it gives. The lost voltage is dropped across R1."
+            },
+            {
+              "text": "RL adds to R2, so the bottom of the divider gets bigger and takes a smaller share of the {Vin} supply",
+              "feedback": "Parallel resistors combine to less than either one. The bottom becomes R2 ∥ RL, smaller than R2, and that is why its share falls."
+            }
+          ],
+          "explanation": "Without a load, R1 carries only R2's current. The load adds its own current, and all of it comes through R1, so R1 drops more and the output falls. Thevenin puts this in one line: the output behaves like V_th = {Vth} behind R_th = {Rth}, so a load current I drops I·R_th before the output. With RL = {RL}, that leaves {answer}."
+        }
+      ],
+      "review": "verified"
+    },
+    {
+      "id": "th_syn_bridge",
+      "topicId": "thevenin",
+      "connects": [
+        "dividers",
+        "series_parallel",
+        "thevenin"
+      ],
+      "prompt": "A bridge circuit runs from an ideal {Vs} supply. The left arm is R1 = {R} (top) and R2 = {R} (bottom), meeting at node a. The right arm is R3 = {R3} (top) and a sensor R4 = {R4} (bottom), meeting at node b. A detector with resistance RL = {RL} is connected from a to b. How much current flows through it?",
+      "variables": [
+        {
+          "name": "Vs",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "value": 10000
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "value": 47000
+        },
+        {
+          "name": "R4",
+          "unit": "Ω",
+          "values": [
+            2200,
+            3300,
+            4700
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500,
+            2200,
+            3300
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Va",
+          "formula": "Vs*R/(R+R)",
+          "unit": "V"
+        },
+        {
+          "name": "Vb",
+          "formula": "Vs*R4/(R3+R4)",
+          "unit": "V"
+        },
+        {
+          "name": "Vth",
+          "formula": "Va-Vb",
+          "unit": "V"
+        },
+        {
+          "name": "Rth",
+          "formula": "R/2+R3*R4/(R3+R4)",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "Vth/(Rth+RL)",
+        "unit": "A"
+      },
+      "explanation": "Voltage and current dividers: with the detector removed, each arm is a plain divider. V_a = {Vs} × {R} / ({R} + {R}) = {Va} and V_b = {Vs} × {R4} / ({R3} + {R4}) = {Vb}. Both are measured from the same ground, so the voltage from a to b is their difference, V_th = V_a − V_b = {Vth}. Series and parallel resistance: short the ideal supply; then from node a, R1 and R2 are in parallel, and so are R3 and R4 from node b, and the detector looks through both in series: R_th = {R} ∥ {R} + {R3} ∥ {R4} = {Rth}. Thevenin and Norton equivalents: the current is V_th / (R_th + R_L) = {Vth} / ({Rth} + {RL}) = {answer}, from a to b.",
+      "hints": [
+        "Find the open-circuit voltage between a and b, then the resistance seen between a and b.",
+        "V_th = V_a − V_b from the two dividers; R_th = R1 ∥ R2 + R3 ∥ R4 with the supply shorted; I = V_th / (R_th + RL)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vth/RL",
+          "feedback": "That treats the bridge as a perfect voltage source. Seen from a and b it has its own resistance, R_th = R1 ∥ R2 + R3 ∥ R4, in series with the detector."
+        },
+        {
+          "formula": "Vth/(RL+(R+R3)*(R+R4)/(2*R+R3+R4))",
+          "feedback": "That R_th leaves the supply open. An ideal supply holds its voltage at any current, so it counts as a short: R1 ∥ R2 in series with R3 ∥ R4."
+        },
+        {
+          "formula": "Vth/(R/2+RL)",
+          "feedback": "That R_th counts only the left arm. The current also passes through the right arm, R3 ∥ R4, on its way back: the two are in series."
+        },
+        {
+          "formula": "Vb/(Rth+RL)",
+          "feedback": "V_b alone is measured from ground, not across the detector. By Kirchhoff's voltage law, the voltage from a to b is V_a − V_b."
+        }
+      ],
+      "simCheck": {
+        "netlist": "bridge\nV1 top 0 {Vs:spice}\nR1 top a {R:spice}\nR2 a 0 {R:spice}\nR3 top b {R3:spice}\nR4 b 0 {R4:spice}\nRL a b {RL:spice}\n",
+        "probe": "i(RL)"
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "{Vs}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              4,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              4,
+              4
+            ],
+            "rot": 90,
+            "label": "R2\n{R}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              12,
+              0
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              12,
+              4
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              6,
+              4
+            ],
+            "label": "RL\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              4,
+              0
+            ]
+          ],
+          [
+            [
+              4,
+              0
+            ],
+            [
+              12,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              8
+            ],
+            [
+              4,
+              8
+            ]
+          ],
+          [
+            [
+              4,
+              8
+            ],
+            [
+              12,
+              8
+            ]
+          ],
+          [
+            [
+              4,
+              4
+            ],
+            [
+              6,
+              4
+            ]
+          ],
+          [
+            [
+              10,
+              4
+            ],
+            [
+              12,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            8,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              4,
+              4
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              12,
+              4
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "To find R_th between a and b, why is the supply replaced by a short rather than left open?",
+          "choices": [
+            {
+              "text": "An ideal supply holds its voltage at any current, so it has zero resistance, like a wire",
+              "feedback": "Right: the source's voltage is already in V_th; what's left of it for R_th is its zero resistance.",
+              "correct": true
+            },
+            {
+              "text": "Because once the detector is connected, the supply stops pushing current through the two arms",
+              "feedback": "The supply keeps driving both arms whether the detector is there or not. The short is about its resistance, not its current."
+            },
+            {
+              "text": "Shorting it keeps the bridge balanced, so that V_a and V_b stay equal while R_th is measured",
+              "feedback": "The bridge isn't balanced here (V_a ≠ V_b), and shorting the supply doesn't balance it. It stands in for the source's zero resistance."
+            },
+            {
+              "text": "Either works: an open supply gives a slightly different R_th, but the current comes out about the same",
+              "feedback": "An open supply lets the top node float and gives (R1 + R3) ∥ (R2 + R4), a different circuit and a different current."
+            }
+          ],
+          "explanation": "A Thevenin equivalent splits a source into its voltage and its resistance. The voltage part is already counted in V_th = {Vth}. What's left is the source's internal resistance, which for an ideal voltage source is zero: a wire. With the supply a wire, the top and bottom of the bridge are the same node, so R1 ∥ R2 and R3 ∥ R4 appear in series between a and b: R_th = {Rth}."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    }
+  ]
+}

@@ -1,0 +1,1310 @@
+{
+  "topics": [
+    {
+      "id": "bjt_class_a",
+      "title": "Class A amplifier with a resistive load",
+      "summary": "A transistor biased halfway conducts all the time: simple and linear, but at best 25% efficient with a resistive collector load.",
+      "lenses": [
+        "circuit",
+        "physics"
+      ],
+      "prerequisites": [
+        "bjt_amplifiers"
+      ],
+      "lensNotes": {
+        "circuit": "Bias the collector at half the supply so the output can swing equally both ways. The transistor conducts all the time, which keeps distortion low.",
+        "physics": "Because the quiescent current flows even with no signal, most of the supply power becomes heat: at best 25% reaches a resistive load. That's why power amplifiers use class B or D instead."
+      },
+      "formulas": [
+        {
+          "label": "Q-point (resistive load)",
+          "tex": "V_{CEQ} = \\frac{V_{CC}}{2},\\quad I_{CQ} = \\frac{V_{CC}}{2R_C}"
+        },
+        {
+          "label": "Maximum efficiency",
+          "tex": "\\eta_{max} = 25\\%"
+        },
+        {
+          "label": "Supply power",
+          "tex": "P_{CC} = V_{CC} I_{CQ} = \\frac{V_{CC}^2}{2R_C}"
+        },
+        {
+          "label": "Max output (sine)",
+          "tex": "P_{out,max} = \\frac{V_{CC}^2}{8R_C}"
+        },
+        {
+          "label": "Idle transistor heat",
+          "tex": "P_Q = V_{CEQ} I_{CQ} = \\frac{V_{CC}^2}{4R_C}"
+        }
+      ],
+      "prerequisiteNotes": {
+        "bjt_amplifiers": "A class A stage is a common-emitter or follower biased so the output can swing both ways, and its efficiency follows from that bias."
+      },
+      "goals": [
+        "Place a class A stage's operating point at mid-supply, V_CE = V_CC/2, and find I_CQ = V_CC/(2R_C) for a resistive collector load",
+        "Find the maximum undistorted output power, the supply power and the efficiency, and explain the 25% limit with a resistive load (50% when the load is coupled through a transformer or inductor)",
+        "Explain why a class A stage runs hottest with no signal, and predict how its efficiency falls as the signal gets smaller"
+      ],
+      "intuition": "A class A stage conducts through the whole cycle, so it draws the same average supply current loud or silent; with a resistive collector load, at most a quarter of the supply power becomes signal, and that only at full swing.",
+      "why": "Class A means the transistor conducts for the whole cycle: the collector current swings around its quiescent value I_CQ but never reaches zero. A sine adds as much current in one half-cycle as it removes in the other, so the supply delivers V_CC·I_CQ whatever the signal. With the collector resistor as the load, the collector can move between about 0 V (saturated) and V_CC (cut off): at most ±V_CC/2 around V_CC/2, giving V_CC²/(8R_C) of signal from V_CC²/(2R_C) drawn, 25%. R_C's DC current alone wastes half. A transformer or inductor drops no DC voltage, so the collector can swing up to 2V_CC: 50%.",
+      "explanation": "You have biased a common-emitter stage so a small signal rides on its operating point. A power stage adds a new question: how much of the supply's power reaches the load? Class A means the transistor conducts for the whole cycle. Take the simplest case: the load is the collector resistor R_C itself, with the emitter grounded. The collector can rise to V_CC (transistor cut off) and fall to nearly 0 V (saturated). For the largest undistorted sine, put the operating point in the middle: V_CE = V_CC/2, so I_CQ = V_CC/(2R_C). The output can then swing ±V_CC/2, and a sine of peak V_p delivers V_p²/(2R_C): at most V_CC²/(8R_C). The supply delivers V_CC·I_CQ = V_CC²/(2R_C) whether a signal plays or not. So the efficiency is at most 25%, reached only at full swing; at a tenth of the swing the output power is a hundredth. The rest is heat, and with no signal the transistor takes half the supply power. Feeding the load through a transformer or inductor raises the limit to 50%. Class B stages, where each of two transistors conducts for half the cycle, reach 78.5%.",
+      "workedExample": {
+        "problem": "A class A stage runs from 12 V with R_C = 220 Ω as its load and the emitter grounded, biased at mid-supply. Find I_CQ, the supply power and where it goes with no signal. Then find the output power and efficiency at the largest swing that keeps the transistor out of saturation (V_CE(sat) ≈ 0.2 V), and at a tenth of that swing.",
+        "steps": [
+          "Operating point: V_CE = 12 V / 2 = 6 V, so R_C drops the other 6 V: I_CQ = 6 V / 220 Ω = 27.27 mA.",
+          "Supply power (the average current is I_CQ, loud or silent): P_supply = 12 V × 27.27 mA = 327.3 mW.",
+          "No signal: R_C dissipates (27.27 mA)² × 220 Ω = 163.6 mW and the transistor 6 V × 27.27 mA = 163.6 mW. Half the supply power heats the transistor with no signal at all.",
+          "Largest swing: the ideal would be ±6 V, but to stay out of saturation the collector must stay above 0.2 V, so the peak is 6 V − 0.2 V = 5.8 V. The top of the swing, 6 V + 5.8 V = 11.8 V, stays below the 12 V the collector reaches at cutoff.",
+          "Output power (sine: P = V_p²/(2R)): P_out = (5.8 V)² / (2 × 220 Ω) = 76.5 mW. Efficiency = 76.5 mW / 327.3 mW = 23.4%, just under the ideal 25%, which would need the full ±6 V: (6 V)² / (2 × 220 Ω) = 81.8 mW.",
+          "Transistor at that swing: 327.3 mW − 163.6 mW (R_C's DC share) − 76.5 mW (signal in R_C) = 87 mW, cooler than with no signal. R_C now takes 163.6 mW + 76.5 mW = 240.1 mW, 96% of a ¼ W part's 250 mW rating, with no margin for heat or tolerance; a ½ W part runs at under half its rating, a common derating target.",
+          "A tenth of the swing, 0.58 V peak: P_out = (0.58 V)² / (2 × 220 Ω) = 0.765 mW, while the supply still delivers 327.3 mW: the efficiency is 0.23%, a hundredth of before. Almost all the supply power becomes heat."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 4 \"Bipolar Junction Transistors\", section \"Biasing techniques\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_4.html#xtocid90368",
+          "note": "Class A keeps the transistor active over the whole cycle with the quiescent point in the middle of the load line, half the saturation current, so the transistor conducts and dissipates heat all the time, and class B push-pull is more efficient."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Amplifier Performance\" (last update 27 September 2026), ch. 2 \"Tutorial\", sections 2.2 \"Amplifier energy efficiency\" and 2.3 \"Classes of operation\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_ampperf.pdf",
+          "note": "Efficiency is load power over power drawn from the supply, a class A stage never turns off and so always dissipates heat in the transistor, and in class B each of two push-pull transistors conducts for half the cycle."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "ca_quiescent_current",
+      "topicId": "bjt_class_a",
+      "prompt": "A class A stage has a {Rc} collector resistor from {Vcc} (emitter grounded). For maximum symmetrical swing, what quiescent collector current should it have?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "range": {
+            "min": 6,
+            "max": 24,
+            "step": 1
+          }
+        },
+        {
+          "name": "Rc",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "Vcc/(2*Rc)",
+        "unit": "A"
+      },
+      "explanation": "Maximum swing needs V_CE at half the supply, so R_C drops the other half: I_CQ = (V_CC/2) / R_C = {Vcc} / (2 × {Rc}) = {answer}.",
+      "hints": [
+        "Where should V_CE sit for the output to swing equally up and down?",
+        "At V_CC/2, so I_CQ = V_CC / (2 R_C)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vcc/Rc",
+          "feedback": "That's the saturation current (V_CE = 0). Bias at half of it for symmetrical swing."
+        }
+      ],
+      "schematic": {
+        "netlist": "Class A\nVCC vcc 0 {Vcc:spice}\nRC vcc c {Rc:spice}\nQ1 c b 0 QN\nVB b 0 0.7\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "Q1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C {Rc}"
+          },
+          {
+            "ref": "VB",
+            "at": [
+              5,
+              8
+            ],
+            "rot": 90,
+            "label": "bias + signal"
+          },
+          {
+            "ref": "VCC",
+            "at": [
+              17,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              5,
+              8
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              17,
+              2
+            ],
+            [
+              17,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            8
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            17,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              10,
+              4
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "Why bias the collector at half the supply?",
+          "choices": [
+            {
+              "text": "The collector can swing up to V_CC (transistor cut off) and down to about 0 V (saturated); starting halfway gives the same room in both directions before clipping",
+              "feedback": "Right: the Q-point sits in the middle of the load line.",
+              "correct": true
+            },
+            {
+              "text": "Half the supply gives the most voltage gain",
+              "feedback": "The gain depends on R_C and r_e; the Q-point is chosen for room to swing."
+            },
+            {
+              "text": "It keeps the transistor's dissipation as low as possible",
+              "feedback": "The opposite: on this load line V_CE·I_C is largest at V_CE = V_CC/2. Class A accepts that heat to get the biggest symmetrical swing."
+            },
+            {
+              "text": "It keeps the base–emitter voltage at 0.7 V",
+              "feedback": "V_BE is about 0.7 V anywhere in the active region; it doesn't pick the Q-point."
+            }
+          ],
+          "explanation": "A resistive load line runs from cutoff (V_CE = V_CC, I_C = 0) to saturation (V_CE ≈ 0, I_C = V_CC/R_C). Sit in the middle and the output can swing ±V_CC/2 before hitting either end; sit off-center and one half of the wave clips first."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "ca_max_output_power",
+      "topicId": "bjt_class_a",
+      "prompt": "A class A stage with a {Rc} resistive collector load runs from {Vcc}, biased at V_CE = V_CC/2. What is the maximum undistorted AC power delivered to R_C (take V_CE(sat) ≈ 0)?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "range": {
+            "min": 6,
+            "max": 24,
+            "step": 1
+          }
+        },
+        {
+          "name": "Rc",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vp",
+          "formula": "Vcc/2",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "Vcc^2/(8*Rc)",
+        "unit": "W"
+      },
+      "explanation": "The collector can swing {Vp} peak each way. A sine of peak V_p delivers V_p² / (2R) = ({Vp})² / (2 × {Rc}) = {answer}, which is V_CC² / (8 R_C).",
+      "hints": [
+        "The peak swing is V_CC/2.",
+        "Sine power: P = V_peak² / (2R)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vcc^2/(4*Rc)",
+          "feedback": "Use the RMS value: a sine of peak V_p gives V_p²/(2R), so P = (V_CC/2)² / (2 R_C) = V_CC²/(8 R_C)."
+        },
+        {
+          "formula": "Vcc^2/(2*Rc)",
+          "feedback": "That takes the peak as V_CC; from the mid-point the collector can only swing V_CC/2 each way."
+        }
+      ],
+      "steps": [
+        "For the biggest symmetrical swing, bias at V_CE = V_CC/2.",
+        "The output can then swing ±{Vp} (peak) across R_C.",
+        "Sine power: P = V_p²/(2R_C) = ({Vp})²/(2 × {Rc}) = {answer}."
+      ],
+      "schematic": {
+        "netlist": "Class A (drawing)\nVCC vcc 0 {Vcc:spice}\nRC vcc c {Rc:spice}\nQ1 c b 0 QN\nVB b 0 0.7\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "Q1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C {Rc}"
+          },
+          {
+            "ref": "VB",
+            "at": [
+              5,
+              8
+            ],
+            "rot": 90,
+            "label": "bias + signal"
+          },
+          {
+            "ref": "VCC",
+            "at": [
+              17,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              5,
+              8
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              17,
+              2
+            ],
+            [
+              17,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            8
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            17,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              10,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "ca_supply_power",
+      "topicId": "bjt_class_a",
+      "prompt": "A class A stage with a {Rc} collector resistor from {Vcc} is biased at I_CQ = V_CC/(2R_C). How much power does it draw from the supply?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "range": {
+            "min": 6,
+            "max": 24,
+            "step": 1
+          }
+        },
+        {
+          "name": "Rc",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Icq",
+          "formula": "Vcc/(2*Rc)",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "Vcc^2/(2*Rc)",
+        "unit": "W"
+      },
+      "explanation": "The average current is I_CQ = {Icq} whether or not there's a signal, so P_DC = V_CC · I_CQ = {Vcc} × {Icq} = {answer}. Compare with the maximum output of V_CC²/(8R_C): at most a quarter of the supply power reaches the signal.",
+      "hints": [
+        "A class A stage draws its quiescent current all the time.",
+        "P = V_CC × I_CQ."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vcc^2/Rc",
+          "feedback": "That uses the saturation current V_CC/R_C; the stage idles at half of it."
+        },
+        {
+          "formula": "Vcc^2/(4*Rc)",
+          "feedback": "That is only R_C's DC share (or the transistor's); the supply delivers both."
+        },
+        {
+          "formula": "Vcc^2/(8*Rc)",
+          "feedback": "That is the maximum signal output, not what the supply draws."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "The supply power is the same whether the stage is playing loudly or is silent. Why?",
+          "choices": [
+            {
+              "text": "The collector current swings equally above and below I_CQ, so its average, and with it the supply power V_CC·I_CQ, doesn't change with the signal",
+              "feedback": "Right: a sine adds as much current on one half-cycle as it takes away on the other.",
+              "correct": true
+            },
+            {
+              "text": "The signal power comes from the input source, not the supply",
+              "feedback": "The input only supplies a tiny base current; the output power comes from the supply."
+            },
+            {
+              "text": "The transistor stores energy at idle and releases it on loud passages",
+              "feedback": "A transistor stores no useful energy; the supply delivers the power moment by moment."
+            },
+            {
+              "text": "It isn't true: the supply power doubles at full signal",
+              "feedback": "The sine part of the current averages to zero over a cycle, so the average stays I_CQ."
+            }
+          ],
+          "explanation": "The supply sees i = I_CQ + I_p·sin ωt. The sine part averages to zero, so P_supply = V_CC·I_CQ always: that's class A's defining cost. When a signal plays, some of that fixed power moves from heating the transistor to the load; at idle it all becomes heat."
+        }
+      ],
+      "schematic": {
+        "netlist": "Class A (drawing)\nVCC vcc 0 {Vcc:spice}\nRC vcc c {Rc:spice}\nQ1 c b 0 QN\nVB b 0 0.7\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "Q1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C {Rc}"
+          },
+          {
+            "ref": "VB",
+            "at": [
+              5,
+              8
+            ],
+            "rot": 90,
+            "label": "bias + signal"
+          },
+          {
+            "ref": "VCC",
+            "at": [
+              17,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              5,
+              8
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              17,
+              2
+            ],
+            [
+              17,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            8
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            17,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              10,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ca_efficiency",
+      "topicId": "bjt_class_a",
+      "prompt": "What is the maximum efficiency of a class A amplifier with a resistive collector load?",
+      "choices": [
+        {
+          "text": "25%",
+          "correct": true,
+          "feedback": "Yes: V_CC²/(8R) out of V_CC²/(2R) in."
+        },
+        {
+          "text": "50%",
+          "feedback": "50% is the limit with a transformer or inductor load, which lets the collector swing above V_CC."
+        },
+        {
+          "text": "78.5%",
+          "feedback": "That's the ideal class B push-pull limit (π/4)."
+        },
+        {
+          "text": "100%",
+          "feedback": "Class A always draws its quiescent current, so much of the power is wasted as heat."
+        }
+      ],
+      "explanation": "Maximum AC output V_CC²/(8R_C) divided by supply power V_CC²/(2R_C) gives 1/4 = 25%, and that's only at full swing. At lower levels the efficiency is worse, because the supply power stays the same.",
+      "schematic": {
+        "netlist": "Class A (drawing)\nVCC vcc 0 12\nRC vcc c 1k\nQ1 c b 0 QN\nVB b 0 0.7\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "Q1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C"
+          },
+          {
+            "ref": "VB",
+            "at": [
+              5,
+              8
+            ],
+            "rot": 90,
+            "label": "bias + signal"
+          },
+          {
+            "ref": "VCC",
+            "at": [
+              17,
+              2
+            ],
+            "rot": 90,
+            "label": "V_CC"
+          }
+        ],
+        "wires": [
+          [
+            [
+              5,
+              8
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              17,
+              2
+            ],
+            [
+              17,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            8
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            17,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              10,
+              4
+            ]
+          }
+        ]
+      },
+      "level": "recall",
+      "review": "verified"
+    },
+    {
+      "id": "class_a_efficiency_concept",
+      "topicId": "bjt_class_a",
+      "prompt": "Why is a class A amplifier with a resistive load so inefficient?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "It draws its full quiescent current all the time, even with no signal",
+          "feedback": "Right: at rest about half the supply sits across the transistor and half across the resistor, and both dissipate power even with no signal; only the AC part of the load power is useful output.",
+          "correct": true
+        },
+        {
+          "text": "The transistor is switched fully on and off",
+          "feedback": "That describes switching (class D) amplifiers, which are efficient."
+        },
+        {
+          "text": "Its gain is too low",
+          "feedback": "Efficiency is about power delivered versus power drawn, not gain."
+        },
+        {
+          "text": "The base current wastes most of the power",
+          "feedback": "Base current is small; the loss is the quiescent collector current."
+        }
+      ],
+      "explanation": "Class A biases the transistor at mid-supply so it conducts all the time. The supply delivers V_CC·I_CQ continuously, but the most AC power that can reach the load is a quarter of that with a resistive load.",
+      "hints": [
+        "How much current does it draw when the input is silent?"
+      ],
+      "schematic": {
+        "netlist": "Class A (drawing)\nVCC vcc 0 12\nRC vcc c 1k\nQ1 c b 0 QN\nVB b 0 0.7\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "Q1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C"
+          },
+          {
+            "ref": "VB",
+            "at": [
+              5,
+              8
+            ],
+            "rot": 90,
+            "label": "bias + signal"
+          },
+          {
+            "ref": "VCC",
+            "at": [
+              17,
+              2
+            ],
+            "rot": 90,
+            "label": "V_CC"
+          }
+        ],
+        "wires": [
+          [
+            [
+              5,
+              8
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              17,
+              2
+            ],
+            [
+              17,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            8
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            17,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              10,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ca_what_if_idle_heat",
+      "topicId": "bjt_class_a",
+      "prompt": "A class A stage runs from {Vcc} with R_C = {Rc} (a ½ W part) and the emitter grounded, biased at V_CE = V_CC/2. It is playing a sine at full swing, ±V_CC/2 at the collector. The input is switched off, so the output falls silent. What happens to the power the transistor dissipates?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "values": [
+            9,
+            12
+          ]
+        },
+        {
+          "name": "Rc",
+          "unit": "Ω",
+          "values": [
+            220,
+            330,
+            470
+          ]
+        },
+        {
+          "name": "s",
+          "unit": "",
+          "value": 1
+        }
+      ],
+      "derived": [
+        {
+          "name": "Psup",
+          "formula": "Vcc^2/(2*Rc)",
+          "unit": "W"
+        },
+        {
+          "name": "Prdc",
+          "formula": "Vcc^2/(4*Rc)",
+          "unit": "W"
+        },
+        {
+          "name": "Pac",
+          "formula": "Vcc^2/(8*Rc)",
+          "unit": "W"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the transistor's dissipation",
+        "formula": "Vcc^2/(4*Rc)-(s*Vcc/2)^2/(2*Rc)",
+        "unit": "W",
+        "change": {
+          "s": "0*s"
+        },
+        "askFactor": true,
+        "factorHint": "The supply power V_CC²/(2R_C) is fixed, and R_C always takes its DC share, V_CC²/(4R_C). The transistor gets what is left after R_C's DC and signal shares: work out R_C's signal share, V_p²/(2R_C), at full swing (V_p = V_CC/2) and in silence.",
+        "feedback": {
+          "down": "No signal feels like less work, but the supply still delivers V_CC·I_CQ, and now none of it becomes signal: the power R_C was taking as signal now heats the transistor instead.",
+          "same": "The supply power stays the same, but where it goes changes: with the signal off, the signal power R_C was taking now ends up in the transistor."
+        }
+      },
+      "explanation": "The supply power is fixed at V_CC·I_CQ = V_CC²/(2R_C) = {Psup}, because the average current doesn't change with the signal. R_C's DC share is I_CQ²·R_C = {Prdc}. At full swing R_C also takes the signal power V_p²/(2R_C) = {Pac}, so the transistor gets {before}. Silent, the transistor gets everything R_C doesn't: {after}, twice as much. A class A stage runs hottest with no signal; that idle waste is why power amplifiers use class B or D.",
+      "hints": [
+        "Does the supply power change when the signal stops?",
+        "Transistor power = supply power − power in R_C (DC part + signal part)."
+      ],
+      "schematic": {
+        "netlist": "Class A (drawing)\nVCC vcc 0 {Vcc:spice}\nRC vcc c {Rc:spice}\nQ1 c b 0 QN\nVB b 0 0.7\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "Q1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C {Rc}"
+          },
+          {
+            "ref": "VB",
+            "at": [
+              5,
+              8
+            ],
+            "rot": 90,
+            "label": "bias + signal"
+          },
+          {
+            "ref": "VCC",
+            "at": [
+              17,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              5,
+              8
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              17,
+              2
+            ],
+            [
+              17,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            8
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            17,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              10,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "ca_what_if_quiet_efficiency",
+      "topicId": "bjt_class_a",
+      "prompt": "A class A stage from {Vcc} with R_C = {Rc} (emitter grounded) is biased at V_CE = V_CC/2 and plays a sine at full swing, ±V_CC/2, so its efficiency (signal power in R_C ÷ supply power) is 0.25. The volume is turned down until the swing is a tenth as big. What happens to the efficiency?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "values": [
+            9,
+            12
+          ]
+        },
+        {
+          "name": "Rc",
+          "unit": "Ω",
+          "values": [
+            220,
+            330,
+            470
+          ]
+        },
+        {
+          "name": "s",
+          "unit": "",
+          "value": 1
+        }
+      ],
+      "derived": [
+        {
+          "name": "Psup",
+          "formula": "Vcc^2/(2*Rc)",
+          "unit": "W"
+        },
+        {
+          "name": "Pout",
+          "formula": "Vcc^2/(8*Rc)",
+          "unit": "W"
+        },
+        {
+          "name": "Pout2",
+          "formula": "Vcc^2/(800*Rc)",
+          "unit": "W"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the efficiency",
+        "formula": "(s*Vcc/2)^2/(2*Rc)/(Vcc^2/(2*Rc))",
+        "unit": "",
+        "change": {
+          "s": "s/10"
+        },
+        "askFactor": true,
+        "factorHint": "Efficiency is P_out/P_supply. The output power goes as the square of the swing (P = V_p²/2R), while a class A stage's supply power doesn't depend on the signal at all, so the efficiency follows P_out.",
+        "feedback": {
+          "up": "Less signal doesn't make the stage leaner: the supply keeps delivering V_CC·I_CQ, and a much smaller part of it is now signal.",
+          "same": "The efficiency would stay put only if the supply power fell along with the output. In class A it doesn't: the average current is I_CQ whatever the signal."
+        }
+      },
+      "explanation": "Output power is V_p²/(2R_C), so a tenth of the swing gives a hundredth of the power: {Pout} → {Pout2}. The supply power V_CC·I_CQ = {Psup} stays the same, because class A draws its quiescent current regardless. Efficiency = P_out/P_supply: {before} → {after}. Music spends most of its time far below full swing, so in practice a class A stage turns almost all its supply power into heat.",
+      "hints": [
+        "How does sine power depend on the peak voltage?",
+        "Does the supply power change with the volume?"
+      ],
+      "schematic": {
+        "netlist": "Class A (drawing)\nVCC vcc 0 {Vcc:spice}\nRC vcc c {Rc:spice}\nQ1 c b 0 QN\nVB b 0 0.7\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "Q1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C {Rc}"
+          },
+          {
+            "ref": "VB",
+            "at": [
+              5,
+              8
+            ],
+            "rot": 90,
+            "label": "bias + signal"
+          },
+          {
+            "ref": "VCC",
+            "at": [
+              17,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              5,
+              8
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              17,
+              2
+            ],
+            [
+              17,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            8
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            17,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              10,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ca_design_idle_heat",
+      "topicId": "bjt_class_a",
+      "prompt": "A class A stage runs from {Vcc} with its emitter grounded and a resistive collector load R_C (rated well above the power it will see). It is biased at V_CE = V_CC/2 for maximum symmetrical swing. The transistor may dissipate at most {Pmax} (its derated limit in this enclosure), whatever the signal. Choose R_C (an E24 value) for as much output power as possible: the transistor's worst-case dissipation must not exceed {Pmax}, and must be no more than 15% below it.",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "values": [
+            9,
+            12
+          ]
+        },
+        {
+          "name": "Pmax",
+          "unit": "W",
+          "values": [
+            0.1,
+            0.15,
+            0.2,
+            0.25
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rex",
+          "formula": "Vcc^2/(4*Pmax)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Pout",
+          "formula": "Pmax/2",
+          "unit": "W"
+        },
+        {
+          "name": "Rfull",
+          "formula": "Vcc^2/(8*Pmax)",
+          "unit": "Ω"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "RC",
+            "label": "R_C",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 10,
+            "max": 10000
+          }
+        ],
+        "result": "Vcc^2/(4*RC)",
+        "resultLabel": "transistor's worst-case dissipation",
+        "resultUnit": "W",
+        "target": "Pmax",
+        "tolerance": 0.15,
+        "mode": "atMost"
+      },
+      "explanation": "The supply delivers V_CC·I_CQ whatever the signal. With a signal, R_C takes signal power on top of its DC share and the transistor cools; with no signal, the transistor takes everything R_C's DC share leaves. So the worst case is silence: P_Q = V_CEQ·I_CQ = (V_CC/2) × V_CC/(2R_C) = V_CC²/(4R_C). For P_Q ≤ {Pmax}: R_C ≥ ({Vcc})²/(4 × {Pmax}) = {Rex}; take the next E24 value up. Smaller R_C would give more output, but more heat. The maximum output is then V_CC²/(8R_C), at most {Pout}: half of what the transistor idles at. Sizing R_C for the full-swing dissipation, V_CC²/(8R_C), would give {Rfull} and let the transistor idle at twice its limit.",
+      "hints": [
+        "When does a class A transistor dissipate the most: at full swing or with no signal?",
+        "With no signal, P = V_CE·I_C = (V_CC/2) × V_CC/(2R_C) = V_CC²/(4R_C)."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why is the transistor's dissipation checked with no signal rather than at full output?",
+          "choices": [
+            {
+              "text": "The supply power is the same with or without a signal; with one, R_C carries part of it away as signal power, so the transistor is hottest when silent",
+              "correct": true,
+              "feedback": "Right: transistor power = supply power − power in R_C, and only the R_C part grows with the signal."
+            },
+            {
+              "text": "At full output the collector current peaks at twice I_CQ, so full output must be the worst case",
+              "feedback": "The peak current is higher, but at that moment V_CE is near zero. Averaged over a cycle, V_CE·I_C falls as the swing grows."
+            },
+            {
+              "text": "With no signal the transistor is off, so the check is only for a fault",
+              "feedback": "A class A transistor conducts all the time. With no signal it carries I_CQ at V_CC/2: exactly the operating point that heats it most."
+            },
+            {
+              "text": "It makes no difference: a class A transistor dissipates the same power at any signal level",
+              "feedback": "The supply power is constant, but the transistor's share isn't: it falls by the signal power that R_C takes, from V_CC²/(4R_C) silent to V_CC²/(8R_C) at full swing."
+            }
+          ],
+          "explanation": "The average collector current is I_CQ with or without a sine on top, so the supply delivers V_CC·I_CQ all the time. Energy is conserved: whatever R_C doesn't take ends up as heat in the transistor. The signal power in R_C is at most half of R_C's DC power, so at full swing the transistor gets V_CC²/(8R_C) and silent it gets V_CC²/(4R_C). A class A design is sized for silence, which is also why class A stages run hot when nothing is playing."
+        }
+      ],
+      "schematic": {
+        "netlist": "Class A (drawing)\nVCC vcc 0 {Vcc:spice}\nRC vcc c 220\nQ1 c b 0 QN\nVB b 0 0.7\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "Q1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C = ?"
+          },
+          {
+            "ref": "VB",
+            "at": [
+              5,
+              8
+            ],
+            "rot": 90,
+            "label": "bias + signal"
+          },
+          {
+            "ref": "VCC",
+            "at": [
+              17,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              5,
+              8
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              17,
+              2
+            ],
+            [
+              17,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            8
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            17,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              10,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    }
+  ]
+}

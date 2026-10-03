@@ -1,0 +1,1851 @@
+{
+  "topics": [
+    {
+      "id": "inductors",
+      "title": "Inductors: energy in a magnetic field",
+      "summary": "A current through a coil sets up a magnetic field. When the current changes, the changing field induces a voltage across the coil that opposes the change, v = L·di/dt, so an inductor's current cannot change instantly. The inductor stores energy ½LI² in its magnetic field.",
+      "lenses": [
+        "physics",
+        "circuit",
+        "signals",
+        "math"
+      ],
+      "prerequisites": [
+        "charge_current",
+        "voltage_energy",
+        "ohms_law",
+        "power_heat"
+      ],
+      "prerequisiteNotes": {
+        "charge_current": "The coil's magnetic field is set up by the current in its wire, and the same current flows through every turn and both leads; the inductor changes how fast that current can change, not where it goes.",
+        "voltage_energy": "The induced voltage is energy per coulomb: while the current rises, the circuit does v joules of work on the field for every coulomb that passes through the coil (power v·i), and while it falls the field returns energy to the circuit. Adding that up as the current rises from zero gives ½LI².",
+        "ohms_law": "A real coil is a long copper wire, so it has a winding resistance (DCR, R = ρℓ/A, with ℓ the wire's length); once the current is steady the inductance induces nothing and the coil behaves as that resistance alone: I = V/R.",
+        "power_heat": "The winding resistance turns I²R into heat, which limits the steady current a coil can carry; that heating limit is separate from the core's saturation limit."
+      },
+      "lensNotes": {
+        "physics": "A current I in N turns drives a magnetic flux Φ through the core, proportional to N·I and to the core's permeability µ = µ0·µr, and inversely proportional to the length of the flux path. Every turn links that flux, so the flux linkage is N·Φ, proportional to N²·I. Faraday's law gives the voltage induced in the coil, v = N·dΦ/dt = L·di/dt, with L = µ0·µr·N²·A/l for a long coil of cross-section A and length l; Lenz's law gives its sign, always opposing the change in current. The energy in the field is ½LI², with an energy density B²/(2µ) at each point: in a ferrite core with a small air gap most of the energy sits in the gap, where µ is thousands of times lower. A ferromagnetic material can only be magnetized so far: as the flux density approaches its saturation value, µr falls and L falls with it.",
+        "circuit": "An inductor's datasheet gives its inductance and tolerance, its DC resistance (DCR), a saturation current (the current at which L has fallen by a stated percentage, which differs between manufacturers) and a heating or rated current (the current that warms it by a stated temperature rise, set by the DCR). Keep the peak current below the saturation current and the RMS current below the heating current. Shielded parts keep most of their field inside; unshielded ones can induce voltages in nearby traces and inductors. A coil's current must always have a path when it is switched off: a flyback diode across a relay coil gives it one (diode_practical, later in the course). For hands-on work, stay with battery or USB supplies of 12 V or less, and never break a coil's current by hand: the voltage rises until something conducts, an arc across the gap or your body if you are touching the terminals.",
+        "signals": "v = L·di/dt makes an inductor respond to change in current: a steady current passes with only the DCR's voltage drop, while a fast change induces a large voltage. That is why an inductor in series smooths the current in a switching regulator and why one in a supply line blocks fast noise while passing DC (reactance, later in the course).",
+        "math": "Integrating v = L·di/dt gives Δi = (1/L)∫v dt, so a constant voltage makes a straight-line ramp, Δi = V·Δt/L. The power into the coil is v·i = L·i·di/dt; integrating from 0 to I gives the stored energy ½LI². In series the current and its rate of change are shared and the voltages add, so L = L1 + L2; in parallel the voltage is shared and the rates of change add, so 1/L = 1/L1 + 1/L2 (both assume the coils' fields do not link). An inductor is the dual of a capacitor: swap v and i, L and C."
+      },
+      "formulas": [
+        {
+          "label": "Voltage and current",
+          "tex": "v = L\\,\\frac{di}{dt}\\quad (1\\ \\text{H} = 1\\ \\text{V}\\cdot\\text{s}/\\text{A})"
+        },
+        {
+          "label": "Ramp at constant voltage",
+          "tex": "\\Delta i = \\frac{V\\,\\Delta t}{L}"
+        },
+        {
+          "label": "Stored energy",
+          "tex": "W = \\tfrac{1}{2}\\,L\\,I^2"
+        },
+        {
+          "label": "Inductance of a coil",
+          "tex": "L = \\frac{\\mu_0\\,\\mu_r\\,N^2 A}{l},\\qquad L = A_L\\,N^2"
+        },
+        {
+          "label": "Series and parallel (no coupling)",
+          "tex": "L_\\text{series} = L_1 + L_2\\qquad \\frac{1}{L_\\parallel} = \\frac{1}{L_1} + \\frac{1}{L_2}"
+        },
+        {
+          "label": "Winding loss",
+          "tex": "P = I^2\\,R_\\text{DCR}"
+        }
+      ],
+      "goals": [
+        "Use v = L·di/dt to find the voltage across an inductor from how fast its current changes, and the straight-line current ramp a fixed voltage produces",
+        "Find the energy an inductor stores, W = ½LI², say where that energy is, and explain why an inductor's current cannot change instantly",
+        "Relate inductance to construction (L ∝ N², core permeability, geometry) and combine inductors in series and parallel",
+        "Choose an inductor from its datasheet (inductance, saturation current, winding resistance), and recognize saturation, an open winding and the switch-off voltage spike from measurements"
+      ],
+      "intuition": "An inductor's current can change only as fast as the voltage across it allows, di/dt = v/L: a fixed voltage ramps the current in a straight line, a steady current needs no voltage at all, and stopping the current suddenly takes a very large voltage.",
+      "why": "Every current is surrounded by a magnetic field. Winding the wire into a coil makes the turns' fields add inside it, and a core of ferrite or iron, whose atoms' magnetic moments line up with the field, multiplies the flux many times for the same current. Faraday's law: when the magnetic flux through a turn of wire changes, a voltage is induced around that turn, and in a coil of N turns the N voltages add. So a changing current in a coil induces a voltage across the same coil, in proportion to how fast the current changes: v = L·di/dt. The inductance L, in henries, is the flux linkage per ampere. Lenz's law fixes the polarity: the induced voltage opposes the change. While the current rises the coil takes energy from the circuit, and while it falls it returns energy, as a source would. That energy, ½LI², is in the magnetic field, not in the copper and not in the electrons' motion: they drift at about a millimeter per second or less, so their total kinetic energy is far less than a billionth of ½LI², negligible. Changing the current instantly would need an infinite voltage, so an inductor's current is continuous: just after a switch closes it is still zero, and when a switch opens the voltage rises until something conducts. With the current steady nothing is induced, and only the winding's resistance remains, turning I²R into heat. L grows as N²: twice the turns make twice the flux for each ampere, and that flux passes through twice as many turns. A ferromagnetic core can only be magnetized so far; above the saturation current its permeability, and with it L, falls steeply.",
+      "explanation": "An inductor is a coil of wire, often wound on a ferrite or iron core. A current through it sets up a magnetic field. When the current changes, the field changes, and the changing field induces a voltage across the coil (Faraday's law) whose polarity opposes the change (Lenz's law): v = L·di/dt. One henry gives 1 V when the current changes at 1 A/s.\n\nRead that both ways. A steady current induces nothing, so an ideal inductor has 0 V across it at DC; a real one has only I·R across its winding resistance (DCR). A fixed voltage V makes the current ramp in a straight line at V/L amperes per second. The current cannot jump, because that would need an infinite voltage.\n\nThe stored energy is W = ½LI², in the magnetic field. Inductance grows with the square of the turns and with the core's permeability and cross-section. Above its saturation current a core's L collapses. Inductors add in series and combine like resistors in parallel (when their fields don't link).\n\nOpening a switch that carries a coil's current makes di/dt enormous, and the voltage rises until something conducts. Never break a coil's current by hand: the voltage rises until something conducts, an arc across the gap or your body if you are touching the terminals.",
+      "workedExample": {
+        "problem": "In a switching regulator, a 47 µH inductor (winding resistance 30 mΩ) carries 0.50 A when its switch puts a steady 7.0 V across it for 4.0 µs. What current does it reach, how much energy does its field gain, and how much power does its winding turn into heat at the final current?",
+        "steps": [
+          "The winding resistance drops at most about 1.1 A × 30 mΩ = 33 mV, far less than 7.0 V, so nearly all of the 7.0 V is L·di/dt.",
+          "Rate of rise: di/dt = V/L = 7.0 V / (47 × 10⁻⁶ H) = 1.49 × 10⁵ A/s, which is 0.149 A per microsecond, the same throughout, because the voltage is constant.",
+          "Change in current: Δi = V·Δt/L = 7.0 V × 4.0 × 10⁻⁶ s / (47 × 10⁻⁶ H) = 0.596 A, so the current rises from 0.50 A to 1.10 A in a straight line.",
+          "Energy before: ½LI² = ½ × 47 × 10⁻⁶ H × (0.50 A)² = 5.9 µJ. After: ½ × 47 × 10⁻⁶ H × (1.10 A)² = 28.2 µJ. The field gained 22.4 µJ.",
+          "Check from the source side: power in is V × i, with i averaging (0.50 + 1.10)/2 = 0.80 A over the 4.0 µs, so 7.0 V × 0.80 A × 4.0 µs = 22.4 µJ.",
+          "Winding heat at 1.10 A: P = I²R = (1.10 A)² × 0.030 Ω = 36 mW. The inductance itself turns no energy into heat; the winding resistance does.",
+          "Units: V·s/H = V·s/(V·s/A) = A; H × A² = (V·s/A) × A² = V·A·s = J."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 15 \"Inductors\", section \"Magnetic fields and inductance\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_15.html#xtocid88330",
+          "note": "Checked: a current in a conductor sets up a magnetic field; a coil concentrates it and a ferromagnetic core strengthens it for the same current; more current stores more energy in the field; with a rising current the inductor drops a voltage like a load, with a falling current it acts as a source; a source suddenly applied to an unmagnetized inductor appears across it at first while the current starts from zero; inductance in henries. Disagrees: the section describes an inductor's stored energy as the kinetic motion of electrons; we place it in the magnetic field, since the electrons' kinetic energy is about 10⁻¹¹ of ½LI² for a typical part (far less than a billionth)."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 15 \"Inductors\", section \"Inductors and calculus\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_15.html#xtocid88331",
+          "note": "Checked v = L·di/dt: no voltage across an ideal inductor at a steady current, a fixed voltage for a steady rate of change, the polarity opposing the change (Lenz's law) and reversing when the current falls, and very high voltages when a switch interrupts the current."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 15 \"Inductors\", section \"Factors affecting inductance\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_15.html#xtocid88332",
+          "note": "Checked that inductance rises with turns, coil area and core permeability and falls with coil length, the approximation L = N²·µ·A/l, and that permeability, and so L, changes as the core approaches saturation."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 15 \"Inductors\", section \"Series and parallel inductors\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_15.html#xtocid88333",
+          "note": "Checked that series inductances add and parallel inductances combine as reciprocals, giving less than either."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 15 \"Inductors\", section \"Practical considerations\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_15.html#xtocid88334",
+          "note": "Checked: the rated current is limited by the wire's resistance and heating; real inductors have winding resistance; an inductor's field can link nearby inductors (mutual inductance)."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 14 \"Magnetism and electromagnetism\", section \"Permeability and saturation\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_14.html#xtocid88243",
+          "note": "Checked that a ferromagnetic material's flux density levels off as the field intensity rises (saturation) and that air-core coils do not saturate."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 14 \"Magnetism and electromagnetism\", section \"Electromagnetic induction\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_14.html#xtocid88244",
+          "note": "Checked Faraday's law, e = N·dΦ/dt, and self-induction: a changing current in a wire or coil induces a voltage in the same conductor."
+        }
+      ],
+      "analogy": {
+        "text": "An inductor's current behaves like the velocity of a mass: L plays the part of mass, the voltage across it the part of force (v = L·di/dt, as F = m·dv/dt), and ½LI² the part of kinetic energy ½mv². Just as a force is needed to change a mass's velocity, a voltage is needed to change an inductor's current, and neither can change instantly.",
+        "breaksDown": "The energy is in the magnetic field around the coil, not in moving charge, whose kinetic energy is negligible. L depends on the turns and the core and falls when the core saturates, which a mass never does. Interrupting the current is not like stopping a mass against a wall: the voltage rises until something conducts, an arc or a breaking-down junction."
+      }
+    }
+  ],
+  "templates": [
+    {
+      "id": "ind_energy",
+      "topicId": "inductors",
+      "level": "recall",
+      "prompt": "A {L} power inductor carries a steady {I}, below its saturation current. How much energy is stored in its magnetic field?",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "H",
+          "values": [
+            2.2e-05,
+            4.7e-05,
+            0.0001,
+            0.00022
+          ]
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "values": [
+            0.5,
+            1.5,
+            2.5,
+            3
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "0.5*L*I^2",
+        "unit": "J",
+        "tolerance": 0.02
+      },
+      "estimate": true,
+      "explanation": "W = ½LI² = ½ × {L} × ({I})² = {answer}. The ½ is there because the current rose from zero: for each small step di, the coil takes L·i·di, and adding those steps as i goes from 0 to I gives ½LI², whatever the shape of the rise. With the current now steady, nothing more is induced and the stored energy stays at {answer}.",
+      "hints": [
+        "The energy grows with the square of the current. Where does a ½ come from?",
+        "W = ½·L·I², with L in henries and I in amperes, gives joules."
+      ],
+      "misconceptions": [
+        {
+          "formula": "L*I^2",
+          "feedback": "You left out the ½. The energy went in while the current rose from zero: the energy delivered is ∫L·i·di from 0 to {I}, which is ½LI²."
+        },
+        {
+          "formula": "0.5*L*I",
+          "feedback": "The current must be squared: twice the current makes twice the field, and the energy in a field grows as the square of its strength. W = ½LI²."
+        },
+        {
+          "formula": "L*I",
+          "feedback": "L·I is the flux linkage, in webers (volt-seconds), not an energy. The energy is ½·L·I²."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Where is this energy stored?",
+          "choices": [
+            {
+              "text": "In the magnetic field set up by the current, inside and around the coil",
+              "feedback": "Right: setting up the field took work against the induced voltage, and that work is stored in the field, B²/(2µ) in each cubic meter.",
+              "correct": true
+            },
+            {
+              "text": "In the copper wire, which holds it as heat",
+              "feedback": "Heat in the copper is energy lost, I²R every second, and it does not come back. The stored energy returns to the circuit when the current falls, because it is in the field, not in the wire."
+            },
+            {
+              "text": "In the kinetic energy of the electrons moving through the wire",
+              "feedback": "The electrons drift at about a millimeter per second or less, so their total kinetic energy is far less than a billionth of ½LI²: negligible. The stored energy is in the magnetic field their current sets up."
+            },
+            {
+              "text": "As extra charge kept in the coil, as in a capacitor",
+              "feedback": "The coil holds no extra charge: the same current enters one lead as leaves the other. Its energy is in the magnetic field, set by the current, not by any charge."
+            }
+          ],
+          "explanation": "Energy is stored wherever there is a magnetic field, B²/(2µ) per cubic meter. In a ferrite inductor with a small air gap in its core, most of the energy is in the gap, because µ is thousands of times lower there. When the current falls, the field shrinks, and the induced voltage delivers that energy back to the circuit."
+        }
+      ],
+      "noDrawing": "the energy in one inductor carrying a steady current; no circuit to analyze",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "ind_ramp_current",
+      "topicId": "inductors",
+      "level": "recall",
+      "prompt": "A transistor switch connects a {V} supply across a {L} inductor for {t}, starting from zero current, and the current stays below its saturation current. The winding resistance is small enough to ignore over this time. What current flows through the inductor at the end of the {t}?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            5,
+            9,
+            12
+          ]
+        },
+        {
+          "name": "L",
+          "unit": "H",
+          "values": [
+            4.7e-05,
+            0.0001,
+            0.00022
+          ]
+        },
+        {
+          "name": "t",
+          "unit": "s",
+          "values": [
+            2e-06,
+            5e-06,
+            1e-05
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "rate",
+          "formula": "V/L*1e-6",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "V*t/L",
+        "unit": "A",
+        "tolerance": 0.02
+      },
+      "explanation": "With {V} across it, the inductor's current changes at di/dt = V/L = {V} / {L} = {rate} A/µs, the same all the way, because the voltage is constant. After {t}: Δi = V·t/L = {V} × {t} / {L} = {answer}. When the switch opens, D1 gives this current a path, so it can fall without a voltage spike.",
+      "hints": [
+        "A fixed voltage across an inductor fixes the rate at which its current changes.",
+        "di/dt = V/L, so after a time t the current is V·t/L."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V/L",
+          "feedback": "V/L is the rate of rise, in amperes per second. Multiply by the time the voltage is applied: Δi = V·t/L."
+        },
+        {
+          "formula": "V*L/t",
+          "feedback": "A larger inductance makes the current rise more slowly, so L belongs in the denominator: Δi = V·t/L."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "What does a scope show for the inductor's current during the {t}?",
+          "choices": [
+            {
+              "text": "A straight line rising from zero at a steady {rate} A/µs",
+              "feedback": "Right: with a fixed voltage, di/dt = V/L is fixed, so the current climbs at a constant rate.",
+              "correct": true
+            },
+            {
+              "text": "A jump to its full value as soon as the switch closes, then a flat line",
+              "feedback": "A jump would need di/dt to be infinite, which would need an infinite voltage. With {V} across it, the current can only rise at V/L."
+            },
+            {
+              "text": "A rise that slows down and levels off, as a capacitor charging through a resistor does",
+              "feedback": "Nothing here makes the rate fall: the voltage across the inductor stays {V}, so di/dt stays V/L. A real coil's winding resistance only bends the line over a much longer time than {t}."
+            },
+            {
+              "text": "Nothing until the magnetic field has built up, then a sudden rise",
+              "feedback": "The field and the current build up together: the field is set by the current at each instant. Both rise steadily from the moment the switch closes."
+            }
+          ],
+          "explanation": "v = L·di/dt read the other way: di/dt = v/L. A fixed voltage means a fixed slope, so the current is a straight-line ramp. Switching regulators use exactly this: each switching cycle ramps the inductor current up and down by V·t/L."
+        }
+      ],
+      "schematic": {
+        "netlist": "switched inductor\nV1 a 0 {V:spice}\nRS1 a b 1m\nL1 b 0 {L:spice}\nD1 0 b DF\n.model DF D\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "switch\n(on)",
+            "symbol": "switchClosed"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "L1\n{L}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              13,
+              6
+            ],
+            "rot": 270,
+            "label": "D1\n(flyback)"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              8,
+              6
+            ],
+            [
+              13,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "b",
+            "at": [
+              10,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ind_voltage_didt",
+      "topicId": "inductors",
+      "level": "recall",
+      "prompt": "A current probe shows the current through a {L} inductor rising in a straight line from {I1} to {I2} in {t}. Ignoring the winding resistance, what voltage is across the inductor during the rise?",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "H",
+          "values": [
+            0.0001,
+            0.00022,
+            0.00047
+          ]
+        },
+        {
+          "name": "I1",
+          "unit": "A",
+          "values": [
+            0.2,
+            0.5
+          ]
+        },
+        {
+          "name": "I2",
+          "unit": "A",
+          "values": [
+            1,
+            1.5
+          ]
+        },
+        {
+          "name": "t",
+          "unit": "s",
+          "values": [
+            5e-05,
+            0.0001,
+            0.0002
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "dI",
+          "formula": "I2-I1",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "L*(I2-I1)/t",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "estimate": true,
+      "explanation": "The current changes by Δi = {I2} − {I1} = {dI} in {t}, at a steady rate. v = L·di/dt = {L} × {dI} / {t} = {answer}. Only the change matters: the same rate of rise starting from any current would need the same voltage.",
+      "hints": [
+        "The voltage depends on how fast the current changes, not on how large it is.",
+        "v = L·Δi/Δt, with Δi = {I2} − {I1}."
+      ],
+      "misconceptions": [
+        {
+          "formula": "L*I2/t",
+          "feedback": "You used the final current, not the change. The induced voltage is set by how fast the current changes: Δi = {I2} − {I1} = {dI} in {t}."
+        },
+        {
+          "formula": "L*(I2-I1)",
+          "feedback": "L·Δi is in volt-seconds. Divide by the time the change took: v = L·Δi/Δt."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "The current then stays steady at {I2}. What is the voltage across the inductor now, still ignoring the winding resistance?",
+          "choices": [
+            {
+              "text": "0 V: the current is not changing, so nothing is induced",
+              "feedback": "Right: v = L·di/dt with di/dt = 0. A real coil shows only {I2} times its small winding resistance.",
+              "correct": true
+            },
+            {
+              "text": "{L} × {I2}, because the inductor opposes the current through it",
+              "feedback": "L·I is the flux linkage, not a voltage, and an inductor does not oppose a steady current. It induces a voltage only while the current changes."
+            },
+            {
+              "text": "The same as during the rise, because the current is now larger",
+              "feedback": "The voltage was set by the rate of change, not the size of the current. With the current steady, the rate is zero and so is the voltage."
+            },
+            {
+              "text": "It reverses, because the inductor now gives its energy back",
+              "feedback": "The energy, ½LI², stays in the field while the current stays steady. It comes back, with the voltage reversed, only when the current falls."
+            }
+          ],
+          "explanation": "An inductor does not resist current the way a resistor does. It induces a voltage only while its current changes. At a steady current an ideal inductor is a plain conductor, and a real one shows only its winding resistance."
+        }
+      ],
+      "noDrawing": "a measured current ramp in one inductor; no circuit to analyze",
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "ind_parallel",
+      "topicId": "inductors",
+      "level": "recall",
+      "prompt": "Two shielded inductors, L1 = {L1} and L2 = {L2}, are mounted far enough apart that their magnetic fields do not link, and are connected in parallel between nodes a and b. What inductance does the pair present between a and b?",
+      "variables": [
+        {
+          "name": "L1",
+          "unit": "H",
+          "values": [
+            1e-05,
+            2.2e-05,
+            4.7e-05
+          ]
+        },
+        {
+          "name": "L2",
+          "unit": "H",
+          "values": [
+            1.5e-05,
+            3.3e-05,
+            6.8e-05
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "L1||L2",
+        "unit": "H",
+        "tolerance": 0.02
+      },
+      "explanation": "In parallel both inductors have the same voltage v across them, so each current changes at its own rate: v/L1 and v/L2. The total current changes at the sum, v/L1 + v/L2, so the pair behaves as one inductor with 1/L = 1/L1 + 1/L2: L = L1·L2/(L1 + L2) = {L1} × {L2} / ({L1} + {L2}) = {answer}, less than either. This holds only when the fields do not link; coupled coils add or subtract a mutual inductance.",
+      "hints": [
+        "In parallel, which is shared: the voltage or the rate of change of current?",
+        "Same voltage, so the rates of change add: 1/L = 1/L1 + 1/L2."
+      ],
+      "misconceptions": [
+        {
+          "formula": "L1+L2",
+          "feedback": "Adding is the rule for inductors in series, where the same current change makes each coil induce its own voltage. In parallel the voltage is shared and the current changes add, so the pair has less inductance than either: 1/L = 1/L1 + 1/L2."
+        },
+        {
+          "formula": "1/L1+1/L2",
+          "feedback": "That is 1/L, in reciprocal henries. Take the reciprocal: L = 1/(1/L1 + 1/L2) = L1·L2/(L1 + L2)."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "The same two inductors are instead connected in series. What inductance does the string present?",
+          "choices": [
+            {
+              "text": "{L1} + {L2}: the same current changes in both, so their induced voltages add",
+              "feedback": "Right: L = L1 + L2 for series inductors whose fields do not link.",
+              "correct": true
+            },
+            {
+              "text": "L1·L2/(L1 + L2), the same as in parallel, because the connection order does not matter",
+              "feedback": "Series and parallel are different connections. In series the coils share the current, so the same di/dt induces a voltage in each and the voltages add."
+            },
+            {
+              "text": "The larger of the two: the larger coil sets the rate of change for both",
+              "feedback": "Both coils induce a voltage for the same di/dt, so both contribute. The total voltage, and so the inductance, is the sum."
+            },
+            {
+              "text": "Zero: the two fields cancel each other",
+              "feedback": "The fields cancel only for coils wound and placed to couple in opposition. These do not link at all, so each contributes its full inductance."
+            }
+          ],
+          "explanation": "Inductors combine like resistors: they add in series and combine as reciprocals in parallel, the opposite of capacitors. In series the current, and its rate of change, is the same in both, so v = (L1 + L2)·di/dt."
+        }
+      ],
+      "schematic": {
+        "netlist": "two inductors in parallel\nL1 a b {L1:spice}\nL2 a b {L2:spice}\n",
+        "parts": [
+          {
+            "ref": "L1",
+            "at": [
+              4,
+              2
+            ],
+            "rot": 90,
+            "label": "L1\n{L1}"
+          },
+          {
+            "ref": "L2",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "L2\n{L2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              4,
+              2
+            ]
+          ],
+          [
+            [
+              4,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              8
+            ],
+            [
+              4,
+              8
+            ],
+            [
+              4,
+              6
+            ]
+          ],
+          [
+            [
+              4,
+              8
+            ],
+            [
+              10,
+              8
+            ],
+            [
+              10,
+              6
+            ]
+          ]
+        ],
+        "grounds": [],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              0,
+              0
+            ],
+            "left": true
+          },
+          {
+            "text": "b",
+            "at": [
+              0,
+              8
+            ],
+            "left": true
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ind_dcr_heat",
+      "topicId": "inductors",
+      "level": "recall",
+      "prompt": "A 22 µH power inductor with a winding resistance (DCR) of {R} carries a steady {I}. How much power does it turn into heat?",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            0.015,
+            0.022,
+            0.033,
+            0.047
+          ]
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "values": [
+            1.5,
+            2,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vw",
+          "formula": "I*R",
+          "unit": "V"
+        },
+        {
+          "name": "W0",
+          "formula": "0.5*22e-6*I^2",
+          "unit": "J"
+        }
+      ],
+      "answer": {
+        "formula": "I^2*R",
+        "unit": "W",
+        "tolerance": 0.02
+      },
+      "explanation": "At a steady current the inductance induces no voltage, so the only voltage across the coil is the winding's I·R = {I} × {R} = {Vw}. The power turned into heat is P = I²R = ({I})² × {R} = {answer}. The field holds a fixed {W0}, which neither grows nor turns into heat while the current is steady; the 22 µH does not enter the heat at all.",
+      "hints": [
+        "At a steady current, which part of the coil turns energy into heat: its inductance or its wire?",
+        "P = I²·R with R the winding resistance."
+      ],
+      "misconceptions": [
+        {
+          "formula": "I*R",
+          "feedback": "I·R is the voltage across the winding, in volts. The power is that voltage times the current: P = I·(I·R) = I²R."
+        },
+        {
+          "formula": "0.5*22e-6*I^2",
+          "feedback": "That is the energy stored in the field, ½LI², in joules. It stays the same while the current is steady, so it is not a power. The heat comes from the winding resistance: P = I²R."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "A 47 µH inductor with the same {R} DCR replaces the 22 µH part, carrying the same steady {I}. How much heat does it make?",
+          "choices": [
+            {
+              "text": "The same, {answer}: the heat comes from the winding resistance, which is unchanged",
+              "feedback": "Right: P = I²R does not involve L. At a steady current the inductance induces no voltage and turns no energy into heat.",
+              "correct": true
+            },
+            {
+              "text": "About twice as much, because the larger inductance resists the current more",
+              "feedback": "An inductance does not resist a steady current; it induces a voltage only while the current changes. The heat is set by the DCR alone."
+            },
+            {
+              "text": "Less, because more of the energy is stored in the field instead of being lost",
+              "feedback": "The stored energy is fixed while the current is steady: no power goes into the field. All the power into the coil, I²R, becomes heat in either part."
+            },
+            {
+              "text": "More: the field now holds about twice the energy, ½LI², and that energy has to be kept supplied",
+              "feedback": "Once set up, the field's energy stays put at a steady current; no power flows into it. The heating rate is I²R, the same for both parts."
+            }
+          ],
+          "explanation": "An inductor's two properties work separately: inductance sets how its current responds to change, and the winding resistance sets the heat at a given current. In practice a larger inductance in the same case needs more turns of thinner wire, so it usually has a higher DCR; here the DCR was given as equal."
+        }
+      ],
+      "noDrawing": "the heat in one inductor's winding; no circuit to analyze",
+      "review": "verified"
+    },
+    {
+      "id": "ind_turns_al",
+      "topicId": "inductors",
+      "level": "recall",
+      "prompt": "A ferrite toroid's datasheet gives its inductance factor A_L = {AL} per turn² (L = A_L·N²). How many turns must be wound on it for an inductance of {L}? Give the number of turns (enter 12 for 12 turns).",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "H",
+          "values": [
+            0.0001,
+            0.00022,
+            0.00047,
+            0.001
+          ]
+        },
+        {
+          "name": "AL",
+          "unit": "H",
+          "values": [
+            2.5e-07,
+            4e-07,
+            1e-06
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "sqrt(L/AL)",
+        "unit": "",
+        "unitless": true,
+        "tolerance": 0.05
+      },
+      "explanation": "L = A_L·N², so N = √(L/A_L) = √({L} / {AL}) = {answer}. Wind the nearest whole number of turns and measure: one turn more or less changes L by about 2/N of its value. The square root is there because L grows as N²: each turn adds to the flux, and the flux passes through every turn.",
+      "hints": [
+        "Rearrange L = A_L·N² for N.",
+        "N = √(L/A_L), with both in henries."
+      ],
+      "misconceptions": [
+        {
+          "formula": "L/AL",
+          "feedback": "That is N², not N. Inductance grows with the square of the turns, so take the square root: N = √(L/A_L)."
+        },
+        {
+          "formula": "sqrt(L*AL)",
+          "feedback": "You multiplied by A_L. L = A_L·N², so N² = L/A_L: divide the inductance by A_L, then take the square root."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why is A_L given per turn squared, not per turn?",
+          "choices": [
+            {
+              "text": "Each extra turn adds to the flux, and that flux passes through every turn, so N enters twice",
+              "feedback": "Right: the flux is proportional to N·I, and the induced voltage is N times the rate of change of that flux, so L ∝ N².",
+              "correct": true
+            },
+            {
+              "text": "The wire gets longer as turns are added, and inductance is proportional to the wire's resistance",
+              "feedback": "Inductance has nothing to do with the wire's resistance. Doubling the turns doubles the wire length (and roughly the resistance), but quadruples L."
+            },
+            {
+              "text": "The core's permeability grows in proportion to the number of turns",
+              "feedback": "The core's permeability is a property of the material (below saturation); it does not depend on how many turns are wound on it."
+            },
+            {
+              "text": "It is a convention; L actually grows in proportion to N",
+              "feedback": "It is physics, not a convention: doubling the turns of a coil on the same core gives four times the inductance."
+            }
+          ],
+          "explanation": "A current I in N turns drives a flux proportional to N·I through the core. Faraday's law adds the voltage induced in each of the N turns: v = N·dΦ/dt. Together, L = (flux linkage)/I ∝ N². A_L packs the core's material and geometry into one number."
+        }
+      ],
+      "noDrawing": "about winding a coil on a core; no circuit to analyze",
+      "review": "verified"
+    },
+    {
+      "id": "ind_choose_part",
+      "topicId": "inductors",
+      "level": "design",
+      "prompt": "A switching regulator needs an inductor of at least 15 µH, and its inductor current peaks at 2.0 A. Three inductors come in the same case size. Part A: 100 µH, saturation current 1.6 A, DCR 180 mΩ. Part B: 22 µH, saturation current 3.5 A, DCR 40 mΩ. Part C: 10 µH, saturation current 5.2 A, DCR 18 mΩ. Which should be used?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "Part B: it meets the 15 µH minimum, stays below saturation at 2.0 A, and dissipates at most (2.0 A)² × 40 mΩ = 0.16 W",
+          "feedback": "Right: it is the only part that meets both limits. Its winding heat is modest and its core stays unsaturated with margin.",
+          "correct": true
+        },
+        {
+          "text": "Part A: more inductance always gives a smoother current, and 100 µH is far above 15 µH",
+          "feedback": "At 2.0 A, Part A is above its 1.6 A saturation current: its core saturates, L falls well below 100 µH and keeps falling, and the current spikes. Its winding would also dissipate up to (2.0 A)² × 180 mΩ = 0.72 W, which would make a part this size hot."
+        },
+        {
+          "text": "Part C: it has the lowest DCR, at most (2.0 A)² × 18 mΩ = 0.07 W, so it wastes the least power",
+          "feedback": "Part C is below the 15 µH the regulator needs: the current would ramp more than twice as fast as with 22 µH, giving more ripple than the design allows."
+        },
+        {
+          "text": "Any of them: the inductance only matters while switching, and all three carry 2.0 A",
+          "feedback": "Carrying the current is not enough. Part A saturates below 2.0 A and Part C has too little inductance for this regulator."
+        }
+      ],
+      "explanation": "Take the three as the same core wound with different numbers of turns. More turns raise L as N², but the core saturates at a fixed N·I, so the saturation current falls as 1/N, and more turns of thinner wire raise the DCR roughly as N². Check: ½·L·I_sat² is about the same for all three (128 µJ, 135 µJ and 135 µJ); the core's size sets how much energy it can hold before saturating. So a larger L in the same size is not free: it costs saturation current and adds winding heat. Choose a part that meets the minimum inductance with its saturation current above the peak current, then check the DCR heat.",
+      "hints": [
+        "Check each part against both requirements: at least 15 µH, and a saturation current above the 2.0 A peak.",
+        "For the parts that remain, compare the winding heat, I²·DCR."
+      ],
+      "noDrawing": "choosing a part from datasheet values; no circuit to analyze",
+      "review": "verified"
+    },
+    {
+      "id": "ind_fault_pulse_test",
+      "topicId": "inductors",
+      "level": "design",
+      "prompt": "A pulse tester checks {L} coils from a production batch. It puts 5 V across each coil for 20 µs through a 0.1 Ω sense resistor and records the peak current. A good coil reads about {h0}, close to V·t/L = {Iideal}. One coil reads as below. Which fault explains the reading?",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "H",
+          "values": [
+            0.0001,
+            0.00015,
+            0.00022
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Iideal",
+          "formula": "5*20e-6/L",
+          "unit": "A"
+        },
+        {
+          "name": "Iq",
+          "formula": "4*5*20e-6/L",
+          "unit": "A"
+        },
+        {
+          "name": "I4",
+          "formula": "5*20e-6/(4*L)",
+          "unit": "A"
+        },
+        {
+          "name": "L4",
+          "formula": "L/4",
+          "unit": "H"
+        },
+        {
+          "name": "Lx4",
+          "formula": "L*4",
+          "unit": "H"
+        }
+      ],
+      "fault": {
+        "netlist": "pulse test\nV1 in 0 PULSE(0 5 0 10n 10n 20u 1)\nRs in a 0.1\nL1 a 0 {L:spice}\n.tran 0.1u 30u\n",
+        "probes": [
+          {
+            "label": "Peak current (tester)",
+            "probe": "max:i(Rs)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "The closed (ungapped) ferrite core is cracked, and its inductance has fallen to about a quarter ({L4})",
+            "value": {
+              "ref": "L1",
+              "formula": "L/4"
+            },
+            "feedback": "With a quarter of the inductance, the same 5 V would ramp the current four times as fast: the peak would be about {Iq}, far above the healthy reading.",
+            "why": "The peak is about four times the healthy reading, so the current ramped about four times as fast under the same 5 V: di/dt = V/L, so L has fallen to about a quarter. A crack in a closed ferrite core puts an air gap in the flux path; the field needs far more current per unit of flux through air than through ferrite, so the coil makes much less flux per ampere and L falls. (Shorted turns would read high too; the core can be checked by eye or with a second winding.)"
+          },
+          {
+            "text": "The winding is open (its wire broke where it leaves the coil)",
+            "open": "L1",
+            "feedback": "With the winding open, no current could flow at all: the tester would read zero.",
+            "why": "The tester reads no current at all. With the full 5 V across the coil's leads and no current, there is no complete path through the winding: it is open."
+          },
+          {
+            "text": "The coil was wound with twice the specified turns",
+            "value": {
+              "ref": "L1",
+              "formula": "L*4"
+            },
+            "feedback": "Twice the turns would give four times the inductance, {Lx4}, so the current would ramp at a quarter of the rate: the peak would be about {I4}.",
+            "why": "The peak is about a quarter of the healthy reading, so the current ramped a quarter as fast and L is about four times too large. Inductance grows as N², so twice the turns gives four times the inductance."
+          }
+        ]
+      },
+      "explanation": "With a fixed voltage across a coil, its current ramps at di/dt = V/L, so the peak after 20 µs is about V·t/L = 5 V × 20 µs / {L} = {Iideal} (the healthy reading is slightly lower because the 0.1 Ω sense resistor drops a little of the 5 V). The reading tells you L: a higher peak means less inductance, a lower peak more, and zero means no path at all. Real testers also use this ramp to find saturation: when the core saturates the ramp suddenly steepens, because L collapses.",
+      "hints": [
+        "The peak current is about V·t/L. What would each fault do to L?",
+        "A higher peak means a faster ramp, which means less inductance."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "tester\n5 V, 20 µs"
+          },
+          {
+            "ref": "Rs",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R_sense\n0.1 Ω"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "L1\n{L}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ind_what_if_turns",
+      "topicId": "inductors",
+      "prompt": "A coil of {N} turns on a ferrite toroid has an inductance of {L0}. It is rewound with {new_N} turns on the same core. What happens to the inductance?",
+      "variables": [
+        {
+          "name": "N",
+          "unit": "",
+          "values": [
+            10,
+            15,
+            20,
+            25
+          ]
+        },
+        {
+          "name": "AL",
+          "unit": "H",
+          "values": [
+            2.5e-07,
+            4e-07,
+            1e-06
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "L0",
+          "formula": "AL*N^2",
+          "unit": "H"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the inductance",
+        "formula": "AL*N^2",
+        "unit": "H",
+        "change": {
+          "N": "2*N"
+        },
+        "askFactor": true,
+        "factorHint": "Twice the turns make twice the flux for each ampere, and that flux now passes through twice as many turns. ×16 would need L ∝ N⁴; the turns enter twice, not four times.",
+        "feedback": {
+          "down": "More turns do not make a weaker coil. Each ampere now circles the core more times, making more flux, and a change in that flux induces a voltage in each of the extra turns too.",
+          "same": "The core is the same, but L = A_L·N² depends on the turns as well as the core. More turns give more flux per ampere, linked by more turns."
+        }
+      },
+      "explanation": "L = A_L·N². Doubling N multiplies L by 2² = 4: {before} → {after}. Twice the turns carry the same current around the core twice as many times, so the flux per ampere doubles; the voltage induced by a change in that flux appears in each of twice as many turns, which doubles it again.",
+      "hints": [
+        "What happens to the flux for each ampere when the turns double? And to the number of turns that flux passes through?",
+        "L = A_L·N²."
+      ],
+      "followUps": [
+        {
+          "prompt": "What happens to the current at which this core saturates?",
+          "choices": [
+            {
+              "text": "It halves: the core saturates at a fixed N·I, so twice the turns reach it at half the current",
+              "feedback": "Right: the flux in the core is set by N·I, the ampere-turns. With twice the turns, half the current gives the same flux and the same saturation.",
+              "correct": true
+            },
+            {
+              "text": "It stays the same: saturation is a property of the core material",
+              "feedback": "The material saturates at a certain flux density, but the flux is driven by the ampere-turns N·I. With twice the turns, half the current reaches it."
+            },
+            {
+              "text": "It doubles: more turns spread the field over more wire",
+              "feedback": "The turns all drive flux through the same core, so more turns make the flux larger for each ampere, not smaller. The core saturates at a lower current."
+            },
+            {
+              "text": "It quadruples, along with the inductance",
+              "feedback": "A larger inductance in the same core means more flux per ampere, so the core reaches its limit sooner, at a lower current."
+            }
+          ],
+          "explanation": "On a given core, L ∝ N² while the saturation current ∝ 1/N, so ½·L·I_sat² stays about the same: the core's size sets how much energy it can hold before saturating. More inductance from the same core always costs current handling."
+        }
+      ],
+      "noDrawing": "about how a coil is wound; no circuit to analyze",
+      "review": "verified"
+    },
+    {
+      "id": "ind_what_if_energy_current",
+      "topicId": "inductors",
+      "prompt": "A {L} inductor in a switching regulator carries a peak current of {I}. A heavier load raises the peak to {new_I}, still below its saturation current. What happens to the energy stored at the peak?",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "H",
+          "values": [
+            4.7e-05,
+            0.0001,
+            0.00022
+          ]
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "values": [
+            0.5,
+            0.75,
+            1
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the stored energy",
+        "formula": "0.5*L*I^2",
+        "unit": "J",
+        "change": {
+          "I": "2*I"
+        },
+        "askFactor": true,
+        "factorHint": "Twice the current makes twice the field at every point, and the energy in each cubic meter of field grows as the square of its strength.",
+        "feedback": {
+          "down": "The energy is stored in the coil's magnetic field, W = ½LI², and the field's strength is set by the current through the coil. A bigger current makes a stronger field.",
+          "same": "The inductance is the same, but the energy sits in the coil's magnetic field, and a larger current through the same coil makes a stronger field: W = ½LI²."
+        }
+      },
+      "explanation": "W = ½LI². Doubling I doubles the field everywhere, and the energy density B²/(2µ) goes as the field squared, so the energy rises 4 times: {before} → {after}. Seen from the circuit: W = ∫L·i·di, so the current rose twice as far, at an average twice as large.",
+      "hints": [
+        "The energy grows with the current, but in proportion or as a square?",
+        "W = ½LI²."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does doubling the current give four times the energy, not twice?",
+          "choices": [
+            {
+              "text": "Twice the current makes twice the field everywhere, and the energy in a field grows as the square of its strength",
+              "feedback": "Right: W = ½LI², or B²/(2µ) at each point, and B doubled.",
+              "correct": true
+            },
+            {
+              "text": "The inductance doubles at the higher current",
+              "feedback": "Below saturation, L is fixed by the turns and the core, not by the current. Near saturation it falls, which is the opposite."
+            },
+            {
+              "text": "Energy always grows as the square of whatever is changed",
+              "feedback": "Not so: doubling L at the same current doubles the energy, W = ½LI², in proportion, not as a square."
+            },
+            {
+              "text": "The winding heat doubles too, and that heat is added to the stored energy",
+              "feedback": "Winding heat is lost, not stored, and it goes as I²R anyway. The stored energy is in the field: ½LI²."
+            }
+          ],
+          "explanation": "W = ½LI² is the same form as a capacitor's ½CV², with the current in place of the voltage. It is also why ½·L·I_sat² measures how much energy a core can usefully store: above I_sat the energy still rises with the current, but L has fallen, so the part no longer behaves as the inductor the design assumed."
+        }
+      ],
+      "noDrawing": "the energy in one inductor; no circuit to analyze",
+      "review": "verified"
+    },
+    {
+      "id": "ind_what_if_ramp_voltage",
+      "topicId": "inductors",
+      "prompt": "A switch connects a {V} supply across a {L} inductor for {t}, starting from zero current; the winding resistance is negligible over this time. The supply is changed to {new_V}, with the same {t}; the current stays below the inductor's saturation current. What happens to the current at the end of the {t}?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            5,
+            6,
+            12
+          ]
+        },
+        {
+          "name": "L",
+          "unit": "H",
+          "values": [
+            0.0001,
+            0.00022
+          ]
+        },
+        {
+          "name": "t",
+          "unit": "s",
+          "values": [
+            5e-06,
+            1e-05
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the current at the end of the switch-on time",
+        "formula": "V*t/L",
+        "unit": "A",
+        "change": {
+          "V": "2*V"
+        },
+        "askFactor": true,
+        "factorHint": "The rate of rise, di/dt = V/L, is in proportion to the voltage, and the time is unchanged.",
+        "feedback": {
+          "down": "A larger voltage across an inductor makes its current change faster, di/dt = V/L, so in the same time it rises further.",
+          "same": "The current is not set by the inductance alone: an inductor's current changes at di/dt = V/L for as long as the voltage is applied, so a larger voltage makes it climb faster over the same {t}."
+        }
+      },
+      "explanation": "The current ramps at di/dt = V/L. Doubling V doubles the ramp rate, so in the same {t} the current reaches twice as much: Δi = V·t/L, {before} → {after}. The energy at the end, ½LI², is four times as large.",
+      "hints": [
+        "How does the rate of rise of the current depend on the voltage across the inductor?",
+        "Δi = V·t/L."
+      ],
+      "schematic": {
+        "netlist": "switched inductor\nV1 a 0 {V:spice}\nRS1 a b 1m\nL1 b 0 {L:spice}\nD1 0 b DF\n.model DF D\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "switch\n(on)",
+            "symbol": "switchClosed"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "L1\n{L}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              13,
+              6
+            ],
+            "rot": 270,
+            "label": "D1\n(flyback)"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              8,
+              6
+            ],
+            [
+              13,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "b",
+            "at": [
+              10,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ind_what_if_core_steady",
+      "topicId": "inductors",
+      "prompt": "A 12 V battery drives a solenoid coil with inductance {L} and winding resistance {R}, and has been connected for a long time. An iron plunger is then pulled into the coil, raising its inductance to {new_L}; the winding is unchanged. Once everything has settled, what happens to the current?",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "H",
+          "values": [
+            0.022,
+            0.047,
+            0.1
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            33,
+            47,
+            68,
+            100
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Iss",
+          "formula": "12/R",
+          "unit": "A"
+        },
+        {
+          "name": "W1",
+          "formula": "0.5*L*(12/R)^2",
+          "unit": "J"
+        },
+        {
+          "name": "W2",
+          "formula": "L*(12/R)^2",
+          "unit": "J"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the steady current",
+        "formula": "12/R",
+        "unit": "A",
+        "change": {
+          "L": "2*L"
+        },
+        "feedback": {
+          "down": "An inductance does not resist a steady current. With the current steady, v = L·di/dt = 0 whatever L is, so all 12 V is across the winding resistance and I = 12 V / {R}.",
+          "up": "More inductance does not let more current through. At a steady current the inductance induces nothing; the current is set by the winding resistance alone, 12 V / {R}."
+        }
+      },
+      "explanation": "Once the current is steady, di/dt = 0, so the inductance induces no voltage and the whole 12 V is across the winding resistance: I = 12 V / {R} = {after}, before and after. The larger inductance changes how the current responds to change (while the plunger moves, the current dips briefly, and switching the coil on or off now takes longer), and it changes the energy in the field, ½LI²: from {W1} to {W2}.",
+      "hints": [
+        "At a steady current, what is v = L·di/dt?",
+        "What is left to limit the current once the inductance induces nothing?"
+      ],
+      "followUps": [
+        {
+          "prompt": "With the plunger in and the current settled, what has changed compared with before?",
+          "choices": [
+            {
+              "text": "The energy stored in the magnetic field has doubled, to {W2}: ½·L·I² with the same current and twice the inductance",
+              "feedback": "Right: the current is the same {Iss}, and the energy is ½LI² with L doubled.",
+              "correct": true
+            },
+            {
+              "text": "The heat in the winding has doubled",
+              "feedback": "The heat is I²R, and neither the current nor the winding resistance changed, so the heat is the same."
+            },
+            {
+              "text": "The voltage across the coil has doubled",
+              "feedback": "The battery fixes the voltage at 12 V, and with the current steady it is all across the winding resistance, as before."
+            },
+            {
+              "text": "Nothing: at a steady current an inductor is just a wire",
+              "feedback": "Its terminal behavior at DC is unchanged, but the field is not: the same current through twice the inductance stores twice the energy, ½LI²."
+            }
+          ],
+          "explanation": "At DC a coil's current is set by its resistance; its inductance shows up in how fast the current can change and in the energy held in its field. That stored energy is what has to go somewhere when the coil is switched off."
+        }
+      ],
+      "schematic": {
+        "netlist": "solenoid\nV1 a 0 12\nL1 a b {L:spice}\nRw b 0 {R:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V",
+            "symbol": "battery"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "L1\n{L}"
+          },
+          {
+            "ref": "Rw",
+            "at": [
+              8,
+              6
+            ],
+            "rot": 90,
+            "label": "winding\n{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              10
+            ],
+            [
+              8,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            10
+          ]
+        ],
+        "labels": [],
+        "noBuild": "Rw is the coil's own winding resistance, not a part"
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ind_current_cannot_jump",
+      "topicId": "inductors",
+      "prompt": "A switch connects a 12 V battery to a coil with inductance 100 mH and winding resistance 24 Ω (drawn as L1 and Rw), which carried no current before. What is the current one microsecond after the switch closes?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "About 0.12 mA: the current starts at zero and rises at 12 V / 100 mH = 120 A/s",
+          "feedback": "Right: the current through an inductor cannot jump. At first the whole 12 V is across L1, so di/dt = 12 V / 0.1 H = 120 A/s, and in 1 µs that is 0.12 mA.",
+          "correct": true
+        },
+        {
+          "text": "500 mA at once: 12 V / 24 Ω, since the winding resistance alone sets the current",
+          "feedback": "500 mA is where the current ends up. Getting there instantly would need an infinite di/dt, so an infinite voltage across L1; with 12 V available it can only rise at 120 A/s."
+        },
+        {
+          "text": "Over 500 mA (an inrush), then settling to 12 V / 24 Ω = 500 mA as the field builds",
+          "feedback": "That is how a capacitor behaves at switch-on. An inductor does the opposite: its current starts at zero and rises toward 12 V / 24 Ω."
+        },
+        {
+          "text": "Zero until the field has built up, and then a jump to 12 V / 24 Ω = 500 mA at once",
+          "feedback": "The field is set by the current at every instant, so the two build up together. The current rises smoothly from the moment the switch closes."
+        }
+      ],
+      "explanation": "v = L·di/dt: a current that jumped would need an infinite voltage, so an inductor's current is continuous. Just after the switch closes the current is still zero, Rw drops nothing, and the full 12 V is across the inductance: di/dt = 120 A/s. As the current grows, Rw takes more of the 12 V and the rise slows, settling at 12 V / 24 Ω = 500 mA after several time constants τ = L/R = 4.2 ms (the same exponential as an RC circuit's τ = RC, in rc_time_constant). Opening the switch again is a different matter: the current must then fall to zero almost instantly, and the coil's voltage rises until something conducts.",
+      "hints": [
+        "What voltage would it take to change an inductor's current instantly?",
+        "At the first instant the current is zero, so what is the voltage across Rw, and across L1?"
+      ],
+      "followUps": [
+        {
+          "prompt": "What current flows once the switch has been closed for a long time (a second or more)?",
+          "choices": [
+            {
+              "text": "500 mA: with the current steady, L1 induces no voltage and Rw alone sets it",
+              "feedback": "Right: at DC the coil is just its winding resistance, so I = 12 V / 24 Ω.",
+              "correct": true
+            },
+            {
+              "text": "Under 500 mA: the 100 mH keeps opposing the current for as long as it flows",
+              "feedback": "An inductance opposes changes in current, not current. Once the current stops changing, v = L·di/dt = 0."
+            },
+            {
+              "text": "Still rising at 120 A/s: it keeps growing for as long as the switch is closed",
+              "feedback": "It rises at 120 A/s only while all 12 V is across L1. As the current grows, Rw takes more of the voltage, and the rise stops at 12 V / 24 Ω."
+            },
+            {
+              "text": "Zero: once the magnetic field has absorbed the energy, the current stops flowing",
+              "feedback": "The field holds ½LI², a fixed amount at a steady current; it does not stop the current. The battery keeps supplying I²R to the winding resistance."
+            }
+          ],
+          "explanation": "An inductor sets how the current gets to its final value, not the final value itself. Here the final current is 500 mA, the field holds ½ × 0.1 H × (0.5 A)² = 12.5 mJ, and the winding turns (0.5 A)² × 24 Ω = 6 W into heat."
+        }
+      ],
+      "schematic": {
+        "netlist": "switch-on\nV1 a 0 12\nRS1 a b 1m\nL1 b c 100m\nRw c 0 24\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V",
+            "symbol": "battery"
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "switch\n(just closed)",
+            "symbol": "switchClosed"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "L1\n100 mH"
+          },
+          {
+            "ref": "Rw",
+            "at": [
+              8,
+              6
+            ],
+            "rot": 90,
+            "label": "Rw\n24 Ω"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              10
+            ],
+            [
+              8,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            10
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "ind_switch_off_spike",
+      "topicId": "inductors",
+      "prompt": "A transistor switches a 12 V relay coil (inductance 100 mH, winding resistance 240 Ω, so 50 mA flows) on its low side, with no diode across the coil. The transistor turns off in about 1 µs. What happens at the transistor's collector?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "It rises far above 12 V: stopping 50 mA in 1 µs would need L·di/dt = 100 mH × 50 mA / 1 µs = 5000 V, so the voltage climbs until the transistor's collector junction breaks down, at tens of volts",
+          "feedback": "Right: the coil's current cannot stop instantly, and to force it down so fast the coil's voltage reverses and adds to the supply at the collector.",
+          "correct": true
+        },
+        {
+          "text": "It rises to 12 V and stops there, because the supply is only 12 V",
+          "feedback": "Without a coil it would. But the coil carries 50 mA that cannot stop instantly; to make it fall in 1 µs the coil induces about 100 mH × 50 mA / 1 µs = 5000 V, added to the 12 V."
+        },
+        {
+          "text": "It drops to 0 V, because the transistor is off and no current flows",
+          "feedback": "An off transistor lets its collector rise, not fall. The coil's 50 mA keeps flowing into the collector for a moment, and with nowhere to go, the voltage there climbs."
+        },
+        {
+          "text": "It goes negative, about −5000 V, as the field collapses",
+          "feedback": "The sign is wrong: the coil acts as a source that keeps its current flowing toward the collector, so the collector goes positive, far above 12 V. Nor does it reach 5000 V: that is only what stopping the current in 1 µs would take, and the transistor breaks down at tens of volts first."
+        }
+      ],
+      "explanation": "The coil's field holds ½LI² = ½ × 0.1 H × (0.05 A)² = 125 µJ, and its current cannot stop instantly. When the transistor turns off, the current through the coil starts to fall, and the coil's voltage reverses (Lenz's law) so that it drives the current onward into the collector: the collector goes far above 12 V. A real transistor breaks down long before 5000 V, and most of the 125 µJ ends up as heat in it at every switch-off. The usual fix is a flyback diode across the coil, which gives the current a path so it can decay slowly (diode_practical, later in the course). The same spike appears across any gap that interrupts a coil's current: never break the current of a coil, motor or relay by hand: the voltage rises until something conducts, an arc across the gap or your body if you are touching the terminals.",
+      "hints": [
+        "Can the current through the coil drop from 50 mA to zero instantly?",
+        "v = L·di/dt, with di = 50 mA and dt = 1 µs. Which way does the coil's voltage point when its current falls?"
+      ],
+      "schematic": {
+        "netlist": "Relay driver\nV1 vcc 0 12\nL1 vcc c 100m\nQ1 c b 0 QN\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "relay coil\n100 mH, 240 Ω",
+            "symbol": "relayCoil"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "Q1"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            10,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "drive",
+            "at": [
+              6,
+              6
+            ],
+            "left": true
+          },
+          {
+            "text": "collector",
+            "at": [
+              10,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "ind_voltage_polarity",
+      "topicId": "inductors",
+      "prompt": "A current flows into terminal A of a 10 mH inductor and out of terminal B. A voltmeter has its red lead on A and its black lead on B. While the current rises at 200 A/s, the meter reads +2.0 V. The current, still flowing from A to B, then falls at 200 A/s. What does the meter read?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "−2.0 V: the current is falling, so the induced voltage reverses; B is now positive and the inductor returns energy to the circuit",
+          "feedback": "Right: v = L·di/dt with di/dt = −200 A/s gives −2.0 V. Current still leaves through B, the + side, as from a source.",
+          "correct": true
+        },
+        {
+          "text": "+2.0 V: the current still flows from A to B, so A stays positive",
+          "feedback": "That would hold for a resistor, whose voltage follows its current. An inductor's voltage follows the rate of change of its current, and that has changed sign."
+        },
+        {
+          "text": "0 V: the current is still flowing the same way, so nothing has changed",
+          "feedback": "The current's direction is the same, but its rate of change has reversed: v = L·di/dt = 10 mH × (−200 A/s) = −2.0 V."
+        },
+        {
+          "text": "+4.0 V: the falling field adds its voltage to the one already there",
+          "feedback": "There is no voltage \"already there\" from the current itself: an inductor's voltage is set only by di/dt, which is now −200 A/s, giving −2.0 V."
+        }
+      ],
+      "explanation": "v = L·di/dt = 10 mH × (−200 A/s) = −2.0 V. While the current rose, A was positive and current entered at the + terminal: the inductor took energy, as a load does, building up its field. While it falls, B is positive and current leaves from the + terminal: the inductor gives energy back, as a source does, from its shrinking field. Lenz's law in both cases: the induced voltage opposes the change, first the rise and then the fall.",
+      "hints": [
+        "An inductor's voltage depends on the rate of change of its current, not on its direction.",
+        "v = L·di/dt. What is the sign of di/dt now?"
+      ],
+      "noDrawing": "one inductor's terminal voltage; no circuit to analyze",
+      "review": "verified"
+    },
+    {
+      "id": "ind_saturation",
+      "topicId": "inductors",
+      "prompt": "A 22 µH power inductor's datasheet gives a saturation current of 3.0 A. In a switching regulator, a current probe shows its current ramping in a straight line from 1.0 A up to about 3 A, then bending sharply upward and climbing much faster for the rest of the switch's on-time, while the voltage across it stays the same. Why?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "Above about 3 A the core saturates: its magnetization can hardly grow further, so its permeability, and with it L, falls steeply, and di/dt = V/L rises",
+          "feedback": "Right: the same voltage across a much smaller L ramps the current much faster. The peak current can then run far above what the design expected.",
+          "correct": true
+        },
+        {
+          "text": "The winding heats up during the ramp, its resistance falls, and the current rises faster",
+          "feedback": "Copper's resistance rises with temperature, not falls, and a winding heats over seconds, not within one switching cycle of microseconds."
+        },
+        {
+          "text": "Above 3 A the inductor has stored all the energy it can hold, so further current passes straight through as in a wire",
+          "feedback": "Saturation is not an energy limit: past it the stored energy still rises with the current, and the current does not pass 'straight through'. The voltage across the coil still sets di/dt = V/L. What changes is L: the core's permeability falls, so the same voltage ramps the current much faster."
+        },
+        {
+          "text": "The inductor's voltage rating has been exceeded, so its insulation is breaking down",
+          "feedback": "The voltage across it stays the same throughout, as the prompt says. The change happens at a current, not a voltage, which points to the core."
+        }
+      ],
+      "explanation": "A ferrite or iron core gives an inductor its high L because its atoms' magnetic moments line up with the field and add to it. Once most of them are lined up, the core cannot add much more: it saturates, its permeability falls, and so does L. With the same voltage across it, di/dt = V/L jumps. Datasheets give the saturation current as the current at which L has fallen by a stated percentage, and that percentage differs between manufacturers, so read the definition. A design keeps the peak current below it with margin; a saturating inductor makes the current climb steeply and can destroy the switch.",
+      "hints": [
+        "The voltage is the same, but di/dt has risen. What must have changed in di/dt = V/L?",
+        "What limits how strongly a ferrite or iron core can be magnetized?"
+      ],
+      "noDrawing": "about a core's magnetic behavior; no circuit to analyze",
+      "review": "verified"
+    }
+  ]
+}

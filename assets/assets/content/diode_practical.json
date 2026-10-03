@@ -1,0 +1,1802 @@
+{
+  "topics": [
+    {
+      "id": "diode_practical",
+      "title": "LEDs, Zener regulators and flyback diodes",
+      "summary": "Set LED current with a resistor, hold a voltage steady with a Zener, and protect switches from inductive kickback.",
+      "lenses": [
+        "circuit",
+        "physics"
+      ],
+      "prerequisites": [
+        "diode_models"
+      ],
+      "lensNotes": {
+        "circuit": "LEDs need a series resistor to set current; Zeners hold a voltage by conducting in breakdown; a flyback diode gives an inductor's current somewhere to go when a switch opens.",
+        "physics": "An LED's color sets its voltage (photon energy E = hf). An inductor resists changes in current (V = L·di/dt), so interrupting it suddenly produces a large voltage spike."
+      },
+      "formulas": [
+        {
+          "label": "LED resistor",
+          "tex": "R = \\frac{V_s - V_F}{I}"
+        },
+        {
+          "label": "Zener current",
+          "tex": "I_Z = \\frac{V_{in} - V_Z}{R} - \\frac{V_Z}{R_L}"
+        },
+        {
+          "label": "Coil kickback",
+          "tex": "v = L\\,\\frac{di}{dt}"
+        },
+        {
+          "label": "Zener power",
+          "tex": "P_Z = V_Z I_Z"
+        }
+      ],
+      "prerequisiteNotes": {
+        "diode_models": "LEDs and Zeners are diodes with a useful voltage (forward or reverse), and a series resistor sets their current."
+      },
+      "goals": [
+        "Choose an LED's series resistor with R = (V_s − V_F)/I, round it to a standard value, and find the power in the resistor and in the LED",
+        "Find the currents in a Zener regulator by KCL, size its series resistor for the lowest input and heaviest load, and check the Zener's power at the highest input and no load",
+        "Predict how an LED's current or a Zener's current and power change when the supply or the load changes, and explain why",
+        "Explain how a series diode protects against a reversed supply and how a flyback diode protects a switch driving a coil"
+      ],
+      "intuition": "Once it conducts, forward for an LED or in breakdown for a Zener, a diode's voltage stays nearly fixed over a wide range of current, so the series resistor, which takes the rest of the supply, is what sets the current.",
+      "why": "A conducting junction's current rises steeply with its voltage: forward, about tenfold for every 60–120 mV; in reverse breakdown, where the junction's strong field pulls electrons straight out of their bonds (the Zener effect, below about 5 V) or speeds them up enough to knock others free (avalanche, above about 7 V), steeply too. So its voltage barely moves while its current changes a lot, and in series with a resistor a supply change lands across the resistor. So an LED needs something, usually a series resistor, to set its current, and a Zener holds a voltage while taking whatever current the load leaves. A coil's current cannot stop instantly (v = L·di/dt); a flyback diode lets it die away instead of forcing a spike.",
+      "explanation": "An LED is a diode that emits light; a red one drops about 2 V when lit. Its current rises steeply with voltage, so a series resistor sets it: R = (V_s − V_F)/I. Round R up to a standard value so the current stays under target. The resistor dissipates (V_s − V_F)·I and the LED V_F·I. A Zener diode is made to break down at a chosen reverse voltage, V_Z, and holds close to it over a wide current range. In a regulator, a series resistor carries (V_in − V_Z)/R; the load takes V_Z/R_L and the Zener takes the rest. Size R so the Zener still carries a few milliamps, enough to stay well into breakdown, at the lowest input and heaviest load, and check its power, V_Z·I_Z, at the highest input with no load. A diode in series with the supply blocks a reversed battery, at the cost of its forward drop. A coil keeps its current flowing when a switch opens, and v = L·di/dt would reach hundreds of volts, enough to break down the transistor. A flyback diode across the coil gives that current a path and holds the switch one drop above the supply.",
+      "workedExample": {
+        "problem": "A board runs from an unregulated DC input that can be anywhere from 9 V to 12 V. A 1N4007 in series with the positive lead protects it from a reversed connection. After the diode, a red LED (V_F ≈ 2.0 V) must never exceed 10 mA, and a 5.1 V Zener (rated 500 mW) with a series resistor feeds a load drawing 0 to 10 mA while keeping at least 5 mA in the Zener. Choose both resistors (E12) and check the powers.",
+        "steps": [
+          "Protection diode (0.7 V model): the board's rail is 9 V − 0.7 V = 8.3 V at the lowest input and 12 V − 0.7 V = 11.3 V at the highest. Connected backwards, the 1N4007 is reverse biased and passes only a tiny leakage current, so nothing on the board sees the reversed voltage.",
+          "LED resistor (LED as a fixed 2.0 V drop): the current is highest at the highest rail, so R ≥ (11.3 V − 2.0 V) / 10 mA = 930 Ω. The next E12 value up is 1.0 kΩ.",
+          "LED current with 1.0 kΩ: (11.3 V − 2.0 V) / 1.0 kΩ = 9.3 mA at the highest rail and (8.3 V − 2.0 V) / 1.0 kΩ = 6.3 mA at the lowest. The LED is dimmer on a low input, but never over 10 mA.",
+          "Powers at 9.3 mA: the resistor dissipates 9.3 V × 9.3 mA = 86.5 mW and the LED 2.0 V × 9.3 mA = 18.6 mW. A ¼ W resistor is fine.",
+          "Zener resistor (Zener as a fixed 5.1 V in breakdown): the worst case for keeping it in breakdown is the lowest rail with the heaviest load, when R must still pass 10 mA + 5 mA = 15 mA. R ≤ (8.3 V − 5.1 V) / 15 mA = 213 Ω. The next E12 value down is 180 Ω (220 Ω would be too large).",
+          "Check at the lowest rail and full load: I_R = (8.3 V − 5.1 V) / 180 Ω = 17.8 mA, and by KCL I_Z = 17.8 mA − 10 mA = 7.8 mA, above the 5 mA minimum.",
+          "Line change: at the highest rail and full load, I_R = (11.3 V − 5.1 V) / 180 Ω = 34.4 mA and I_Z = 34.4 mA − 10 mA = 24.4 mA. The output stays at 5.1 V; the extra input voltage lands on R and the extra current goes into the Zener.",
+          "Load change and worst-case power: at the highest rail with no load, the whole 34.4 mA flows through the Zener: P_Z = 5.1 V × 34.4 mA = 175 mW, inside its 500 mW rating. R dissipates (11.3 V − 5.1 V)² / 180 Ω = 214 mW, close to a ¼ W resistor's 250 mW, so use a ½ W part. The protection diode carries the whole board current, 9.3 mA + 34.4 mA = 43.7 mA at the highest rail, and dissipates 0.7 V × 43.7 mA = 30.6 mW."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 3 \"Diodes and Rectifiers\", section \"Zener diodes\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_3.html#xtocid902712",
+          "note": "A reverse-biased Zener holds close to its Zener voltage while its current varies, the series dropping resistor's current divides between load and Zener, the Zener's dissipation is its voltage times its current and must stay inside its rating, and too large a dropping resistor or too heavy a load takes it out of breakdown so it stops regulating."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 3 \"Diodes and Rectifiers\", section \"Special-purpose diodes\", subsection \"Light-emitting diodes\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_3.html#xtocid902716",
+          "note": "An LED on a DC supply needs a series dropping resistor sized as (supply − forward voltage)/current, with the resistor's power as its voltage times the current, and red LEDs drop roughly 1.5 to 2.4 V."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 3 \"Diodes and Rectifiers\", section \"Inductor commutating circuits\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_3.html#xtocid90278",
+          "note": "Interrupting a coil's current produces a spike of hundreds of volts; a diode across the coil, reverse biased in normal operation, carries the coil current when the switch opens, so the switch sees only the supply plus about 0.7 V."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "led_resistor",
+      "topicId": "diode_practical",
+      "prompt": "An LED with a {Vf} forward voltage should run at {I} from a {Vs} supply. What series resistance gives exactly this current? (Rounding to a standard part comes after.)",
+      "variables": [
+        {
+          "name": "Vs",
+          "unit": "V",
+          "values": [
+            5,
+            9,
+            12
+          ]
+        },
+        {
+          "name": "Vf",
+          "unit": "V",
+          "values": [
+            1.8,
+            1.9,
+            2,
+            2.1,
+            2.2,
+            2.9,
+            3,
+            3.1,
+            3.2
+          ]
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "range": {
+            "min": 0.005,
+            "max": 0.02,
+            "step": 0.001
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "VR",
+          "formula": "Vs-Vf",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "(Vs-Vf)/I",
+        "unit": "Ω"
+      },
+      "explanation": "The resistor takes whatever the LED doesn't: {Vs} − {Vf} = {VR}. R = {VR} / {I} = {answer}. Round up to the next standard value so the current stays at or below the target.",
+      "hints": [
+        "How much voltage is left for the resistor?",
+        "R = (V_s − V_F) / I."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vs/I",
+          "feedback": "Subtract the LED's forward voltage first: only V_s − V_F appears across the resistor."
+        },
+        {
+          "formula": "Vf/I",
+          "feedback": "That uses the LED voltage; the resistor has V_s − V_F across it."
+        }
+      ],
+      "schematic": {
+        "netlist": "LED\nVS a 0 {Vs:spice}\nR1 a b 1k\nD1 b 0 DL\n.model DL D(N=2)\n",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vs}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R = ?"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "LED\n{Vf}",
+            "symbol": "led"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "steps": [
+        "The LED drops about {Vf} when lit.",
+        "That leaves {Vs} − {Vf} = {VR} across the resistor.",
+        "The same current {I} flows through both, so R = {VR}/{I} = {answer}."
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "zener_current",
+      "topicId": "diode_practical",
+      "prompt": "A {Vz} Zener regulator is fed from {Vin} through R = {R}, and drives a {RL} load. How much current flows through the Zener?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 12,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "Vz",
+          "unit": "V",
+          "values": [
+            4.3,
+            4.7,
+            5.1,
+            5.6,
+            6.2,
+            6.8
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "value": 470
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1200,
+            1500,
+            1800,
+            2200,
+            2700,
+            3300
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "IR",
+          "formula": "(Vin-Vz)/R",
+          "unit": "A"
+        },
+        {
+          "name": "IL",
+          "formula": "Vz/RL",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "(Vin-Vz)/R-Vz/RL",
+        "unit": "A"
+      },
+      "explanation": "The series resistor carries I_R = ({Vin} − {Vz}) / {R} = {IR}. The load takes I_L = {Vz} / {RL} = {IL}. The Zener takes the rest: {IR} − {IL} = {answer}.",
+      "hints": [
+        "Find the current through the series resistor, then the load current.",
+        "I_Z = I_R − I_L (KCL at the output node)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(Vin-Vz)/R",
+          "feedback": "That's the total through the series resistor. The load takes part of it: I_Z = I_R − I_L."
+        },
+        {
+          "formula": "Vin/R-Vz/RL",
+          "feedback": "The series resistor has V_in − V_Z across it, not V_in."
+        }
+      ],
+      "schematic": {
+        "netlist": "Zener\nVIN in 0 {Vin:spice}\nRS in out {R:spice}\nDZ 0 out ZD\nRL out 0 {RL:spice}\n.model ZD D(BV={Vz:spice})\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R {R}"
+          },
+          {
+            "ref": "DZ",
+            "at": [
+              8,
+              6
+            ],
+            "rot": 270,
+            "label": "{Vz}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "RL\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              10,
+              0
+            ]
+          }
+        ]
+      },
+      "steps": [
+        "While it regulates, the Zener holds the output at {Vz}.",
+        "Current through R: ({Vin} − {Vz})/{R} = {IR}.",
+        "The load takes {Vz}/{RL} = {IL}.",
+        "KCL at the output: the Zener carries the rest, {IR} − {IL} = {answer}."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does a Zener regulator need the series resistor R?",
+          "choices": [
+            {
+              "text": "The Zener fixes the output voltage, so something must take up V_in − V_Z and set the current",
+              "feedback": "Right: R absorbs the difference between input and output, and the Zener takes whatever current the load leaves over.",
+              "correct": true
+            },
+            {
+              "text": "R lowers the input down to V_Z by itself; the Zener only smooths out the remaining ripple",
+              "feedback": "R alone can't set a voltage: its drop depends on the current. It is the Zener that fixes the output, and R's drop adjusts to whatever is left."
+            },
+            {
+              "text": "Without R the Zener would pass no current at all, and so it could not regulate anything",
+              "feedback": "The opposite: straight across the input, the Zener would try to clamp the supply and pass a huge current until it burned out."
+            },
+            {
+              "text": "R stops reverse current flowing back from the load into the supply when the input drops",
+              "feedback": "A resistor conducts both ways. Its job here is to set the current that the Zener and the load share."
+            }
+          ],
+          "explanation": "A Zener in breakdown is a near-constant voltage, like the forward drop in Practical diodes but larger. Put a constant voltage straight across a supply and nothing limits the current. R sets I_R = (V_in − V_Z)/R, and KCL shares it: the load takes V_Z/R_L and the Zener takes the rest."
+        }
+      ],
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "zener_power",
+      "topicId": "diode_practical",
+      "prompt": "A {Vz} Zener is fed from {Vin} through R = {R} with no load connected. How much power does the Zener dissipate?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 12,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "Vz",
+          "unit": "V",
+          "values": [
+            4.3,
+            4.7,
+            5.1,
+            5.6,
+            6.2,
+            6.8
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "value": 470
+        }
+      ],
+      "derived": [
+        {
+          "name": "Iz",
+          "formula": "(Vin-Vz)/R",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "Vz*(Vin-Vz)/R",
+        "unit": "W"
+      },
+      "explanation": "With no load, all the resistor current {Iz} goes through the Zener. P = V_Z · I_Z = {Vz} × {Iz} = {answer}. No-load is the worst case for the Zener.",
+      "hints": [
+        "With no load, where does all of the resistor current go?",
+        "P = V_Z × I_Z."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(Vin-Vz)^2/R",
+          "feedback": "That's the power in the series resistor. The Zener dissipates V_Z × I_Z."
+        }
+      ],
+      "schematic": {
+        "netlist": "Zener\nVIN in 0 {Vin:spice}\nRS in out {R:spice}\nDZ 0 out ZD\n.model ZD D(BV={Vz:spice})\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R {R}"
+          },
+          {
+            "ref": "DZ",
+            "at": [
+              8,
+              6
+            ],
+            "rot": 270,
+            "label": "{Vz}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "flyback_spike",
+      "topicId": "diode_practical",
+      "prompt": "A transistor switches off {I} through a {L} relay coil in {t}, with no flyback diode. Roughly what voltage does the coil try to generate (V = L·di/dt)?",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "H",
+          "series": "E12",
+          "decades": [
+            -2,
+            -2
+          ]
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "range": {
+            "min": 0.05,
+            "max": 0.5,
+            "step": 0.05
+          }
+        },
+        {
+          "name": "t",
+          "unit": "s",
+          "series": "E12",
+          "decades": [
+            -6,
+            -6
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "L*I/t",
+        "unit": "V"
+      },
+      "explanation": "V = L·ΔI/Δt = {L} × {I} / {t} = {answer}. In practice the collector voltage rises until the transistor breaks down, far below this figure but still far above its rating, which is why a flyback diode across the coil is essential: it gives the current a path, clamping the spike to about 0.7 V above the supply.",
+      "hints": [
+        "An inductor resists changes in current with V = L·di/dt.",
+        "Use ΔI / Δt = I / t."
+      ],
+      "misconceptions": [
+        {
+          "formula": "L*I",
+          "feedback": "L·I is the flux linkage. Divide by the switching time to get the voltage: V = L·I / t."
+        }
+      ],
+      "schematic": {
+        "netlist": "Relay driver\nV1 vcc 0 12\nL1 vcc c {L:spice}\nQ1 c b 0 QN\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "supply"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "{L}",
+            "symbol": "relayCoil"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "Q1"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            10,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "drive",
+            "at": [
+              6,
+              6
+            ],
+            "left": true
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "flyback_how",
+      "topicId": "diode_practical",
+      "prompt": "How is a flyback diode connected across a relay coil driven by a low-side NPN transistor?",
+      "choices": [
+        {
+          "text": "Across the coil, reverse biased in normal operation (cathode to the supply)",
+          "correct": true,
+          "feedback": "Yes: it does nothing while the coil is on, then conducts the coil's current when the transistor switches off."
+        },
+        {
+          "text": "Across the coil, forward biased in normal operation",
+          "feedback": "Then it would short the coil: with the transistor on, the supply drives a large current through the diode and transistor, destroying them, and the coil gets almost nothing."
+        },
+        {
+          "text": "In series with the coil",
+          "feedback": "In series it carries the same current as the coil and adds no other path, so when the transistor opens the coil's current still has nowhere to go."
+        },
+        {
+          "text": "From the transistor's base to ground",
+          "feedback": "The spike appears across the coil and the collector, so the diode goes across the coil."
+        }
+      ],
+      "explanation": "When the transistor turns off, the coil keeps its current flowing and its voltage reverses. The diode, reverse biased during normal operation, now conducts and lets that current circulate and decay, clamping the collector to about 0.7 V above the supply.",
+      "schematic": {
+        "netlist": "Relay driver\nV1 vcc 0 12\nL1 vcc c 10m\nQ1 c b 0 QN\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "supply"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "relay\ncoil",
+            "symbol": "relayCoil"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "Q1"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            10,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "drive",
+            "at": [
+              6,
+              6
+            ],
+            "left": true
+          }
+        ]
+      },
+      "level": "recall",
+      "review": "verified"
+    },
+    {
+      "id": "led_design_resistor",
+      "topicId": "diode_practical",
+      "prompt": "An LED (V_F = {Vf}) runs from {Vs}. Choose a standard E12 resistor so the current is as close to {I} as possible without exceeding it (and no more than 25% below).",
+      "variables": [
+        {
+          "name": "Vs",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "Vf",
+          "unit": "V",
+          "range": {
+            "min": 1.8,
+            "max": 3.2,
+            "step": 0.1
+          }
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "range": {
+            "min": 0.01,
+            "max": 0.02,
+            "step": 0.001
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rex",
+          "formula": "(Vs-Vf)/I",
+          "unit": "Ω"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "R",
+            "label": "R",
+            "unit": "Ω",
+            "series": "E12",
+            "min": 10,
+            "max": 100000
+          }
+        ],
+        "result": "(Vs-Vf)/R",
+        "resultLabel": "LED current",
+        "resultUnit": "A",
+        "target": "I",
+        "tolerance": 0.25,
+        "mode": "atMost"
+      },
+      "explanation": "The exact value is R = (V_s − V_F)/I = {Rex}. Standard values rarely match, so take the next E12 value up (or the exact value, if it is an E12 value): a larger resistor keeps the current at or below {I}.",
+      "hints": [
+        "Work out the exact resistance first.",
+        "Round up to the next E12 value so the current doesn't exceed the target."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does an LED need a series resistor, rather than a supply set to exactly V_F?",
+          "choices": [
+            {
+              "text": "LED current rises steeply with voltage, so a fixed voltage can't hold the current; a resistor can",
+              "feedback": "Right: with a resistor, more current means more drop across R, which pulls the current back. With a fixed voltage, nothing reduces the drive as the current rises.",
+              "correct": true
+            },
+            {
+              "text": "Any part that drops V_s − V_F would do; a resistor is just the cheapest way to lose the extra voltage",
+              "feedback": "A fixed drop (another diode, say) leaves the same steep problem. A resistor's drop grows with current, and that is what holds the current steady."
+            },
+            {
+              "text": "Without it the LED would only be a little too bright, but otherwise it would be fine",
+              "feedback": "The current isn't limited by anything but the steep diode curve, so it can run far past the LED's rating and destroy it."
+            },
+            {
+              "text": "The resistor stops current flowing backwards through the LED when the supply is reversed",
+              "feedback": "A resistor conducts both ways. Blocking reverse current is what the LED (a diode) does itself."
+            }
+          ],
+          "explanation": "From Practical diodes: a diode's current grows about tenfold for every 0.06–0.12 V more across it, and V_F drifts with temperature and from part to part. Set the voltage and the current is anyone's guess; set the current with a resistor and the LED's voltage settles wherever it needs to. That's why LEDs are driven by current, not voltage."
+        }
+      ],
+      "schematic": {
+        "netlist": "LED\nVS a 0 {Vs:spice}\nR1 a b 1k\nD1 b 0 DL\n.model DL D(N=2)\n",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vs}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R = ?"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vf}",
+            "symbol": "led"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "bridge_led_colour",
+      "topicId": "diode_practical",
+      "bridge": [
+        "physics",
+        "circuit"
+      ],
+      "prompt": "A red LED turns on at about 1.8 V, a blue one at about 3 V. Why?",
+      "choices": [
+        {
+          "text": "Blue photons carry more energy (shorter wavelength), so each electron must cross a bigger energy gap",
+          "correct": true,
+          "feedback": "Yes: E = hf. Each photon's energy comes from one electron dropping across the junction's band gap, so the voltage tracks the color."
+        },
+        {
+          "text": "Blue LEDs have more internal resistance",
+          "feedback": "Resistance affects the slope of the I-V curve, not where it turns on. The turn-on voltage is set by the band gap."
+        },
+        {
+          "text": "Blue light is brighter, so it needs more power",
+          "feedback": "Brightness depends on current. The turn-on voltage is set by the energy of each photon."
+        },
+        {
+          "text": "Blue LEDs are made with more doping",
+          "feedback": "Doping sets the carrier concentrations, but the photon energy (and so the color and turn-on voltage) is fixed by the semiconductor's band gap."
+        }
+      ],
+      "explanation": "An LED emits one photon for each electron that drops across its band gap, so V ≈ E_photon/q = hc/(qλ). Blue (≈450 nm) photons carry about 2.8 eV, red (≈630 nm) about 2 eV: the band gap shows up in the circuit as the turn-on voltage.",
+      "noDrawing": "about band gaps and photon energy, no circuit",
+      "review": "verified"
+    },
+    {
+      "id": "led_what_if_supply",
+      "topicId": "diode_practical",
+      "prompt": "An LED (V_F = {Vf}) runs from a {Vs} battery pack through a {R} resistor. A second, identical pack is added in series, so the supply becomes {new_Vs}. What happens to the LED current?",
+      "variables": [
+        {
+          "name": "Vs",
+          "unit": "V",
+          "range": {
+            "min": 4.5,
+            "max": 6,
+            "step": 1.5
+          }
+        },
+        {
+          "name": "Vf",
+          "unit": "V",
+          "range": {
+            "min": 1.8,
+            "max": 3.2,
+            "step": 0.1
+          }
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "value": 560
+        }
+      ],
+      "derived": [
+        {
+          "name": "VR",
+          "formula": "Vs-Vf",
+          "unit": "V"
+        },
+        {
+          "name": "Nled",
+          "formula": "Vf/(0.025852*ln((Vs-Vf)/R/1e-18))",
+          "unit": ""
+        }
+      ],
+      "whatIf": {
+        "quantity": "the LED current",
+        "formula": "(Vs-Vf)/R",
+        "unit": "A",
+        "change": {
+          "Vs": "2*Vs"
+        },
+        "askFactor": true,
+        "feedback": {
+          "down": "A higher supply doesn't starve the LED. Its own voltage stays near {Vf}, so all of the extra supply voltage lands across the resistor, and the resistor's voltage over its resistance is the current the LED carries: I = (V_s − V_F)/R.",
+          "same": "The LED holds its own voltage near {Vf}, but it doesn't hold the current: the resistor sets that. The extra supply voltage appears across the resistor, and the current is that voltage over R, (V_s − V_F)/R."
+        },
+        "factorHint": "The current follows the resistor's voltage, V_s − V_F, not V_s itself, and V_F stays near {Vf} whatever the supply: compare V_s − V_F before and after."
+      },
+      "explanation": "The LED's voltage holds close to {Vf}, rising only slightly with current, so the resistor gets what is left: {VR} before, {new_Vs} − {Vf} after. That is more than double, because V_F doesn't double with the supply. So the current more than doubles: {before} → {after}. It is the same reason the resistor formula subtracts V_F first.",
+      "hints": [
+        "Which part's voltage changes: the LED's or the resistor's?"
+      ],
+      "schematic": {
+        "netlist": "LED\nVS a 0 {Vs:spice}\nR1 a b {R:spice}\nD1 b 0 DL\n.model DL D(IS=1e-18 N={Nled:spice})\n",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vs}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "{R}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vf}",
+            "symbol": "led"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "zener_what_if_load",
+      "topicId": "diode_practical",
+      "prompt": "A {Vz} Zener regulator is fed from {Vin} through R = {R} and drives a load R_L = {RL}. The load is replaced by {new_RL}, which draws ten times the current; the Zener still regulates. What happens to the current through the Zener?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 9,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "Vz",
+          "unit": "V",
+          "value": 5.1
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "value": 330
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            4,
+            4
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "IR",
+          "formula": "(Vin-Vz)/R",
+          "unit": "A"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the Zener current",
+        "formula": "(Vin-Vz)/R-Vz/RL",
+        "unit": "A",
+        "change": {
+          "RL": "RL/10"
+        },
+        "feedback": {
+          "up": "The extra load current doesn't come from the supply. Both ends of R stay put ({Vin} and {Vz}), so R's current is fixed; the load's extra share is taken from the Zener.",
+          "same": "R's current stays the same, but the load now takes more of it; apply KCL at the output node to see what remains for the Zener."
+        }
+      },
+      "explanation": "The Zener holds the output at {Vz}, so R always has {Vin} − {Vz} across it and carries the same {IR}. KCL at the output: I_Z = I_R − I_L. The heavier load takes more of that fixed current, so the Zener current falls: {before} → {after}. If the load ever wanted more than I_R, the Zener would drop out of breakdown and the output would sag: that sets the regulator's maximum load.",
+      "hints": [
+        "Does the current through R change when the load changes?"
+      ],
+      "schematic": {
+        "netlist": "Zener\nVIN in 0 {Vin:spice}\nRS in out {R:spice}\nDZ 0 out ZD\nRL out 0 {RL:spice}\n.model ZD D(BV={Vz:spice})\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R {R}"
+          },
+          {
+            "ref": "DZ",
+            "at": [
+              8,
+              6
+            ],
+            "rot": 270,
+            "label": "{Vz}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "RL\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              10,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "zener_what_if_supply",
+      "topicId": "diode_practical",
+      "prompt": "A {Vz} Zener (rated 500 mW) is fed from a {Vin} battery through R = {R}, with no load connected. A second {Vin} battery is added in series, so the input becomes {new_Vin}. What happens to the power the Zener dissipates?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "value": 9
+        },
+        {
+          "name": "Vz",
+          "unit": "V",
+          "values": [
+            4.7,
+            5.1,
+            5.6,
+            6.2
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            680,
+            820,
+            1000,
+            1200,
+            1500
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "VR",
+          "formula": "Vin-Vz",
+          "unit": "V"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the Zener's power",
+        "formula": "Vz*(Vin-Vz)/R",
+        "unit": "W",
+        "change": {
+          "Vin": "2*Vin"
+        },
+        "askFactor": true,
+        "feedback": {
+          "down": "The Zener's voltage stays at {Vz}, but its current rises: all the extra input appears across R, so R passes more current, and with no load all of it goes through the Zener.",
+          "same": "The Zener voltage stays at {Vz}, but the power is V_Z × I_Z, and the current is not fixed: with no load, I_Z is all of R's current, (V_in − V_Z)/R, and the extra input voltage lands across R."
+        },
+        "factorHint": "P = V_Z·(V_in − V_Z)/R: V_Z and R stay put, so only R's voltage, V_in − V_Z, changes. Compare it before and after, keeping in mind that V_Z doesn't grow with the input."
+      },
+      "explanation": "The Zener clamps at {Vz}, so R carries (V_in − V_Z)/R, and with no load all of it flows through the Zener. R's voltage goes from {VR} to {new_Vin} − {Vz}, more than three times as much, so P = V_Z · I_Z goes {before} → {after}. Doubling the input more than triples the Zener's heat, because V_Z stays put: size R and the Zener for the highest input.",
+      "hints": [
+        "The Zener voltage stays fixed. What happens to the voltage across R?"
+      ],
+      "schematic": {
+        "netlist": "Zener\nVIN in 0 {Vin:spice}\nRS in out {R:spice}\nDZ 0 out ZD\n.model ZD D(BV={Vz:spice})\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R {R}"
+          },
+          {
+            "ref": "DZ",
+            "at": [
+              8,
+              6
+            ],
+            "rot": 270,
+            "label": "{Vz}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "led_fault",
+      "topicId": "diode_practical",
+      "prompt": "A red LED indicator runs from {Vs}: the LED is on the supply side and R1 = {R} goes from the LED to ground. Healthy, about {h1} flows. The meter readings are below. Which fault explains them?",
+      "variables": [
+        {
+          "name": "Vs",
+          "unit": "V",
+          "range": {
+            "min": 5,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "value": 680
+        }
+      ],
+      "fault": {
+        "netlist": "LED\nVS a 0 {Vs:spice}\nD1 a b DL\nR1 b 0 {R:spice}\n.model DL D(IS=1e-18 N=2)\n",
+        "probes": [
+          {
+            "label": "Voltage across R1",
+            "probe": "v(b)"
+          },
+          {
+            "label": "Current through R1",
+            "probe": "i(R1)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "R1 is open",
+            "open": "R1",
+            "feedback": "An open R1 would stop the current (0 A), but the meter across the gap would read most of the supply, not 0 V.",
+            "why": "No current flows, yet the meter across R1 reads most of the supply. The meter's own 10 MΩ is now the only path to ground, so a fraction of a microamp flows through the LED, which then drops only about 1.4 V instead of its usual 1.9 V. The meter reads about {Vs} − 1.4 V, even a little more than the healthy reading."
+          },
+          {
+            "text": "The LED is open",
+            "open": "D1",
+            "feedback": "An open LED would stop the current (0 A), and with no current R1 would have 0 V across it.",
+            "why": "No current flows, and with no current R1 has 0 V across it (V = I·R). The supply's voltage sits across the open LED instead."
+          },
+          {
+            "text": "The LED is shorted",
+            "short": "D1",
+            "feedback": "A shorted LED would put the whole supply across R1, so R1 would carry more current than normal.",
+            "why": "With the LED shorted, R1 has the whole {Vs} across it and carries {Vs}/{R}, more than the normal {h1}: nothing takes away the LED's V_F any more."
+          },
+          {
+            "text": "R1 is 6.8 kΩ instead of 680 Ω (blue-gray-red, not blue-gray-brown)",
+            "value": {
+              "ref": "R1",
+              "formula": "R*10"
+            },
+            "feedback": "A ten-times resistor would cut the current to about a tenth, while R1's voltage would change only a little.",
+            "why": "The current is only about a tenth of normal, yet R1's voltage has risen by only about 0.1 V: an LED's current changes steeply with voltage, so a tenth of the current lowers its drop only a little, and R1 gets that bit extra. The LED glows dimly; R1 is ten times too big."
+          }
+        ]
+      },
+      "explanation": "Two readings sort the faults. Zero current means something is open, and the voltage says which part: an open part has most of the supply across it, while an intact resistor with no current has none. More current than normal means a short; a tenth of it means too much resistance. The LED's drop stays near V_F over a wide range of current, as the exponential curve in Practical diodes predicts.",
+      "hints": [
+        "Start with the current: zero, smaller than normal, or larger?",
+        "With no current, a resistor has no voltage across it, and an open part has most of the supply across it."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vs}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "red LED",
+            "symbol": "led"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R1\n{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "b",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "zener_fault",
+      "topicId": "diode_practical",
+      "prompt": "A {Vz} Zener regulator (500 mW Zener) is fed from {Vin} through R = {R} (¼ W) and drives a load R_L = {RL}. Healthy, the output reads about {h0}. The meter readings are below. Which fault explains them?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 12,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "Vz",
+          "unit": "V",
+          "value": 5.1
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "value": 470
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "fault": {
+        "netlist": "Zener\nVIN in 0 {Vin:spice}\nRS in out {R:spice}\nDZ 0 out ZD\nRL out 0 {RL:spice}\n.model ZD D(BV={Vz:spice})\n",
+        "probes": [
+          {
+            "label": "Output voltage",
+            "probe": "v(out)"
+          },
+          {
+            "label": "Current through R",
+            "probe": "i(RS)"
+          },
+          {
+            "label": "Current through the load",
+            "probe": "i(RL)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "R is open",
+            "open": "RS",
+            "feedback": "An open R would cut off everything after it: the output, R's current and the load current would all read zero.",
+            "why": "With R open nothing feeds the output, so every reading is zero."
+          },
+          {
+            "text": "The Zener is open",
+            "open": "DZ",
+            "feedback": "Without the Zener, R and the load would form a plain divider: the output would rise above {Vz}, and R and the load would carry the same current.",
+            "why": "Nothing clamps the output any more. R and the load form a plain divider, so the output rises above {Vz}, and R carries exactly what the load draws."
+          },
+          {
+            "text": "The Zener is shorted",
+            "short": "DZ",
+            "feedback": "A shorted Zener would pull the output to 0 V with no current in the load, and R would carry {Vin}/{R}, more than normal.",
+            "why": "The short ties the output to ground: 0 V and no load current. R now has the whole {Vin} across it, so it carries {Vin}/{R}, more than normal, and dissipates two to three times its normal power: more than its ¼ W rating, so it overheats and may burn open."
+          },
+          {
+            "text": "The load has failed short",
+            "short": "RL",
+            "feedback": "A shorted load would pull the output to 0 V, and the load would then carry the same large current as R.",
+            "why": "The shorted load holds the output at 0 V, and all of R's current, now {Vin}/{R}, flows through the load in place of the Zener: the load's meter reads the same large current as R. R now dissipates two to three times its normal power, more than its ¼ W rating, so it overheats and may burn open."
+          }
+        ]
+      },
+      "explanation": "Healthy, R carries (V_in − V_Z)/R and the load takes V_Z/R_L; the Zener takes the rest. Zero everywhere means the feed is broken; an output above {Vz} means the clamp is gone; 0 V at the output with a large current in R means a short, and the load's current says whether the short is in the Zener or in the load.",
+      "hints": [
+        "First check the output: at {Vz}, above it, or at 0 V?"
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R {R}"
+          },
+          {
+            "ref": "DZ",
+            "at": [
+              8,
+              6
+            ],
+            "rot": 270,
+            "label": "{Vz}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "RL\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              12,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              10,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    }
+  ]
+}

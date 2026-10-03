@@ -1,0 +1,2493 @@
+{
+  "topics": [
+    {
+      "id": "bjt_amplifiers",
+      "title": "Common-emitter amplifiers and emitter followers",
+      "summary": "A common-emitter stage gives voltage gain −R_C/(r_e + R_E); an emitter follower gives gain ≈ 1 with high input and low output resistance.",
+      "lenses": [
+        "circuit",
+        "signals"
+      ],
+      "prerequisites": [
+        "bjt_bias"
+      ],
+      "lensNotes": {
+        "circuit": "Common emitter: voltage gain −R_C/(r_e + R_E), with r_e = V_T/I_C. Emitter follower: gain about 1, but it multiplies the load resistance by β + 1 as seen from the input.",
+        "signals": "The common-emitter stage inverts and amplifies; bypassing R_E raises the gain but also the distortion, because r_e changes with the signal current. The follower buffers without inverting."
+      },
+      "formulas": [
+        {
+          "label": "Emitter resistance",
+          "tex": "r_e = \\frac{V_T}{I_C}"
+        },
+        {
+          "label": "CE gain",
+          "tex": "A_v \\approx -\\frac{R_C}{R_E + r_e}"
+        },
+        {
+          "label": "Follower input",
+          "tex": "R_{in} \\approx (\\beta + 1) R_E"
+        },
+        {
+          "label": "CE gain, emitter resistor bypassed",
+          "tex": "A_v \\approx -\\frac{R_C}{r_e}\\ \\ (R_E \\text{ in the CE gain is only the unbypassed part})"
+        },
+        {
+          "label": "Follower gain",
+          "tex": "A_v = \\frac{R_L}{R_L + r_e}\\ \\ (R_L = \\text{total emitter load})"
+        },
+        {
+          "label": "Stage input resistance",
+          "tex": "R_{in} = R_1 \\parallel R_2 \\parallel (\\beta + 1)R_E\\ (R_E \\text{ unbypassed}),\\quad v_b = v_s\\,\\frac{R_{in}}{R_s + R_{in}}"
+        }
+      ],
+      "prerequisiteNotes": {
+        "bjt_bias": "An amplifier is a biased transistor with a small signal riding on the operating point; the bias sets g_m and so the gain."
+      },
+      "goals": [
+        "Find r_e = V_T/I_E from the bias current, and a common-emitter stage's voltage gain with R_E unbypassed, −R_C/(r_e + R_E), or bypassed, −R_C/r_e",
+        "Explain why a common-emitter stage inverts, and why an unbypassed R_E makes its gain depend on resistors rather than on β or temperature",
+        "Find an emitter follower's input resistance, about (β + 1)·R_E, and explain why it can buffer a weak source driving a heavy load",
+        "Check that the output swing keeps the transistor in its active region"
+      ],
+      "intuition": "In the active region the base signal appears across the emitter path, the transistor's own r_e plus any unbypassed R_E, and sets a signal current that the collector passes on to R_C, so the voltage gain is the resistance ratio −R_C/(r_e + R_E).",
+      "why": "The collector current rises exponentially with V_BE, like a diode's current with its voltage. Around the bias point, a small change v_be changes the emitter current by v_be/r_e, where r_e = V_T/I_E ≈ 26 mV/I_E: 26 Ω at 1 mA. So a base signal v_in drives an emitter signal current v_in/(r_e + R_E), with R_E counted only if it is not bypassed. Nearly all of it flows in the collector, and more current through R_C pulls the collector down: the output inverts. β enters the gain from base to collector only through I_C ≈ I_E. It does set the input resistance, about β·(r_e + R_E) in parallel with the bias divider, so when the source has its own resistance, a low-β part loads it more and the gain measured from the source drops. A large R_E also swamps r_e, which drifts with temperature and changes with the signal itself.",
+      "explanation": "A biased transistor rests at its operating point; an amplifier adds a small signal on top, fed through a coupling capacitor that passes the signal but blocks DC, so the bias stays put. In the common-emitter stage the signal enters at the base and leaves at the collector. The signal appears across the emitter path: R_E plus r_e = V_T/I_E, not a part but the slope of the base–emitter curve: 26 Ω at 1 mA (since I_E ≈ I_C, the problems write V_T/I_C). That sets an emitter signal current, and almost all of it flows through R_C, so the gain is −R_C/(r_e + R_E). The minus sign means the output inverts: more current, more drop across R_C, a lower collector. With R_E much larger than r_e, the gain is close to R_C/R_E, fixed by two resistors. A bypass capacitor across R_E shorts it for signals but keeps its DC bias action. The gain rises to −R_C/r_e, often over a hundred, but it now depends on I_C and temperature, and large signals distort. The emitter follower takes its output at the emitter instead: gain just under 1, no inversion, and the source sees R_E multiplied by β + 1: a buffer.",
+      "workedExample": {
+        "problem": "A common-emitter stage runs from 12 V with divider bias: R1 = 47 kΩ from the supply to the base, R2 = 10 kΩ to ground, R_E = 1.0 kΩ and R_C = 3.9 kΩ. The transistor is a small-signal NPN such as a 2N3904 (assume β = 100, V_BE = 0.7 V and V_T = 26 mV), and the signal arrives through a large coupling capacitor. Find the voltage gain with R_E unbypassed and with R_E fully bypassed, check that the transistor stays active for a sensible input in each case, and compare the resistance the signal source sees.",
+        "steps": [
+          "DC first (stiff-divider bias model, V_BE = 0.7 V): V_B = 12 V × 10 kΩ / (47 kΩ + 10 kΩ) = 2.105 V, V_E = 2.105 V − 0.7 V = 1.405 V and I_E = 1.405 V / 1.0 kΩ = 1.405 mA. At rest V_C = 12 V − 1.405 mA × 3.9 kΩ = 6.519 V, so V_CE = 6.519 V − 1.405 V = 5.11 V.",
+          "Small-signal model: r_e = V_T/I_E = 26 mV / 1.405 mA = 18.5 Ω.",
+          "R_E unbypassed: gain = −R_C/(r_e + R_E) = −3.9 kΩ / (18.5 Ω + 1000 Ω) = −3.83. The quick estimate R_C/R_E = 3.9 is within 2%, because R_E is 54 times r_e.",
+          "Swing check, unbypassed, with a 0.4 V peak input: the collector swings 3.83 × 0.4 V = 1.53 V peak around 6.519 V, from 4.99 V to 8.05 V. The emitter swings 0.4 V × 1000 Ω / 1018.5 Ω = 0.393 V peak around 1.405 V, up to 1.80 V at the moment the collector is lowest. The smallest V_CE is 4.99 V − 1.80 V = 3.19 V, far above 0.2 V: active throughout.",
+          "R_E bypassed by a large capacitor: the capacitor carries no DC, so the bias is unchanged, but for signals only r_e is left in the emitter path. Gain = −R_C/r_e = −3.9 kΩ / 18.5 Ω = −211, 55 times more.",
+          "Swing check, bypassed: the input must now stay at a few millivolts, because r_e itself changes with the signal current: even at 4 mV peak the collector current swings +17% and −14% of I_C, a few percent distortion, so the ±0.844 V below is approximate. With 4 mV peak the collector swings 211 × 4 mV = 0.844 V peak, while the capacitor holds the emitter at 1.405 V. The smallest V_CE is 6.519 V − 0.844 V − 1.405 V = 4.27 V: active throughout.",
+          "What the source sees: as with a follower, the base presents (β + 1) times its emitter path: 101 × (18.5 Ω + 1000 Ω) = 103 kΩ unbypassed, but only 101 × 18.5 Ω = 1.87 kΩ bypassed. For signals the supply counts as ground, so R1 and R2 are in parallel with that: 47 kΩ ∥ 10 kΩ ∥ 103 kΩ = 7.63 kΩ against 47 kΩ ∥ 10 kΩ ∥ 1.87 kΩ = 1.52 kΩ. The high-gain version loads its source about five times harder."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Single-Stage BJT Amplifiers\" (last update 22 September 2026), ch. 3 \"Tutorial\", section 3.4 \"Common-emitter amplifier\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_bjtamp.pdf",
+          "note": "The AC input appears across the dynamic emitter resistance plus any unbypassed R_E, so the gain is about R_C/(r'_E + R_E), a large R_E swamps r'_E for predictable gain, and a bypass capacitor removes R_E for signals while keeping its DC bias action."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Single-Stage BJT Amplifiers\" (last update 22 September 2026), ch. 3 \"Tutorial\", section 3.6 \"Amplifier gain comparisons\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_bjtamp.pdf",
+          "note": "Only the common-emitter stage inverts (gain about −R_C/R_E, 180° phase shift), while the common-collector stage has a voltage gain close to 1 with no inversion."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Single-Stage BJT Amplifiers\" (last update 22 September 2026), ch. 3 \"Tutorial\", section 3.7.1 \"Common-emitter impedances\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_bjtamp.pdf",
+          "note": "Seen from the base, the emitter path r'_E + R_E appears β + 1 times larger, so the stage input impedance is R1 ∥ R2 ∥ (β + 1)(r'_E + R_E)."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "amp_re",
+      "topicId": "bjt_amplifiers",
+      "prompt": "A transistor is biased at I_C = {Ic}. Using V_T = {VT}, what is its intrinsic emitter resistance r_e?",
+      "variables": [
+        {
+          "name": "Ic",
+          "unit": "A",
+          "series": "E12",
+          "decades": [
+            -4,
+            -2
+          ]
+        },
+        {
+          "name": "VT",
+          "unit": "V",
+          "value": 0.026
+        }
+      ],
+      "answer": {
+        "formula": "VT/Ic",
+        "unit": "Ω"
+      },
+      "explanation": "r_e = V_T / I_C = {VT} / {Ic} = {answer}. At 1 mA it's about 26 Ω; more current means smaller r_e and, with R_E bypassed, more gain.",
+      "hints": [
+        "r_e comes from the slope of the exponential diode curve at the bias current.",
+        "r_e = V_T / I_C."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Ic/VT",
+          "feedback": "That's the transconductance g_m (in siemens). r_e is its inverse: V_T / I_C."
+        }
+      ],
+      "noDrawing": "r_e of a transistor from its bias current alone; no circuit is described",
+      "review": "verified"
+    },
+    {
+      "id": "amp_ce_gain_re",
+      "topicId": "bjt_amplifiers",
+      "prompt": "A common-emitter amplifier runs from {Vcc}. Its divider (R1, R2) and emitter resistor bias it at I_C = {Ic}; R_C = {Rc}, and R_E = {Re} is not bypassed. Using V_T = {VT} (no load on the output; ignore the transistor's output resistance), what is the voltage gain v_out/v_in?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "value": 12
+        },
+        {
+          "name": "Ic",
+          "unit": "A",
+          "values": [
+            0.001,
+            0.0012,
+            0.0015,
+            0.0018,
+            0.0022
+          ]
+        },
+        {
+          "name": "Rc",
+          "unit": "Ω",
+          "values": [
+            2200,
+            2700,
+            3300,
+            3900
+          ]
+        },
+        {
+          "name": "Re",
+          "unit": "Ω",
+          "values": [
+            100,
+            120,
+            150,
+            180,
+            220
+          ]
+        },
+        {
+          "name": "VT",
+          "unit": "V",
+          "value": 0.026
+        }
+      ],
+      "derived": [
+        {
+          "name": "re",
+          "formula": "VT/Ic",
+          "unit": "Ω"
+        },
+        {
+          "name": "Vc",
+          "formula": "Vcc-Ic*Rc",
+          "unit": "V"
+        },
+        {
+          "name": "Ve",
+          "formula": "Ic*Re",
+          "unit": "V"
+        },
+        {
+          "name": "Vce",
+          "formula": "Vcc-Ic*Rc-Ic*Re",
+          "unit": "V"
+        },
+        {
+          "name": "VRc",
+          "formula": "Ic*Rc",
+          "unit": "V"
+        },
+        {
+          "name": "Rb1",
+          "formula": "10000*(12-(0.025852*ln(Ic*100000000000000)+1.01*Ic*Re))/(0.025852*ln(Ic*100000000000000)+1.01*Ic*Re+Ic/100*10000)",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "-Rc/(VT/Ic+Re)",
+        "unit": "",
+        "unitless": true
+      },
+      "explanation": "r_e = {VT} / {Ic} = {re}. The gain is −R_C / (r_e + R_E) = −{Rc} / ({re} + {Re}) = {answer}. The minus sign is the phase inversion. The divider only sets the DC operating point, and C1 passes the signal to the base while blocking DC, so the source can't upset the bias. At rest the collector sits at {Vcc} − {Ic} × {Rc} = {Vc} and the emitter at {Ve}, so V_CE = {Vce}. The collector can rise {VRc} before the transistor cuts off and fall nearly V_CE before it saturates: at least 2 V either way, so it stays in the active region. A real stage usually puts a bypassed resistor in series with this R_E to lift V_E to about 1 V for bias stability; that resistor is shorted for signals and doesn't change the gain.",
+      "hints": [
+        "Find r_e = V_T / I_C first.",
+        "A_v = −R_C / (r_e + R_E)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "-Rc/Re",
+          "feedback": "R_C/R_E leaves out the transistor's own emitter resistance r_e = V_T/I_C = {re}, which sits in series with R_E = {Re}. The emitter signal current is v_in/(r_e + R_E), so the gain is −R_C/(r_e + R_E). R_C/R_E is only the quick estimate for R_E ≫ r_e."
+        },
+        {
+          "formula": "-Rc*Ic/VT",
+          "feedback": "−R_C/r_e is the gain with R_E bypassed. Here R_E = {Re} has no capacitor across it, so the signal at the emitter drives current through r_e + R_E = {re} + {Re}, and the gain is −R_C/(r_e + R_E)."
+        }
+      ],
+      "steps": [
+        "The divider and R_E set I_C = {Ic}; the gain comes from the signal current in the emitter path.",
+        "The transistor's own emitter resistance: r_e = V_T/I_C = {re}.",
+        "The unbypassed R_E adds to r_e: gain = −R_C/(r_e + R_E).",
+        "Gain = −{Rc}/({re} + {Re}) = {answer}."
+      ],
+      "followUps": [
+        {
+          "prompt": "When R_E is much larger than r_e, the gain is close to R_C/R_E. Why doesn't it depend on β?",
+          "choices": [
+            {
+              "text": "The emitter follows the base, so the input signal appears across r_e + R_E and sets the emitter signal current; almost all of that current flows in R_C, whatever β is",
+              "feedback": "Right: the gain is a ratio of two resistances the same current flows through.",
+              "correct": true
+            },
+            {
+              "text": "β cancels because it appears in both R_C and R_E",
+              "feedback": "Resistors don't contain β. It drops out because the emitter resistance sets the signal current and I_C ≈ I_E."
+            },
+            {
+              "text": "The bias divider sets the gain",
+              "feedback": "The divider sets the DC operating point; for signals, the gain is the ratio of collector to emitter resistance."
+            },
+            {
+              "text": "β is the same in every transistor, so it doesn't matter",
+              "feedback": "β varies two or three times between parts, which is exactly why designers want a gain that doesn't depend on it."
+            }
+          ],
+          "explanation": "A signal v_in at the base appears at the emitter, because V_BE stays close to 0.7 V. It drives an emitter signal current i_e = v_in/(r_e + R_E). The collector carries α·i_e ≈ i_e, which drops v_out = −i_e·R_C. So the gain is −R_C/(r_e + R_E): only resistances, no β. It's the same negative feedback from R_E that makes divider bias stable."
+        }
+      ],
+      "schematic": {
+        "netlist": "CE stage (drawing)\nVCC vcc 0 12\nC1 in b 10u\nR1 vcc b {Rb1:spice}\nR2 b 0 10k\nRC vcc c {Rc:spice}\nQ1 c b e QN\nRE e 0 {Re:spice}\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              18,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R1"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              6,
+              8
+            ],
+            "rot": 90,
+            "label": "R2"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              12,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C\n{Rc}"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              10,
+              8
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "RE",
+            "at": [
+              12,
+              10
+            ],
+            "rot": 90,
+            "label": "R_E\n{Re}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              2,
+              7
+            ],
+            "rot": 0,
+            "label": "C1"
+          }
+        ],
+        "wires": [
+          [
+            [
+              6,
+              0
+            ],
+            [
+              18,
+              0
+            ],
+            [
+              18,
+              2
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              6,
+              8
+            ],
+            [
+              10,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              12,
+              6
+            ]
+          ],
+          [
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              14
+            ]
+          ],
+          [
+            [
+              6,
+              14
+            ],
+            [
+              12,
+              14
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            9,
+            14
+          ],
+          [
+            18,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              12,
+              5
+            ]
+          },
+          {
+            "text": "in",
+            "at": [
+              2,
+              7
+            ],
+            "left": true
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "amp_ce_gain_bypassed",
+      "topicId": "bjt_amplifiers",
+      "prompt": "A common-emitter amplifier runs from {Vcc}. Its divider (R1, R2) and emitter resistor R_E = {Re} bias it at I_C = {Ic}, and R_C = {Rc}. A large capacitor C_E bypasses R_E fully. Using V_T = {VT} (no load on the output; ignore the transistor's output resistance), what is the voltage gain v_out/v_in?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "value": 12
+        },
+        {
+          "name": "Ic",
+          "unit": "A",
+          "values": [
+            0.001,
+            0.0012,
+            0.0015,
+            0.0018,
+            0.0022
+          ]
+        },
+        {
+          "name": "Rc",
+          "unit": "Ω",
+          "values": [
+            2200,
+            2700,
+            3300
+          ]
+        },
+        {
+          "name": "Re",
+          "unit": "Ω",
+          "values": [
+            470,
+            560,
+            680
+          ]
+        },
+        {
+          "name": "VT",
+          "unit": "V",
+          "value": 0.026
+        }
+      ],
+      "derived": [
+        {
+          "name": "re",
+          "formula": "VT/Ic",
+          "unit": "Ω"
+        },
+        {
+          "name": "Vc",
+          "formula": "Vcc-Ic*Rc",
+          "unit": "V"
+        },
+        {
+          "name": "Ve",
+          "formula": "Ic*Re",
+          "unit": "V"
+        },
+        {
+          "name": "Vce",
+          "formula": "Vcc-Ic*Rc-Ic*Re",
+          "unit": "V"
+        },
+        {
+          "name": "Rb1",
+          "formula": "10000*(12-(0.025852*ln(Ic*100000000000000)+1.01*Ic*Re))/(0.025852*ln(Ic*100000000000000)+1.01*Ic*Re+Ic/100*10000)",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "-Rc*Ic/VT",
+        "unit": "",
+        "unitless": true
+      },
+      "explanation": "C_E carries no DC, so R_E still sets the bias, but for signals C_E shorts R_E and only r_e = {VT} / {Ic} = {re} is left in the emitter path. A_v = −R_C / r_e = −{Rc} / {re} = {answer}. At rest V_CE = {Vcc} − {Ic} × ({Rc} + {Re}) = {Vce}. High gain, but it depends on I_C and temperature, and because r_e changes with the signal current, the input must stay well below V_T (about 1 mV peak keeps distortion near 1%).",
+      "hints": [
+        "For signals, the bypass capacitor shorts R_E.",
+        "A_v = −R_C / r_e = −g_m R_C."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Rc*Ic/VT",
+          "feedback": "The magnitude is right, but a common-emitter stage inverts: include the minus sign."
+        },
+        {
+          "formula": "-Rc/(VT/Ic+Re)",
+          "feedback": "That's the gain with R_E in the signal path. C_E is a short for signals, so the emitter is held at a steady {Ve} and the base signal appears across r_e = {re} alone: gain = −R_C/r_e."
+        }
+      ],
+      "schematic": {
+        "netlist": "CE stage (drawing)\nVCC vcc 0 12\nC1 in b 10u\nR1 vcc b {Rb1:spice}\nR2 b 0 10k\nRC vcc c {Rc:spice}\nQ1 c b e QN\nRE e 0 {Re:spice}\nCE e 0 100u\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              18,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R1"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              6,
+              8
+            ],
+            "rot": 90,
+            "label": "R2"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              12,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C\n{Rc}"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              10,
+              8
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "RE",
+            "at": [
+              12,
+              10
+            ],
+            "rot": 90,
+            "label": "R_E\n{Re}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              2,
+              7
+            ],
+            "rot": 0,
+            "label": "C1"
+          },
+          {
+            "ref": "CE",
+            "at": [
+              19,
+              10
+            ],
+            "rot": 90,
+            "label": "C_E"
+          }
+        ],
+        "wires": [
+          [
+            [
+              6,
+              0
+            ],
+            [
+              18,
+              0
+            ],
+            [
+              18,
+              2
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              6,
+              8
+            ],
+            [
+              10,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              12,
+              6
+            ]
+          ],
+          [
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              14
+            ]
+          ],
+          [
+            [
+              6,
+              14
+            ],
+            [
+              12,
+              14
+            ]
+          ],
+          [
+            [
+              12,
+              10
+            ],
+            [
+              19,
+              10
+            ]
+          ],
+          [
+            [
+              12,
+              14
+            ],
+            [
+              19,
+              14
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            9,
+            14
+          ],
+          [
+            18,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              12,
+              5
+            ]
+          },
+          {
+            "text": "in",
+            "at": [
+              2,
+              7
+            ],
+            "left": true
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "amp_follower_rin",
+      "topicId": "bjt_amplifiers",
+      "prompt": "An emitter follower with β = {beta} drives an emitter resistance of {Re} (ignore bias resistors and r_e). Roughly what input resistance does its base present?",
+      "variables": [
+        {
+          "name": "beta",
+          "unit": "",
+          "range": {
+            "min": 50,
+            "max": 300,
+            "step": 10
+          }
+        },
+        {
+          "name": "Re",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            3
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "(beta+1)*Re",
+        "unit": "Ω"
+      },
+      "explanation": "The base current is (β + 1) times smaller than the emitter current, so the emitter resistance looks (β + 1) times bigger from the base: R_in ≈ ({beta} + 1) × {Re} = {answer}.",
+      "hints": [
+        "Compare the base current with the emitter current for the same signal voltage.",
+        "R_in ≈ (β + 1) R_E."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Re",
+          "feedback": "The base only supplies 1/(β + 1) of the emitter current, so R_E looks (β + 1) times larger from the base."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does R_E look (β + 1) times bigger from the base?",
+          "choices": [
+            {
+              "text": "The base supplies only 1/(β + 1) of the emitter current for the same voltage across R_E, so the source sees the same voltage with far less current",
+              "feedback": "Right: resistance as seen by the source is v/i, and i is (β + 1) times smaller.",
+              "correct": true
+            },
+            {
+              "text": "The transistor amplifies resistance",
+              "feedback": "Nothing amplifies resistance; the ratio v/i the source sees is larger because the source supplies only the base current."
+            },
+            {
+              "text": "The 0.7 V base–emitter drop adds resistance",
+              "feedback": "A fixed drop shifts the DC level; it doesn't change how the current responds to a change in voltage."
+            },
+            {
+              "text": "The collector current flows back out through the base",
+              "feedback": "Collector current flows from the supply into the collector and out of the emitter; the base carries only the small base current."
+            }
+          ],
+          "explanation": "The emitter voltage follows the base, so R_E carries i_e = v/R_E. Of that, only i_b = i_e/(β + 1) comes from the source; the rest comes from the supply through the collector. The source therefore sees v/i_b = (β + 1)·R_E. That's why a follower can sit between a weak source and a heavy load."
+        }
+      ],
+      "schematic": {
+        "netlist": "Emitter follower (drawing)\nVCC vcc 0 12\nQ1 vcc b e QN\nRE e 0 {Re:spice}\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              4,
+              2
+            ],
+            "rot": 90,
+            "label": "V_CC"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              10,
+              8
+            ],
+            "label": "β = {beta}"
+          },
+          {
+            "ref": "RE",
+            "at": [
+              12,
+              10
+            ],
+            "rot": 90,
+            "label": "R_E\n{Re}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              4,
+              2
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              6
+            ]
+          ],
+          [
+            [
+              7,
+              8
+            ],
+            [
+              10,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ],
+          [
+            12,
+            14
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              7,
+              8
+            ],
+            "left": true
+          }
+        ]
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "amp_follower_why",
+      "topicId": "bjt_amplifiers",
+      "prompt": "An emitter follower has a voltage gain of about 1. Why use one?",
+      "choices": [
+        {
+          "text": "It has high input resistance and low output resistance, so it buffers a weak source driving a heavy load",
+          "correct": true,
+          "feedback": "Yes: it gives current gain, not voltage gain."
+        },
+        {
+          "text": "It inverts the signal",
+          "feedback": "The emitter follows the base in phase; there's no inversion."
+        },
+        {
+          "text": "It removes the 0.7 V drop",
+          "feedback": "The output sits about 0.7 V below the input; the drop is still there."
+        },
+        {
+          "text": "It gives a large voltage gain at high frequencies",
+          "feedback": "Its voltage gain stays just below 1 at any frequency."
+        }
+      ],
+      "explanation": "The emitter follower (common collector) has A_v ≈ 1 but current gain ≈ β + 1. It presents about (β + 1)·R_E to the source and a low output resistance to the load: a buffer.",
+      "schematic": {
+        "netlist": "Emitter follower (drawing)\nVCC vcc 0 12\nQ1 vcc b e QN\nRE e 0 1k\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              4,
+              2
+            ],
+            "rot": 90,
+            "label": "V_CC"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              10,
+              8
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "RE",
+            "at": [
+              12,
+              10
+            ],
+            "rot": 90,
+            "label": "R_E"
+          }
+        ],
+        "wires": [
+          [
+            [
+              4,
+              2
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              6
+            ]
+          ],
+          [
+            [
+              7,
+              8
+            ],
+            [
+              10,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              10
+            ],
+            [
+              15,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ],
+          [
+            12,
+            14
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              7,
+              8
+            ],
+            "left": true
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              10
+            ]
+          }
+        ]
+      },
+      "level": "recall",
+      "review": "verified"
+    },
+    {
+      "id": "ce_design_degenerated_gain",
+      "topicId": "bjt_amplifiers",
+      "prompt": "A common-emitter stage runs from V_CC = 12 V with a divider bias (R1 = 47 kΩ, R2 = 10 kΩ), β = 100, and an emitter made of R_E = {RE} (unbypassed) in series with 1 kΩ (bypassed). The transistor sits at about I_C = {IC}. Choose R_C (an E24 value, 470 Ω to 10 kΩ) for a mid-band voltage gain of magnitude {G}, within 7%. The simulator checks your design.",
+      "variables": [
+        {
+          "name": "G",
+          "unit": "",
+          "range": {
+            "min": 5,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "RE",
+          "unit": "Ω",
+          "range": {
+            "min": 100,
+            "max": 200,
+            "step": 100
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "IC",
+          "formula": "0.99*1.35/(RE+1000)",
+          "unit": "A"
+        },
+        {
+          "name": "re",
+          "formula": "0.025852/IC",
+          "unit": "Ω"
+        },
+        {
+          "name": "RCpaper",
+          "formula": "G*RE",
+          "unit": "Ω"
+        },
+        {
+          "name": "RCex",
+          "formula": "G*(RE+re)/0.99",
+          "unit": "Ω"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "RC",
+            "label": "R_C",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 470,
+            "max": 10000
+          }
+        ],
+        "result": "RC/RE",
+        "resultLabel": "gain magnitude",
+        "resultUnit": "",
+        "target": "G",
+        "tolerance": 0.07,
+        "sim": {
+          "netlist": "Common emitter with emitter degeneration\nVcc vcc 0 DC 12\nV1 in 0 AC 1\nC1 in b 10u\nR1 vcc b 47k\nR2 b 0 10k\nRC vcc c {RC:spice}\nQ1 c b e QN\nRE e x {RE:spice}\nREB x 0 1k\nCE x 0 100u\n.model QN NPN(BF=100 IS=1e-14)\n.ac lin 1 1k 1k\n",
+          "measure": "mag:v(c)",
+          "note": "R_C/R_E leaves out the transistor's own emitter resistance r_e = V_T/I_C ≈ {re}, which adds to R_E. The gain is really about R_C/(R_E + r_e)."
+        }
+      },
+      "explanation": "The signal sees the transistor's intrinsic emitter resistance r_e = V_T/I_C = 25.85 mV / {IC} ≈ {re} in series with R_E, so the gain is about α·R_C/(R_E + r_e), with α = β/(β + 1) ≈ 0.99. For a gain of {G}: R_C ≈ {G} × ({RE} + {re}) / 0.99 = {RCex}; pick the nearest E24 value. Using R_C = {G} × R_E = {RCpaper} gives too little gain.",
+      "hints": [
+        "The transistor adds its own small emitter resistance, r_e = V_T/I_C, in series with R_E.",
+        "Gain ≈ R_C/(R_E + r_e), so R_C ≈ G·(R_E + r_e)."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "Vcc",
+            "at": [
+              2,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "V1",
+            "at": [
+              4,
+              10
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              4,
+              7
+            ],
+            "label": "10 µF"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n47 kΩ"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              8
+            ],
+            "rot": 90,
+            "label": "R2\n10 kΩ",
+            "labelOpposite": true
+          },
+          {
+            "ref": "RC",
+            "at": [
+              12,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C = ?"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              10,
+              8
+            ],
+            "label": "β = 100"
+          },
+          {
+            "ref": "RE",
+            "at": [
+              12,
+              10
+            ],
+            "rot": 90,
+            "label": "R_E\n{RE}"
+          },
+          {
+            "ref": "REB",
+            "at": [
+              12,
+              14
+            ],
+            "rot": 90,
+            "label": "1 kΩ",
+            "labelOpposite": true
+          },
+          {
+            "ref": "CE",
+            "at": [
+              15,
+              14
+            ],
+            "rot": 90,
+            "label": "100 µF"
+          }
+        ],
+        "wires": [
+          [
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              12,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              4
+            ],
+            [
+              8,
+              8
+            ],
+            [
+              10,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              12,
+              6
+            ]
+          ],
+          [
+            [
+              12,
+              14
+            ],
+            [
+              15,
+              14
+            ]
+          ],
+          [
+            [
+              4,
+              10
+            ],
+            [
+              4,
+              7
+            ]
+          ],
+          [
+            [
+              2,
+              6
+            ],
+            [
+              2,
+              18
+            ],
+            [
+              15,
+              18
+            ]
+          ],
+          [
+            [
+              8,
+              12
+            ],
+            [
+              8,
+              18
+            ]
+          ],
+          [
+            [
+              4,
+              14
+            ],
+            [
+              4,
+              18
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            18
+          ]
+        ],
+        "labels": [
+          {
+            "text": "c",
+            "at": [
+              12,
+              5
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "amp_what_if_rc_gain",
+      "topicId": "bjt_amplifiers",
+      "prompt": "A common-emitter stage on a 12 V supply is biased at I_C = {Ic} by its divider and emitter resistor, with R_C = {Rc} and an unbypassed R_E = {Re}. Using V_T = {VT}, a second {Rc} resistor is soldered in parallel with R_C. What happens to the size of the voltage gain?",
+      "variables": [
+        {
+          "name": "Ic",
+          "unit": "A",
+          "values": [
+            0.001,
+            0.0015
+          ]
+        },
+        {
+          "name": "Rc",
+          "unit": "Ω",
+          "values": [
+            2200,
+            2700,
+            3300,
+            3900,
+            4700
+          ]
+        },
+        {
+          "name": "Re",
+          "unit": "Ω",
+          "values": [
+            100,
+            150,
+            220,
+            330,
+            470
+          ]
+        },
+        {
+          "name": "VT",
+          "unit": "V",
+          "value": 0.026
+        }
+      ],
+      "derived": [
+        {
+          "name": "re",
+          "formula": "VT/Ic",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rb1",
+          "formula": "10000*(12-(0.025852*ln(Ic*100000000000000)+1.01*Ic*Re))/(0.025852*ln(Ic*100000000000000)+1.01*Ic*Re+Ic/100*10000)",
+          "unit": "Ω"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the size of the voltage gain",
+        "formula": "Rc/(VT/Ic+Re)",
+        "unit": "",
+        "change": {
+          "Rc": "Rc/2"
+        },
+        "askFactor": true,
+        "factorHint": "The gain is R_C/(r_e + R_E). r_e = V_T/I_C stays put because the bias still sets I_C, so only the top changes: work out the new collector resistance.",
+        "feedback": {
+          "up": "A second resistor in parallel with R_C gives the signal current another path, so it lowers the collector resistance; it doesn't add to it. The signal current, v_in/(r_e + R_E), is unchanged, and the output swing is that current times the resistance it flows through.",
+          "same": "The signal current i_e = v_in/(r_e + R_E) is unchanged (and so is the DC collector current), but the output swing is that current times the collector resistance, and the parallel resistor has changed that resistance."
+        }
+      },
+      "explanation": "The divider and R_E set the DC collector current (bias topic), so I_C stays at {Ic} and r_e = V_T/I_C stays at {re}. The gain magnitude is R_C/(r_e + R_E); two equal resistors in parallel give R_C/2 (Series and parallel), so the gain halves: {before} → {after}. The collector's DC voltage rises, because the smaller R_C drops only half as much.",
+      "hints": [
+        "Does adding the parallel resistor change the bias current, and so r_e?",
+        "Gain = R_C/(r_e + R_E); what is R_C now?"
+      ],
+      "followUps": [
+        {
+          "prompt": "The gain halved. What happened to the DC collector current?",
+          "choices": [
+            {
+              "text": "Nothing: the divider and R_E set it; R_C only decides how far below the supply the collector sits",
+              "feedback": "Right: in the active region the transistor sets the current, and R_C turns it into a voltage.",
+              "correct": true
+            },
+            {
+              "text": "It doubled, because R_C halved",
+              "feedback": "That would be Ohm's law with R_C alone across the supply. In the active region I_C ≈ (V_B − 0.7 V)/R_E, and R_C just takes whatever drop results."
+            },
+            {
+              "text": "It halved, along with the gain",
+              "feedback": "The gain fell because the same signal current now flows in a smaller resistor; the DC current hasn't moved."
+            },
+            {
+              "text": "It now depends on β",
+              "feedback": "With divider bias and R_E, I_C hardly depends on β, whatever R_C is."
+            }
+          ],
+          "explanation": "In the active region the transistor acts as a current source controlled from the base side: I_C ≈ (V_B − 0.7 V)/R_E. R_C converts current into voltage, both for DC (V_C = V_CC − I_C·R_C) and for signals (gain = R_C/(r_e + R_E)). Change R_C and the voltages change, not the current, as long as the collector stays well above the emitter."
+        }
+      ],
+      "schematic": {
+        "netlist": "CE stage (drawing)\nVCC vcc 0 12\nC1 in b 10u\nR1 vcc b {Rb1:spice}\nR2 b 0 10k\nRC vcc c {Rc:spice}\nQ1 c b e QN\nRE e 0 {Re:spice}\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              18,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R1"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              6,
+              8
+            ],
+            "rot": 90,
+            "label": "R2"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              12,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C\n{Rc}"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              10,
+              8
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "RE",
+            "at": [
+              12,
+              10
+            ],
+            "rot": 90,
+            "label": "R_E\n{Re}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              2,
+              7
+            ],
+            "rot": 0,
+            "label": "C1"
+          }
+        ],
+        "wires": [
+          [
+            [
+              6,
+              0
+            ],
+            [
+              18,
+              0
+            ],
+            [
+              18,
+              2
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              6,
+              8
+            ],
+            [
+              10,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              12,
+              6
+            ]
+          ],
+          [
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              14
+            ]
+          ],
+          [
+            [
+              6,
+              14
+            ],
+            [
+              12,
+              14
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            9,
+            14
+          ],
+          [
+            18,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              12,
+              5
+            ]
+          },
+          {
+            "text": "in",
+            "at": [
+              2,
+              7
+            ],
+            "left": true
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "amp_what_if_follower_load",
+      "topicId": "bjt_amplifiers",
+      "prompt": "An emitter follower, driven from a low-resistance source, is biased at I_C = {Ic} (its emitter bias resistor is large enough to ignore) and drives a load R_L = {Rl} through a coupling capacitor. Using V_T = {VT}, the load is swapped for one ten times smaller, {new_Rl}. What happens to the voltage gain?",
+      "variables": [
+        {
+          "name": "Ic",
+          "unit": "A",
+          "values": [
+            0.001,
+            0.002,
+            0.005
+          ]
+        },
+        {
+          "name": "Rl",
+          "unit": "Ω",
+          "values": [
+            1000,
+            2200,
+            4700
+          ]
+        },
+        {
+          "name": "VT",
+          "unit": "V",
+          "value": 0.026
+        }
+      ],
+      "derived": [
+        {
+          "name": "re",
+          "formula": "VT/Ic",
+          "unit": "Ω"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the voltage gain",
+        "formula": "Rl/(Rl+VT/Ic)",
+        "unit": "",
+        "change": {
+          "Rl": "Rl/10"
+        },
+        "feedback": {
+          "up": "A heavier load never helps: the transistor's own r_e and the load form a divider; look at which leg R_L is.",
+          "same": "The follower's gain is close to 1, not exactly 1: r_e = V_T/I_C sits in series with the load like the top of a divider; look at which leg R_L is."
+        }
+      },
+      "explanation": "For signals the follower is a divider: r_e = V_T/I_C = {re} on top, R_L at the bottom (Dividers topic). Gain = R_L/(R_L + r_e): {before} → {after}. It's just under 1 because r_e is small, and even a tenfold heavier load costs at most about a fifth of the small-signal gain: that small r_e is the follower's low output resistance.",
+      "hints": [
+        "Draw the follower as r_e = V_T/I_C in series with the load.",
+        "Gain = R_L/(R_L + r_e)."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why is the follower's output resistance so low?",
+          "choices": [
+            {
+              "text": "The emitter is held one V_BE below the base, and the transistor supplies whatever current the load needs from the supply; only the small r_e (plus the source resistance divided by β + 1) is in the way",
+              "feedback": "Right: a change in load current barely changes V_BE.",
+              "correct": true
+            },
+            {
+              "text": "Because its emitter resistor is small",
+              "feedback": "The emitter bias resistor is large here (we ignored it). The low output resistance comes from the transistor: r_e = V_T/I_C."
+            },
+            {
+              "text": "Because the coupling capacitor has a low reactance",
+              "feedback": "The capacitor just passes the signal on; it can't make the stage behind it any stiffer."
+            },
+            {
+              "text": "Because its gain is 1, so its output resistance must be low",
+              "feedback": "Gain alone says nothing about output resistance: a plain wire from a weak source also has a gain of 1 with no load, and collapses under one."
+            }
+          ],
+          "explanation": "Looking back into the emitter, a change in load current changes I_E, which changes V_BE only by about V_T·ΔI/I_C: that's r_e = V_T/I_C, a few ohms to a few tens of ohms. The source's own resistance is seen divided by β + 1, because the base supplies only 1/(β + 1) of the current: the mirror image of R_in = (β + 1)·R_E."
+        }
+      ],
+      "schematic": {
+        "netlist": "Emitter follower (drawing)\nVCC vcc 0 12\nVIN b 0 SIN(2 10m 1k)\nQ1 vcc b e QN\nRE e 0 10k\nC2 e out 10u\nRL out 0 {Rl:spice}\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              4,
+              2
+            ],
+            "rot": 90,
+            "label": "V_CC"
+          },
+          {
+            "ref": "VIN",
+            "at": [
+              6,
+              8
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              10,
+              8
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "RE",
+            "at": [
+              12,
+              10
+            ],
+            "rot": 90,
+            "label": "R_E"
+          },
+          {
+            "ref": "C2",
+            "at": [
+              16,
+              10
+            ],
+            "rot": 0,
+            "label": "C2"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              20,
+              10
+            ],
+            "rot": 90,
+            "label": "R_L\n{Rl}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              4,
+              2
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              6
+            ]
+          ],
+          [
+            [
+              6,
+              8
+            ],
+            [
+              10,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              10
+            ],
+            [
+              16,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            12,
+            14
+          ],
+          [
+            20,
+            14
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "amp_follower_fault",
+      "topicId": "bjt_amplifiers",
+      "prompt": "This emitter follower (β = 100) runs from {Vcc}, biased by R1 = R2 = 10 kΩ with R_E = {Re}. It should read {h0} at the base and {h1} at the emitter. The meter readings (to ground) are below. Which fault explains them?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "range": {
+            "min": 9,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "name": "Re",
+          "unit": "Ω",
+          "values": [
+            1000,
+            2200
+          ]
+        }
+      ],
+      "fault": {
+        "netlist": "Follower\nVCC vcc 0 {Vcc:spice}\nR1 vcc b 10k\nR2 b 0 10k\nQ1 vcc b e QN\nRE e 0 {Re:spice}\n.model QN NPN(BF=100)\n",
+        "probes": [
+          {
+            "label": "Base voltage",
+            "probe": "v(b)"
+          },
+          {
+            "label": "Emitter voltage",
+            "probe": "v(e)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "R1 (base to supply) is open",
+            "open": "R1",
+            "feedback": "With R1 open nothing would pull the base up: it would read 0 V, the transistor would be off, and the emitter would read 0 V too.",
+            "why": "The base reads 0 V, so nothing is feeding it: R1, the only path from the supply to the base, is open. With no base drive the transistor is off and the emitter sits at 0 V."
+          },
+          {
+            "text": "R2 (base to ground) is open",
+            "open": "R2",
+            "feedback": "With R2 open only R1 and the base current would set the base: the base would rise far above half the supply, and the emitter would follow it, still about 0.7 V below.",
+            "why": "The emitter still follows the base about 0.7 V below, so the transistor works, but the base is far above half the supply. Only R1 is feeding it: the leg that holds it down, R2, is missing, and just the small base current through R1 limits the rise."
+          },
+          {
+            "text": "R_E is open",
+            "open": "RE",
+            "feedback": "With R_E open there would be no emitter current: the base would sit at the plain divider voltage (half the supply), and the emitter, loaded only by the meter, would read only about 0.4–0.5 V below it instead of 0.7 V.",
+            "why": "The base is at exactly half the supply, so the divider carries no base current at all, and the base–emitter voltage is smaller than a working junction's 0.7 V: almost no emitter current flows. The path it should take, R_E, is open; the meter's own tiny current is all that's left. The emitter still rises well above 0 V, so the transistor is conducting: that is what separates this from a transistor failed open, where the emitter would read 0 V."
+          },
+          {
+            "text": "A solder bridge joins the collector (supply) to the emitter",
+            "add": "Rbridge vcc e 0.1",
+            "feedback": "A collector–emitter bridge would pull the emitter up to the supply, above the base. The base–emitter junction would be reverse biased, so the base would sit at the plain divider voltage.",
+            "why": "The emitter reads the full supply, above the base, which a working follower can never do (its emitter sits 0.7 V below the base). Something joins the emitter straight to the supply: the collector–emitter bridge."
+          },
+          {
+            "text": "A solder bridge joins the base to the emitter",
+            "add": "Rbridge b e 0.1",
+            "feedback": "A base–emitter bridge would put R_E straight across R2, dragging the base far down, and base and emitter would read the same voltage.",
+            "why": "Base and emitter read the same voltage, so they are joined: the junction is bypassed and the transistor is off. R_E now sits in parallel with R2, which pulls the divider's output far down."
+          },
+          {
+            "text": "The transistor has failed open (no junction conducts)",
+            "open": "Q1",
+            "feedback": "With the transistor open, no base or emitter current would flow: the base would sit at exactly half the supply (the unloaded divider), and the emitter, with nothing driving it, would read 0 V.",
+            "why": "The base sits at exactly half the supply, so the divider carries no base current, and the emitter reads 0 V: nothing passes from base or collector to emitter. The divider and R_E are fine; the transistor itself has failed open."
+          }
+        ]
+      },
+      "explanation": "Read the two voltages as a story. In a working follower the base sits near the divider voltage (a little below half the supply, since the base current loads the divider) and the emitter follows about 0.7 V below. Base at 0 V: nothing feeds it. Base too high: the lower divider leg is gone. Base at half the supply with the emitter at 0 V, or with a base–emitter gap well under 0.7 V: no emitter current. Emitter above the base: something drives the emitter directly. Base and emitter equal: they are joined. The divider-bias fault problem in Reading schematics uses the same reasoning on a common-emitter stage.",
+      "hints": [
+        "Start with V_B − V_E. Is it still about 0.7 V?",
+        "Then compare V_B with half the supply: the divider's unloaded voltage."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              2,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n10 kΩ"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              8
+            ],
+            "rot": 90,
+            "label": "R2\n10 kΩ",
+            "labelOpposite": true
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              10,
+              8
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "RE",
+            "at": [
+              12,
+              10
+            ],
+            "rot": 90,
+            "label": "R_E\n{Re}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              6
+            ]
+          ],
+          [
+            [
+              8,
+              4
+            ],
+            [
+              8,
+              8
+            ],
+            [
+              10,
+              8
+            ]
+          ],
+          [
+            [
+              2,
+              6
+            ],
+            [
+              2,
+              14
+            ],
+            [
+              12,
+              14
+            ]
+          ],
+          [
+            [
+              8,
+              12
+            ],
+            [
+              8,
+              14
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            14
+          ]
+        ],
+        "labels": [
+          {
+            "text": "B",
+            "at": [
+              9,
+              8
+            ]
+          },
+          {
+            "text": "E",
+            "at": [
+              12,
+              10
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "amp_syn_divider_gain",
+      "topicId": "bjt_amplifiers",
+      "connects": [
+        "dividers",
+        "bjt_bias",
+        "bjt_amplifiers"
+      ],
+      "prompt": "A common-emitter stage runs from {Vcc}. R1 = {R1} runs from the supply to the base and R2 = {R2} from the base to ground; the divider is stiff enough to ignore the base current. The emitter goes to ground through R_E = {Re}, fully bypassed for signals by a large capacitor, and the collector to the supply through R_C = {Rc}. Taking V_BE = 0.7 V and V_T = {VT}, what is the small-signal voltage gain?",
+      "variables": [
+        {
+          "name": "Vcc",
+          "unit": "V",
+          "value": 12
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            47000,
+            56000,
+            68000
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "value": 10000
+        },
+        {
+          "name": "Re",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1200,
+            1500
+          ]
+        },
+        {
+          "name": "Rc",
+          "unit": "Ω",
+          "values": [
+            2200,
+            2700,
+            3300,
+            3900
+          ]
+        },
+        {
+          "name": "VT",
+          "unit": "V",
+          "value": 0.026
+        }
+      ],
+      "derived": [
+        {
+          "name": "VB",
+          "formula": "Vcc*R2/(R1+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "Ic",
+          "formula": "(VB-0.7)/Re",
+          "unit": "A"
+        },
+        {
+          "name": "re",
+          "formula": "VT/Ic",
+          "unit": "Ω"
+        },
+        {
+          "name": "VRc",
+          "formula": "Ic*Rc",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "-Rc/re",
+        "unit": "",
+        "unitless": true
+      },
+      "explanation": "Three topics, one after the other. Voltage and current dividers: the base sits at V_B = {Vcc} × R2/(R1 + R2) = {VB}. Biasing a bipolar transistor: the emitter is one V_BE lower, and R_E turns that into the current, I_C ≈ I_E = (V_B − 0.7 V)/R_E = {Ic}. Common-emitter amplifiers and emitter followers: that current sets r_e = V_T/I_C = {re}, and with R_E bypassed only r_e is left in the emitter for signals, so A_v = −R_C/r_e = −{Rc}/{re} = {answer}. The minus sign is the inversion. Notice that the gain equals the DC drop across R_C ({VRc}) divided by V_T: the bias decides the gain.",
+      "hints": [
+        "Work from DC to signal: the base voltage, then the emitter current, then r_e.",
+        "V_B = V_CC·R2/(R1 + R2); I_C ≈ (V_B − 0.7 V)/R_E; A_v = −R_C/r_e with r_e = V_T/I_C."
+      ],
+      "misconceptions": [
+        {
+          "formula": "-Rc*VB/(Re*VT)",
+          "feedback": "You put all of V_B across R_E. The emitter sits 0.7 V below the base, so R_E only has V_B − 0.7 V across it; that sets a smaller I_C, and a smaller I_C means a larger r_e and less gain."
+        },
+        {
+          "formula": "-Rc*(Vcc*R1/(R1+R2)-0.7)/(Re*VT)",
+          "feedback": "The base voltage is the share across R2, the resistor from the base to ground: V_B = V_CC·R2/(R1 + R2), not R1/(R1 + R2)."
+        },
+        {
+          "formula": "-Rc/Re",
+          "feedback": "R_C/R_E is the gain when R_E stays in the signal path. Here the capacitor bypasses R_E for signals, so only r_e = V_T/I_C is left, and the bias current decides the gain."
+        },
+        {
+          "formula": "Rc/re",
+          "feedback": "The size is right, but a common-emitter stage inverts: the gain is negative."
+        }
+      ],
+      "steps": [
+        "Divider: V_B = {Vcc} × {R2}/({R1} + {R2}) = {VB}.",
+        "Bias: I_C ≈ (V_B − 0.7 V)/R_E = {Ic}.",
+        "Transistor: r_e = V_T/I_C = {re}.",
+        "Gain with R_E bypassed: −R_C/r_e = −{Rc}/{re} = {answer}."
+      ],
+      "followUps": [
+        {
+          "prompt": "The gain came out as the DC voltage across R_C divided by V_T. Why does the bias divider end up setting the gain?",
+          "choices": [
+            {
+              "text": "The divider fixes I_C through R_E, and r_e = V_T/I_C, so that one current sets both R_C's DC drop and the stage's gain",
+              "feedback": "Right: gain = R_C/r_e = I_C·R_C/V_T, and I_C comes from the divider through R_E.",
+              "correct": true
+            },
+            {
+              "text": "The divider shrinks the input signal before it reaches the base, and that shrinking is what sets the size of the stage's gain",
+              "feedback": "The divider loads the source a little, but the gain from base to collector is R_C/r_e, and r_e comes from the DC current the divider sets up."
+            },
+            {
+              "text": "β multiplies the divider current, so the collector current is β times the current flowing through R1 and R2",
+              "feedback": "With divider bias, R_E sets I_C = (V_B − 0.7 V)/R_E; the divider current isn't multiplied by β, and β hardly matters."
+            },
+            {
+              "text": "The bypass capacitor charges up to the base voltage, and its reactance then sets the signal gain of the stage",
+              "feedback": "The bypass capacitor charges to V_E and is a short at signal frequencies: that is why only r_e remains, but it doesn't set r_e's value."
+            }
+          ],
+          "explanation": "A_v = −R_C/r_e = −R_C·I_C/V_T = −(I_C·R_C)/V_T, and I_C·R_C is the DC drop across R_C. So a bypassed stage with 4 V across R_C has a gain of about 4 V/26 mV ≈ 150, whatever the individual resistor values. Because I_C = (V_B − 0.7 V)/R_E, anything that moves the divider's output moves the gain too."
+        }
+      ],
+      "schematic": {
+        "netlist": "CE stage (drawing)\nVCC vcc 0 {Vcc:spice}\nC1 in b 10u\nR1 vcc b {R1:spice}\nR2 b 0 {R2:spice}\nRC vcc c {Rc:spice}\nQ1 c b e QN\nRE e 0 {Re:spice}\nCE e 0 100u\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              21,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vcc}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              6,
+              8
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              12,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C\n{Rc}"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              10,
+              8
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "RE",
+            "at": [
+              12,
+              10
+            ],
+            "rot": 90,
+            "label": "R_E\n{Re}"
+          },
+          {
+            "ref": "CE",
+            "at": [
+              17,
+              10
+            ],
+            "rot": 90,
+            "label": "C_E"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              2,
+              7
+            ],
+            "rot": 0,
+            "label": "C1"
+          }
+        ],
+        "wires": [
+          [
+            [
+              6,
+              0
+            ],
+            [
+              21,
+              0
+            ],
+            [
+              21,
+              2
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              6,
+              8
+            ],
+            [
+              10,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              12,
+              6
+            ]
+          ],
+          [
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              14
+            ]
+          ],
+          [
+            [
+              12,
+              10
+            ],
+            [
+              17,
+              10
+            ]
+          ],
+          [
+            [
+              6,
+              14
+            ],
+            [
+              17,
+              14
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            9,
+            14
+          ],
+          [
+            21,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              12,
+              5
+            ]
+          },
+          {
+            "text": "in",
+            "at": [
+              2,
+              7
+            ],
+            "left": true
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "amp_syn_what_if_stiff_divider",
+      "topicId": "bjt_amplifiers",
+      "connects": [
+        "series_parallel",
+        "dividers",
+        "bjt_bias",
+        "bjt_amplifiers"
+      ],
+      "prompt": "A common-emitter stage runs from 12 V with divider bias: R1 = {R1} from the supply to the base, R2 = {R2} from the base to ground, and an unbypassed R_E = {Re} (β = {beta}; ignore r_e, which is small next to R_E). A signal source with {Rs} of internal resistance feeds the base through a large coupling capacitor. To make the bias stiffer, both divider resistors are swapped for ten-times-smaller ones, {new_R1} and {new_R2}, which keeps the unloaded V_B the same (and I_C nearly so). What happens to the fraction of the source's signal that reaches the base?",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            39000,
+            47000,
+            56000
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "value": 10000
+        },
+        {
+          "name": "Re",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500,
+            2200
+          ]
+        },
+        {
+          "name": "beta",
+          "unit": "",
+          "value": 100
+        },
+        {
+          "name": "Rs",
+          "unit": "Ω",
+          "values": [
+            1000,
+            2200
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rbase",
+          "formula": "(beta+1)*Re",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rin",
+          "formula": "1/(1/R1+1/R2+1/((beta+1)*Re))",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rin2",
+          "formula": "1/(10/R1+10/R2+1/((beta+1)*Re))",
+          "unit": "Ω"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the fraction of the source's signal that reaches the base",
+        "formula": "Rin/(Rs+Rin)",
+        "unit": "",
+        "change": {
+          "R1": "R1/10",
+          "R2": "R2/10"
+        },
+        "askFactor": false,
+        "feedback": {
+          "up": "A stiffer divider holds the DC bias more firmly, but for the signal R1 and R2 are two more paths from the base to ground (the supply is ground for signals). Smaller resistors make those paths easier, which pulls the input resistance R1 ∥ R2 ∥ (β + 1)·R_E down, and the source's {Rs} forms a divider with that input resistance.",
+          "same": "The bias point doesn't move, so the stage's own gain from base to collector doesn't either. But the source sees R1 ∥ R2 ∥ (β + 1)·R_E, and ten-times-smaller divider resistors drag that down, and the source's own {Rs} forms a divider with it."
+        }
+      },
+      "explanation": "Four ideas meet at the base. Biasing a bipolar transistor: V_B = 12 V × R2/(R1 + R2) depends only on the ratio, so V_B, I_C and the stage's own gain stay put. Series and parallel resistance: for signals the supply counts as ground, so R1 and R2 both run from the base to ground, in parallel with what the transistor presents, (β + 1)·R_E = {Rbase} (the (β + 1) rule from Common-emitter amplifiers and emitter followers). The input resistance falls from {Rin} to {Rin2}. Voltage and current dividers: the source's {Rs} and that input resistance form a divider, so the base gets R_in/(R_s + R_in): {before} → {after}. That is the trade-off in divider bias: the stiffer the divider, the more it loads the signal, which is why designers aim for a divider current of about ten times the base current and go no stiffer: enough to hold the bias, not so little resistance that it swamps the input.",
+      "hints": [
+        "Does the bias point change? Then ask what the source is looking into.",
+        "For signals the supply is ground: R1, R2 and (β + 1)·R_E are all in parallel, and that forms a divider with the source resistance."
+      ],
+      "followUps": [
+        {
+          "prompt": "R1 goes to the supply and R2 to ground. Why do they count as being in parallel for the signal?",
+          "choices": [
+            {
+              "text": "The supply is held steady by its decoupling, so it carries no signal: for signals, R1's top end is at ground like R2's bottom",
+              "feedback": "Right: any point with no signal on it is signal ground.",
+              "correct": true
+            },
+            {
+              "text": "Because both resistors carry the same DC current from the supply, so the signal arriving at the base sees the two of them side by side",
+              "feedback": "Carrying the same current makes them series for DC. For signals what matters is what each end is tied to: both run from the base to a point with no signal on it."
+            },
+            {
+              "text": "Because the coupling capacitor ties their far ends together, so both resistors end up connected across the source",
+              "feedback": "The coupling capacitor links the source to the base. R1 and R2 meet at the base anyway; their other ends, supply and ground, are both signal ground."
+            },
+            {
+              "text": "They aren't: R1 is in series with R2 between supply and ground, so from the base the signal sees R1 + R2",
+              "feedback": "That is the DC view from the supply. The signal enters at the base, the middle of the divider, and from there both resistors lead to points with no signal on them."
+            }
+          ],
+          "explanation": "A DC supply with decoupling holds its voltage fixed: signal current flowing into it changes nothing, just as with ground. So in the small-signal picture every DC source becomes a short to ground, and R1 lands in parallel with R2 as seen from the base."
+        }
+      ],
+      "schematic": {
+        "netlist": "CE stage (drawing)\nVCC vcc 0 12\nV1 s 0 SIN(0 10m 1k)\nRS s a {Rs:spice}\nC1 a b 10u\nR1 vcc b {R1:spice}\nR2 b 0 {R2:spice}\nRC vcc c 2.2k\nQ1 c b e QN\nRE e 0 {Re:spice}\n.model QN NPN\n",
+        "parts": [
+          {
+            "ref": "VCC",
+            "at": [
+              18,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              6,
+              8
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              12,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              10,
+              8
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "RE",
+            "at": [
+              12,
+              10
+            ],
+            "rot": 90,
+            "label": "R_E\n{Re}"
+          },
+          {
+            "ref": "V1",
+            "at": [
+              -2,
+              7
+            ],
+            "rot": 90,
+            "label": "source"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              -2,
+              7
+            ],
+            "rot": 0,
+            "label": "R_s {Rs}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              2,
+              7
+            ],
+            "rot": 0,
+            "label": "C1"
+          }
+        ],
+        "wires": [
+          [
+            [
+              6,
+              0
+            ],
+            [
+              18,
+              0
+            ],
+            [
+              18,
+              2
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              6,
+              8
+            ],
+            [
+              10,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              12,
+              6
+            ]
+          ],
+          [
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              14
+            ]
+          ],
+          [
+            [
+              -2,
+              11
+            ],
+            [
+              -2,
+              14
+            ],
+            [
+              12,
+              14
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            9,
+            14
+          ],
+          [
+            18,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              12,
+              5
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    }
+  ]
+}
