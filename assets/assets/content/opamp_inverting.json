@@ -33,16 +33,16 @@
         "opamp_ideal": "The inverting amplifier is the golden rules applied once: a virtual ground at the − input and the same current through Rin and Rf."
       },
       "goals": [
-        "Find an inverting amplifier's output from Rin, Rf and the input, sign included",
+        "Find an inverting amplifier's output from Rin, Rf, and the input, sign included",
         "Choose Rf for a required gain, and state the input resistance the source sees",
         "Explain from the virtual ground why the gain is Rf/Rin in size and why changing Rf leaves the input current unchanged",
         "Check that the output stays inside its swing limits, and find the largest input before it clips"
       ],
       "intuition": "With the + input grounded and negative feedback, the − input is held at 0 V, so the input current is fixed at Vin/Rin and the output goes to whatever voltage makes that same current flow through Rf (this holds only while the output stays inside its swing limits).",
       "why": "The + input is grounded, so feedback holds the − input at 0 V, although nothing connects it to ground: a virtual ground. Rin has Vin on one end and 0 V on the other, so its current is Vin/Rin whatever Rf is. That current cannot enter the op amp, so all of it continues through Rf to the output. For current to flow from the 0 V node through Rf, the output must be below 0 V when Vin is positive: Vout = −I·Rf = −(Rf/Rin)·Vin. The source sees only Rin, because Rin's far end stays at 0 V.",
-      "explanation": "The input goes through Rin to the − input. Rf connects the − input to the output. The + input goes to ground. Negative feedback makes V− equal V+, so the − input sits at 0 V. It is called a virtual ground: the output holds it at 0 V, no wire does, and no current flows to ground there. The current through Rin is therefore Vin/Rin. None of it enters the op amp, so all of it flows through Rf. The output is the voltage at the far end of Rf: Vout = −(Rf/Rin)·Vin. The minus sign means inversion: a positive input gives a negative output, and a sine wave comes out shifted by 180°. The size of the gain can be below 1, equal to 1 or above it. The source sees Rin, because Rin runs into a node held at 0 V. A small Rin can load a weak source; a larger Rin needs a larger Rf for the same gain. The output cannot go beyond its swing limits, at or inside the supply rails, so the largest usable input is that limit divided by the size of the gain.",
+      "explanation": "The input goes through Rin to the − input. Rf connects the − input to the output. The + input goes to ground. Negative feedback makes V− equal V+, so the − input sits at 0 V. It is called a virtual ground: the output, not a wire, holds it at 0 V, and no current flows to ground there. The current through Rin is therefore Vin/Rin. None of it enters the op amp, so all of it flows through Rf. The output is the voltage at the far end of Rf: Vout = −(Rf/Rin)·Vin. The minus sign means inversion: a positive input gives a negative output, and a sine wave comes out shifted by 180°. The size of the gain can be below 1, equal to 1, or above it. The source sees Rin, because Rin runs into a node held at 0 V. A small Rin can load a weak source; a larger Rin needs a larger Rf for the same gain. The output cannot go beyond its swing limits, at or inside the supply rails, so the largest usable input is that limit divided by the size of the gain.",
       "workedExample": {
-        "problem": "An inverting amplifier runs from ±15 V supplies, with Rin = 10 kΩ, Rf = 47 kΩ and the + input grounded. Find the output for a 0.50 V input, the input resistance, and the largest input before the output clips.",
+        "problem": "An inverting amplifier runs from ±15 V supplies, with Rin = 10 kΩ, Rf = 47 kΩ, and the + input grounded. Find the output for a 0.50 V input, the input resistance, and the largest input before the output clips.",
         "steps": [
           "The + input is at 0 V, so feedback holds the − input at 0 V (a virtual ground).",
           "Current through Rin: I = (0.50 V − 0 V) / 10 kΩ = 50 µA, flowing toward the − input.",
@@ -67,7 +67,7 @@
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 8 \"Operational Amplifiers\", section \"Negative feedback\"",
           "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_8.html#xtocid90723",
-          "note": "The output can only swing to its saturation voltages, which for bipolar-output parts such as the 741 stop short of the rails and for FET-output parts come within millivolts of them."
+          "note": "The output can only swing to its saturation voltages, which stop short of the rails for bipolar-output parts such as the 741 and come within millivolts of them, at light load, for CMOS rail-to-rail-output parts."
         }
       ]
     }
@@ -125,7 +125,7 @@
       "misconceptions": [
         {
           "formula": "-(1+Rf/Rin)*Vin",
-          "feedback": "The '1 +' belongs to the non-inverting amplifier. The inverting gain is just −Rf / Rin."
+          "feedback": "The \"1 +\" belongs to the non-inverting amplifier. The inverting gain is just −Rf / Rin."
         }
       ],
       "simCheck": {
@@ -527,7 +527,7 @@
           "choices": [
             {
               "text": "Feedback holds the far end of Rin at 0 V, so the source current is Vin/Rin whatever Rf is",
-              "feedback": "Right: the source only 'sees' Rin going to a node that stays at 0 V. Rf changes the output, not the input current.",
+              "feedback": "Right: the source only \"sees\" Rin going to a node that stays at 0 V. Rf changes the output, not the input current.",
               "correct": true
             },
             {
@@ -1077,7 +1077,7 @@
     {
       "id": "inv_virtual_ground_concept",
       "topicId": "opamp_inverting",
-      "prompt": "In an inverting amplifier, the inverting input is called a \"virtual ground\". What does that mean?",
+      "prompt": "In an inverting amplifier, the inverting input is called a \"virtual ground.\" What does that mean?",
       "variables": [],
       "choices": [
         {
@@ -1481,7 +1481,7 @@
     {
       "id": "inv_fault",
       "topicId": "opamp_inverting",
-      "prompt": "This inverting amplifier runs from ±12 V supplies (rail-to-rail output, not drawn). With Rin = {Rin}, Rf = {Rf} and {Vin} in, the output should be {h0}. The meter readings are below. Which fault explains them?",
+      "prompt": "This inverting amplifier runs from ±12 V supplies (rail-to-rail output, not drawn). With Rin = {Rin}, Rf = {Rf}, and {Vin} in, the output should be {h0}. The meter readings are below. Which fault explains them?",
       "variables": [
         {
           "name": "Vin",
@@ -1531,25 +1531,25 @@
           {
             "text": "Rin is open (cracked, or a dry joint)",
             "open": "R1",
-            "feedback": "With Rin open no input current could flow, so Rf would carry nothing either: the − input and the output would both sit at 0 V, with 0 A in Rin.",
+            "feedback": "With Rin open, no input current could flow, so Rf would carry nothing either: the − input and the output would both sit at 0 V, with 0 A in Rin.",
             "why": "No current flows in Rin, yet the − input still reads 0 V, so the feedback loop works. With no input current there is nothing for Rf to carry, so the output sits at 0 V: the input is cut off at Rin."
           },
           {
             "text": "Rf is open",
             "open": "R2",
-            "feedback": "With Rf open nothing would bring the output back: no current could flow in Rin, so the − input would rise to the full input voltage, and the op amp, with V− above V+, would drive its output to the −12 V rail.",
+            "feedback": "With Rf open, nothing would bring the output back: no current could flow in Rin, so the − input would rise to the full input voltage, and the op amp, with V− above V+, would drive its output to the −12 V rail.",
             "why": "The − input reads the full input voltage instead of 0 V: the virtual ground is gone because nothing feeds back. No current flows in Rin (it has the same voltage on both ends), and with V− above V+ and no feedback, the output sits at the −12 V rail."
           },
           {
             "text": "Rf is shorted (a solder bridge across it)",
             "short": "R2",
-            "feedback": "With Rf shorted the output would be tied to the − input, which feedback holds at 0 V: the output would read 0 V while the normal current, Vin/Rin, still flowed through Rin into the bridge.",
+            "feedback": "With Rf shorted, the output would be tied to the − input, which feedback holds at 0 V: the output would read 0 V while the normal current, Vin/Rin, still flowed through Rin into the bridge.",
             "why": "The − input is still at 0 V and Rin still carries the normal Vin/Rin, so the input side is healthy. But the output reads 0 V: the current is going through the Rf position without dropping any voltage, so Rf is bridged."
           },
           {
             "text": "Rin is shorted",
             "short": "R1",
-            "feedback": "With Rin shorted the − input would be tied straight to the source, so the op amp could never pull it to 0 V: the output would go to the −12 V rail and pull a large current from the source through the short and Rf into its output: (Vin + 12 V)/Rf = {Ishort}, within a typical op amp's roughly 20 mA output limit.",
+            "feedback": "With Rin shorted, the − input would be tied straight to the source, so the op amp could never pull it to 0 V. The output would go to the −12 V rail and pull a large current from the source through the short and Rf into its output: (Vin + 12 V)/Rf = {Ishort}, within a typical op amp's output limit of roughly 20 mA.",
             "why": "The − input reads the full input voltage, so the op amp can't hold it at 0 V: the source is driving that node directly. The output gives up at the −12 V rail, and a current flows ({Ishort}) from the source through the short where Rin should be, then through Rf into the op amp's output: only Rf now limits it."
           }
         ]
@@ -1707,6 +1707,244 @@
           "unit": "A"
         }
       ],
+      "review": "verified"
+    },
+    {
+      "id": "inv_design_source_rs",
+      "topicId": "opamp_inverting",
+      "prompt": "A sensor behaves as a voltage source behind its own output resistance, R_s = {Rs}. It drives an inverting amplifier (ideal op amp on ±12 V supplies, not drawn). The gain from the sensor's open-circuit voltage to the output must be −{G}, within 3%. Choose R_in and R_f (E24 values, each from 1 kΩ to 100 kΩ: larger resistors add thermal noise, and the op amp's input bias current through them shifts the output).",
+      "variables": [
+        {
+          "name": "G",
+          "unit": "",
+          "range": {
+            "min": 6,
+            "max": 15,
+            "step": 1
+          }
+        },
+        {
+          "name": "Rs",
+          "unit": "Ω",
+          "values": [
+            1500,
+            2200,
+            3300
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rmax",
+          "formula": "100000/G",
+          "unit": "Ω"
+        },
+        {
+          "name": "RinEx",
+          "formula": "100000/G-Rs",
+          "unit": "Ω"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "Rin",
+            "label": "R_in",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 1000,
+            "max": 100000
+          },
+          {
+            "name": "Rf",
+            "label": "R_f",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 1000,
+            "max": 100000
+          }
+        ],
+        "result": "Rf/(Rs+Rin)",
+        "resultLabel": "size of the gain",
+        "resultUnit": "",
+        "target": "G",
+        "tolerance": 0.03
+      },
+      "explanation": "The − input is a virtual ground, so the sensor drives its current through R_s and R_in in series into a node held at 0 V: I = V_s/(R_s + R_in). None of it enters the op amp, so all of it flows on through R_f, and the size of the gain from the sensor's own voltage is R_f/(R_s + R_in), not R_f/R_in. With R_f at most 100 kΩ, R_s + R_in can be at most 100 kΩ/{G} = {Rmax}, so the sensor's {Rs} is too large a share of it to ignore at 3%. Pick R_f, then R_in = R_f/{G} − R_s: with R_f = 100 kΩ, R_in = {RinEx}. Round R_in to an E24 value and recheck R_f/(R_s + R_in); if it is off by more than 3%, try another R_f (91 kΩ, 82 kΩ, …) and repeat. Choosing R_f = {G} × R_in, as if the sensor had no resistance, leaves the gain too small by the factor R_in/(R_s + R_in).",
+      "hints": [
+        "The − input is a virtual ground. Through which resistances does the sensor's voltage drive its current to that node?",
+        "The input current is V_s/(R_s + R_in), and all of it flows through R_f, so the size of the gain is R_f/(R_s + R_in)."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does the sensor's own resistance change this stage's gain?",
+          "choices": [
+            {
+              "text": "The sensor must supply the input current into the virtual ground, so R_s drops part of its voltage before R_in",
+              "correct": true,
+              "feedback": "Right: the current is V_s/(R_s + R_in), so R_s and R_in share the sensor's voltage like a divider ending at 0 V. Only the current that gets through reaches R_f."
+            },
+            {
+              "text": "R_s adds to R_f, because the feedback current also flows back through the sensor",
+              "feedback": "The current through R_f is the current that came from the sensor through R_s and R_in; nothing flows back into the sensor. R_s sits on the input side, in series with R_in, so it divides the gain rather than adding to R_f."
+            },
+            {
+              "text": "The virtual ground pulls the sensor's terminal down to 0 V, so the sensor's voltage is lost",
+              "feedback": "The virtual ground is at the far end of R_in, not at the sensor. The sensor's terminal sits between V_s and 0 V, at V_s·R_in/(R_s + R_in), and the signal is reduced, not lost."
+            },
+            {
+              "text": "It wouldn't, if the op amp's open-loop gain were high enough",
+              "feedback": "The open-loop gain only holds the − input at 0 V. Once it does, Ohm's law sets the current through R_s + R_in, so R_s matters however large the open-loop gain is."
+            }
+          ],
+          "explanation": "With the − input held at 0 V, the source sees R_in to ground: the input resistance of an inverting stage is R_in. A source with its own resistance R_s therefore forms a divider with R_in, and the stage amplifies only the share that reaches R_in. That is why an inverting stage fed from a resistive source either needs R_s counted in the design, or an R_in much larger than R_s (which pushes R_f up), or a buffer in front."
+        }
+      ],
+      "schematic": {
+        "netlist": "inverting from a sensor\nVS s 0 1\nRS s in {Rs:spice}\nR1 in inv {Rin:spice}\nR2 inv out {Rf:spice}\nX1 0 inv out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "sensor"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              1,
+              3
+            ],
+            "label": "R_s {Rs}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "R1",
+            "at": [
+              5,
+              3
+            ],
+            "label": "R_in {Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              11,
+              0
+            ],
+            "label": "R_f {Rf}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              11,
+              4
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            [
+              9,
+              3
+            ],
+            [
+              11,
+              3
+            ]
+          ],
+          [
+            [
+              10,
+              3
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              11,
+              0
+            ]
+          ],
+          [
+            [
+              15,
+              0
+            ],
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              4
+            ]
+          ],
+          [
+            [
+              15,
+              4
+            ],
+            [
+              18,
+              4
+            ]
+          ],
+          [
+            [
+              11,
+              5
+            ],
+            [
+              10,
+              5
+            ],
+            [
+              10,
+              7
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            10,
+            7
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              18,
+              4
+            ]
+          }
+        ],
+        "noBuild": "R_s is the sensor's own output resistance, a model of the source, not a part"
+      },
       "review": "verified"
     }
   ]

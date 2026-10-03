@@ -35,21 +35,21 @@
         "bjt_bias": "A switch drives the same transistor to its limits instead: fully off, or saturated with extra base current to spare."
       },
       "goals": [
-        "Find the load current of a saturated switch from the supply, the load and V_CE(sat)",
+        "Find the load current of a saturated switch from the supply, the load, and V_CE(sat)",
         "Choose a base resistor for a forced β of about 10, and round it to the standard value that gives more base current, not less",
         "Explain why a switch is driven into saturation, and why it then dissipates little power",
         "Check that every part in the β spread saturates, and tell a saturated switch from one stuck in the active region by its collector voltage"
       ],
       "intuition": "When the base gets several times I_C/β, more than even the lowest-β part needs to carry the load current, the transistor saturates: it acts as a nearly closed switch with about 0.2 V across it, so the supply and the load, not β, set the current.",
-      "why": "In the active region the collector current is fixed at β·I_B, and the transistor takes whatever voltage the load leaves: with half the supply across it, it would dissipate as much as the load. Give the base more current than the load can use and the collector falls until the base–collector junction conducts too. With both junctions conducting, V_CE sits near 0.1–0.3 V and the supply and load set the current; the ratio I_C/I_B, the forced β, is well below β. So V_CE·I_C is small. Off, almost no current flows, and it dissipates almost nothing then either.",
-      "explanation": "In the bias topic the transistor sat in its active region, where I_C = β·I_B. A switch uses the other two states. With no base current it is off (cutoff): no collector current, and the whole supply across it. Drive the base hard enough and it saturates: the collector falls to V_CE(sat), typically 0.1–0.3 V for a small-signal transistor driven at a forced β of about 10 (more at high current and in power transistors; datasheets quote it at a stated I_C and I_B) (the problems use 0.2 V), and the load gets nearly the whole supply: I_C = (V_CC − 0.2 V)/R_load. Once it is saturated, extra base current does not raise I_C; the load sets it. Because β varies two or three times between parts, design for a forced β, I_C/I_B, of about 10, well below the lowest real β. Check the overdrive factor, β·I_B/I_C, with the lowest β: it must be comfortably above 1 (2 or more is a common margin), so every part saturates. The base resistor follows: R_B = (V_in − 0.7 V)/(I_C/10); round it down to a standard value, so the base gets a little more current, not less. A switch wastes little power: off, no current; on, only V_CE(sat)·I_C. Too much overdrive loads the logic output and slows turn-off, because a heavily saturated base holds extra charge.",
+      "why": "In the active region, the collector current is fixed at β·I_B, and the transistor takes whatever voltage the load leaves: with half the supply across it, it would dissipate as much as the load. Give the base more current than the load can use, and the collector falls until the base–collector junction conducts too. With both junctions conducting, V_CE sits near 0.1–0.3 V, and the supply and load set the current; the ratio I_C/I_B, the forced β, is well below β. So V_CE·I_C is small. When the transistor is off, almost no current flows, and it dissipates almost nothing then either.",
+      "explanation": "In Biasing a bipolar transistor, the transistor sat in its active region, where I_C = β·I_B. A switch uses the other two states. With no base current, it is off (cutoff): no collector current, and the whole supply across it. Drive the base hard enough and it saturates: the collector falls to V_CE(sat), typically 0.1–0.3 V for a small-signal transistor driven at a forced β of about 10 (more at high current and in power transistors; datasheets quote it at a stated I_C and I_B; the problems use 0.2 V), and the load gets nearly the whole supply: I_C = (V_CC − 0.2 V)/R_load. Once it is saturated, extra base current does not raise I_C; the load sets it. Because β varies two or three times between parts, design for a forced β, I_C/I_B, of about 10, well below the lowest real β. Check the overdrive factor, β·I_B/I_C, with the lowest β: it must be comfortably above 1 (2 or more is a common margin), so every part saturates. The base resistor follows: R_B = (V_in − 0.7 V)/(I_C/10); round it down to a standard value, so the base gets a little more current, not less. A switch wastes little power: when off, it passes no current; when on, it dissipates only V_CE(sat)·I_C. Too much overdrive loads the logic output and slows turn-off, because a heavily saturated base holds extra charge.",
       "workedExample": {
-        "problem": "A 5 V logic output switches a 470 Ω resistive load on a 12 V supply through a small-signal NPN transistor, emitter grounded. For this design assume β can be anywhere from 40 to 300 (take the real spread from the datasheet at your collector current), V_BE = 0.7 V and V_CE(sat) = 0.2 V. Choose an E12 base resistor for a forced β of 10, check that every part saturates, and compare the transistor's dissipation with a design based on a typical β of 100.",
+        "problem": "A 5 V logic output switches a 470 Ω resistive load on a 12 V supply through a small-signal NPN transistor, emitter grounded. For this design, assume β can be anywhere from 40 to 300 (take the real spread from the datasheet at your collector current), V_BE = 0.7 V, and V_CE(sat) = 0.2 V. Choose an E12 base resistor for a forced β of 10, check that every part saturates, and compare the transistor's dissipation with a design based on a typical β of 100.",
         "steps": [
           "Load current when saturated (switch model, V_CE(sat) = 0.2 V): I_C = (12 V − 0.2 V) / 470 Ω = 25.1 mA. Neither β nor the base drive appears: the supply and the load set it.",
           "Base current for a forced β of 10: I_B = 25.1 mA / 10 = 2.51 mA. R_B has 5 V − 0.7 V = 4.3 V across it, so R_B ≤ 4.3 V / 2.51 mA = 1.71 kΩ. Round down to the E12 value 1.5 kΩ; 1.8 kΩ would give less base current than planned.",
           "With 1.5 kΩ: I_B = 4.3 V / 1.5 kΩ = 2.87 mA, a forced β of 25.1 mA / 2.87 mA = 8.8. The logic output must be able to source 2.87 mA.",
-          "Worst-case part, β = 40: β·I_B = 40 × 2.87 mA = 115 mA, 4.6 times the 25.1 mA the load can take (the overdrive factor), so even this part saturates. A β = 300 part is overdriven 34 times, which only costs a little turn-off speed, and the load current is still 25.1 mA.",
+          "Worst-case part, β = 40: β·I_B = 40 × 2.87 mA = 115 mA, 4.6 times the 25.1 mA the load can take (the overdrive factor), so even this part saturates. A β = 300 part is overdriven 34 times, which costs only a little turn-off speed, and the load current is still 25.1 mA.",
           "Dissipation when on: P = V_CE(sat) × I_C = 0.2 V × 25.1 mA = 5.0 mW, plus V_BE × I_B = 0.7 V × 2.87 mA = 2.0 mW at the base. The load takes 11.8 V × 25.1 mA = 296 mW.",
           "Designed with the typical β = 100 instead: I_B = 25.1 mA / 100 = 0.251 mA, R_B = 4.3 V / 0.251 mA = 17.1 kΩ, rounded down to 15 kΩ, so I_B = 4.3 V / 15 kΩ = 0.287 mA. A β = 40 part then stays in the active region (I_C = β·I_B = 40 × 0.287 mA = 11.5 mA, less than the 25.1 mA the load allows), leaving V_CE = 12 V − 11.5 mA × 470 Ω = 6.6 V.",
           "That part dissipates 6.6 V × 11.5 mA = 76 mW, fifteen times the saturated switch's 5.0 mW, and the load gets less than half its current. The forced-β design avoids this for every part in the spread."
@@ -64,12 +64,12 @@
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Transistor Switching Circuits\" (last update 5 May 2026), ch. 3 \"Tutorial\", section 3.2 \"Transistor saturation\"",
           "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_qswitch.pdf",
-          "note": "I_C ≤ β·I_B, so a switch is designed from the load current with the lowest datasheet β and given base current well above that, after which the load and supply set I_C, and the on-state dissipation is I_C times a small saturated V_CE."
+          "note": "I_C ≤ β·I_B, so a switch is designed from the load current with the lowest datasheet β and given base current well above that. The load and supply then set I_C, and the on-state dissipation is I_C times a small saturated V_CE."
         },
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Transistor Switching Circuits\" (last update 5 May 2026), ch. 3 \"Tutorial\", section 3.4 \"BJT switching\"",
           "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_qswitch.pdf",
-          "note": "The base resistor drops the drive voltage minus about 0.7 V and is sized by Ohm's law for more than the minimum base current, too large a value leaves the transistor unsaturated and wasting power, and a saturated BJT turns off more slowly because its base must clear stored charge."
+          "note": "The base resistor drops the drive voltage minus about 0.7 V and is sized by Ohm's law for more than the minimum base current. Too large a value leaves the transistor unsaturated and wasting power, and a saturated BJT turns off more slowly because its base must clear stored charge."
         }
       ]
     }
@@ -103,7 +103,7 @@
         "formula": "(Vcc-0.2)/Rl",
         "unit": "A"
       },
-      "explanation": "In saturation the transistor drops only V_CE(sat) = 0.2 V, so I = ({Vcc} − 0.2) / {Rl} = {answer}.",
+      "explanation": "In saturation, the transistor drops only V_CE(sat) = 0.2 V, so I = ({Vcc} − 0.2) / {Rl} = {answer}.",
       "hints": [
         "A saturated transistor is almost a closed switch.",
         "I = (V_CC − V_CE(sat)) / R_load."
@@ -111,7 +111,7 @@
       "misconceptions": [
         {
           "formula": "(Vcc-0.7)/Rl",
-          "feedback": "0.7 V is the base-emitter drop. The collector-emitter drop in saturation is about 0.2 V."
+          "feedback": "0.7 V is the base–emitter drop. The collector–emitter drop in saturation is about 0.2 V."
         }
       ],
       "schematic": {
@@ -223,24 +223,24 @@
           "prompt": "Neither the base drive nor β is given. Why don't you need them to find the load current?",
           "choices": [
             {
-              "text": "In saturation the transistor is a closed switch with about 0.2 V across it, so the supply and the load set the current, as long as β·I_B is more than the load can take",
+              "text": "In saturation, the transistor is a closed switch with about 0.2 V across it, so the supply and the load set the current, as long as β·I_B is more than the load can take",
               "feedback": "Right: the base drive only has to be enough; any extra changes nothing.",
               "correct": true
             },
             {
               "text": "The load current is always β·I_B, and β cancels out",
-              "feedback": "I_C = β·I_B holds only in the active region. In saturation the base could drive far more current than the load lets through."
+              "feedback": "I_C = β·I_B holds only in the active region. In saturation, the base could drive far more current than the load lets through."
             },
             {
               "text": "The transistor drops 0.7 V, and that's all you need",
-              "feedback": "0.7 V is across base–emitter. Collector–emitter drops about 0.2 V when saturated, and that's the drop in the load's path."
+              "feedback": "0.7 V is across the base–emitter junction. The collector–emitter path drops about 0.2 V when saturated, and that's the drop in the load's path."
             },
             {
               "text": "The base current flows through the load, so it's already included",
-              "feedback": "Base current flows from the logic source through R_B and out of the emitter; it never passes through the load."
+              "feedback": "The base current flows from the logic source through R_B and out of the emitter; it never passes through the load."
             }
           ],
-          "explanation": "Saturated, the transistor is a switch: V_CE ≈ 0.2 V, KVL leaves V_CC − 0.2 V across the load, and Ohm's law gives the current. The base drive only has to keep it there (β·I_B more than the load current). Compare the active region (Transistor basics), where I_C = β·I_B and the load just takes whatever voltage that current makes."
+          "explanation": "Saturated, the transistor is a switch: V_CE ≈ 0.2 V, KVL leaves V_CC − 0.2 V across the load, and Ohm's law gives the current. The base drive only has to keep it there (β·I_B more than the load current). Compare the active region (Bipolar transistor basics), where I_C = β·I_B and the load takes whatever voltage that current makes."
         }
       ],
       "review": "verified"
@@ -298,7 +298,7 @@
         },
         {
           "formula": "Vin/(Ic/10)",
-          "feedback": "Subtract the 0.7 V base-emitter drop from the drive voltage."
+          "feedback": "Subtract the 0.7 V base–emitter drop from the drive voltage."
         }
       ],
       "schematic": {
@@ -460,7 +460,7 @@
         "formula": "Ic*Vsat",
         "unit": "W"
       },
-      "explanation": "P = V_CE · I_C = {Vsat} × {Ic} = {answer}. Small, because the voltage across a saturated transistor is small.",
+      "explanation": "P = V_CE · I_C = {Vsat} × {Ic} = {answer}. It is small because the voltage across a saturated transistor is small.",
       "hints": [
         "Power = voltage across × current through.",
         "P = V_CE(sat) · I_C."
@@ -468,7 +468,7 @@
       "misconceptions": [
         {
           "formula": "Ic*0.7",
-          "feedback": "0.7 V is the base–emitter drop; the collector current crosses collector–emitter, about {Vsat} when saturated."
+          "feedback": "0.7 V is the base–emitter drop; the collector current crosses the collector–emitter path, about {Vsat} when saturated."
         }
       ],
       "schematic": {
@@ -606,7 +606,7 @@
             },
             {
               "text": "About the same: the transistor carries the same load, so it takes the same share of the power",
-              "feedback": "The transistor's share is its own V_CE times I_C. Saturated, that is {Vsat} × {Ic} = {Psat}; at V_CE = 6 V it is 6 V × {Ihalf} = {Phalf}."
+              "feedback": "The transistor's share is its own V_CE times I_C. When saturated, that is {Vsat} × {Ic} = {Psat}; at V_CE = 6 V it is 6 V × {Ihalf} = {Phalf}."
             },
             {
               "text": "Less: a transistor that is only partly on conducts less, so it heats less",
@@ -625,13 +625,13 @@
       "prompt": "A transistor switching a load could be left in its active region with V_CE = half the supply. Why drive it into saturation instead?",
       "choices": [
         {
-          "text": "In saturation V_CE is tiny, so the transistor wastes very little power",
+          "text": "In saturation, V_CE is tiny, so the transistor wastes very little power",
           "correct": true,
           "feedback": "Yes: P = V_CE · I_C, and V_CE(sat) ≈ 0.2 V instead of half the supply."
         },
         {
           "text": "Saturation gives the most current gain",
-          "feedback": "In saturation I_C < β I_B; the current gain is lower, by design."
+          "feedback": "In saturation, I_C < β I_B; the current gain is lower, by design."
         },
         {
           "text": "Saturation makes the switch turn off faster",
@@ -639,7 +639,7 @@
         },
         {
           "text": "It makes the load current independent of the supply voltage",
-          "feedback": "Saturated, I = (V_CC − 0.2 V)/R_load: the load current still follows the supply. What saturation removes is the transistor's share of the voltage, and with it the transistor's dissipation."
+          "feedback": "When saturated, I = (V_CC − 0.2 V)/R_load: the load current still follows the supply. What saturation removes is the transistor's share of the voltage, and with it the transistor's dissipation."
         }
       ],
       "explanation": "A switch should be fully on or fully off. At V_CE = V_CC/2 the transistor would dissipate as much as the load; saturated, it dissipates only V_CE(sat) × I_C.",
@@ -755,7 +755,7 @@
       "variables": [],
       "choices": [
         {
-          "text": "Extra base current guarantees saturation despite β spread and load changes",
+          "text": "Extra base current guarantees saturation despite the β spread and load changes",
           "feedback": "Right: overdriving the base keeps V_CE at its small saturation value even for a low-β part.",
           "correct": true
         },
@@ -772,7 +772,7 @@
           "feedback": "It increases the base current well beyond I_C/β."
         }
       ],
-      "explanation": "In saturation I_C is set by the load, not by β·I_B. Designing for I_B = I_C/10 gives plenty of margin, so even a low-β transistor saturates and dissipates little.",
+      "explanation": "In saturation, I_C is set by the load, not by β·I_B. Designing for I_B = I_C/10 gives plenty of margin, so even a low-β transistor saturates and dissipates little.",
       "hints": [
         "In saturation, what limits the collector current?"
       ],
@@ -783,7 +783,7 @@
     {
       "id": "sw_what_if_base_drive",
       "topicId": "bjt_switch",
-      "prompt": "A 5 V logic output drives an NPN switch (β = {beta}) through R_B = {Rb}. The collector switches a {Rl} load from a {Vcc} supply, and the emitter is grounded. With the input high the transistor is saturated (V_CE(sat) = 0.2 V). Someone swaps R_B for {new_Rb} to \"make the load stronger\". What happens to the load current?",
+      "prompt": "A 5 V logic output drives an NPN switch (β = {beta}) through R_B = {Rb}. The collector switches a {Rl} load from a {Vcc} supply, and the emitter is grounded. With the input high the transistor is saturated (V_CE(sat) = 0.2 V). Someone swaps R_B for {new_Rb} to \"make the load stronger.\" What happens to the load current?",
       "variables": [
         {
           "name": "Vcc",
@@ -839,11 +839,11 @@
           "Rb": "Rb/10"
         },
         "feedback": {
-          "up": "β·I_B was already {Iask}, more than the load can take, so the transistor was already saturated: the collector is down near 0.2 V, and the load can't pass more than (V_CC − 0.2 V)/R_load. Ten times the base drive can't change that. (In a real part the harder drive pulls V_CE(sat) down by a few tens of millivolts: well under 1 % more load current, not a stronger load.)",
+          "up": "β·I_B was already {Iask}, more than the load can take, so the transistor was already saturated: the collector is down near 0.2 V, and the load can't pass more than (V_CC − 0.2 V)/R_load. Ten times the base drive can't change that. (In a real part the harder drive pulls V_CE(sat) down by a few tens of millivolts: well under 1% more load current, not a stronger load.)",
           "down": "More base current never reduces the collector current: the base current is what turns the collector on, and extra drive can only hold the transistor on harder. Compare β·I_B before the swap, {Iask}, with what the load alone would let through, (V_CC − 0.2 V)/R_load."
         }
       },
-      "explanation": "Before: I_B = (5 V − 0.7 V)/{Rb} = {Ib}, and β·I_B = {Iask} is already more than the load can take, so the transistor is saturated and the load sets the current: ({Vcc} − 0.2 V)/{Rl} = {before}. After: I_B is ten times bigger, but the load still limits the current: {after}. A saturated switch is already fully on; the extra base current just flows out of the emitter.",
+      "explanation": "Before: I_B = (5 V − 0.7 V)/{Rb} = {Ib}, and β·I_B = {Iask} is already more than the load can take, so the transistor is saturated and the load sets the current: ({Vcc} − 0.2 V)/{Rl} = {before}. After: I_B is ten times bigger, but the load still limits the current: {after}. A saturated switch is already fully on; the extra base current flows out of the emitter.",
       "hints": [
         "Before the change, what limits the collector current: β·I_B, or the load?",
         "The load current is the smaller of β·I_B and (V_CC − 0.2 V)/R_load."
@@ -863,14 +863,14 @@
             },
             {
               "text": "It raises the collector current by β times as much, costing only some extra supply current",
-              "feedback": "Only in the active region. Saturated, the collector current is already at the load's limit."
+              "feedback": "Only in the active region. When saturated, the collector current is already at the load's limit."
             },
             {
               "text": "Nowhere: the base current stays the same because V_BE is fixed, so it costs nothing at all",
               "feedback": "A fixed V_BE with a smaller R_B means more current through R_B: I_B = (V_in − 0.7 V)/R_B."
             }
           ],
-          "explanation": "KCL: I_E = I_C + I_B, so extra base current simply leaves through the emitter. The logic output has to source it (a 5 V pin may only manage a few mA), and a heavily saturated base holds extra stored charge that must be removed before the transistor turns off. That's why switches are designed for a forced β of about 10: a rule of thumb with margin for β spread, without wasting much base current."
+          "explanation": "KCL: I_E = I_C + I_B, so extra base current leaves through the emitter. The logic output has to source it (a 5 V pin may only manage a few mA), and a heavily saturated base holds extra stored charge that must be removed before the transistor turns off. That's why switches are designed for a forced β of about 10: a rule of thumb with margin for β spread, without wasting much base current."
         }
       ],
       "schematic": {
@@ -982,7 +982,7 @@
     {
       "id": "sw_fault",
       "topicId": "bjt_switch",
-      "prompt": "This NPN switch (β = 100) has its input driven high from a {Vin} logic output, so it should saturate and run the {Rl} load from {Vcc}. Healthy, it reads {h0} at the base, {h1} at the collector, {h2} of base current and {h3} of load current. The readings are below. Which fault explains them?",
+      "prompt": "This NPN switch (β = 100) has its input driven high from a {Vin} logic output, so it should saturate and run the {Rl} load from {Vcc}. When the circuit is healthy, it reads {h0} at the base, {h1} at the collector, {h2} of base current, and {h3} of load current. The readings are below. Which fault explains them?",
       "variables": [
         {
           "name": "Vcc",
@@ -1037,19 +1037,19 @@
           {
             "text": "R_B is open",
             "open": "RB",
-            "feedback": "With R_B open no base current could flow: the base would read about 0 V, the transistor would be off, and the collector would sit at the full supply with no load current.",
+            "feedback": "With R_B open, no base current could flow: the base would read about 0 V, the transistor would be off, and the collector would sit at the full supply with no load current.",
             "why": "No base current and about 0 V at the base: nothing reaches the base, so the path through R_B is broken. With the transistor off, no load current flows and the collector sits at {Vcc}."
           },
           {
             "text": "A solder bridge joins the base to the emitter (ground)",
             "add": "Rbridge b 0 0.1",
             "feedback": "A base–emitter bridge would divert all the base current to ground: the logic output would still push current through R_B, but the base would read about 0 V and the transistor would be off.",
-            "why": "Current flows in R_B, yet the base reads 0 V: the base current is going to ground without crossing the junction, so the base must be shorted to the emitter. With V_BE ≈ 0 the transistor is off: no load current, collector at the supply."
+            "why": "Current flows in R_B, yet the base reads 0 V: the base current is going to ground without crossing the junction, so the base must be shorted to the emitter. With V_BE ≈ 0, the transistor is off: no load current flows, and the collector sits at the supply."
           },
           {
             "text": "The load is open",
             "open": "RL",
-            "feedback": "With the load open the base would still be driven normally, but no current could reach the collector: zero load current, and the collector, with nothing feeding it, would read about 0 V.",
+            "feedback": "With the load open, the base would still be driven normally, but no current could reach the collector: zero load current, and the collector, with nothing feeding it, would read about 0 V.",
             "why": "The base is driven normally (about 0.7 V, normal base current), so the transistor is on, yet no load current flows and the collector reads near 0 V. The collector's path from the supply, the load, is broken."
           },
           {
@@ -1064,18 +1064,18 @@
               "ref": "RB",
               "formula": "Rb*100"
             },
-            "feedback": "With R_B a hundred times too large the base current would be tiny, enough for only a couple of mA of collector current: the transistor would sit in the active region with most of the supply across it, the load only partly on.",
-            "why": "The base current is a small fraction of normal, and the collector sits well above 0.2 V but below the supply: the transistor is only partly on (active region), passing β times that small base current. Too little base drive: R_B is too large."
+            "feedback": "With R_B a hundred times too large, the base current would be tiny, enough for only a couple of mA of collector current: the transistor would sit in the active region with most of the supply across it, and the load would be only partly on.",
+            "why": "The base current is a small fraction of normal, and the collector sits well above 0.2 V but below the supply: the transistor is only partly on (active region), passing β times that small base current. The base drive is too weak: R_B is too large."
           },
           {
             "text": "The transistor has failed open (no junction conducts)",
             "open": "Q1",
             "feedback": "With the transistor open, the base–emitter junction could no longer clamp the base at 0.7 V: no base current would flow, the base would read the full logic voltage, and the load would be off with the collector at the supply.",
-            "why": "The base reads the full {Vin} with no base current: a working base–emitter junction would conduct and hold it near 0.7 V, so the junction is open. R_B is fine (it passes the voltage through), and nothing flows collector to emitter either: the transistor itself has failed open."
+            "why": "The base reads the full {Vin} with no base current: a working base–emitter junction would conduct and hold it near 0.7 V, so the junction is open. R_B is fine (it passes the voltage through), and nothing flows from collector to emitter either: the transistor itself has failed open."
           }
         ]
       },
-      "explanation": "Work from the base out. About 0.7 V at the base with normal base current means the transistor is being driven; 0 V with current flowing means the base is shorted; about 0 V with no current means the drive path is open; the full logic voltage with no current means the junction itself is open. Then the collector: within a few tenths of a volt of ground with the load current flowing is a healthy saturated switch; at the supply with no current is off; at the supply with a large current means nothing is above it; in between means the drive is too weak to saturate it (I_C = β·I_B, Transistor basics).",
+      "explanation": "Work from the base out. About 0.7 V at the base with normal base current means the transistor is being driven. A base at 0 V with current flowing means the base is shorted; about 0 V with no current means the drive path is open; the full logic voltage with no current means the junction itself is open. Then check the collector. If it is within a few tenths of a volt of ground, with the load current flowing, the switch is healthy and saturated. If it is at the supply with no current, the transistor is off. If it is at the supply with a large current, nothing is above it. If it is in between, the drive is too weak to saturate the transistor (I_C = β·I_B, Bipolar transistor basics).",
       "hints": [
         "Is the base being driven (about 0.7 V and some base current)?",
         "Then the collector: near ground (a saturated switch reads 0.2 V or less), at the supply, or in between?"
@@ -1196,6 +1196,243 @@
             ]
           }
         ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "sw_design_relay_driver",
+      "topicId": "bjt_switch",
+      "prompt": "A 3.3 V logic output switches a 12 V relay through an NPN transistor with its emitter grounded (the diode across the coil catches the turn-off spike). The logic output can source up to 10 mA; take its high level as 3.3 V (a real pin sags a few tenths of a volt at that current, which only lowers I_B slightly). The relay's coil measures {Rcoil}. The transistor's datasheet gives β from 40 to 300 at this current; take V_BE = 0.7 V and V_CE(sat) = 0.2 V. Choose R_B (an E12 value) so the forced β, I_C/I_B, is at most 10, so that even a β = 40 part saturates with margin, and no less than 5: more base current than that loads the logic output, whose high level sags as it sources more current, and slows turn-off.",
+      "variables": [
+        {
+          "name": "Rcoil",
+          "unit": "Ω",
+          "values": [
+            270,
+            330,
+            400
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Ic",
+          "formula": "11.8/Rcoil",
+          "unit": "A"
+        },
+        {
+          "name": "Ib10",
+          "formula": "11.8/Rcoil/10",
+          "unit": "A"
+        },
+        {
+          "name": "Ib5",
+          "formula": "11.8/Rcoil/5",
+          "unit": "A"
+        },
+        {
+          "name": "Rmax",
+          "formula": "2.6/(11.8/Rcoil/10)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rmin",
+          "formula": "2.6/(11.8/Rcoil/5)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rtyp",
+          "formula": "2.6/(11.8/Rcoil/100)",
+          "unit": "Ω"
+        },
+        {
+          "name": "bneed",
+          "formula": "11.8/Rcoil/(2.6/10000)",
+          "unit": ""
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "RB",
+            "label": "R_B",
+            "unit": "Ω",
+            "series": "E12",
+            "min": 100,
+            "max": 100000
+          }
+        ],
+        "result": "(11.8/Rcoil)/((3.3-0.7)/RB)",
+        "resultLabel": "forced β (I_C/I_B)",
+        "resultUnit": "",
+        "target": "10",
+        "tolerance": 0.5,
+        "mode": "atMost"
+      },
+      "explanation": "Start with the load. Saturated, the transistor keeps 0.2 V, so the coil has 12 V − 0.2 V = 11.8 V across it and I_C = 11.8 V/{Rcoil} = {Ic}. A forced β of 10 needs I_B = {Ic}/10 = {Ib10}; a forced β of 5 needs twice that, {Ib5}. R_B has 3.3 V − 0.7 V = 2.6 V across it, so R_B = 2.6 V/I_B: from {Rmin} (forced β 5) up to {Rmax} (forced β 10). Any E12 value in that range works. Rounding R_B down from {Rmax}, never up, keeps the forced β at or below 10. Check with the lowest β: the drive covers β·I_B ≥ 40 × I_C/10 = 4·I_C, four times what the coil can take, so every part saturates and the coil, not β, sets the current. Designing with a typical β of 100 instead (I_B = I_C/100, R_B ≈ {Rtyp}) would leave a β = 40 part in its active region, with part of the 12 V across the transistor and too little current for the relay to pull in reliably.",
+      "hints": [
+        "First find the collector current: with the transistor saturated, how much of the 12 V does the coil get?",
+        "I_B = I_C/(forced β), and R_B carries it with 3.3 V − 0.7 V across it. Find R_B for forced β = 10 and 5, then pick an E12 value between them."
+      ],
+      "followUps": [
+        {
+          "prompt": "A colleague fits R_B = 10 kΩ instead: \"β is typically 100 or more, so a quarter of a milliamp is plenty.\" The prototype works on the bench. Why is it still a poor design?",
+          "choices": [
+            {
+              "text": "2.6 V/10 kΩ = 0.26 mA covers the coil current only for parts with β above about {bneed}; a part near the datasheet's minimum of 40 would stay in its active region, with the coil short of its current",
+              "correct": true,
+              "feedback": "Right: the prototype happened to get a high-β part. A design has to work for every part the datasheet allows."
+            },
+            {
+              "text": "10 kΩ wastes more power in the base circuit than a smaller R_B would",
+              "feedback": "A larger R_B passes less base current, so it wastes less power, not more. The trouble is the opposite: too little base current for a low-β part."
+            },
+            {
+              "text": "R_B also carries the coil current, so a large R_B would drop too much voltage",
+              "feedback": "Only the base current flows in R_B. The coil current flows from 12 V through the coil into the collector and out of the emitter."
+            },
+            {
+              "text": "A large R_B affects only the switching speed; whether the transistor saturates depends on the coil",
+              "feedback": "Whether it saturates is exactly what R_B decides: β·I_B must exceed what the coil can take. With 10 kΩ, a low-β part's β·I_B falls short of {Ic}."
+            }
+          ],
+          "explanation": "Saturation needs β·I_B > I_C for the part actually fitted, and β spreads from 40 to 300 between parts of this type (and falls in the cold). With 10 kΩ, I_B = 0.26 mA, so the transistor saturates only if β exceeds {Ic}/0.26 mA ≈ {bneed}. A β = 40 part would pass about 40 × 0.26 mA ≈ 10 mA in its active region, with most of the 12 V across it. A forced β of 10 or less makes the design independent of β: every part in the range saturates."
+        }
+      ],
+      "schematic": {
+        "netlist": "Relay driver (drawing)\nVCC vcc 0 12\nVIN in 0 3.3\nRB in b 1k\nRK vcc c {Rcoil:spice}\nD1 c vcc DN\nQ1 c b 0 QN\n.model DN D\n.model QN NPN\n",
+        "noBuild": "drawn with a relay coil",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              8
+            ],
+            "rot": 90,
+            "label": "3.3 V logic"
+          },
+          {
+            "ref": "RB",
+            "at": [
+              2,
+              6
+            ],
+            "label": "R_B = ?"
+          },
+          {
+            "ref": "Q1",
+            "at": [
+              8,
+              6
+            ],
+            "label": "Q1"
+          },
+          {
+            "ref": "RK",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "relay coil\n{Rcoil}",
+            "symbol": "relayCoil",
+            "labelOpposite": true
+          },
+          {
+            "ref": "D1",
+            "at": [
+              13,
+              4
+            ],
+            "rot": 270,
+            "label": "D1"
+          },
+          {
+            "ref": "VCC",
+            "at": [
+              18,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              8
+            ],
+            [
+              0,
+              6
+            ],
+            [
+              2,
+              6
+            ]
+          ],
+          [
+            [
+              6,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              18,
+              2
+            ],
+            [
+              18,
+              0
+            ],
+            [
+              13,
+              0
+            ]
+          ],
+          [
+            [
+              13,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              10,
+              4
+            ],
+            [
+              13,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            12
+          ],
+          [
+            10,
+            8
+          ],
+          [
+            18,
+            6
+          ]
+        ],
+        "labels": []
       },
       "review": "verified"
     }

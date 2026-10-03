@@ -3,7 +3,7 @@
     {
       "id": "si_prefixes",
       "title": "SI prefixes and engineering notation",
-      "summary": "Read and use k, M, m, µ, n and p so values like 4.7 kΩ and 10 µF go straight into formulas.",
+      "summary": "Read and use k, M, m, µ, n, and p, so that values like 4.7 kΩ and 10 µF go straight into formulas.",
       "lenses": [
         "math"
       ],
@@ -13,7 +13,7 @@
       ],
       "prerequisiteNotes": {
         "ohms_law": "Every calculation here is Ohm's law with prefixed values: mA × kΩ = V.",
-        "power_heat": "P = V·I, V²/R and I²R, and E = P·t, are the formulas the prefixes go into."
+        "power_heat": "P = V·I, V²/R, and I²R, along with E = P·t, are the formulas the prefixes go into."
       },
       "lensNotes": {
         "math": "Engineering notation keeps exponents in steps of three, so every value is a number from 1 to 999 with a prefix. Multiplying prefixes is adding exponents: kΩ × mA = 10³ × 10⁻³ = volts, and kΩ × µF = 10³ × 10⁻⁶ = milliseconds."
@@ -42,13 +42,13 @@
       ],
       "goals": [
         "Convert a value between prefixes, for example 4700 pF = 4.7 nF and 0.1 µF = 100 nF",
-        "Put values like 4.7 kΩ and 2.2 mA straight into Ohm's law and power formulas and give the result with the right prefix",
+        "Put values like 4.7 kΩ and 2.2 mA straight into Ohm's law and power formulas, and give the result with the right prefix",
         "Compare values written with different prefixes and say which is larger",
         "Check the size of an answer before trusting it, and spot a lost k or m (an error of a factor of 1000)"
       ],
-      "intuition": "Each prefix step is a factor of 1000, so the prefix tells you a value's size at a glance, and multiplying two prefixed values adds their exponents and dividing subtracts them: kΩ × mA gives volts, V ÷ kΩ gives mA.",
-      "why": "Circuit quantities span an enormous range: a leakage current of a few nanoamps and a motor current of a few amps differ by a factor of a billion. Prefixes change none of the physics; they are powers of ten written in front of a unit. The laws themselves hold in base units: one ohm is one volt per amp, one volt times one amp is one watt, and one watt is one joule per second. So V = I·R is exact in volts, amps and ohms, and prefixes only have to be carried through the arithmetic correctly.",
-      "explanation": "You already use prefixes outside electronics: a kilometer is a thousand meters, a millimeter is a thousandth of one. Electronics uses the same idea in steps of a thousand. Going up: k (kilo, 10³), M (mega, 10⁶), G (giga, 10⁹). Going down: m (milli, 10⁻³), µ (micro, 10⁻⁶), n (nano, 10⁻⁹), p (pico, 10⁻¹²). Engineering notation picks the prefix that leaves a number from 1 to 999, so 0.0047 A is written 4.7 mA. Formulas such as Ohm's law, V = I·R, and power, P = V·I, work in base units: volts, amps, ohms, watts. You can always convert everything first. It is faster to combine the prefixes: milli times kilo is 10⁻³ × 10³ = 1, so mA × kΩ gives volts, and volts ÷ kΩ gives mA. Squaring squares the prefix too: (2 mA)² is 4 × 10⁻⁶ A², not 4 × 10⁻³ A². The same value can be marked several ways: 0.1 µF, 100 nF and 100 000 pF are one capacitor. Before trusting a result, check its size. A few volts across a few kilohms should give a few milliamps; an answer in amps means a prefix was lost.",
+      "intuition": "Each prefix step is a factor of 1000, so the prefix tells you a value's size at a glance. Multiplying two prefixed values adds their exponents, and dividing subtracts them: kΩ × mA gives volts, and V ÷ kΩ gives mA.",
+      "why": "Circuit quantities span an enormous range: a leakage current of a few nanoamps and a motor current of a few amps differ by a factor of a billion. Prefixes change none of the physics; they are powers of ten written in front of a unit. The laws themselves hold in base units: one ohm is one volt per amp, one volt times one amp is one watt, and one watt is one joule per second. So V = I·R is exact in volts, amps, and ohms, and prefixes only have to be carried through the arithmetic correctly.",
+      "explanation": "You already use prefixes outside electronics: a kilometer is a thousand meters, a millimeter is a thousandth of one. Electronics uses the same idea in steps of a thousand. Going up: k (kilo, 10³), M (mega, 10⁶), G (giga, 10⁹). Going down: m (milli, 10⁻³), µ (micro, 10⁻⁶), n (nano, 10⁻⁹), p (pico, 10⁻¹²). Engineering notation picks the prefix that leaves a number from 1 to 999, so 0.0047 A is written 4.7 mA. Formulas such as Ohm's law, V = I·R, and power, P = V·I, work in base units: volts, amps, ohms, watts. You can always convert everything first, but it is faster to combine the prefixes: milli times kilo is 10⁻³ × 10³ = 1, so mA × kΩ gives volts, and volts ÷ kΩ gives mA. Squaring squares the prefix too: (2 mA)² is 4 × 10⁻⁶ A², not 4 × 10⁻³ A². The same value can be marked several ways: 0.1 µF, 100 nF, and 100 000 pF are one capacitor. Before trusting a result, check its size. A few volts across a few kilohms should give a few milliamps; an answer in amps means a prefix was lost.",
       "workedExample": {
         "problem": "A 9 V battery is connected across a 4.7 kΩ resistor. Find the current, the power the resistor dissipates, and the energy it turns into heat in one hour.",
         "steps": [
@@ -57,7 +57,7 @@
           "Size check: a few volts across a few kilohms gives a few milliamps, so 1.91 mA is plausible. 1.91 A would mean the k was dropped.",
           "Power: P = V × I = 9 V × 1.915 mA = 17.2 mW (volts × mA gives mW). Cross-check: P = V² / R = (9 V)² / 4700 Ω = 81 V² / 4700 Ω = 0.0172 W = 17.2 mW.",
           "Energy: a watt is a joule per second, and one hour is 3600 s, so E = P × t = 0.01723 W × 3600 s = 62.0 J.",
-          "A common 0.25 W (250 mW) resistor is dissipating about 7% of its rating, so it only runs slightly warm."
+          "A common 0.25 W (250 mW) resistor is dissipating about 7% of its rating, so it runs only slightly warm."
         ]
       },
       "sources": [
@@ -74,7 +74,7 @@
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 4 \"Scientific Notation and Metric Prefixes\", section \"Hand calculator use\"",
           "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_4.html#xtocid87344",
-          "note": "The exponents of p, n, µ, m, k, M and G, and engineering display in multiples of three."
+          "note": "The exponents of p, n, µ, m, k, M, and G, and engineering display in multiples of three."
         }
       ]
     }
@@ -126,7 +126,7 @@
       },
       "explanation": "Ohm's law: V = I·R = {I} × {R} = {answer}. Shortcut: mA × kΩ gives volts directly, because 10⁻³ × 10³ = 1.",
       "hints": [
-        "Which law links voltage, current and resistance?",
+        "Which law links voltage, current, and resistance?",
         "Use V = I·R with both values in base units (amps and ohms), or use the shortcut mA × kΩ = V."
       ],
       "misconceptions": [
@@ -149,7 +149,7 @@
               "correct": true
             },
             {
-              "text": "Milliamps and kilohms are both 'small' units, so they match",
+              "text": "Milliamps and kilohms are both \"small\" units, so they match",
               "feedback": "Kilo is big (×1000) and milli is small (÷1000). They cancel because they are opposites."
             },
             {
@@ -415,7 +415,7 @@
         },
         {
           "formula": "V^2*R",
-          "feedback": "Multiply by R? Use P = V² / R: divide the squared voltage by the resistance."
+          "feedback": "You multiplied by R. Use P = V² / R: divide the squared voltage by the resistance."
         }
       ],
       "estimate": true,
@@ -654,7 +654,7 @@
       "misconceptions": [
         {
           "formula": "P/t",
-          "feedback": "Divide and you get J/s², which isn't energy. Multiply: E = P·t."
+          "feedback": "Dividing gives J/s², which isn't an energy. Multiply: E = P·t."
         }
       ],
       "noDrawing": "energy from power and time for an appliance; no circuit is described",
@@ -892,7 +892,7 @@
     {
       "id": "si_which_bigger",
       "topicId": "si_prefixes",
-      "prompt": "Four capacitors are marked {Au} µF, {Bn} nF, {Cp} pF and {Du} µF. Which has the largest capacitance?",
+      "prompt": "Four capacitors are marked {Au} µF, {Bn} nF, {Cp} pF, and {Du} µF. Which has the largest capacitance?",
       "variables": [
         {
           "name": "Au",
@@ -958,7 +958,7 @@
         {
           "text": "{Bn} nF",
           "correct": true,
-          "feedback": "Right: {Bn} nF = {Bu} µF, more than {Au} µF, {Du} µF or {Cp} pF ({Cn} nF). Put every value in one prefix before comparing."
+          "feedback": "Right: {Bn} nF = {Bu} µF, more than {Au} µF, {Du} µF, or {Cp} pF ({Cn} nF). Put every value in one prefix before comparing."
         },
         {
           "text": "{Au} µF",
@@ -973,7 +973,7 @@
           "feedback": "{Du} µF = {Dn} nF, less than {Bn} nF. A bigger prefix with a small number can still be the smaller value: put all four in nanofarads first."
         }
       ],
-      "explanation": "In nanofarads: {Au} µF = {An} nF, {Bn} nF stays {Bn} nF, {Cp} pF = {Cn} nF and {Du} µF = {Dn} nF. Each prefix step is a factor of 1000, so a big number with a small prefix can be the smallest value. Parts are marked all these ways: 0.1 µF and 100 nF are the same capacitor.",
+      "explanation": "In nanofarads: {Au} µF = {An} nF, {Bn} nF stays {Bn} nF, {Cp} pF = {Cn} nF, and {Du} µF = {Dn} nF. Each prefix step is a factor of 1000, so a big number with a small prefix can be the smallest value. Parts are marked all these ways: 0.1 µF and 100 nF are the same capacitor.",
       "hints": [
         "Write all four in nanofarads.",
         "1 µF = 1000 nF and 1 nF = 1000 pF."
@@ -1058,7 +1058,7 @@
         "target": "I",
         "tolerance": 0.3
       },
-      "explanation": "Pressed, the button ties the pin to ground, so the whole {V} sits across R and I = V/R. Solve for R: R = {V} / {I} = {Rex}. Keep the prefixes straight: volts divided by milliamps give kilohms, and volts divided by microamps give megohms. Any E12 value from {Rlo} to {Rhi} keeps the current in range; pick one and check V/R.",
+      "explanation": "When pressed, the button ties the pin to ground, so the whole {V} sits across R and I = V/R. Solve for R: R = {V} / {I} = {Rex}. Keep the prefixes straight: volts divided by milliamps give kilohms, and volts divided by microamps give megohms. Any E12 value from {Rlo} to {Rhi} keeps the current in range; pick one and check V/R.",
       "hints": [
         "With the button pressed, what voltage is across the resistor?",
         "R = V/I. Volts ÷ mA = kΩ; volts ÷ µA = MΩ."

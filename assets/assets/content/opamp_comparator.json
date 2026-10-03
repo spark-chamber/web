@@ -46,8 +46,8 @@
           "With R2 in place, V+ is a weighted average of the input and the output: V+ = (Vin × R2 + Vout × R1) / (R1 + R2) = (Vin × 100 kΩ + Vout × 4.7 kΩ) / 104.7 kΩ.",
           "Output low (−11 V): V+ reaches 0 V, the switching point, when Vin × 100 kΩ = 11 V × 4.7 kΩ, so Vin = 11 V × 4.7 kΩ / 100 kΩ = +0.517 V. That is the rising threshold.",
           "At that moment the output jumps to +11 V, and V+ jumps to (0.517 V × 100 kΩ + 11 V × 4.7 kΩ) / 104.7 kΩ = 0.988 V. The feedback pushed V+ further positive, so the switch completes and the input would have to fall a long way to undo it.",
-          "Output high (+11 V): by the same working V+ reaches 0 V when Vin = −11 V × 4.7 kΩ / 100 kΩ = −0.517 V. That is the falling threshold.",
-          "Hysteresis width: 0.517 V − (−0.517 V) = 1.03 V. The noise is 0.3 V peak-to-peak, less than a third of the gap, so once the output switches the noise cannot bring the input back past the other threshold: one clean edge per crossing.",
+          "Output high (+11 V): by the same working, V+ reaches 0 V when Vin = −11 V × 4.7 kΩ / 100 kΩ = −0.517 V. That is the falling threshold.",
+          "Hysteresis width: 0.517 V − (−0.517 V) = 1.03 V. The noise is 0.3 V peak-to-peak, less than a third of the gap, so once the output switches, the noise cannot bring the input back past the other threshold: one clean edge per crossing.",
           "Levels check: the output's ±11 V stays inside the ±12 V supplies, and the ±3 V signal crosses both thresholds, so the output does switch each way."
         ]
       },
@@ -55,7 +55,7 @@
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 8 \"Operational Amplifiers\", section \"The \"operational\" amplifier\"",
           "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_8.html#xtocid90722",
-          "note": "Without feedback an op amp's very large open-loop gain saturates its output with a differential input of only microvolts, high when the + input is above the − input and low when below, and a reference voltage on one input sets the switching point."
+          "note": "Without feedback, an op amp's very large open-loop gain saturates its output with a differential input of only microvolts, high when the + input is above the − input and low when below; a reference voltage on one input sets the switching point."
         },
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 8 \"Operational Amplifiers\", section \"Positive feedback\"",
@@ -74,7 +74,7 @@
     {
       "id": "cmp_output_state",
       "topicId": "opamp_comparator",
-      "prompt": "An op amp (open-loop gain about 10⁵, inputs and output work up to its rails) with no feedback runs from ±{Vs}. Its non-inverting input is at {Vp} and its inverting input at {Vn}. Roughly what is the output?",
+      "prompt": "An op amp (open-loop gain about 10⁵, inputs and output working up to its rails) with no feedback runs from ±{Vs}. Its non-inverting input is at {Vp} and its inverting input at {Vn}. Roughly what is the output?",
       "variables": [
         {
           "name": "Vs",
@@ -231,7 +231,7 @@
     {
       "id": "cmp_output_state_low",
       "topicId": "opamp_comparator",
-      "prompt": "An op amp (open-loop gain about 10⁵, inputs and output work up to its rails) with no feedback runs from ±{Vs}. Its non-inverting input is at {Vp} and its inverting input at {Vn}. Roughly what is the output?",
+      "prompt": "An op amp (open-loop gain about 10⁵, inputs and output working up to its rails) with no feedback runs from ±{Vs}. Its non-inverting input is at {Vp} and its inverting input at {Vn}. Roughly what is the output?",
       "variables": [
         {
           "name": "Vs",
@@ -387,7 +387,7 @@
     {
       "id": "cmp_threshold",
       "topicId": "opamp_comparator",
-      "prompt": "An ideal comparator (inputs work from 0 V to {Vcc}) has its inverting input set by a divider from {Vcc}: R1 = {R1} on top, R2 = {R2} on the bottom. The signal goes to the non-inverting input. At what input voltage does the output switch?",
+      "prompt": "An ideal comparator (inputs working from 0 V to {Vcc}) has its inverting input set by a divider from {Vcc}: R1 = {R1} on top, R2 = {R2} on the bottom. The signal goes to the non-inverting input. At what input voltage does the output switch?",
       "variables": [
         {
           "name": "Vcc",
@@ -592,7 +592,7 @@
           "prompt": "This comparator has no feedback resistor. Why does its output jump to a rail instead of settling in between?",
           "choices": [
             {
-              "text": "With no feedback nothing pulls the inputs together, and a gain of about 100 000 turns a millivolt into more than the supply",
+              "text": "With no feedback, nothing pulls the inputs together, and a gain of about 100 000 turns a millivolt into more than the supply",
               "feedback": "Right: 1 mV × 100 000 = 100 V, which the output can't reach, so it sits at a rail. Which rail depends only on which input is higher.",
               "correct": true
             },
@@ -1359,7 +1359,7 @@
           "feedback": "The output swings further, but still switches every time the noise crosses the threshold."
         },
         {
-          "text": "A slower comparator only",
+          "text": "A slower comparator alone",
           "feedback": "A slower part still switches at every threshold crossing that lasts longer than its response time. The cause, one threshold that noise keeps crossing, remains."
         }
       ],
@@ -1412,7 +1412,7 @@
           "same": "The thresholds are ±Vsat·R1/R2, so R2 sets how far the output can pull V+. V+ is a weighted average of the input and the output, and a bigger R2 gives the output less weight in it."
         }
       },
-      "explanation": "The band is 2·Vsat·R1/R2, from {before} to {after}. V+ is a weighted average of the input and the output, weighted by the opposite resistors; a bigger R2 gives the output less say, so each switch moves the threshold less. A narrower band rejects less noise; a wider one needs a bigger input swing.",
+      "explanation": "The band, 2·Vsat·R1/R2, goes from {before} to {after}. V+ is a weighted average of the input and the output, weighted by the opposite resistors; a bigger R2 gives the output less say, so each switch moves the threshold less. A narrower band rejects less noise; a wider one needs a bigger input swing.",
       "hints": [
         "Which resistor carries the output's influence back to the + input?"
       ],
@@ -1589,7 +1589,7 @@
     {
       "id": "cmp_what_if_overdrive",
       "topicId": "opamp_comparator",
-      "prompt": "An op amp with a rail-to-rail output, used as a comparator (no feedback, on ±{Vr} supplies, not drawn, so its output swings between −{Vr} and +{Vr}), has {Vref} on its − input and the signal on its + input. The signal is at {Vin}, so the output is high. The signal rises further, to {new_Vin}. What happens to the output voltage?",
+      "prompt": "An op amp with a rail-to-rail output is used as a comparator (no feedback; ±{Vr} supplies, not drawn), so its output swings between −{Vr} and +{Vr}. It has {Vref} on its − input and the signal on its + input. The signal is at {Vin}, so the output is high. The signal rises further, to {new_Vin}. What happens to the output voltage?",
       "variables": [
         {
           "name": "Vref",
@@ -1785,25 +1785,25 @@
           {
             "text": "R1 is open (a dry joint)",
             "open": "R1",
-            "feedback": "With R1 open nothing would feed the divider: 0 A in R1, R2 would pull the reference down to 0 V, and with the input above 0 V the output would flip to +12 V.",
+            "feedback": "With R1 open, nothing would feed the divider: R1 would carry 0 A, R2 would pull the reference down to 0 V, and with the input above 0 V the output would flip to +12 V.",
             "why": "No current flows in R1 and the reference has fallen to 0 V: R2 has nothing to divide. The input is now above the reference, so the output has flipped to +12 V. The divider has lost its top."
           },
           {
             "text": "R2 is open",
             "open": "R2",
-            "feedback": "With R2 open no current could flow down the divider, so R1 would drop nothing and the reference would rise to the full {Vs}. The input would still be below it, so the output would stay low.",
+            "feedback": "With R2 open, no current could flow down the divider, so R1 would drop nothing and the reference would rise to the full {Vs}. The input would still be below it, so the output would stay low.",
             "why": "The reference reads the full {Vs} and no current flows in R1: with no path to ground, R1 drops nothing. The output is still low because the input is below the (now higher) reference, so only the meters on the divider show the fault."
           },
           {
             "text": "R1 is shorted (a solder bridge across it)",
             "short": "R1",
-            "feedback": "With R1 shorted the reference would be tied to {Vs}, while a larger current than normal, Vs/R2, flowed through R1's position into R2. The output would stay low.",
+            "feedback": "With R1 shorted, the reference would be tied to {Vs}, while a larger current than normal, Vs/R2, flowed through R1's position into R2. The output would stay low.",
             "why": "The reference reads the full {Vs}, yet current still flows (more than normal: Vs/R2), so the path to ground through R2 is intact and the drop across R1 is missing. R1 is bridged."
           },
           {
             "text": "R2 is shorted",
             "short": "R2",
-            "feedback": "With R2 shorted the reference would be tied to 0 V while R1 carried the whole supply, Vs/R1, more current than normal; with the input above 0 V the output would flip to +12 V.",
+            "feedback": "With R2 shorted, the reference would be tied to 0 V while R1 carried the whole supply, Vs/R1, more current than normal; with the input above 0 V the output would flip to +12 V.",
             "why": "The reference reads 0 V, yet R1 carries more current than normal (Vs/R1): the bottom of the divider is a dead short. The input is now above the reference, so the output has flipped to +12 V."
           }
         ]
@@ -2007,7 +2007,7 @@
       },
       "explanation": "The thresholds are ±V_sat·R1/R2 = ±{Vth}: with the output low, the input must rise past +{Vth} to switch it high; with the output high, it must fall below −{Vth} to switch it back. The band between them is 2·V_sat·R1/R2 = 2 × {Vsat} × {R1}/{R2} = {answer}.",
       "hints": [
-        "The two thresholds sit symmetrically either side of 0 V.",
+        "The two thresholds sit symmetrically on either side of 0 V.",
         "Each threshold is V_sat·R1/R2 from 0 V; the band spans both."
       ],
       "misconceptions": [
@@ -2167,6 +2167,242 @@
           }
         ]
       }
+    },
+    {
+      "id": "cmp_design_battery_monitor",
+      "topicId": "opamp_comparator",
+      "prompt": "A two-cell lithium-ion pack (8.4 V full, 7.4 V nominal) powers a comparator (ideal, supplied from the pack, not drawn) that raises a low-battery flag. Its + input gets a {Vref} reference. A divider, R1 from the pack to the − input and R2 from there to ground, feeds it a fixed fraction of the pack voltage. Choose R1 and R2 (E24 values, 10 kΩ to 1 MΩ) so the flag goes high when the pack falls to {Vt}, within 2%.",
+      "variables": [
+        {
+          "name": "Vt",
+          "unit": "V",
+          "values": [
+            6.0,
+            6.2,
+            6.4,
+            6.6,
+            6.8
+          ]
+        },
+        {
+          "name": "Vref",
+          "unit": "V",
+          "value": 2.5
+        }
+      ],
+      "derived": [
+        {
+          "name": "k",
+          "formula": "Vt/Vref-1",
+          "unit": ""
+        },
+        {
+          "name": "R1ex",
+          "formula": "(Vt/Vref-1)*100000",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rtot",
+          "formula": "Vt/Vref*100000",
+          "unit": "Ω"
+        },
+        {
+          "name": "Idiv",
+          "formula": "8.4/(Vt/Vref*100000)",
+          "unit": "A"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "R1",
+            "label": "R1",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 10000,
+            "max": 1000000
+          },
+          {
+            "name": "R2",
+            "label": "R2",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 10000,
+            "max": 1000000
+          }
+        ],
+        "result": "Vref*(R1+R2)/R2",
+        "resultLabel": "trip voltage",
+        "resultUnit": "V",
+        "target": "Vt",
+        "tolerance": 0.02
+      },
+      "connects": [
+        "opamp_comparator",
+        "dividers"
+      ],
+      "explanation": "A comparator switches where its inputs are equal, so the flag trips when the divider's output reaches the {Vref} reference. The divider (from Foundations) gives V− = V_pack·R2/(R1 + R2), so the trip voltage is V_trip = {Vref}·(R1 + R2)/R2 = {Vref}·(1 + R1/R2). For {Vt}: R1/R2 = {Vt}/{Vref} − 1 = {k}. With R2 = 100 kΩ, R1 = {R1ex}; round it to an E24 value and recheck, and if the trip point misses by more than 2%, try another R2 until both land close to the ratio. Above the trip point V− is above the reference and the output is low; once the pack falls below it, V− drops under the reference and the output goes high. The divider draws V_pack/(R1 + R2) from the pack all the time: with R2 = 100 kΩ the total is about {Rtot}, so about {Idiv} at 8.4 V. Values well above 10 kΩ keep that drain small. A real comparator draws a small input bias current through R1‖R2, so staying below 1 MΩ keeps the error voltage it makes small next to the 2% budget.",
+      "hints": [
+        "At the trip point the comparator's two inputs are equal. What must the divider's output be then?",
+        "V_trip·R2/(R1 + R2) = {Vref}, so R1/R2 = V_trip/{Vref} − 1."
+      ],
+      "followUps": [
+        {
+          "prompt": "In use, the pack sags by about 0.1 V whenever the motor it powers starts, and recovers when it stops. Near the trip point the flag flickers on and off. What is happening, and what fixes it?",
+          "choices": [
+            {
+              "text": "The pack voltage crosses the single threshold back and forth; positive feedback from the output to the + input adds hysteresis, so the flag only clears once the pack has clearly recovered",
+              "correct": true,
+              "feedback": "Right: with one threshold, every 0.1 V dip and recovery across it flips the output. Hysteresis gives two thresholds, set further apart than the sag, so a dip that trips the flag can't clear it again."
+            },
+            {
+              "text": "The divider resistors are so large that they pick up noise; smaller values would stop the flicker",
+              "feedback": "The flicker follows the motor's 0.1 V sag, a real change in the pack voltage. It crosses the threshold whatever the divider's resistance; smaller resistors would only drain the pack faster."
+            },
+            {
+              "text": "The comparator is too slow; a faster comparator would switch cleanly",
+              "feedback": "A faster comparator follows each crossing even more faithfully. The cause is a single threshold that the pack voltage keeps crossing, not the switching speed."
+            },
+            {
+              "text": "Swapping the divider and the reference between the two inputs would stop it",
+              "feedback": "That only inverts the flag, so it would go low instead of high on a flat pack. There is still one threshold, and the sag still crosses it."
+            }
+          ],
+          "explanation": "A plain comparator has one switching point, so any input that wanders across it, here the pack sagging under the motor's current and recovering, flips the output each time. Positive feedback (a Schmitt trigger) moves the threshold when the output switches: once the flag is high, the pack must rise past a higher threshold to clear it. Make the gap wider than the expected sag and the flag switches once."
+        }
+      ],
+      "schematic": {
+        "netlist": "battery monitor\nVB pack 0 7.4\nR1 pack n {R1:spice}\nR2 n 0 {R2:spice}\nVREF ref 0 {Vref:spice}\nX1 ref n out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "VB",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "pack",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              6,
+              4
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "VREF",
+            "at": [
+              9,
+              9
+            ],
+            "rot": 90,
+            "label": "{Vref}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              10,
+              6
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              8,
+              4
+            ],
+            [
+              8,
+              5
+            ],
+            [
+              10,
+              5
+            ]
+          ],
+          [
+            [
+              9,
+              9
+            ],
+            [
+              9,
+              7
+            ],
+            [
+              10,
+              7
+            ]
+          ],
+          [
+            [
+              14,
+              6
+            ],
+            [
+              16,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            6,
+            8
+          ],
+          [
+            9,
+            13
+          ]
+        ],
+        "labels": [
+          {
+            "text": "flag",
+            "at": [
+              16,
+              6
+            ]
+          }
+        ]
+      },
+      "review": "verified"
     }
   ]
 }

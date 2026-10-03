@@ -20,7 +20,7 @@
       },
       "lensNotes": {
         "physics": "Between ideal parallel plates the field is uniform, E = V/d, and the charge on each plate is Q = ε0·εr·E·A, so Q = (ε0·εr·A/d)·V. In a dielectric the molecules polarize in the field; the bound charge at its surfaces partly cancels the plates' field, so the same voltage needs εr times more charge on the plates. The energy per cubic meter of field is ½·ε0·εr·E², and over the volume A·d that adds up to ½CV². Above its dielectric strength (a field, in V/m) an insulator breaks down and a conducting path forms through it.",
-        "circuit": "A capacitor is marked with its value, tolerance and rated DC voltage; keep the working voltage comfortably below the rating. Aluminum electrolytics are polarized: a stripe on the case marks the negative lead, and reversed they pass a growing current, heat up and can vent. Film and class 1 ceramic (C0G, also called NP0) capacitors keep their value with voltage; class 2 ceramics (X7R, X5R) pack far more capacitance into a chip but lose capacitance as the DC voltage across them rises, so read the manufacturer's DC-bias curve. A large capacitor can stay charged long after power is removed: discharge it through a resistor before handling it.",
+        "circuit": "A capacitor is marked with its value, tolerance, and rated DC voltage; keep the working voltage comfortably below the rating. Aluminum electrolytics are polarized: a stripe on the case marks the negative lead, and reversed they pass a growing current, heat up, and can vent. Film and class 1 ceramic (C0G, also called NP0) capacitors keep their value with voltage; class 2 ceramics (X7R, X5R) pack far more capacitance into a chip but lose capacitance as the DC voltage across them rises, so read the manufacturer's DC-bias curve. A large capacitor can stay charged long after power is removed: discharge it through a resistor before handling it.",
         "signals": "i = C·dv/dt makes a capacitor respond to change: a steady voltage draws no current, a fast change a large one. That is why a capacitor beside a chip can supply short bursts of current, why one smooths a rectifier's output, and why a capacitor between two stages passes a changing signal while blocking its DC level (reactance, later in the course).",
         "math": "Q = CV is a straight line through the origin with slope C. Integrating i = C·dv/dt gives Δv = (1/C)∫i dt, so a constant current makes a straight-line ramp, Δv = I·Δt/C. The stored energy is the area under the line of V against Q, a triangle: ½·Q·V = ½CV². Series capacitors combine as reciprocals, 1/C = 1/C1 + 1/C2, the same form as parallel resistors."
       },
@@ -58,10 +58,10 @@
       ],
       "intuition": "A capacitor's voltage is set by how much charge has been moved from one plate to the other, V = Q/C, so the voltage can only change as fast as a current moves that charge: i = C·dv/dt.",
       "why": "A capacitor is two conductors, the plates, separated by an insulator, the dielectric. Connect a battery and it moves electrons off one plate, around the circuit, and onto the other: one plate is left with +Q, the other with −Q, and the part as a whole stays neutral. The separated charge sets up an electric field across the dielectric, and the voltage between the plates is that field times the spacing, V = E·d. More charge gives more field and more voltage, in proportion: Q = CV. The capacitance C depends only on the construction, C = ε0·εr·A/d. A larger area holds more charge at the same field; a smaller gap gives a stronger field for each volt, and the charge on each plate is proportional to the field at its surface; a dielectric whose molecules polarize in the field (εr > 1) partly cancels the plates' field, so more charge is needed for the same voltage. No charge crosses the dielectric: the current in one lead is charge arriving at one plate, and the same current leaves the other plate through the other lead. Moving charge onto the plates against the growing field takes work, and that energy, ½CV², is stored in the field. Every insulator fails above some field strength, which sets the voltage rating: a thinner dielectric gives more capacitance and a lower rating.",
-      "explanation": "A capacitor is two conductors, called plates, separated by a thin insulator, the dielectric. A ceramic chip capacitor stacks many metal layers (hundreds in high-value parts) between thin ceramic layers; class 2 ceramics have an εr hundreds to thousands of times that of plastic film. A film capacitor winds two long strips of metallized plastic film into a roll. An aluminum electrolytic uses an etched aluminum foil covered by an oxide layer much thinner than the plastic film in a film capacitor of similar rating.\n\nConnect a voltage V and a charge Q = CV moves off one plate and onto the other. The plates hold +Q and −Q, so the total stays zero. What the capacitor stores is energy, W = ½CV², in the electric field across the dielectric. One farad is one coulomb per volt.\n\nCapacitance is set by construction: C = ε0·εr·A/d. Large facing area, small spacing and a dielectric with high relative permittivity εr all raise it. Parallel capacitors add; two in series give less than either.\n\nNo charge crosses the dielectric, yet current flows in both leads while the voltage changes: i = C·dv/dt. A steady voltage means no current.\n\nEvery dielectric breaks down above some field, so every capacitor has a voltage rating. Electrolytics must be fitted the right way round, and class 2 ceramics (X7R, X5R) lose capacitance as the DC voltage rises.",
+      "explanation": "A capacitor is two conductors, called plates, separated by a thin insulator, the dielectric. A ceramic chip capacitor stacks many metal layers (hundreds in high-value parts) between thin ceramic layers; class 2 ceramics have an εr hundreds to thousands of times that of plastic film. A film capacitor winds two long strips of metallized plastic film into a roll. An aluminum electrolytic uses an etched aluminum foil covered by an oxide layer much thinner than the plastic film in a film capacitor of similar rating.\n\nConnect a voltage V and a charge Q = CV moves off one plate and onto the other. The plates hold +Q and −Q, so the total stays zero. What the capacitor stores is energy, W = ½CV², in the electric field across the dielectric. One farad is one coulomb per volt.\n\nCapacitance is set by construction: C = ε0·εr·A/d. Large facing area, small spacing, and a dielectric with high relative permittivity εr all raise it. Parallel capacitors add; two in series give less than either.\n\nNo charge crosses the dielectric, yet current flows in both leads while the voltage changes: i = C·dv/dt. A steady voltage means no current.\n\nEvery dielectric breaks down above some field, so every capacitor has a voltage rating. Electrolytics must be fitted the right way around, and class 2 ceramics (X7R, X5R) lose capacitance as the DC voltage rises.",
       "analogy": {
         "text": "Picture a pipe full of water with a stretchy membrane sealed across it: pushing water in on one side makes the same amount leave the other side, though no water crosses the membrane, just as the current into one lead of a capacitor equals the current out of the other. The membrane pushes back harder in proportion to the volume moved past it, as the voltage grows in proportion to the charge moved (Q = CV), and the total water in the section never changes: what is stored is energy in the stretched membrane, not extra water. Push too hard and the membrane bursts, as a dielectric breaks down above its rated voltage.",
-        "breaksDown": "The membrane itself bulges, while nothing moves across a capacitor's gap: the energy is in the electric field between the plates, and a dielectric's molecules only polarize slightly. Water has mass, so a sudden push makes it slosh, while the charge in a capacitor circuit has no inertia worth counting; that behavior belongs to inductance. The picture does not show why area, spacing and dielectric set C = ε0·εr·A/d, or why a thinner dielectric gives more capacitance and a lower voltage rating."
+        "breaksDown": "The membrane itself bulges, while nothing moves across a capacitor's gap: the energy is in the electric field between the plates, and a dielectric's molecules only polarize slightly. Water has mass, so a sudden push makes it slosh, while the charge in a capacitor circuit has no inertia worth counting; that behavior belongs to inductance. The picture does not show why area, spacing, and dielectric set C = ε0·εr·A/d, or why a thinner dielectric gives more capacitance and a lower voltage rating."
       },
       "workedExample": {
         "problem": "A 470 µF, 16 V aluminum electrolytic is charged from 0 V to 12 V by a constant 10 mA. How much charge moves onto its positive plate, how fast does its voltage rise, how long does the charge take, and how much energy does it then store?",
@@ -146,7 +146,7 @@
         "tolerance": 0.02
       },
       "estimate": true,
-      "explanation": "Q = CV = {C} × {V} = {answer}. One farad holds one coulomb per volt. The battery has moved {answer} off one plate, around the circuit and onto the other: the positive plate holds +{answer}, the negative plate −{answer}, and the capacitor as a whole stays neutral. Once the plates reach {V}, no more current flows.",
+      "explanation": "Q = CV = {C} × {V} = {answer}. One farad holds one coulomb per volt. The battery has moved {answer} off one plate, around the circuit, and onto the other: the positive plate holds +{answer}, the negative plate −{answer}, and the capacitor as a whole stays neutral. Once the plates reach {V}, no more current flows.",
       "hints": [
         "Capacitance is the charge on each plate per volt across the plates.",
         "Q = C·V, with C in farads and V in volts, gives coulombs."
@@ -293,7 +293,7 @@
         },
         {
           "formula": "0.5*C*V",
-          "feedback": "The voltage must be squared: twice the voltage puts twice the charge on the plates, each coulomb moved against twice the voltage. W = ½CV²."
+          "feedback": "The voltage must be squared: twice the voltage puts twice the charge on the plates, and each coulomb is moved against twice the voltage. W = ½CV²."
         },
         {
           "formula": "C*V",
@@ -315,7 +315,7 @@
             },
             {
               "text": "In the motion of electrons circulating between the plates",
-              "feedback": "Once charged and left alone, no current flows anywhere in the capacitor; nothing is moving. The energy sits in the static field across the dielectric."
+              "feedback": "Once the capacitor is charged and left alone, no current flows anywhere in it; nothing is moving. The energy sits in the static field across the dielectric."
             },
             {
               "text": "In chemical form in the electrolyte, as in a battery",
@@ -333,7 +333,7 @@
       "id": "cap_film_area",
       "topicId": "capacitors",
       "level": "reason",
-      "prompt": "A {C} film capacitor is to be made from polypropylene film {d} µm thick (relative permittivity εr = 2.2) with a metal electrode on each side. What area must the two electrodes face each other over? Give it in square meters (enter 0.9 for 0.9 m²). Use ε0 = 8.854 × 10⁻¹² F/m.",
+      "prompt": "A {C} film capacitor is to be made from polypropylene film {d} µm thick (relative permittivity εr = 2.2) with a metal electrode on each side. Over what area must the two electrodes face each other? Give it in square meters (enter 0.9 for 0.9 m²). Use ε0 = 8.854 × 10⁻¹² F/m.",
       "variables": [
         {
           "name": "C",
@@ -784,7 +784,7 @@
         "unit": "F",
         "tolerance": 0.02
       },
-      "explanation": "During the gap the board takes Q = I·t = {I} × {t} = {Qh} from the capacitor. As a capacitor gives up charge its voltage falls by ΔV = Q/C, so C = Q/ΔV = {Qh} / {dV} = {answer}. Pick the next standard value up, then allow for tolerance, aging and, for a class 2 ceramic, the capacitance lost at 3.3 V of DC bias.",
+      "explanation": "During the gap the board takes Q = I·t = {I} × {t} = {Qh} from the capacitor. As a capacitor gives up charge its voltage falls by ΔV = Q/C, so C = Q/ΔV = {Qh} / {dV} = {answer}. Pick the next standard value up, then allow for tolerance, aging, and, for a class 2 ceramic, the capacitance lost at 3.3 V of DC bias.",
       "hints": [
         "How much charge does the board take from the capacitor during the gap?",
         "Q = I·t; a capacitor that gives up Q drops by ΔV = Q/C. Solve for C."
@@ -1010,7 +1010,7 @@
               "feedback": "Nothing special happens at any gap: C = ε0·A/d falls smoothly as d grows, and Q = CV with it. The plate thickness does not enter."
             }
           ],
-          "explanation": "Connected to a battery, the voltage is fixed, so Q = CV follows C and charge flows back through the circuit as the gap opens. Disconnected first, the charge is fixed, so V = Q/C doubles instead. The energy goes different ways too. Disconnected, the work done pulling the plates apart against their attraction is stored in the field, whose energy doubles; connected, the field's energy halves, and both that energy and the work done go back into the battery."
+          "explanation": "With the plates connected to a battery, the voltage is fixed, so Q = CV follows C and charge flows back through the circuit as the gap opens. With the plates disconnected first, the charge is fixed, so V = Q/C doubles instead. The energy goes different ways too. Disconnected, the work done pulling the plates apart against their attraction is stored in the field, whose energy doubles; connected, the field's energy halves, and both that energy and the work done go back into the battery."
         }
       ],
       "noDrawing": "about a capacitor's geometry; no circuit to analyze",
@@ -1061,7 +1061,7 @@
           "V": "2*V"
         },
         "feedback": {
-          "down": "C = Q/V defines C; it does not make C depend on V: doubling V doesn't halve C. The charge on each plate doubles too, from {Q1} to {Q2}, so Q/V stays {C}. It is set by the area, the spacing and the film.",
+          "down": "C = Q/V defines C; it does not make C depend on V: doubling V doesn't halve C. The charge on each plate doubles too, from {Q1} to {Q2}, so Q/V stays {C}. It is set by the area, the spacing, and the film.",
           "up": "A higher voltage puts more charge on the plates, but in proportion: Q doubles with V, so the charge per volt, C, is unchanged."
         }
       },
@@ -1499,7 +1499,7 @@
       "choices": [
         {
           "text": "The ceramic stacks hundreds of very thin layers of a barium-titanate dielectric whose εr is in the thousands; the film part needs thick polyester film, with a low εr, to stand 630 V",
-          "feedback": "Right: C = ε0·εr·A/d. Thin layers (small d), many of them (large A) and a huge εr give the chip its capacitance; the film part's spacing is set by its voltage rating.",
+          "feedback": "Right: C = ε0·εr·A/d. Thin layers (small d), many of them (large A), and a huge εr give the chip its capacitance; the film part's spacing is set by its voltage rating.",
           "correct": true
         },
         {
@@ -1537,7 +1537,7 @@
         },
         {
           "text": "12 V is too close to the 16 V rating; capacitors overheat near their rating",
-          "feedback": "Fitted the right way round, 12 V on a 16 V part is normal and it would stay cool. The rating is the most it may see; below it, an ideal capacitor passes no steady current at all."
+          "feedback": "Fitted the right way around, the part would run normally at 12 V on its 16 V rating and stay cool. The rating is the most it may see; below it, an ideal capacitor passes no steady current at all."
         },
         {
           "text": "The stripe marks the positive lead, so the part was fitted correctly and must have been faulty",
@@ -1548,7 +1548,7 @@
           "feedback": "A healthy capacitor passes only a tiny leakage current, however large its value. The heating comes from the reverse voltage destroying the oxide and driving a large current through the part."
         }
       ],
-      "explanation": "An aluminum electrolytic's dielectric is an aluminum-oxide layer grown on the anode foil by a DC voltage during manufacture, with a liquid electrolyte making contact on the other side. That layer is extremely thin, which is how the part gets a large capacitance in a small can, and it insulates only with the anode positive. Reversed, the layer stops blocking: a current flows, heats the part and produces gas, and the vent scored into the top bulges or opens. Polarized capacitors must be fitted with + to the more positive side, and every hands-on build should check the stripe before power is applied.",
+      "explanation": "An aluminum electrolytic's dielectric is an aluminum-oxide layer grown on the anode foil by a DC voltage during manufacture, with a liquid electrolyte making contact on the other side. That layer is extremely thin, which is how the part gets a large capacitance in a small can, and it insulates only with the anode positive. Reversed, the layer stops blocking: a current flows, heats the part, and produces gas; the vent scored into the top then bulges or opens. Polarized capacitors must be fitted with + to the more positive side, and every hands-on build should check the stripe before power is applied.",
       "hints": [
         "Which lead does the stripe on an aluminum electrolytic mark?",
         "The dielectric of an electrolytic is formed on one foil only. What does that mean for the polarity?"
@@ -1569,7 +1569,7 @@
         },
         {
           "text": "X5R means it is rated for 5 V, so it is working at its limit",
-          "feedback": "X5R is a temperature code (EIA): it works from −55 °C to +85 °C with its capacitance within ±15 % over that range, measured without DC bias. The voltage rating is marked separately, here 6.3 V."
+          "feedback": "X5R is a temperature code (EIA): it works from −55 °C to +85 °C with its capacitance within ±15% over that range, measured without DC bias. The voltage rating is marked separately, here 6.3 V."
         },
         {
           "text": "It is out of tolerance, and the LCR meter reading hid it",
@@ -1648,7 +1648,7 @@
     {
       "id": "cap_fault_pwm_filter",
       "topicId": "capacitors",
-      "prompt": "A microcontroller pin makes a 0 to 5 V, 1 kHz square wave at 50 % duty. R1 = {R} and C1 = {C} (an aluminum electrolytic) smooth it into a steady voltage at node out. Healthy, a meter at out reads {h0} and a scope shows {h1} of ripple, peak to peak. Now the readings are as below. Which fault explains them?",
+      "prompt": "A microcontroller pin makes a 0 to 5 V, 1 kHz square wave at 50% duty. R1 = {R} and C1 = {C} (an aluminum electrolytic) smooth it into a steady voltage at node out. When the circuit is healthy, a meter at out reads {h0} and a scope shows {h1} of ripple, peak to peak. Now the readings are as below. Which fault explains them?",
       "variables": [
         {
           "name": "R",
@@ -1718,7 +1718,7 @@
               "ref": "C1",
               "formula": "C/10"
             },
-            "feedback": "With a tenth of the capacitance, the charge R1 moves each half-cycle would swing C1's voltage much further: the ripple would grow to about {ppLow}, while the meter still read 2.5 V.",
+            "feedback": "With a tenth of the capacitance, the charge R1 moves each half-cycle would swing C1's voltage much further: the ripple would grow to about {ppLow}, while the meter would still read 2.5 V.",
             "why": "The average is still 2.5 V, so C1 still blocks DC and nothing is shorted, but the ripple grew to about {ppLow}. R1 still sets roughly the same charging current, so with less capacitance each half-cycle swings C1's voltage much further (Δv = ΔQ/C): the swing grows almost tenfold, to about {ppLow}; it falls a little short of ten times {h1} because, with C1's voltage swinging further, the current through R1 sags during each half-cycle. Aluminum electrolytics lose capacitance as their electrolyte dries out, faster when they run hot, and a dried-out electrolytic's ESR also rises, which adds to the ripple."
           },
           {
@@ -1731,7 +1731,7 @@
             "text": "C1 is shorted (its dielectric has broken down)",
             "short": "C1",
             "feedback": "A short across C1 would hold out at 0 V: the meter would read 0 V and the scope would show no ripple.",
-            "why": "out sits at 0 V with no ripple: C1 is shorted. The pin now drives R1 straight to ground, {Ishort} while it is high. A capacitor whose dielectric has been punctured, by overvoltage or by reverse voltage on an electrolytic, often fails this way."
+            "why": "Node out sits at 0 V with no ripple: C1 is shorted. The pin now drives R1 straight to ground, {Ishort} while it is high. A capacitor whose dielectric has been punctured, by overvoltage or by reverse voltage on an electrolytic, often fails this way."
           },
           {
             "text": "C1's dielectric has partly broken down: it conducts as if about 1 kΩ were connected across it",

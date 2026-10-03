@@ -12,7 +12,7 @@
         "mosfet_switching"
       ],
       "lensNotes": {
-        "circuit": "A switch and an inductor trade voltage for current efficiently: a buck gives V_in·D, a boost V_in/(1 − D). The switch is never half-on, so little power is wasted.",
+        "circuit": "A switch and an inductor trade voltage for current efficiently: a buck gives V_in·D, a boost V_in/(1 − D). The switch is never half on, so little power is wasted.",
         "signals": "The switch node is a square wave; the LC filter is a low-pass that keeps its average (the DC output) and leaves a small ripple at the switching frequency."
       },
       "formulas": [
@@ -38,9 +38,9 @@
         "Compare a switching converter's losses with a linear regulator's (V_in − V_out)·I, and name where the switcher's remaining losses come from",
         "Explain why a buck's average inductor current equals the load current, and why an ideal buck in continuous conduction holds its output as the load changes"
       ],
-      "intuition": "A buck converter chops its input into a square wave that sits at V_in for a fraction D of each cycle, and its inductor and capacitor pass on only the average: in continuous conduction V_out = D·V_in, set by timing, not by burning off the difference.",
-      "why": "An inductor's current changes at a rate set by its voltage: di/dt = v/L. In steady state the current must end each cycle where it began, so its rise and fall are equal (volt-second balance). In a buck the inductor sees V_in − V_out for the on-time and −V_out for the off-time; balance gives V_out = D·V_in. In a boost it sees V_in during D and −(V_out − V_in) during 1 − D, giving V_out = V_in/(1 − D). The output capacitor passes no steady current, so a buck's average inductor current is the load current.",
-      "explanation": "A MOSFET wastes little power fully on or fully off. A linear regulator uses a transistor as an adjustable resistance: from 12 V to 5 V at 1 A it drops 7 V and burns 7 W. A buck converter uses the MOSFET as a switch instead, connecting the input to the switch node for a fraction D of each cycle, the duty cycle; a diode connects the node to ground for the rest. The node is a square wave averaging D·V_in. A new part filters it: an inductor, which resists changes in its current (v = L·di/dt). With an output capacitor it keeps the average, leaving a small ripple, so V_out = D·V_in (ideal, in continuous conduction: the inductor current never falls to zero). The load current does not appear in V_out = D·V_in: timing alone sets the switch node's average, so an ideal buck holds its output as the load changes. The inductor current ramps up while the switch is on and down while it is off, a ripple ΔI = (V_in − V_out)·D/(f·L) around the load current; a higher frequency or a larger inductor shrinks it. V_out = D·V_in holds while the load current is more than half the peak-to-peak ripple ΔI. At a lighter load the inductor current falls to zero before each cycle ends (discontinuous conduction), and at the same D the output rises above D·V_in; a regulating converter's feedback then shortens D. A boost rearranges the same parts so the inductor's voltage adds to the input: V_out = V_in/(1 − D). Real converters still lose some power: conduction and switching loss in the MOSFET, the diode's forward drop, the inductor's winding resistance and core, and the gate drive. 85–95% efficiency is typical.",
+      "intuition": "A buck converter chops its input into a square wave that sits at V_in for a fraction D of each cycle, and its inductor and capacitor pass on only the average: in continuous conduction, V_out = D·V_in, set by timing, not by burning off the difference.",
+      "why": "An inductor's current changes at a rate set by its voltage: di/dt = v/L. In steady state, the current must end each cycle where it began, so its rise and fall are equal (volt-second balance). In a buck, the inductor sees V_in − V_out for the on-time and −V_out for the off-time; balance gives V_out = D·V_in. In a boost, it sees V_in during D and −(V_out − V_in) during 1 − D, giving V_out = V_in/(1 − D). The output capacitor passes no steady current, so a buck's average inductor current is the load current.",
+      "explanation": "A MOSFET wastes little power when it is fully on or fully off. A linear regulator uses a transistor as an adjustable resistance: from 12 V to 5 V at 1 A it drops 7 V and burns 7 W. A buck converter uses the MOSFET as a switch instead, connecting the input to the switch node for a fraction D of each cycle, the duty cycle; a diode connects the node to ground for the rest. The node is a square wave averaging D·V_in. A new part filters it: an inductor, which resists changes in its current (v = L·di/dt). With an output capacitor it keeps the average, leaving a small ripple, so V_out = D·V_in (ideal, in continuous conduction: the inductor current never falls to zero). The load current does not appear in V_out = D·V_in: timing alone sets the switch node's average, so an ideal buck holds its output as the load changes. The inductor current ramps up while the switch is on and down while it is off, a ripple ΔI = (V_in − V_out)·D/(f·L) around the load current; a higher frequency or a larger inductor shrinks it. V_out = D·V_in holds while the load current is more than half the peak-to-peak ripple ΔI. At a lighter load the inductor current falls to zero before each cycle ends (discontinuous conduction), and at the same D the output rises above D·V_in; a regulating converter's feedback then shortens D. A boost rearranges the same parts so the inductor's voltage adds to the input: V_out = V_in/(1 − D). Real converters still lose some power: conduction and switching loss in the MOSFET, the diode's forward drop, the inductor's winding resistance and core, and the gate drive. Efficiency of 85–95% is typical.",
       "workedExample": {
         "problem": "A buck converter makes 5.0 V at 1.0 A from a 12 V supply, switching at 220 kHz with a 33 µH inductor. Find the duty cycle, the inductor's ripple and peak current, and estimate the efficiency. Assume a MOSFET with R_DS(on) = 33 mΩ and 20 ns transitions, and a Schottky diode (a type with a lower forward drop) at V_F = 0.4 V. Compare a linear regulator, and find the duty cycle a boost would need to make 12 V from 5.0 V.",
         "steps": [
@@ -50,7 +50,7 @@
           "MOSFET conduction loss (ignoring the ripple, which adds about 1%): it carries 1.0 A for 0.417 of each cycle, so P = (1.0 A)² × 33 mΩ × 0.417 = 13.8 mW.",
           "MOSFET switching loss: the inductor holds the current steady during each transition, 0.80 A at turn-on and 1.20 A at turn-off, 1.0 A on average, so P ≈ ½ × 12 V × 1.0 A × (20 ns + 20 ns) × 220 kHz = 52.8 mW.",
           "Diode loss: it carries 1.0 A for the rest of the cycle, 1 − 0.417 = 0.583: P = 0.4 V × 1.0 A × 0.583 = 0.233 W. (The controller raises D slightly to make up for this drop; that is ignored here.)",
-          "Total loss 13.8 mW + 52.8 mW + 233 mW = 0.300 W, so the efficiency is 5.0 W / (5.0 W + 0.300 W) = 94%. The input current is 5.30 W / 12 V = 0.44 A, less than the 1.0 A output: the converter trades voltage for current.",
+          "Total loss: 13.8 mW + 52.8 mW + 233 mW = 0.300 W, so the efficiency is 5.0 W / (5.0 W + 0.300 W) = 94%. The input current is 5.30 W / 12 V = 0.44 A, less than the 1.0 A output: the converter trades voltage for current.",
           "A linear regulator would drop 12 V − 5.0 V = 7.0 V at 1.0 A: 7.0 W lost, and 5.0 V / 12 V = 42% efficient, with the full 1.0 A drawn from the input.",
           "Boost from 5.0 V to 12 V (ideal): 1 − D = V_in / V_out = 5.0 V / 12 V = 0.417, so D = 0.583."
         ]
@@ -64,7 +64,7 @@
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"DC-DC Power Conversion\" (last update 17 September 2026), sections 3.5 \"Buck converter\" and 3.6 \"Boost converter\" (pp. 35-40)",
           "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_dc2dc.pdf",
-          "note": "Ideal output relations V_out = D V_in for the buck and V_out = V_in/(1 - D) for the boost, the diode carrying the inductor current while the switch is off, and a Schottky diode or synchronous switch reducing loss."
+          "note": "The ideal output relations are V_out = D V_in for the buck and V_out = V_in/(1 − D) for the boost; the diode carries the inductor current while the switch is off, and a Schottky diode or synchronous switch reduces loss."
         },
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"DC-DC Power Conversion\" (last update 17 September 2026), section 3.11 \"Continuous and discontinuous converter operation\" (p. 51)",
@@ -290,7 +290,7 @@
           "prompt": "Why does an ideal buck's output depend on the duty cycle but not on the load current?",
           "choices": [
             {
-              "text": "The switch node is at V_in for a fraction D of each cycle and at 0 V for the rest whatever the load draws, and the LC filter passes on just that average",
+              "text": "The switch node is at V_in for a fraction D of each cycle and at 0 V for the rest, whatever the load draws, and the LC filter passes on only that average",
               "feedback": "Right: the switch node's average, D·V_in, is fixed by timing alone, and the filter keeps the average.",
               "correct": true
             },
@@ -307,7 +307,7 @@
               "feedback": "The capacitor only smooths the ripple; over many cycles a load would drain it. The switch node's average is what sets V_out."
             }
           ],
-          "explanation": "In steady state the inductor's average voltage over a cycle must be zero, or its current would keep growing. So V_out equals the average of the switch node's square wave: D·V_in. It is the low-pass idea from 'RC low-pass cutoff frequency' with an LC filter: keep the DC average, reject the switching frequency. This holds while the inductor current never falls to zero (continuous conduction); in a real buck, losses make the output sag a little under load and the feedback loop trims D."
+          "explanation": "In steady state, the inductor's average voltage over a cycle must be zero, or its current would keep growing. So V_out equals the average of the switch node's square wave: D·V_in. It is the low-pass idea from \"RC low-pass cutoff frequency\" with an LC filter: keep the DC average, reject the switching frequency. This holds while the inductor current never falls to zero (continuous conduction); in a real buck, losses make the output sag a little under load and the feedback loop trims D."
         }
       ],
       "review": "verified",
@@ -449,7 +449,7 @@
         ],
         "labels": []
       },
-      "explanation": "D = V_out / V_in = {Vout} / {Vin} = {answer}, i.e. the switch is on {answer} of the time.",
+      "explanation": "D = V_out / V_in = {Vout} / {Vin} = {answer}; that is, the switch is on for {answer} of the time.",
       "hints": [
         "Rearrange V_out = D·V_in.",
         "D = V_out / V_in."
@@ -628,12 +628,12 @@
           "prompt": "Why must a boost converter running at a fixed duty cycle never be left without a load?",
           "choices": [
             {
-              "text": "Each cycle the input stores energy in the inductor during the on-time, and during the off-time the inductor and the input together deliver energy to the output capacitor; with no load to take it away, the capacitor voltage keeps climbing until something breaks down",
+              "text": "Each cycle, the input stores energy in the inductor during the on-time, and during the off-time the inductor and the input together deliver energy to the output capacitor; with no load to take it away, the capacitor voltage keeps climbing until something breaks down",
               "feedback": "Right: the energy keeps arriving and has nowhere to go but the capacitor.",
               "correct": true
             },
             {
-              "text": "With no load no current flows, so the output falls to zero",
+              "text": "With no load, no current flows, so the output falls to zero",
               "feedback": "The inductor still stores energy from the input during every on-time and has to give it up during the off-time: into the output capacitor."
             },
             {
@@ -642,10 +642,10 @@
             },
             {
               "text": "V_out = V_in/(1 − D) still holds, so the output stays put",
-              "feedback": "That formula assumes the energy delivered each cycle is taken away by a load. With no load the energy piles up in the capacitor."
+              "feedback": "That formula assumes the energy delivered each cycle is taken away by a load. With no load, the energy piles up in the capacitor."
             }
           ],
-          "explanation": "Energy is conserved: each on-time stores energy in the inductor, and each off-time the inductor and the input together pass energy through the diode to the output capacitor. With a load, the load uses it and the output settles at V_in/(1 − D). With none, ½CV² keeps growing, so V keeps rising until the capacitor, the diode or the MOSFET's drain–source rating gives way. Real boost controllers add over-voltage protection, and their feedback loop cuts the duty cycle."
+          "explanation": "Energy is conserved: each on-time stores energy in the inductor, and each off-time the inductor and the input together pass energy through the diode to the output capacitor. With a load, the load uses it and the output settles at V_in/(1 − D). With none, ½CV² keeps growing, so V keeps rising until the capacitor, the diode, or the MOSFET's drain–source rating gives way. Real boost controllers add overvoltage protection, and their feedback loop cuts the duty cycle."
         }
       ],
       "review": "verified",
@@ -854,7 +854,7 @@
               "feedback": "The capacitor supplies the load's ripple, but it isn't what keeps the inductor current going; the inductor itself does, by reversing its voltage."
             }
           ],
-          "explanation": "During the on-time the inductor current ramps up by ΔI; during the off-time it ramps back down by the same amount, flowing through the diode. The inductor's voltage flips to about −V_out to keep that current going. It is the flyback diode from 'LEDs, Zener regulators and flyback diodes' put to work: there the diode protects a relay driver, here it passes the inductor's stored energy on to the load."
+          "explanation": "During the on-time, the inductor current ramps up by ΔI; during the off-time it ramps back down by the same amount, flowing through the diode. The inductor's voltage flips to about −V_out to keep that current going. It is the flyback diode from \"LEDs, Zener regulators, and flyback diodes\" put to work: there the diode protects a relay driver; here it passes the inductor's stored energy on to the load."
         }
       ],
       "review": "verified",
@@ -880,7 +880,7 @@
         },
         {
           "text": "Inductors store energy for free",
-          "feedback": "Inductors store and release energy, but the gain comes from never running the switch half-on."
+          "feedback": "Inductors store and release energy, but the gain comes from never running the switch half on."
         }
       ],
       "noDrawing": "compares linear and switching regulators in general; no particular circuit",
@@ -944,7 +944,7 @@
         }
       ],
       "noDrawing": "compares buck converters and linear regulators in general; no particular circuit",
-      "explanation": "A linear regulator drops the voltage difference across a transistor carrying the full current: P = (V_in − V_out)·I. A buck switch has either small voltage or no current, and the inductor passes energy on instead of dissipating it. Remaining losses come from the brief switching transitions, the switch's on-resistance and the diode, which is why real bucks reach about 85–95%, not 100%.",
+      "explanation": "A linear regulator drops the voltage difference across a transistor carrying the full current: P = (V_in − V_out)·I. A buck switch has either small voltage or no current, and the inductor passes energy on instead of dissipating it. Remaining losses come from the brief switching transitions, the switch's on-resistance, and the diode, which is why real bucks reach about 85–95%, not 100%.",
       "hints": [
         "In a switch that is fully on or fully off, what is V × I?"
       ],
@@ -1066,7 +1066,7 @@
               "feedback": "KCL holds at every node, but the input and the load are not in series: during the off-time the load current loops through the diode and ground without passing through the input."
             }
           ],
-          "explanation": "Averaged over a cycle, the input supplies the inductor's current only while the switch is on: I_in ≈ D·I_out. For an ideal buck D = V_out/V_in, so I_in = I_out·V_out/V_in, the same result as the power balance. Losses raise the input current above that, to I_in = I_out·V_out/(η·V_in): 5–18 % more for η = 95–85 %. Part comes from a longer on-time (the controller stretches D to make up for the drops in the switch, diode and inductor); the rest, such as switching loss and gate drive, is drawn from the input as well."
+          "explanation": "Averaged over a cycle, the input supplies the inductor's current only while the switch is on: I_in ≈ D·I_out. For an ideal buck D = V_out/V_in, so I_in = I_out·V_out/V_in, the same result as the power balance. Losses raise the input current above that, to I_in = I_out·V_out/(η·V_in): 5–18% more for η = 95–85%. Part comes from a longer on-time (the controller stretches D to make up for the drops in the switch, diode, and inductor); the rest, such as switching loss and gate drive, is drawn from the input as well."
         }
       ],
       "review": "verified"
@@ -1224,7 +1224,7 @@
         ],
         "labels": []
       },
-      "explanation": "V_out = D·V_in = {before} whatever the load: the inductor's average voltage over a cycle is zero, so the output equals the switch node's average. The extra current raises the inductor's average current (the ripple rides on a higher level), not the output voltage. Compare a divider from Foundations, whose output does sag under load: the buck behaves like a stiff source. At light load a real buck can drop into discontinuous conduction, where V_out rises above D·V_in; that's why the prompt says the current stays continuous.",
+      "explanation": "V_out = D·V_in = {before} whatever the load: the inductor's average voltage over a cycle is zero, so the output equals the switch node's average. The extra current raises the inductor's average current (the ripple rides on a higher level), not the output voltage. Compare a divider from Foundations, whose output does sag under load: the buck behaves like a stiff source. At light load, a real buck can drop into discontinuous conduction, where V_out rises above D·V_in; that's why the prompt says the current stays continuous.",
       "hints": [
         "What is the switch node's average voltage, and does the load change it?"
       ],
@@ -1678,7 +1678,7 @@
             {
               "text": "A smaller ripple needs a proportionally larger inductance: a bigger, costlier inductor with more winding resistance, whose current also changes more slowly when the load steps",
               "correct": true,
-              "feedback": "Right: halving the ripple doubles L. The rule of thumb balances the inductor's size, loss and speed against the ripple the output capacitor must then smooth."
+              "feedback": "Right: halving the ripple doubles L. The rule of thumb balances the inductor's size, loss, and speed against the ripple the output capacitor must then smooth."
             },
             {
               "text": "A smaller ripple would lower the output voltage, since the ripple is part of what sets V_out",
@@ -1690,7 +1690,7 @@
             },
             {
               "text": "A larger inductor would force a higher switching frequency",
-              "feedback": "The frequency is chosen on its own. At the same frequency, a larger L simply gives a smaller ripple; a higher frequency is another way to shrink it with a smaller L."
+              "feedback": "The frequency is chosen on its own. At the same frequency, a larger L gives a smaller ripple; a higher frequency is another way to shrink it with a smaller L."
             }
           ],
           "explanation": "From v = L·di/dt, the on-time's voltage (V_in − V_out) ramps the current by (V_in − V_out)·D/(f·L), so ripple and inductance trade one for one. Too much ripple means high peak currents in the switch and inductor and more output ripple; too little means a large, slow, lossy inductor. About 20–40% of full load is the usual starting compromise."

@@ -33,7 +33,7 @@
       ],
       "prerequisiteNotes": {
         "opamp_inverting": "Closed-loop bandwidth depends on the noise gain of the inverting stage, not on its signal gain alone.",
-        "opamp_noninverting": "For a non-inverting amplifier the gain–bandwidth product gives the bandwidth directly: GBW divided by the gain.",
+        "opamp_noninverting": "For a non-inverting amplifier the gain-bandwidth product gives the bandwidth directly: GBW divided by the gain.",
         "rc_lowpass_cutoff": "A real op amp behaves like the ideal one followed by a single RC-style low-pass pole; the −3 dB idea carries straight over."
       },
       "goals": [
@@ -52,8 +52,8 @@
           "Noise gain: 1 + Rf/Rin = 1 + 100 kΩ / 10 kΩ = 11, one more than the size of the signal gain.",
           "Bandwidth: 1 MHz / 11 = 90.9 kHz. A non-inverting stage with a gain of 10 would reach 1 MHz / 10 = 100 kHz; the inverting stage has less because its noise gain is 11.",
           "Gain at 20 kHz: the stage behaves like a first-order low-pass with its corner at 90.9 kHz, so |gain| = 10 / √(1 + (20 kHz / 90.9 kHz)²) = 10 / √1.048 = 9.77, 0.2 dB below 20 dB.",
-          "Output offset: the offset is amplified by the noise gain: 2 mV × 11 = 22 mV of DC at the output (its sign varies from one op amp to the next, even of the same type).",
-          "Required GBW: for 100 kHz at a noise gain of 11, GBW ≥ 11 × 100 kHz = 1.1 MHz, so this 1 MHz part is not enough; in practice choose a part with a few times more.",
+          "Output offset: the noise gain amplifies the offset, so 2 mV × 11 = 22 mV of DC at the output (its sign varies from one op amp to the next, even of the same type).",
+          "Required GBW: for 100 kHz at a noise gain of 11, GBW ≥ 11 × 100 kHz = 1.1 MHz, so this 1 MHz part is not enough; in practice, choose a part with a few times more.",
           "Two stages instead: split a gain of 100 into two inverting stages of −10 (overall +100). Each has noise gain 11 and a 90.9 kHz bandwidth; two equal first-order stages are 3 dB down at 0.644 × 90.9 kHz = 58.5 kHz. A single inverting stage of −100 has noise gain 101 and reaches only 1 MHz / 101 = 9.90 kHz, so splitting gives about 5.9 times the bandwidth (6.4 times for non-inverting stages: 64 kHz against 10 kHz)."
         ]
       },
@@ -197,7 +197,7 @@
           "choices": [
             {
               "text": "The feedback loop is set by the fraction of the output fed back, Rin/(Rf + Rin); where the signal enters doesn't change that loop",
-              "feedback": "Right: the loop is the same resistors as a non-inverting amplifier, so the loop gives out at the same frequency.",
+              "feedback": "Right: the loop uses the same resistors as a non-inverting amplifier, so it gives out at the same frequency.",
               "correct": true
             },
             {
@@ -213,7 +213,7 @@
               "feedback": "Offsets and bandwidth both follow the noise gain, because both depend on the feedback loop, not on where the input enters."
             }
           ],
-          "explanation": "The loop runs from the output through the Rf–Rin divider back to the − input, with the ideal input source counting as 0 V for this purpose. The fraction fed back is Rin/(Rf + Rin), so the closed loop gives out where the open-loop gain GBW/f falls to 1 + Rf/Rin, the Non-inverting amplifier's gain for the same resistors. Here that is {Gn}, so BW = {GBW} / {Gn} = {answer}. At a gain of −1 the bandwidth is only GBW/2."
+          "explanation": "The loop runs from the output through the Rf–Rin divider back to the − input, with the ideal input source counting as 0 V for this purpose. The fraction fed back is Rin/(Rf + Rin), so the closed loop gives out where the open-loop gain GBW/f falls to 1 + Rf/Rin, the non-inverting amplifier's gain for the same resistors. Here that is {Gn}, so BW = {GBW} / {Gn} = {answer}. At a gain of −1 the bandwidth is only GBW/2."
         }
       ],
       "noDrawing": "a GBW ÷ gain calculation from the stated gain; no resistor values or stage details",
@@ -248,7 +248,7 @@
         "formula": "G*f",
         "unit": "Hz"
       },
-      "explanation": "GBW = gain × bandwidth = {G} × {f} = {answer}. In practice pick a part with a few times more, since the response is already 3 dB down at the edge.",
+      "explanation": "GBW = gain × bandwidth = {G} × {f} = {answer}. In practice, pick a part with a few times more, since the response is already 3 dB down at the edge.",
       "hints": [
         "Rearrange BW = GBW / G.",
         "GBW = G × BW."
@@ -465,10 +465,10 @@
         },
         {
           "text": "Add a capacitor across the feedback resistor",
-          "feedback": "That forms a low-pass, which reduces bandwidth further."
+          "feedback": "That forms a low-pass filter, which reduces the bandwidth further."
         }
       ],
-      "explanation": "Bandwidth ≈ GBW / gain. One stage at gain 100 gets GBW/100; two stages at gain 10 each get about GBW/10 each (two equal stages together reach about 0.64 of one stage's bandwidth, still over six times better), a large improvement.",
+      "explanation": "Bandwidth ≈ GBW / gain. One stage at gain 100 gets GBW/100; two stages at gain 10 each get about GBW/10 each, a large improvement (two equal stages together reach about 0.64 of one stage's bandwidth, still over six times better).",
       "noDrawing": "a design choice between whole amplifier arrangements; no single circuit",
       "review": "verified"
     },
@@ -488,7 +488,7 @@
         },
         {
           "text": "The supply voltage limits the product",
-          "feedback": "Supply limits the output swing, not gain-bandwidth."
+          "feedback": "The supply limits the output swing, not the gain-bandwidth product."
         },
         {
           "text": "It's a coincidence of how datasheets define bandwidth",
@@ -586,10 +586,10 @@
         "sim": {
           "netlist": "Inverting amplifier at one frequency\nV1 in 0 AC 1\nR1 in inv {Rin:spice}\nR2 inv out {Rf:spice}\nX1 0 inv out OA\n.model OA OPAMP(A=1e5 GBW={GBW:spice} VPOS=15 VNEG=-15)\n.ac lin 1 {f:spice} {f:spice}\n",
           "measure": "mag:v(out)",
-          "note": "The formula R_f/R_in ignores the op amp's gain-bandwidth product. The closed-loop bandwidth is only GBW/(1 + R_f/R_in), and {f} is close enough to it to cut the gain. Aim R_f/R_in above {G}."
+          "note": "The formula R_f/R_in ignores the op amp's gain-bandwidth product. The closed-loop bandwidth is only GBW/(1 + R_f/R_in), and {f} is close enough to it to cut the gain. Aim for R_f/R_in above {G}."
         }
       },
-      "explanation": "The closed-loop bandwidth of an inverting amplifier is GBW/(1 + R_f/R_in), because the op amp works at its noise gain. Designing for exactly {G} puts the corner at {fc0}, so at {f} the gain is only about {Gpaper}. The gain magnitude is about (R_f/R_in)/√(1 + (f·(1 + R_f/R_in)/GBW)²), which reaches {G} when R_f/R_in ≈ {Rneed}. For example, R_in = 10 kΩ and R_f near {Rfex}, rounded to E24; if the nearest value misses, try another R_in so that R_f/R_in lands within about 2% of {Rneed}.",
+      "explanation": "The closed-loop bandwidth of an inverting amplifier is GBW/(1 + R_f/R_in), because the op amp works at its noise gain. Designing for exactly {G} puts the corner at {fc0}, so at {f} the gain is only about {Gpaper}. The gain magnitude is about (R_f/R_in)/√(1 + (f·(1 + R_f/R_in)/GBW)²), which reaches {G} when R_f/R_in ≈ {Rneed}. For example, take R_in = 10 kΩ and R_f near {Rfex}, rounded to E24; if the nearest value misses, try another R_in so that R_f/R_in lands within about 2% of {Rneed}.",
       "hints": [
         "At {f}, the op amp's limited gain-bandwidth product pulls the gain below R_f/R_in.",
         "Gain magnitude ≈ (R_f/R_in)/√(1 + (f·(1 + R_f/R_in)/GBW)²). Make R_f/R_in a bit larger than {G} so the result lands on {G}."
@@ -774,7 +774,7 @@
           "same": "It is gain × bandwidth that stays constant, not the bandwidth. The closed-loop gain only holds while the open-loop gain (about GBW/f) is bigger than it, so a different gain stops holding at a different frequency."
         }
       },
-      "explanation": "BW ≈ GBW / G for a Non-inverting amplifier, so ten times the gain gives a tenth of the bandwidth: {before} → {after}. On a Bode plot the open-loop gain falls 20 dB per decade (Decibels); a flat closed-loop line 20 dB higher meets it one decade earlier.",
+      "explanation": "BW ≈ GBW / G for a non-inverting amplifier, so ten times the gain gives a tenth of the bandwidth: {before} → {after}. On a Bode plot the open-loop gain falls 20 dB per decade (Decibels); a flat closed-loop line 20 dB higher meets it one decade earlier.",
       "hints": [
         "Which stays constant: the bandwidth, or gain × bandwidth?"
       ],
@@ -784,7 +784,7 @@
     {
       "id": "bw_what_if_scale",
       "topicId": "opamp_bandwidth",
-      "prompt": "A non-inverting amplifier uses an op amp with a GBW of {GBW} with Rf = {Rf} and Rg = {Rg}. Both resistors are swapped for ten times their value: {new_Rf} and {new_Rg}. Ignoring stray capacitance, what happens to the closed-loop bandwidth?",
+      "prompt": "A non-inverting amplifier uses an op amp with a GBW of {GBW}, with Rf = {Rf} and Rg = {Rg}. Both resistors are swapped for ten times their value: {new_Rf} and {new_Rg}. Ignoring stray capacitance, what happens to the closed-loop bandwidth?",
       "variables": [
         {
           "name": "GBW",
@@ -953,6 +953,306 @@
             "text": "out",
             "at": [
               15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "bw_syn_antialias",
+      "topicId": "opamp_bandwidth",
+      "connects": [
+        "opamp_bandwidth",
+        "rc_lowpass_cutoff"
+      ],
+      "prompt": "An inverting stage with R_in = {Rin} and R_f = {Rf} uses an op amp whose gain-bandwidth product is {GBW}. Its output drives an RC low-pass filter, R = {R} and C = {C}, whose capacitor feeds an ADC. Treat the op amp as ideal apart from its GBW (its closed-loop output impedance, tens of ohms here, is small next to R), and the ADC input as drawing no current. At what frequency is the whole chain, from the input to the ADC pin, 3 dB below its low-frequency gain?",
+      "variables": [
+        {
+          "name": "GBW",
+          "unit": "Hz",
+          "value": 1000000
+        },
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "value": 10000
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "values": [
+            15000,
+            22000,
+            33000
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "value": 1000
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            4.7e-10,
+            6.8e-10
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "G",
+          "formula": "Rf/Rin",
+          "unit": ""
+        },
+        {
+          "name": "Gn",
+          "formula": "1+Rf/Rin",
+          "unit": ""
+        },
+        {
+          "name": "f1",
+          "formula": "GBW/(1+Rf/Rin)",
+          "unit": "Hz"
+        },
+        {
+          "name": "f2",
+          "formula": "1/(2*pi*R*C)",
+          "unit": "Hz"
+        },
+        {
+          "name": "Fx",
+          "formula": "sqrt((-((f1)^2+(f2)^2)+sqrt(((f1)^2+(f2)^2)^2+4*(f1)^2*(f2)^2))/2)",
+          "unit": "Hz"
+        },
+        {
+          "name": "k1",
+          "formula": "1/sqrt(1+(Fx/f1)^2)",
+          "unit": ""
+        },
+        {
+          "name": "k2",
+          "formula": "1/sqrt(1+(Fx/f2)^2)",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "Fx",
+        "unit": "Hz",
+        "tolerance": 0.02
+      },
+      "explanation": "Two first-order low-pass corners sit in a row, and each topic supplies one. Op-amp bandwidth: an inverting stage's closed-loop bandwidth is set by its noise gain, 1 + R_f/R_in = {Gn}, not by its signal gain of {G}, so its corner is f₁ = {GBW}/{Gn} = {f1}. RC low-pass cutoff: the op amp's output drives the filter from a low resistance and the ADC takes no current, so the filter's corner is f₂ = 1/(2πRC) = {f2}. Each is a first-order low-pass whose gain falls as 1/√(1 + (f/f_c)²), and in a chain the gains multiply. The chain is 3 dB down where the product is 1/√2, so (1 + (f/f₁)²)(1 + (f/f₂)²) = 2. That is a quadratic in f²: f² = [−(f₁² + f₂²) + √((f₁² + f₂²)² + 4f₁²f₂²)]/2, which gives f = {answer}. There the stage is at {k1} of its gain and the filter at {k2}, and {k1} × {k2} = 0.707. The answer is below both corners: with the corners this close, each gives up part of the 3 dB, so neither corner alone is the chain's bandwidth.",
+      "hints": [
+        "Find each corner on its own first. For an inverting stage, which gain sets the closed-loop bandwidth?",
+        "f₁ = GBW/(1 + R_f/R_in) and f₂ = 1/(2πRC). The gains multiply, so the chain is 3 dB down where (1 + (f/f₁)²)(1 + (f/f₂)²) = 2; solve it as a quadratic in f²."
+      ],
+      "misconceptions": [
+        {
+          "formula": "GBW/(1+Rf/Rin)",
+          "feedback": "That is the op amp stage's corner alone, GBW/(1 + R_f/R_in). At that frequency the stage is already 3 dB down, and the RC filter after it takes more on top, so the chain is more than 3 dB down there. Multiply the two responses and find where the product is 1/√2."
+        },
+        {
+          "formula": "1/(2*pi*R*C)",
+          "feedback": "That is the RC filter's corner alone, 1/(2πRC). The op amp stage is also losing gain there, because its own corner, {f1}, is not far away. Multiply the two responses and find where the product is 1/√2."
+        },
+        {
+          "formula": "sqrt((-((GBW*Rin/Rf)^2+(1/(2*pi*R*C))^2)+sqrt(((GBW*Rin/Rf)^2+(1/(2*pi*R*C))^2)^2+4*(GBW*Rin/Rf)^2*(1/(2*pi*R*C))^2))/2)",
+          "feedback": "You found the op amp's corner from the signal gain, R_f/R_in. An inverting stage's bandwidth follows its noise gain, 1 + R_f/R_in = {Gn}, because the loop feeds back R_in/(R_in + R_f) of the output whichever input the signal enters. So f₁ = {f1}, and the chain's bandwidth is lower than your answer."
+        },
+        {
+          "formula": "sqrt((-((GBW/(1+Rf/Rin))^2+(1/(R*C))^2)+sqrt(((GBW/(1+Rf/Rin))^2+(1/(R*C))^2)^2+4*(GBW/(1+Rf/Rin))^2*(1/(R*C))^2))/2)",
+          "feedback": "1/(RC) is the filter's corner in radians per second. In hertz it is 1/(2πRC) = {f2}."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why is the chain's −3 dB frequency lower than either corner on its own?",
+          "choices": [
+            {
+              "text": "Each stage already loses some gain below its own corner, and the two stages' gains multiply, so together they reach 3 dB down sooner",
+              "correct": true,
+              "feedback": "Right: in dB the two losses add, so they reach 3 dB together at a frequency where neither stage alone is 3 dB down."
+            },
+            {
+              "text": "The filter loads the op amp's output, and the extra load lowers the op amp's corner",
+              "feedback": "The op amp is treated as ideal apart from its GBW, so its output holds its voltage whatever the filter draws, and the load changes nothing. The lower bandwidth comes from two responses multiplying."
+            },
+            {
+              "text": "The noise gain divides the RC filter's corner too, so both corners move down",
+              "feedback": "The noise gain belongs to the op amp's feedback loop. The RC filter sits outside the loop, so its corner stays at 1/(2πRC). The chain is lower because the two responses multiply."
+            },
+            {
+              "text": "Bandwidths combine like resistors in parallel, f₁f₂/(f₁ + f₂), which is always below both",
+              "feedback": "That rule would give two equal corners exactly half of one corner; the real figure for two equal corners is 0.644. The −3 dB point comes from multiplying the two magnitude responses: (1 + (f/f₁)²)(1 + (f/f₂)²) = 2."
+            }
+          ],
+          "explanation": "A first-order low-pass is already slightly down below its corner: at half its corner frequency the gain is 1/√1.25 = 0.894, about −1 dB. In a chain the gains multiply (the dB add), so the two stages reach −3 dB together below either corner: two equal corners, for example, each give up 1.5 dB there. The closer the corners, the further the chain's bandwidth falls below the lower one; two equal corners give 0.644 of either. With one corner ten times higher than the other, it takes only 1% off, and the lower corner sets the bandwidth."
+        }
+      ],
+      "schematic": {
+        "netlist": "inverting stage and anti-alias filter\nV1 in 0 AC 1\nR1 in inv {Rin:spice}\nR2 inv out {Rf:spice}\nX1 0 inv out OA\nR3 out adc {R:spice}\nC1 adc 0 {C:spice}\n.model OA OPAMP(A=1e5 GBW={GBW:spice})\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "in"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              3
+            ],
+            "label": "R_in {Rin}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "R_f {Rf}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "label": ""
+          },
+          {
+            "ref": "R3",
+            "at": [
+              15,
+              4
+            ],
+            "label": "R {R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              21,
+              4
+            ],
+            "rot": 90,
+            "label": "C\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              6,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              7
+            ]
+          ],
+          [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              4
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ],
+          [
+            [
+              19,
+              4
+            ],
+            [
+              24,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            7
+          ],
+          [
+            21,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "ADC",
+            "at": [
+              24,
               4
             ]
           }

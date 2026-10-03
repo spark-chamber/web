@@ -55,7 +55,7 @@
           "τ = RC = 47 kΩ × 10 µF = 47 × 10³ Ω × 10 × 10⁻⁶ F = 0.47 s = 470 ms.",
           "At the first instant the capacitor is at 0 V, so all 3.3 V is across R: i = 3.3 V / 47 kΩ = 70.2 µA.",
           "After one τ (470 ms): v = 3.3 V × (1 − e^(−1)) = 3.3 V × 0.632 = 2.09 V.",
-          "Half the supply (1.65 V): 1 − e^(−t/τ) = 0.5, so e^(−t/τ) = 0.5 and t = τ·ln 2 = 470 ms × 0.693 = 326 ms. The 3.3 V cancels: a 5 V supply would reach its own half-way point at the same 326 ms.",
+          "Half the supply (1.65 V): 1 − e^(−t/τ) = 0.5, so e^(−t/τ) = 0.5 and t = τ·ln 2 = 470 ms × 0.693 = 326 ms. The 3.3 V cancels: a 5 V supply would reach its own halfway point at the same 326 ms.",
           "After 5τ (2.35 s): v = 3.3 V × (1 − e^(−5)) = 3.3 V × 0.9933 = 3.28 V, within 0.7% of the supply.",
           "Energy when full: E = ½CV² = ½ × 10 µF × (3.3 V)² = ½ × 10 × 10⁻⁶ F × 10.89 V² = 54.5 µJ. Once fully charged, the supply has delivered Q·V = CV² = 10 µF × 10.89 V² = 109 µJ; the other 54.5 µJ became heat in the 47 kΩ resistor."
         ]
@@ -64,7 +64,7 @@
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 16 \"RC and L/R Time Constants\", section \"Voltage and current calculations\"",
           "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_16.html#xtocid88423",
-          "note": "In a series RC circuit τ = RC in seconds, each τ moves the capacitor voltage about 63% of the way still left, an empty capacitor first draws the supply voltage over R, and the current at any moment is the supply minus capacitor voltage over R."
+          "note": "In a series RC circuit, τ = RC in seconds; each τ moves the capacitor voltage about 63% of the way still left; an empty capacitor first draws the supply voltage over R; and the current at any moment is the supply voltage minus the capacitor voltage, over R."
         },
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Capacitors and Capacitive Circuits\", ch. 3 \"Tutorial\", section 3.4 \"Inverse exponential growth/decay\"",
@@ -121,7 +121,7 @@
         },
         {
           "formula": "R/C",
-          "feedback": "τ is the product R·C, not R/C: more resistance or more capacitance both make charging slower."
+          "feedback": "τ is the product R·C, not R/C: more resistance and more capacitance both make charging slower."
         }
       ],
       "schematic": {
@@ -232,7 +232,7 @@
               "feedback": "Capacitance depends only on the capacitor's construction."
             }
           ],
-          "explanation": "Charge flows in at I = (Vs − Vc)/R, and the voltage rises at dVc/dt = I/C. Bigger R means less current; bigger C means each coulomb raises the voltage less. Both slow the charge, which is why the time scale is the product τ = RC."
+          "explanation": "Charge flows in at I = (Vs − Vc)/R, and the voltage rises at dVc/dt = I/C. Bigger R means less current; bigger C means each coulomb raises the voltage less. Both slow the charging, which is why the time scale is the product τ = RC."
         }
       ],
       "estimate": true,
@@ -283,7 +283,7 @@
       "misconceptions": [
         {
           "formula": "R*C",
-          "feedback": "One time constant takes the capacitor to 63%, not 50%. Half-way comes sooner, at τ·ln 2 ≈ 0.69τ."
+          "feedback": "One time constant takes the capacitor to 63%, not 50%. Halfway comes sooner, at τ·ln 2 ≈ 0.69τ."
         },
         {
           "formula": "R*C/2",
@@ -292,7 +292,7 @@
       ],
       "followUps": [
         {
-          "prompt": "Half the supply arrives at 0.69τ, but 99 % takes about 5τ. Why does the first half come so much faster than the rest?",
+          "prompt": "Half the supply arrives at 0.69τ, but 99% takes about 5τ. Why does the first half come so much faster than the rest?",
           "choices": [
             {
               "text": "It charges fastest at the start, when the gap to the supply, and so the current, is largest",
@@ -312,7 +312,7 @@
               "feedback": "C is fixed by the part's construction. What shrinks is the charging current."
             }
           ],
-          "explanation": "The charging current is (Vs − Vc)/R. At first the whole supply is across R, so the current is large and Vc rises fast. As Vc climbs, the gap closes and the current falls. So half-way comes at 0.69τ, 63 % at τ, and 99 % only after about 5τ."
+          "explanation": "The charging current is (Vs − Vc)/R. At first the whole supply is across R, so the current is large and Vc rises fast. As Vc climbs, the gap closes and the current falls. So halfway comes at 0.69τ, 63% at τ, and 99% only after about 5τ."
         }
       ],
       "schematic": {
@@ -611,7 +611,7 @@
         {
           "text": "Also ½CV², whatever the resistance",
           "correct": true,
-          "feedback": "Yes: the battery supplies Q·V = CV², half is stored, half is lost, for any R."
+          "feedback": "Yes: the battery supplies Q·V = CV²; half is stored and half is lost, for any R."
         },
         {
           "text": "Almost nothing if the resistor is small",
@@ -835,7 +835,7 @@
     {
       "id": "rc_what_if_r_time",
       "topicId": "rc_time_constant",
-      "prompt": "A {C} capacitor charges through {R}. A second {R} resistor is added in series with the first. What happens to the time the capacitor takes to reach 63 % of the supply?",
+      "prompt": "A {C} capacitor charges through {R}. A second {R} resistor is added in series with the first. What happens to the time the capacitor takes to reach 63% of the supply?",
       "variables": [
         {
           "name": "R",
@@ -866,10 +866,10 @@
         "askFactor": true,
         "feedback": {
           "down": "More resistance in series lets less current through, and the capacitor still needs the same charge to reach the same voltage.",
-          "same": "The capacitor still needs the same charge to reach 63 %, but the resistor limits how fast that charge can flow in: at every capacitor voltage the current is (V − Vc)/R."
+          "same": "The capacitor still needs the same charge to reach 63%, but the resistor limits how fast that charge can flow in: at every capacitor voltage the current is (V − Vc)/R."
         }
       },
-      "explanation": "The time to 63 % is one time constant, τ = RC. Two {R} resistors in series make 2R, which halves the charging current at every capacitor voltage, so everything takes twice as long: {before} → {after}.",
+      "explanation": "The time to 63% is one time constant, τ = RC. Two {R} resistors in series make 2R, which halves the charging current at every capacitor voltage, so everything takes twice as long: {before} → {after}.",
       "schematic": {
         "netlist": "RC charging\nV1 in 0 PULSE(0 1 0 1n 1n 1 2)\nR1 in out {R:spice}\nC1 out 0 {C:spice}\n",
         "parts": [
@@ -1111,7 +1111,7 @@
     {
       "id": "rc_what_if_v_energy",
       "topicId": "rc_time_constant",
-      "prompt": "A {C} capacitor is charged to {V}. It is charged instead to {new_V}. What happens to the energy it stores?",
+      "prompt": "A {C} capacitor is charged to {V}. Instead, it is charged to {new_V}. What happens to the energy it stores?",
       "variables": [
         {
           "name": "C",
@@ -1145,7 +1145,7 @@
           "same": "C is fixed, but charging to a higher voltage puts more charge on the plates (Q = CV), and the coulombs added past the old voltage are pushed in against a plate voltage the old charge never reached. The stored energy is that work, E = ½CV²."
         }
       },
-      "explanation": "E = ½CV². Twice the voltage means twice the charge (Q = CV) pushed in against twice the voltage, so the energy grows by 2 × 2 = 4: {before} → {after}.",
+      "explanation": "E = ½CV². Twice the voltage means twice the charge (Q = CV) pushed in against twice the voltage, so the energy grows by a factor of 2 × 2 = 4: {before} → {after}.",
       "noDrawing": "energy stored in one charged capacitor; no circuit around it",
       "review": "verified"
     },
@@ -1194,7 +1194,7 @@
           "down": "The bigger supply does push more current, but the target, half the supply, is higher by the same factor. The two cancel."
         }
       },
-      "explanation": "Charging follows Vc = V(1 − e^(−t/RC)). The supply only scales the curve; its shape and timing are set by τ = RC alone. Half-way is always at τ·ln 2 = {after}, whatever the supply.",
+      "explanation": "Charging follows Vc = V(1 − e^(−t/RC)). The supply only scales the curve; its shape and timing are set by τ = RC alone. Halfway is always at τ·ln 2 = {after}, whatever the supply.",
       "hints": [
         "Does the supply voltage appear in the time constant?"
       ],
@@ -1349,16 +1349,16 @@
           "choices": [
             {
               "text": "The pin crosses half the supply early, at about 0.69 of the wanted delay, because one time constant already takes it to 63%",
-              "feedback": "Right: half-way comes at RC·ln 2 ≈ 0.69·RC, so with RC equal to the delay the chip enables about 30% early.",
+              "feedback": "Right: halfway comes at RC·ln 2 ≈ 0.69·RC, so with RC equal to the delay the chip enables about 30% early.",
               "correct": true
             },
             {
               "text": "The delay comes out right: one time constant is the time to reach half the supply",
-              "feedback": "One time constant takes the pin to 63% of the supply, not 50%. Half-way comes sooner, at 0.69τ, so this delay is about 30% short."
+              "feedback": "One time constant takes the pin to 63% of the supply, not 50%. Halfway comes sooner, at 0.69τ, so this delay is about 30% short."
             },
             {
               "text": "The pin crosses late, at about 1.44 times the wanted delay",
-              "feedback": "That would need half-way to take longer than τ. It comes sooner: the capacitor charges fastest at the start, while the whole supply is across R."
+              "feedback": "That would need halfway to take longer than τ. It comes sooner: the capacitor charges fastest at the start, while the whole supply is across R."
             },
             {
               "text": "The pin never reaches half the supply unless RC is at least five times the delay",
@@ -1449,6 +1449,235 @@
             "text": "enable",
             "at": [
               11,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "rc_syn_divider_settle",
+      "topicId": "rc_time_constant",
+      "connects": [
+        "rc_time_constant",
+        "kirchhoff",
+        "series_parallel"
+      ],
+      "prompt": "A battery monitor scales a {V} battery down for a microcontroller's ADC input (3.3 V full scale): R1 = {R1} runs from the battery to the ADC pin, R2 = {R2} from the pin to ground, and C = {C} from the pin to ground to filter noise. Treat the ADC pin as drawing no current. The battery is connected at t = 0 with C empty. How long until the pin is within 1% of its final voltage?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "value": 9
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            220000,
+            330000,
+            470000
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            68000,
+            100000
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            1e-07,
+            2.2e-07,
+            4.7e-07
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rp",
+          "formula": "R1 || R2",
+          "unit": "Ω"
+        },
+        {
+          "name": "tau",
+          "formula": "C*(R1 || R2)",
+          "unit": "s"
+        },
+        {
+          "name": "Vf",
+          "formula": "V*R2/(R1+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "t1",
+          "formula": "ln(100)*C*R1",
+          "unit": "s"
+        }
+      ],
+      "answer": {
+        "formula": "ln(100)*C*(R1 || R2)",
+        "unit": "s",
+        "tolerance": 0.02
+      },
+      "explanation": "Kirchhoff's current law at the pin: the current in through R1 equals the current out through R2 plus the current into C. Once C stops charging, R1 and R2 carry the same current, so the pin settles at {V} × {R2} / ({R1} + {R2}) = {Vf}. Before that, every volt the pin sits below {Vf} adds current through R1 (more volts across it) and takes current away from R2 (fewer volts across it), and both changes feed C. So the capacitor closes its gap through both resistors at once: it sees R1 ∥ R2 = {Rp} (series and parallel), and τ = {Rp} × {C} = {tau}. The gap shrinks as e^(−t/τ); within 1% means e^(−t/τ) = 0.01, so t = ln(100) × τ = 4.61 × {tau} = {answer}. Firmware that reads the pin sooner than that sees a low battery that isn't there. With R1 alone the wait would be {t1}.",
+      "hints": [
+        "Write KCL at the pin. If the pin is a little below its final voltage, what happens to the currents in R1 and in R2?",
+        "The capacitor charges through R1 ∥ R2, so τ = (R1 ∥ R2)·C. Within 1% of the final value takes ln(100) ≈ 4.6 time constants."
+      ],
+      "misconceptions": [
+        {
+          "formula": "ln(100)*C*R1",
+          "feedback": "R1 alone would be right without R2. R2 also joins the pin to a fixed voltage (ground), so any gap between the pin and its final value changes the current in both resistors: the capacitor sees R1 ∥ R2, which is smaller than R1."
+        },
+        {
+          "formula": "ln(100)*C*(R1+R2)",
+          "feedback": "R1 and R2 are not in series as the capacitor sees them. Each runs from the pin to a fixed voltage (the battery or ground), so for changes at the pin they act in parallel: R1 ∥ R2."
+        },
+        {
+          "formula": "ln(100)*C*R2",
+          "feedback": "R2 alone leaves out R1. Both resistors join the pin to a fixed voltage, so the capacitor closes its gap through both of them: R1 ∥ R2."
+        },
+        {
+          "formula": "C*(R1 || R2)",
+          "feedback": "That is one time constant, which closes only 63% of the gap. Within 1% needs e^(−t/τ) = 0.01, so t = ln(100)·τ ≈ 4.6τ."
+        },
+        {
+          "formula": "5*C*(R1 || R2)",
+          "feedback": "5τ is the rule of thumb for fully charged (within 0.7%). The pin first comes within 1% a little earlier, at ln(100)·τ ≈ 4.6τ."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Without R2, the pin would charge through R1 alone. With R2 across the capacitor, it settles sooner, even though R2 is one more resistor. Why?",
+          "choices": [
+            {
+              "text": "Any gap between the pin and its final value changes the current in R1 and in R2 at once, so the capacitor sees R1 ∥ R2, which is smaller than R1",
+              "correct": true,
+              "feedback": "Right: KCL at the pin shows both resistors working on the gap, which is the same as charging through R1 ∥ R2."
+            },
+            {
+              "text": "It doesn't: adding a resistor always slows an RC circuit, so the pin settles later",
+              "feedback": "A resistor added in series with the charging path slows it. R2 is a second path from the pin to a fixed voltage, which lowers the resistance the capacitor sees."
+            },
+            {
+              "text": "The final voltage is lower, so the capacitor needs less charge and gets there sooner; τ is still R1·C",
+              "feedback": "A lower final value alone doesn't change the time to come within 1% of it: an exponential takes the same number of time constants to close a given fraction of its gap, whatever the size. What changes is τ itself, now (R1 ∥ R2)·C."
+            },
+            {
+              "text": "R2 feeds extra current into the capacitor from ground, adding to R1's",
+              "feedback": "R2 runs from the pin to ground, so it only ever takes current away from the pin. It speeds settling because the gap is closed through both resistors, not because it supplies charge."
+            }
+          ],
+          "explanation": "Let x be how far the pin sits below its final value. Compared with the settled state, R1 carries x/R1 more current and R2 carries x/R2 less, and KCL sends both differences into C: C·dx/dt = −x·(1/R1 + 1/R2). That is an RC decay with τ = C·(R1 ∥ R2). (Seen from the capacitor, the battery and the divider act like one source of {Vf} behind R1 ∥ R2. That is its Thevenin equivalent, which the Thevenin topic develops.)"
+        }
+      ],
+      "schematic": {
+        "netlist": "battery monitor\nV1 in 0 {V:spice}\nR1 in adc {R1:spice}\nR2 adc 0 {R2:spice}\nC1 adc 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              13,
+              2
+            ],
+            "rot": 90,
+            "label": "C\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              13,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "ADC pin",
+            "at": [
+              13,
               0
             ]
           }

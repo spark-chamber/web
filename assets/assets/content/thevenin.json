@@ -12,7 +12,7 @@
         "kirchhoff"
       ],
       "lensNotes": {
-        "circuit": "Any linear circuit, seen from two terminals, behaves like one source and one resistor. That's why you can analyze a sensor, a divider or a whole amplifier stage as V_th in series with R_th and then just add the load."
+        "circuit": "Any linear circuit, seen from two terminals, behaves like one source and one resistor. That's why you can analyze a sensor, a divider, or a whole amplifier stage as V_th in series with R_th and then add the load."
       },
       "formulas": [
         {
@@ -51,13 +51,13 @@
         "Find the load resistance that takes the most power, and explain why a power supply is not run that way"
       ],
       "intuition": "Seen from two terminals, any circuit of resistors and sources is one ideal source behind one resistor: V_th is what a meter reads with nothing connected, and R_th is how much the voltage sags per amp drawn (this holds only while every part inside is linear).",
-      "why": "In a circuit of resistors and fixed sources, every part obeys a straight-line law, and Kirchhoff's laws only add and subtract voltages and currents, so the whole circuit obeys one too: the voltage at the terminals falls in a straight line as the load draws more current: V = V_th − I·R_th. A straight line is fixed by two numbers. V_th is where it starts, at zero current. R_th is its slope: how many volts the output loses per amp drawn, which is the resistance seen looking back into the terminals with the sources turned off. Norton describes the same line by its other end, the short-circuit current. A diode or transistor inside bends the line, and the equivalent then holds only near one operating point.",
-      "explanation": "A divider's output drops under load. Thevenin's theorem says any linear circuit, seen from two terminals, behaves like a single source V_th in series with a single resistance R_th. V_th is the open-circuit voltage; for a divider, Vin · R2 / (R1 + R2). R_th is the resistance you see looking back into the terminals with the sources turned off: an ideal voltage source becomes a short, an ideal current source an open. For a divider the short joins the top of R1 to ground, so R_th = R1 ∥ R2. Or: R_th = V_oc / I_sc. Any load then forms a two-resistor divider: V_L = V_th · R_L / (R_th + R_L). Norton's form is a current source I_N = V_th / R_th with R_th in parallel. The load takes the most power when R_L = R_th, but then only half of V_th reaches it; supplies are run with R_L much larger than R_th so the output stays close to V_th. Where R_th is a real internal resistance, as in a battery, a matched load would also waste as much power inside the source as it delivers. The equivalent describes only the terminals, not the power lost inside.",
+      "why": "In a circuit of resistors and fixed sources, every part obeys a straight-line law, and Kirchhoff's laws only add and subtract voltages and currents, so the whole circuit obeys one too. The voltage at the terminals falls in a straight line as the load draws more current: V = V_th − I·R_th. A straight line is fixed by two numbers. V_th is where it starts, at zero current. R_th is its slope: how many volts the output loses per amp drawn, which is the resistance seen looking back into the terminals with the sources turned off. Norton describes the same line by its other end, the short-circuit current. A diode or transistor inside bends the line, and the equivalent then holds only near one operating point.",
+      "explanation": "A divider's output drops under load. Thevenin's theorem says any linear circuit, seen from two terminals, behaves like a single source V_th in series with a single resistance R_th. V_th is the open-circuit voltage; for a divider, Vin · R2 / (R1 + R2). R_th is the resistance you see looking back into the terminals with the sources turned off: an ideal voltage source becomes a short, and an ideal current source becomes an open. For a divider the short joins the top of R1 to ground, so R_th = R1 ∥ R2. Equivalently, R_th = V_oc / I_sc. Any load then forms a two-resistor divider: V_L = V_th · R_L / (R_th + R_L). Norton's form is a current source I_N = V_th / R_th with R_th in parallel. The load takes the most power when R_L = R_th, but then only half of V_th reaches it; supplies are run with R_L much larger than R_th so the output stays close to V_th. Where R_th is a real internal resistance, as in a battery, a matched load would also waste as much power inside the source as it delivers. The equivalent describes only the terminals, not the power lost inside.",
       "workedExample": {
         "problem": "A divider runs from an ideal 12 V source: R1 = 6.8 kΩ on top, R2 = 3.3 kΩ on the bottom. Find its Thevenin and Norton equivalents, the voltage across a 10 kΩ load, and the most power any load could take from it.",
         "steps": [
           "V_th is the open-circuit output: 12 V × 3.3 kΩ / (6.8 kΩ + 3.3 kΩ) = 12 V × 3.3 kΩ / 10.1 kΩ = 3.92 V.",
-          "R_th: replace the 12 V source by a short, so R1 and R2 both run from the output to ground: 6.8 kΩ ∥ 3.3 kΩ = (6.8 kΩ × 3.3 kΩ) / 10.1 kΩ = 2.22 kΩ.",
+          "R_th: replace the 12 V source with a short, so R1 and R2 both run from the output to ground: 6.8 kΩ ∥ 3.3 kΩ = (6.8 kΩ × 3.3 kΩ) / 10.1 kΩ = 2.22 kΩ.",
           "Load: the 10 kΩ load and R_th form a divider. I = 3.92 V / (2.22 kΩ + 10 kΩ) = 0.321 mA, and V_L = 0.321 mA × 10 kΩ = 3.21 V.",
           "Cross-check on the full circuit: R2 ∥ R_L = 3.3 kΩ ∥ 10 kΩ = 2.48 kΩ, and 12 V × 2.48 kΩ / (6.8 kΩ + 2.48 kΩ) = 3.21 V, the same.",
           "Norton: I_N = V_th / R_th = 3.92 V / 2.22 kΩ = 1.76 mA, with 2.22 kΩ in parallel. Check: shorting the output also shorts R2, so the short-circuit current is 12 V / 6.8 kΩ = 1.76 mA.",
@@ -124,7 +124,7 @@
       "explanation": "V_th is the open-circuit output voltage: the plain divider result, {Vin} × {R2} / ({R1} + {R2}) = {answer}.",
       "hints": [
         "V_th is the voltage at the terminals with no load.",
-        "With no load, it's just the divider output."
+        "With no load, it's the divider output."
       ],
       "misconceptions": [
         {
@@ -258,7 +258,7 @@
         "formula": "R1*R2/(R1+R2)",
         "unit": "Ω"
       },
-      "explanation": "Turn the source off: an ideal voltage source becomes a short, which connects the top of R1 to ground. Looking into the output you then see R1 and R2 in parallel: {R1} || {R2} = {answer}.",
+      "explanation": "Turn the source off: an ideal voltage source becomes a short, which connects the top of R1 to ground. Looking into the output you then see R1 and R2 in parallel: {R1} ∥ {R2} = {answer}.",
       "hints": [
         "Replace the voltage source with a short circuit.",
         "From the output, R1 and R2 are then in parallel."
@@ -374,7 +374,7 @@
           "prompt": "Why do you replace the voltage source with a short to find R_th?",
           "choices": [
             {
-              "text": "An ideal voltage source holds its voltage at any current, so it adds no resistance: set to 0 V, it's just a wire",
+              "text": "An ideal voltage source holds its voltage at any current, so it adds no resistance: set to 0 V, it acts as a plain wire",
               "feedback": "Right: R_th describes how the output changes with load current, and an ideal source contributes nothing to that change.",
               "correct": true
             },
@@ -558,10 +558,10 @@
             },
             {
               "text": "R_th and R_L are in parallel, so the current divides",
-              "feedback": "In the equivalent, V_th, R_th and R_L form one loop: R_th and R_L are in series."
+              "feedback": "In the equivalent, V_th, R_th, and R_L form one loop: R_th and R_L are in series."
             }
           ],
-          "explanation": "In the equivalent, V_th, R_th and the load form one series loop (KVL from Kirchhoff). One current flows through R_th and R_L, and it drops I·R_th inside the source, so the load sees only V_th − I·R_th. That internal drop is why an output sags under load."
+          "explanation": "In the equivalent, V_th, R_th, and the load form one series loop (KVL from Kirchhoff). One current flows through R_th and R_L, and it drops I·R_th inside the source, so the load sees only V_th − I·R_th. That internal drop is why an output sags under load."
         }
       ],
       "review": "verified"
@@ -863,7 +863,7 @@
         },
         "feedback": {
           "down": "The voltage across the load does fall, but V_th is the open-circuit voltage: the divider with nothing connected. Changing the load doesn't change the source.",
-          "up": "V_th is set by Vin, R1 and R2 alone, and none of them changed."
+          "up": "V_th is set by Vin, R1, and R2 alone, and none of them changed."
         }
       },
       "explanation": "V_th = {Vin} × {R2} / ({R1} + {R2}) = {before}, whatever load is connected. The load voltage does drop, because the heavier load draws more current through R_th = R1 ∥ R2. Keeping the source (V_th, R_th) separate from the load is the whole point of the equivalent.",
@@ -889,10 +889,10 @@
             },
             {
               "text": "Nothing: the equivalent circuit ignores the load",
-              "feedback": "The equivalent is built so you can add any load afterwards and see its effect: here, a lower load voltage."
+              "feedback": "The equivalent is built so you can add any load afterward and see its effect: here, a lower load voltage."
             }
           ],
-          "explanation": "The equivalent splits the problem in two: the source (V_th, R_th), fixed, and the load, which you connect afterwards. A heavier load draws more current, I = V_th / (R_th + R_L), and the drop I·R_th inside the source grows."
+          "explanation": "The equivalent splits the problem in two: the source (V_th, R_th), fixed, and the load, which you connect afterward. A heavier load draws more current, I = V_th / (R_th + R_L), and the drop I·R_th inside the source grows."
         }
       ],
       "schematic": {
@@ -1151,7 +1151,7 @@
     {
       "id": "th_fault",
       "topicId": "thevenin",
-      "prompt": "A module contains a divider (R1 = {R1} on top, R2 = {R2} on the bottom, fed from {Vin}) whose output drives a load of {RL}. Healthy, the output should read {h0}. The readings are below. Which fault inside the module explains them?",
+      "prompt": "A module contains a divider (R1 = {R1} on top, R2 = {R2} on the bottom, fed from {Vin}) whose output drives a load of {RL}. When the module is healthy, the output reads {h0}. The readings are below. Which fault inside the module explains them?",
       "variables": [
         {
           "name": "Vin",
@@ -1213,7 +1213,7 @@
             "text": "R2 is open",
             "open": "R2",
             "feedback": "An open R2 would raise the output, because V_th becomes the full {Vin}, while the supply current falls.",
-            "why": "The output is higher than normal but the supply current is lower. Without R2 the equivalent becomes V_th = {Vin} with R_th = R1, and R1 now carries only the load current."
+            "why": "The output is higher than normal, but the supply current is lower. Without R2 the equivalent becomes V_th = {Vin} with R_th = R1, and R1 now carries only the load current."
           },
           {
             "text": "R2 is shorted",
@@ -1232,9 +1232,9 @@
           }
         ]
       },
-      "explanation": "Read the output and the supply current together: an open part stops current, a short passes current with no voltage across it. Then think in Thevenin terms: each fault changes V_th, R_th or both, and the load just shows the result. The load is the loaded divider from Voltage and current dividers.",
+      "explanation": "Read the output and the supply current together: an open part stops current, a short passes current with no voltage across it. Then think in Thevenin terms: each fault changes V_th, R_th, or both, and the load just shows the result. The load is the loaded divider from Voltage and current dividers.",
       "hints": [
-        "Is the supply current zero, lower or higher than normal? And the output?",
+        "Is the supply current zero, lower, or higher than normal? And the output?",
         "An output of 0 V with more supply current than normal means a short to ground."
       ],
       "schematic": {
@@ -1414,7 +1414,7 @@
         "formula": "Vth*RL/(Rth+RL)",
         "unit": "V"
       },
-      "explanation": "Three ideas meet here. Voltage and current dividers: with nothing connected, the output is V_th = {Vin} × {R2} / ({R1} + {R2}) = {Vth}. Series and parallel resistance: replace the ideal source by a short (it has no resistance), and R1 and R2 both run from the output to ground, so R_th = {R1} ∥ {R2} = {Rth}. Thevenin and Norton equivalents: the load and R_th now form a second, simple divider: V_L = {Vth} × {RL} / ({Rth} + {RL}) = {answer}. Check: R2 ∥ RL as the bottom of the original divider gives the same answer.",
+      "explanation": "Three ideas meet here. Voltage and current dividers: with nothing connected, the output is V_th = {Vin} × {R2} / ({R1} + {R2}) = {Vth}. Series and parallel resistance: replace the ideal source with a short (it has no resistance), and R1 and R2 both run from the output to ground, so R_th = {R1} ∥ {R2} = {Rth}. Thevenin and Norton equivalents: the load and R_th now form a second, simple divider: V_L = {Vth} × {RL} / ({Rth} + {RL}) = {answer}. Check: R2 ∥ RL as the bottom of the original divider gives the same answer.",
       "hints": [
         "Replace everything the load sees by V_th in series with R_th.",
         "V_th is the unloaded divider output; R_th is R1 ∥ R2 (source shorted). Then divide V_th between R_th and RL."

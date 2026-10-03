@@ -3,7 +3,7 @@
     {
       "id": "series_parallel",
       "title": "Series and parallel resistance",
-      "summary": "Resistors in series add; in parallel the total is smaller than the smallest one.",
+      "summary": "Resistances in series add; in parallel, the total is smaller than the smallest one.",
       "lenses": [
         "circuit",
         "math"
@@ -14,7 +14,7 @@
       ],
       "lensNotes": {
         "circuit": "Series parts share a current; parallel parts share a voltage. Most resistor networks reduce to a single resistance by combining pairs from the inside out.",
-        "math": "Series resistances add; parallel conductances (1/R) add. Product-over-sum is just 1/(1/R₁ + 1/R₂) for two resistors, and a parallel pair is always smaller than either one."
+        "math": "Series resistances add; parallel conductances (1/R) add. Product over sum, R₁R₂/(R₁ + R₂), is 1/(1/R₁ + 1/R₂) rewritten for two resistors, and a parallel pair is always smaller than either one."
       },
       "formulas": [
         {
@@ -31,7 +31,7 @@
         }
       ],
       "prerequisiteNotes": {
-        "ohms_law": "Each series and parallel rule comes from applying V = IR to every resistor: in series the voltages add at one current, in parallel the currents add at one voltage.",
+        "ohms_law": "Each series and parallel rule comes from applying V = IR to every resistor: in series the voltages add at one current; in parallel the currents add at one voltage.",
         "si_prefixes": "Resistances come as 4.7 kΩ or 220 Ω; adding and combining them means working comfortably across prefixes."
       },
       "goals": [
@@ -42,7 +42,7 @@
       ],
       "intuition": "A resistor added in series is one more part the same current must pass through, so resistance goes up; a resistor added in parallel is one more path for current between the same two nodes, so resistance goes down, below the smallest branch.",
       "why": "In a series chain there is only one path, so the same current flows through every part (charge cannot leave the chain between them). Each part drops I·R, and the drops add: V = I·(R1 + R2). In parallel, both ends of every branch sit on the same two nodes, so every branch has the same voltage across it and carries its own current, V / R. The currents add, so the conductances 1/R add. An extra branch only adds current at the same voltage, so the combination's resistance is below the smallest branch.",
-      "explanation": "Ohm's law, V = I·R, relates one resistor's voltage and current. Circuits with several resistors start by finding the single resistance they add up to. Two parts are in series when they are joined end to end at a node with nothing else connected to that node. They carry the same current, and their resistances add: 1 kΩ + 2.2 kΩ = 3.2 kΩ. Two parts are in parallel when both their ends connect to the same two nodes. A node is one piece of metal: every wire joined together, however it is drawn. Parallel parts have the same voltage across them, and for two of them R = R1·R2 / (R1 + R2), product over sum. For more, add the reciprocals: 1/R = 1/R1 + 1/R2 + 1/R3. Two useful checks: a parallel combination is always smaller than its smallest resistor, and n equal resistors in parallel give R / n. A mixed network reduces from the inside out: combine one series or parallel pair, redraw it as a single resistor, and repeat until one is left. Judge series or parallel by where the ends connect, never by how the parts are laid out on the page.",
+      "explanation": "Ohm's law, V = I·R, relates one resistor's voltage and current. Analyzing a circuit with several resistors starts with finding the single resistance they are equivalent to. Two parts are in series when they are joined end to end at a node with nothing else connected to that node. They carry the same current, and their resistances add: 1 kΩ + 2.2 kΩ = 3.2 kΩ. Two parts are in parallel when both their ends connect to the same two nodes. A node is one piece of metal: every wire joined together, however it is drawn. Parallel parts have the same voltage across them, and for two of them R = R1·R2 / (R1 + R2), product over sum. For more, add the reciprocals: 1/R = 1/R1 + 1/R2 + 1/R3. Two useful checks: a parallel combination is always smaller than its smallest resistor, and n equal resistors in parallel give R / n. A mixed network reduces from the inside out: combine one series or parallel pair, redraw it as a single resistor, and repeat until one is left. Judge series or parallel by where the ends connect, never by how the parts are laid out on the page.",
       "workedExample": {
         "problem": "R1 = 1 kΩ is in series with the parallel pair R2 = 2.2 kΩ and R3 = 4.7 kΩ. Find the total resistance, and the current a 5 V supply drives through the network.",
         "steps": [
@@ -102,15 +102,15 @@
         "formula": "R1+R2",
         "unit": "Ω"
       },
-      "explanation": "In series the same current flows through both, so their voltages add and so do their resistances: R = {R1} + {R2} = {answer}.",
+      "explanation": "In series the same current flows through both, so their voltages add, and so do their resistances: R = {R1} + {R2} = {answer}.",
       "hints": [
         "In series, the same current flows through every resistor.",
-        "Series resistances simply add: R = R1 + R2."
+        "Series resistances add: R = R1 + R2."
       ],
       "misconceptions": [
         {
           "formula": "R1*R2/(R1+R2)",
-          "feedback": "That's the parallel formula. Resistors in series simply add."
+          "feedback": "That's the parallel formula. Resistances in series add."
         }
       ],
       "schematic": {
@@ -348,10 +348,10 @@
         "formula": "R1+R2*R3/(R2+R3)",
         "unit": "Ω"
       },
-      "explanation": "Reduce the parallel pair first: {R2} || {R3} = {Rp}. Then add the series resistor: {R1} + {Rp} = {answer}.",
+      "explanation": "Reduce the parallel pair first: {R2} ∥ {R3} = {Rp}. Then add the series resistor: {R1} + {Rp} = {answer}.",
       "hints": [
         "Work from the inside out: combine the parallel pair first.",
-        "R2 || R3 = R2·R3 / (R2 + R3), then add R1."
+        "R2 ∥ R3 = R2·R3 / (R2 + R3), then add R1."
       ],
       "misconceptions": [
         {
@@ -615,7 +615,7 @@
     {
       "id": "sp_parallel_three",
       "topicId": "series_parallel",
-      "prompt": "Resistors of {R1}, {R2} and {R3} are connected in parallel. What is the equivalent resistance?",
+      "prompt": "Resistors of {R1}, {R2}, and {R3} are connected in parallel. What is the equivalent resistance?",
       "variables": [
         {
           "name": "R1",
@@ -766,7 +766,7 @@
         "unit": "Ω",
         "tolerance": 0.02
       },
-      "explanation": "n equal resistors in parallel give R/n = {R}/{n} = {answer}.",
+      "explanation": "For n equal resistors in parallel, the total is R/n = {R}/{n} = {answer}.",
       "hints": [
         "Each extra path carries the same current.",
         "R_total = R/n."
@@ -1486,11 +1486,11 @@
           "n": "n+1"
         },
         "feedback": {
-          "up": "More resistors means more resistance only in series, where the current must pass through every one. In parallel each one is another path between the same two nodes, so the same voltage now drives current through one more path at once.",
+          "up": "Adding resistors raises the resistance only in series, where the current must pass through every one. In parallel each one is another path between the same two nodes, so the same voltage now drives current through one more path at once.",
           "same": "Every resistor in parallel has the full voltage across it and carries its own current, however many are already there. The total resistance is that voltage divided by the total current, R = V/I_total, and the new path adds its current to I_total."
         }
       },
-      "explanation": "n equal resistors in parallel give R / n: {before} → {after}. Each extra path adds current at the same voltage, so the total falls. That's why a supply delivers more current as more lamps are switched on in parallel.",
+      "explanation": "For n equal resistors in parallel, the total is R / n: {before} → {after}. Each extra path adds current at the same voltage, so the total falls. That's why a supply delivers more current as more lamps are switched on in parallel.",
       "hints": [
         "Does the new resistor make the current's path longer, or give it another path?"
       ],
@@ -1643,6 +1643,292 @@
               4
             ],
             "left": true
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "sp_fault_ladder",
+      "topicId": "series_parallel",
+      "prompt": "A {V} battery feeds a resistor network: R1 = {R1} from the battery to node a, R2 = {R2} from node a to ground, R3 = {R3} from node a to node b, and R4 = {R4} from node b to ground. When the network is healthy, the battery delivers {h0}, node a sits at {h1}, and node b at {h2}. One resistor has failed open or shorted. Which fault explains the readings below?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            5,
+            9,
+            12
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1200,
+            1500,
+            1800,
+            2200
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            2200,
+            2700,
+            3300,
+            3900,
+            4700,
+            5600,
+            6800,
+            8200
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "values": [
+            2200,
+            2700,
+            3300,
+            3900,
+            4700,
+            5600,
+            6800,
+            8200
+          ]
+        },
+        {
+          "name": "R4",
+          "unit": "Ω",
+          "values": [
+            2200,
+            2700,
+            3300,
+            3900,
+            4700,
+            5600,
+            6800,
+            8200
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Req",
+          "formula": "R1 + (R2 || (R3+R4))",
+          "unit": "Ω"
+        }
+      ],
+      "fault": {
+        "netlist": "series-parallel network\nV1 in 0 {V:spice}\nR1 in a {R1:spice}\nR2 a 0 {R2:spice}\nR3 a b {R3:spice}\nR4 b 0 {R4:spice}\n",
+        "probes": [
+          {
+            "label": "Current from the battery (ammeter in the battery lead)",
+            "probe": "i(R1)"
+          },
+          {
+            "label": "Voltage at node a",
+            "probe": "v(a)"
+          },
+          {
+            "label": "Voltage at node b",
+            "probe": "v(b)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "R2 is open",
+            "open": "R2",
+            "feedback": "An open R2 would remove one of the two paths from node a to ground. The battery would see more resistance, so its current would fall and both nodes would rise, with node b still below node a.",
+            "why": "The battery current fell and both nodes rose, with node b still below node a, so current still flows through R3 and R4. Losing the R2 path does exactly that: the resistance from a to ground rises from R2 ∥ (R3 + R4) to R3 + R4."
+          },
+          {
+            "text": "R3 is open",
+            "open": "R3",
+            "feedback": "An open R3 would cut node b off from node a, so node b would fall to 0 V (R4 still ties it to ground). With a path lost, the battery current would fall and node a would rise.",
+            "why": "Node b reads 0 V while the battery current fell and node a rose. The network's resistance went up, so a path was lost rather than shorted, and with node b dead the lost link is R3."
+          },
+          {
+            "text": "R4 is open",
+            "open": "R4",
+            "feedback": "An open R4 would stop the current in R3, so R3 would drop nothing and node b would read the same as node a. With a path lost, the battery current would fall and node a would rise.",
+            "why": "Node b reads the same as node a, so R3 has no voltage across it. The battery current fell, so the network's resistance rose: R3 carries no current because the R3–R4 path is broken at R4."
+          },
+          {
+            "text": "R3 is shorted",
+            "short": "R3",
+            "feedback": "A shorted R3 would join nodes a and b, so they would read the same. The second path would shrink to R4 alone, so the battery current would rise and node a would fall.",
+            "why": "Nodes a and b read the same, yet the battery current rose: the network's resistance fell. A short across R3 joins a to b and leaves R4 as the whole second path to ground."
+          },
+          {
+            "text": "R4 is shorted",
+            "short": "R4",
+            "feedback": "A shorted R4 would pull node b to 0 V and leave R3 alone as the second path from node a, so the battery current would rise and node a would fall.",
+            "why": "Node b reads 0 V while the battery current rose and node a fell: the network's resistance went down. A short at R4 does that. An open R3 would also leave node b at 0 V, but it would raise the resistance and lower the current."
+          }
+        ]
+      },
+      "explanation": "The battery sees R_eq = R1 + R2 ∥ (R3 + R4) = {Req}, so it delivers {V} / {Req} = {h0}. An open removes a path, so R_eq rises and the battery current falls; a short removes resistance, so R_eq falls and the current rises. The battery current tells you which kind of fault it is. Node a moves the opposite way, because R1 drops more when more current flows through it. Node b then locates the fault: node b at 0 V means it has lost its link to node a or is shorted to ground; node b equal to node a means R3 has no voltage across it, so either it carries no current (R4 open) or it is shorted.",
+      "hints": [
+        "For each fault, does the resistance the battery sees go up or down? That tells you which way the battery current moves.",
+        "Node b reading the same as node a means R3 has no voltage across it: either it carries no current, or it is shorted."
+      ],
+      "followUps": [
+        {
+          "prompt": "Suppose R4 opens. R3 is still in place, yet node b then reads the same as node a. Why?",
+          "choices": [
+            {
+              "text": "R3's far end now leads nowhere, so R3 carries no current and drops V = I·R3 = 0; both its ends sit at node a's voltage",
+              "correct": true,
+              "feedback": "Right: a resistor only drops voltage while current flows through it. With R4 gone, R3 is a dead end."
+            },
+            {
+              "text": "R3 is now in parallel with R2, so it has the same voltage as node a",
+              "feedback": "R3 is not in parallel with R2: its far end, node b, connects to nothing but the voltmeter. Node b reads like node a because R3 carries no current and so drops nothing."
+            },
+            {
+              "text": "With R4 gone the battery current rises, and the extra current lifts node b",
+              "feedback": "Opening R4 removes a path, so the resistance the battery sees rises and its current falls. Node b matches node a because no current flows in R3, not because more current flows."
+            },
+            {
+              "text": "Node b is floating, so the meter shows whatever voltage it had before the fault",
+              "feedback": "A node joined to nothing would not keep its old voltage; a meter would show a small, drifting reading. Node b is still joined to node a through R3; with no current in R3, it simply reads node a's voltage."
+            }
+          ],
+          "explanation": "Ohm's law sets the voltage across R3 from the current through it: V = I·R3. Healthy, R3 and R4 carry the same current (they are in series), and R3 drops part of node a's voltage. Open R4 and that series path has no way back to ground, so the current in R3 drops to zero (the voltmeter's 10 MΩ draws next to nothing) and so does its voltage: node b reads node a's voltage. This is why a resistor reading equal voltages at both ends points at an open somewhere in its series path, or at a short across the resistor itself."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              11,
+              0
+            ],
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              17,
+              2
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              11,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              15,
+              0
+            ],
+            [
+              17,
+              0
+            ],
+            [
+              17,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              17,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              10,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              16,
+              0
+            ]
           }
         ]
       },

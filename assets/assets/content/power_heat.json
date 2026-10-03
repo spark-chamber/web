@@ -18,8 +18,8 @@
         "ohms_law": "P = I²R and P = V²/R are P = V·I with Ohm's law put in, and every resistor problem here finds a current or voltage from V = I·R first."
       },
       "lensNotes": {
-        "physics": "Inside a conductor the electric field accelerates the free electrons between collisions, and each collision with a vibrating atom, an impurity or a lattice defect hands the energy gained to the material (Joule heating). The average drift does not grow along the resistor, so the current out equals the current in; only energy is transferred. The part then loses heat by conduction through its leads and the board, by convection to the air and by radiation, at a rate that grows with its temperature above the surroundings. It settles where heat lost per second equals the power going in: ΔT ≈ P·θ.",
-        "circuit": "Power in any part is the voltage across that part times the current through it; the supply delivers the sum over all parts. Through-hole film or carbon-composition resistors commonly come in 1/8, 1/4, 1/2, 1 and 2 W ratings; above that, wirewound and metal-clad parts bolt to a heat sink. Designers keep the dissipation well below the rating (half is a common rule), and below it again in a hot enclosure, following the derating curve in the datasheet. An overloaded resistor discolors, changes value and can fail open.",
+        "physics": "Inside a conductor the electric field accelerates the free electrons between collisions, and each collision with a vibrating atom, an impurity, or a lattice defect hands the energy gained to the material (Joule heating). The average drift does not grow along the resistor, so the current out equals the current in; only energy is transferred. The part then loses heat by conduction through its leads and the board, by convection to the air, and by radiation, at a rate that grows with its temperature above the surroundings. It settles where heat lost per second equals the power going in: ΔT ≈ P·θ.",
+        "circuit": "Power in any part is the voltage across that part times the current through it; the supply delivers the sum over all parts. Through-hole film or carbon-composition resistors commonly come in 1/8, 1/4, 1/2, 1, and 2 W ratings; above that, wirewound and metal-clad parts bolt to a heat sink. Designers keep the dissipation well below the rating (half is a common rule), and below it again in a hot enclosure, following the derating curve in the datasheet. An overloaded resistor discolors, changes value, and can fail open.",
         "math": "With V = I·R, P = V·I becomes I²R or V²/R. Both are square laws: doubling the voltage across a resistor, or the current through it, multiplies its power by four. Which form shows the effect of R depends on what is held fixed: at fixed V, P falls as 1/R; at fixed I, P grows with R. The thermal model ΔT = P·θ and a linear derating curve are straight lines in P."
       },
       "formulas": [
@@ -50,19 +50,19 @@
       ],
       "goals": [
         "Find the power in a part from the voltage across it and the current through it, and in a resistor from I²R or V²/R",
-        "Explain where a resistor's energy goes, and predict how its power changes when the voltage, the current or the resistance changes",
+        "Explain where a resistor's energy goes, and predict how its power changes when the voltage, the current, or the resistance changes",
         "Choose a resistor's power rating with margin, and estimate its temperature from its thermal resistance",
-        "Convert between watts, joules and watt-hours to find a battery's energy, an average power and an efficiency"
+        "Convert between watts, joules, and watt-hours to find a battery's energy, an average power, and an efficiency"
       ],
       "intuition": "A resistor turns every joule it receives into heat at the rate V·I, and its temperature climbs until it loses heat to its surroundings as fast as that; a power rating is the rate it can sustain without its body getting too hot.",
-      "why": "Inside a resistor the electric field accelerates the free electrons, and each one keeps losing the energy it gains in collisions with the vibrating atoms, impurities and defects of the material. The atoms vibrate harder: the material gets hotter. The electrons' average drift does not grow along the resistor, so the current leaving equals the current entering; what the charge gives up is energy, V joules for every coulomb that crosses a voltage V. Since I coulombs cross each second, the energy given up per second, the power, is V·I. The hot body then loses heat to its surroundings, through its leads into the board, to the air and by radiation, faster the hotter it is. Its temperature settles where heat lost per second equals the power going in, about P·θ above the air, where θ is its thermal resistance in °C/W. A power rating is the power that brings the hottest spot to the highest temperature its materials tolerate, at a stated ambient temperature.",
+      "why": "Inside a resistor the electric field accelerates the free electrons, and each one keeps losing the energy it gains in collisions with the vibrating atoms, impurities, and defects of the material. The atoms vibrate harder: the material gets hotter. The electrons' average drift does not grow along the resistor, so the current leaving equals the current entering; what the charge gives up is energy, V joules for every coulomb that crosses a voltage V. Since I coulombs cross each second, the energy given up per second, the power, is V·I. The hot body then loses heat to its surroundings, through its leads into the board, to the air, and by radiation, faster the hotter it is. Its temperature settles where heat lost per second equals the power going in, about P·θ above the air, where θ is its thermal resistance in °C/W. A power rating is the power that brings the hottest spot to the highest temperature its materials tolerate, at a stated ambient temperature.",
       "explanation": "Power is the rate at which energy is transferred: P = W/t, measured in watts (1 W = 1 J/s). In a circuit it follows from two definitions you already know. A voltage is joules per coulomb and a current is coulombs per second, so their product is joules per second: P = V·I. Use the voltage across the part and the current through it.\n\nFor a resistor, Ohm's law gives two more forms: P = I²R, handy when the current is known, and P = V²/R, handy when the voltage is fixed. Neither says a bigger resistance is always hotter. At a fixed voltage a bigger R dissipates less; at a fixed current it dissipates more.\n\nAll the power a resistor takes becomes heat. Its temperature rises until it loses heat as fast as it receives it, about P·θ above the air. A power rating is not what the part uses: it is the most it may dissipate continuously at a stated ambient temperature (a short overload can be survived, because the body takes time to heat up). Designers keep well below it, often to half.\n\nEnergy is power times time. Batteries are rated in watt-hours: 1 Wh = 3600 J. Efficiency is output power over input power; the rest becomes heat.",
       "workedExample": {
         "problem": "A 330 Ω resistor sits directly across a 12 V supply. How much power does it dissipate, which standard power rating should it have, and how much energy does it turn into heat in an hour?",
         "steps": [
           "Current from Ohm's law: I = V/R = 12 V / 330 Ω = 36.4 mA.",
           "Power: P = V·I = 12 V × 0.0364 A = 0.436 W. Check with V²/R: (12 V)² / 330 Ω = 144 V² / 330 Ω = 0.436 W.",
-          "A 1/4 W resistor would be asked for 0.436 W / 0.25 W = 1.7 times its rating: its body would run far above its maximum temperature, discolor, drift in value and could fail open.",
+          "A 1/4 W resistor would be asked for 0.436 W / 0.25 W = 1.7 times its rating: its body would run far above its maximum temperature, discolor, drift in value, and possibly fail open.",
           "With the common rule of dissipating at most half the rating, the part needs a rating of at least 2 × 0.436 W = 0.87 W: choose a 1 W resistor.",
           "Energy in one hour: W = P·t = 0.436 W × 3600 s = 1570 J, which is 0.436 Wh. All of it becomes heat in the resistor and passes to the air and the board around it."
         ]
@@ -81,7 +81,7 @@
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Thermal Management\", sections 3.2 \"Energy, power, and efficiency\", 3.3 \"Heat transfer and thermal resistance\", 3.4 \"Thermal calculations\" and 3.6 \"Thermal de-rating\"",
           "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_thermal.pdf",
-          "note": "Checked 1 W = 1 J/s, efficiency as useful output over input with the rest becoming heat, heat leaving by conduction, convection and radiation at a rate that grows with the temperature difference, ΔT = P·R_th with R_th in °C/W, and that a hotter ambient lowers the power a part may dissipate."
+          "note": "Checked 1 W = 1 J/s, efficiency as useful output over input with the rest becoming heat, heat leaving by conduction, convection, and radiation at a rate that grows with the temperature difference, ΔT = P·R_th with R_th in °C/W, and that a hotter ambient lowers the power a part may dissipate."
         }
       ]
     }
@@ -184,7 +184,7 @@
               "feedback": "Whatever the sizes, R1's power uses R1's voltage. The battery voltage times the current is always the total for the whole loop."
             }
           ],
-          "explanation": "Power in a part = (energy per coulomb across that part) × (coulombs per second through it). The battery's {Vs} × {I} = {Ptot} is shared: R1 takes {answer}, the heater the rest."
+          "explanation": "Power in a part = (energy per coulomb across that part) × (coulombs per second through it). The battery's {Vs} × {I} = {Ptot} is shared: R1 takes {answer}, and the heater takes the rest."
         }
       ],
       "schematic": {
@@ -629,7 +629,7 @@
               "feedback": "The cell-side meters show power flowing out of the cell, at {Pin}. Nothing returns to it; the shortfall becomes heat."
             }
           ],
-          "explanation": "Energy is conserved: P_in = P_out + P_heat. Efficiency only says what fraction reaches the output; the rest heats the converter's switches (or diode), inductor, capacitors and wiring."
+          "explanation": "Energy is conserved: P_in = P_out + P_heat. Efficiency only says what fraction reaches the output; the rest heats the converter's switches (or diode), inductor, capacitors, and wiring."
         }
       ],
       "noDrawing": "the converter is measured only at its terminals; its circuit belongs to the switching-supply topic",
@@ -719,7 +719,7 @@
             },
             {
               "text": "As it warms, its resistance rises until the current stops",
-              "feedback": "A film resistor changes by a few percent at most over this rise (well under 1 % for metal film; a few percent for carbon film, and downward, since carbon film's resistance falls as it warms), so the power barely changes. The temperature settles because heat loss grows with the temperature difference."
+              "feedback": "A film resistor changes by a few percent at most over this rise (well under 1% for metal film; a few percent for carbon film, and downward, since carbon film's resistance falls as it warms), so the power barely changes. The temperature settles because heat loss grows with the temperature difference."
             },
             {
               "text": "The electrons stop colliding once the material is warm",
@@ -876,7 +876,7 @@
             },
             {
               "text": "The resistance falls at high temperature, so the part draws more current",
-              "feedback": "The curve is drawn before the part is in any circuit: it depends only on the air temperature and the body's maximum, {Tmax}. (The resistance does shift a little with temperature, by under 1 % for metal film and up to about 10 % for carbon film at {Tmax}, but that doesn't set the limit.)"
+              "feedback": "The curve is drawn before the part is in any circuit: it depends only on the air temperature and the body's maximum, {Tmax}. (The resistance does shift a little with temperature, by under 1% for metal film and up to about 10% for carbon film at {Tmax}, but that doesn't set the limit.)"
             }
           ],
           "explanation": "Body temperature ≈ T_air + P·θ, and it must stay at or below {Tmax}. So P_max = ({Tmax} − T_air)/θ: a straight line that reaches zero when the air itself is at {Tmax}."
@@ -1296,7 +1296,7 @@
         },
         "askFactor": true,
         "feedback": {
-          "down": "At a fixed voltage more resistance would mean less power, but here the current is held at {I}. Pushing the same current through more resistance takes more voltage (V = I·R), so each of the same coulombs per second gives up more energy on its way through: P = I²R with I held.",
+          "down": "At a fixed voltage, more resistance would mean less power, but here the current is held at {I}. Pushing the same current through more resistance takes more voltage (V = I·R), so each of the same coulombs per second gives up more energy on its way through: P = I²R with I held.",
           "same": "The current is the same, but it now crosses more resistance, so more voltage: each coulomb gives up more energy on the way through."
         }
       },
@@ -1446,7 +1446,7 @@
           "same": "The load still takes the same power, but at the higher voltage it draws less current (I = P/V). The cable's heat is set only by the current through it and its own resistance, I²R_cable, not by the load's power."
         }
       },
-      "explanation": "The cable's heat is I²R_cable, and the current is I = P/V: {I0} at {V}. At {new_V} the same {P} needs half the current, so the loss falls to a quarter: {before} → {after}. This is why long cable runs, solar installations and power distribution use higher voltages.",
+      "explanation": "The cable's heat is I²R_cable, and the current is I = P/V: {I0} at {V}. At {new_V} the same {P} needs half the current, so the loss falls to a quarter: {before} → {after}. This is why long cable runs, solar installations, and power distribution use higher voltages.",
       "hints": [
         "Which voltage is across the cable? Find the current first: I = P/V."
       ],
@@ -1604,7 +1604,7 @@
         },
         {
           "text": "It limits the circuit so that no more than 0.25 W can ever be drawn through it",
-          "feedback": "A resistor doesn't regulate its own power. Put too much voltage across it and it dissipates more than 0.25 W, overheats and fails."
+          "feedback": "A resistor doesn't regulate its own power. Put too much voltage across it and it dissipates more than 0.25 W, overheats, and fails."
         },
         {
           "text": "It delivers 0.25 W to the parts that come after it in the circuit",
@@ -1626,7 +1626,7 @@
       "variables": [],
       "choices": [
         {
-          "text": "The electric field accelerates the free electrons, and they keep losing the energy they gain in collisions with the vibrating atoms, impurities and defects; the atoms vibrate harder, which is a higher temperature",
+          "text": "The electric field accelerates the free electrons, and they keep losing the energy they gain in collisions with the vibrating atoms, impurities, and defects; the atoms vibrate harder, which is a higher temperature",
           "feedback": "Right: this is Joule heating. The charge passes on; the energy stays in the material as heat.",
           "correct": true
         },
@@ -1674,7 +1674,7 @@
           "feedback": "Each branch takes V²/R. The power splits equally only between equal resistors."
         }
       ],
-      "explanation": "In parallel both resistors have the full 12 V across them. The current in each is V/R, so the power V²/R is largest in the smallest resistance: 1.44 W in the 100 Ω, 0.144 W in the 1 kΩ.",
+      "explanation": "In parallel, both resistors have the full 12 V across them. The current in each is V/R, so the power V²/R is largest in the smallest resistance: 1.44 W in the 100 Ω, 0.144 W in the 1 kΩ.",
       "hints": [
         "What is the same for both resistors in parallel: the voltage or the current?"
       ],
@@ -1700,7 +1700,7 @@
               "feedback": "The voltage divides in proportion to resistance: 10.9 V across the 1 kΩ, 1.09 V across the 100 Ω. Equal halves would need equal resistors."
             }
           ],
-          "explanation": "In series one current flows: I = 12 V / 1100 Ω = 10.9 mA. P = I²R gives 0.119 W in the 1 kΩ and 0.0119 W in the 100 Ω. \"Bigger R is hotter\" is true at a fixed current and false at a fixed voltage."
+          "explanation": "In series, one current flows: I = 12 V / 1100 Ω = 10.9 mA. P = I²R gives 0.119 W in the 1 kΩ and 0.0119 W in the 100 Ω. \"Bigger R is hotter\" is true at a fixed current and false at a fixed voltage."
         }
       ],
       "schematic": {
@@ -1826,7 +1826,7 @@
           "feedback": "2 W meets the rule too, but 1 W already does; the larger part costs more and takes more board space."
         }
       ],
-      "explanation": "P = V²/R = (9 V)² / 180 Ω = 81/180 = 0.45 W. The rule needs a rating of at least 2 × 0.45 W = 0.9 W, so 1 W. Running at half the rating keeps the body cooler, slows drift and aging, and leaves room for a warm enclosure, a supply at the top of its range or a resistor at the low end of its tolerance.",
+      "explanation": "P = V²/R = (9 V)² / 180 Ω = 81/180 = 0.45 W. The rule needs a rating of at least 2 × 0.45 W = 0.9 W, so 1 W. Running at half the rating keeps the body cooler, slows drift and aging, and leaves room for a warm enclosure, a supply at the top of its range, or a resistor at the low end of its tolerance.",
       "hints": [
         "Find the power first. Then double it."
       ],
@@ -1917,7 +1917,7 @@
           "feedback": "Normally the current is 12 V / (100 Ω + 220 Ω ∥ 390 Ω) = 12 V / 240.7 Ω = 49.9 mA, and R1 dissipates (49.9 mA)² × 100 Ω = 0.249 W: half its rating, warm but not charred."
         }
       ],
-      "explanation": "Work out each part's power in each case. Normally R1 takes 0.249 W, R2 0.224 W and R3 0.126 W, all within 1/2 W. Only a short from node a to ground puts the whole 12 V across R1: 1.44 W. A charred part tells you which resistor received too much power; P = V²/R tells you which fault put the voltage there.",
+      "explanation": "Work out each part's power in each case. Normally R1 takes 0.249 W, R2 0.224 W, and R3 0.126 W, all within 1/2 W. Only a short from node a to ground puts the whole 12 V across R1: 1.44 W. A charred part tells you which resistor received too much power; P = V²/R tells you which fault put the voltage there.",
       "hints": [
         "A part chars when it dissipates far more than its rating. Which fault puts much more voltage across R1?"
       ],
@@ -2146,25 +2146,25 @@
             "text": "Node a is shorted to ground (a solder bridge across R2 or R3)",
             "short": "R2",
             "feedback": "A short from node a to ground would pull node a to 0 V, and R1 alone would set the current: {Vs} / {R1} = {Ishort}.",
-            "why": "node a reads 0 V and R1 carries {Ishort}: something joins a to ground, and these meters can't say whether it sits across R2 or R3 (look for the bridge). R1 has the whole {Vs} across it and dissipates {PR1short}, far beyond its 1/2 W rating. R1 is the part that overheats and discolors; R2 and R3 have no voltage across them and stay cool. Left like this, R1 soon chars and may fail open, which is often how a technician first finds this fault."
+            "why": "Node a reads 0 V and R1 carries {Ishort}: something joins a to ground, and these meters can't say whether it sits across R2 or R3 (look for the bridge). R1 has the whole {Vs} across it and dissipates {PR1short}, far beyond its 1/2 W rating. R1 is the part that overheats and discolors; R2 and R3 have no voltage across them and stay cool. Left like this, R1 soon chars and may fail open, which is often how a technician first finds this fault."
           },
           {
             "text": "R1 is shorted",
             "short": "R1",
             "feedback": "A shorted R1 would put node a at the full {Vs}, and the current would rise to {Vs} / {Rpar} = {Ipar}.",
-            "why": "node a reads the full {Vs}, so both loads have the whole supply across them: R2 dissipates {PR2full}, beyond its 1/2 W rating, and R3 {PR3full}. R2 is the one that overheats; the shorted R1 has no voltage across it and stays cool."
+            "why": "Node a reads the full {Vs}, so both loads have the whole supply across them: R2 dissipates {PR2full}, beyond its 1/2 W rating, and R3 {PR3full}. R2 is the one that overheats; the shorted R1 has no voltage across it and stays cool."
           },
           {
             "text": "R3 is open (a cracked part or a dry joint)",
             "open": "R3",
             "feedback": "An open R3 would leave R1 and R2 as a divider: node a would rise to {Va3} and the current would fall.",
-            "why": "node a rose to {Va3} and the current fell, so a load went open; the reading matches R1 and R2 alone. The current falls, R1 runs cooler than normal, and R2 dissipates {PR2o}, within its rating: nothing overheats, the circuit just loses R3's load."
+            "why": "Node a rose to {Va3} and the current fell, so a load went open; the reading matches R1 and R2 alone. The current falls, R1 runs cooler than normal, and R2 dissipates {PR2o}, within its rating: nothing overheats, the circuit just loses R3's load."
           },
           {
             "text": "R2 is open",
             "open": "R2",
             "feedback": "An open R2 would leave R1 and R3 as a divider: node a would rise to {Va2} and the current would fall.",
-            "why": "node a rose to {Va2} and the current fell, matching R1 and R3 alone. R1 runs cooler than normal and R3 dissipates {PR3o}, within its rating: nothing overheats."
+            "why": "Node a rose to {Va2} and the current fell, matching R1 and R3 alone. R1 runs cooler than normal and R3 dissipates {PR3o}, within its rating: nothing overheats."
           }
         ]
       },

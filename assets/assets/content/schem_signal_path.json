@@ -17,8 +17,8 @@
         "schem_part_purpose": "Knowing why each part is there lets you predict what happens when one fails."
       },
       "lensNotes": {
-        "circuit": "Split the circuit into stages at the nodes where one block hands its output to the next. Work out each stage's job and its output, then feed that into the next, like reading sentences in order.",
-        "signals": "Follow one signal: a sensor voltage is scaled by a divider, amplified, filtered, compared with a threshold and finally drives a load. At each node ask what the signal looks like now."
+        "circuit": "Split the circuit into stages at the nodes where one block hands its output to the next. Work out each stage's job and its output, then feed that into the next stage, in order.",
+        "signals": "Follow one signal: a sensor voltage is scaled by a divider, amplified, filtered, compared with a threshold, and finally used to drive a load. At each node, ask what the signal looks like now."
       },
       "formulas": [
         {
@@ -45,21 +45,21 @@
       "goals": [
         "Split a multi-stage circuit into stages at the nodes where one block hands its output to the next, and say what each stage does",
         "Carry a DC level through chained stages, stage by stage, and explain why an op-amp input does not load the stage before it",
-        "Work backwards from a comparator threshold to the sensor value that trips it",
+        "Work backward from a comparator threshold to the sensor value that trips it",
         "Locate a fault by finding the first stage boundary whose reading is wrong"
       ],
       "intuition": "A circuit reads as a chain of stages: find the nodes where one block hands its output to the next, work out what each stage does to the signal, and carry the result forward.",
       "why": "Stages can be read one at a time only when each stage's output is not disturbed by the next. An op amp's input draws essentially no current, and its output has a low resistance (with negative feedback, nearly zero), so a divider feeding an op amp keeps the voltage it would have alone, and an op amp can supply a transistor's base current without its output sagging. That is why a chain multiplies: V_b = G₂·V_a, and the total gain is G₁·G₂·G₃…. Where a stage does load the one before, such as a low-resistance load on a divider, the boundary is no longer clean and the two stages must be solved together.",
-      "explanation": "You can now name blocks and say why each part is there. Real circuits chain them: a sensor makes a voltage, a divider scales it, an amplifier boosts it, a filter smooths it, a comparator decides, a transistor switches a load. Read them the way the signal travels. First mark the boundaries: the nodes where one block's output becomes the next block's input. Label them (a, b, ref); they are where a meter probe goes when you debug. Next, name each stage with the reading skills you already have, starting from the feedback on each op amp. Then carry a number forward: the voltage at the first boundary, times the next stage's gain, and so on. An op amp's high input resistance is what lets you do this stage by stage. A comparator ends the analog chain: its output sits at one rail or the other, so the question becomes when it switches. Answer it by working backwards from its reference to the input that reaches it. To reason about a change or a fault, find the stage it is in; every later stage sees only what that stage now hands on. When hunting a fault, measure the boundaries in order. The first wrong reading points at the stage that drives that node, or at something in the next stage loading it; lifting the next stage's input tells the two apart. On a long chain, measuring first at the middle boundary is faster: one reading rules out half the stages (split-half).",
+      "explanation": "You can now name blocks and say why each part is there. Real circuits chain them: a sensor makes a voltage, a divider scales it, an amplifier boosts it, a filter smooths it, a comparator decides, and a transistor switches a load. Read them the way the signal travels. First mark the boundaries: the nodes where one block's output becomes the next block's input. Label them (a, b, ref); they are where a meter probe goes when you debug. Next, name each stage with the reading skills you already have, starting from the feedback on each op amp. Then carry a number forward: the voltage at the first boundary, times the next stage's gain, and so on. An op amp's high input resistance is what lets you do this stage by stage. A comparator ends the analog chain: its output sits at one rail or the other, so the question becomes when it switches. Answer it by working backward from its reference to the input that reaches it. To reason about a change or a fault, find the stage it is in; every later stage sees only what that stage now hands on. When hunting a fault, measure the boundaries in order. The first wrong reading points at the stage that drives that node, or at something in the next stage loading it; lifting the next stage's input tells the two apart. On a long chain, measuring first at the middle boundary is faster: one reading rules out half the stages (split-half).",
       "workedExample": {
         "problem": "An over-temperature alarm runs from one 12 V supply (assume op amps whose outputs swing from rail to rail). Stage 1: R1 = 100 kΩ from 12 V to node a, and a sensor R2 from a to ground whose resistance rises with temperature; right now it reads 4.7 kΩ. Stage 2: X1 has a on its + input, Rf = 47 kΩ from its output (node b) to its − input, and Rg = 4.7 kΩ from − to ground. Stage 3: X2 has b on its + input and node ref on its − input, where R3 = R4 = 10 kΩ divide 12 V; its output connects only to RB. Stage 4: RB = 10 kΩ drives the base of NPN transistor Q1, whose collector pulls current through an LED and 1 kΩ from 12 V. Is the LED on now, and at what sensor resistance does it come on?",
         "steps": [
           "Stage 1, a divider: V_a = 12 V × 4.7 kΩ / (100 kΩ + 4.7 kΩ) = 0.539 V. X1's + input takes no current, so stage 2 does not load it.",
           "Stage 2: feedback to the − input with the signal on +, a non-inverting amplifier. G = 1 + 47 kΩ / 4.7 kΩ = 11, so V_b = 11 × 0.539 V = 5.93 V.",
-          "Stage 3: no feedback, a comparator. V_ref = 12 V × 10 kΩ / (10 kΩ + 10 kΩ) = 6 V. V_b = 5.93 V is below 6 V, so X2's output is at 0 V, Q1 is off and the LED is dark.",
-          "Working backwards: the LED comes on when V_b reaches 6 V, that is when V_a = 6 V / 11 = 0.5455 V. From the divider, R2 = R1 × V_a / (12 V − V_a) = 100 kΩ × 0.5455 V / 11.45 V = 4.76 kΩ. A rise of only about 1.3% in the sensor (4.7 kΩ to 4.76 kΩ) trips the alarm. With no hysteresis, the LED would flicker as the temperature drifts slowly through this point; feedback to X2's + input would fix that.",
+          "Stage 3: no feedback, a comparator. V_ref = 12 V × 10 kΩ / (10 kΩ + 10 kΩ) = 6 V. V_b = 5.93 V is below 6 V, so X2's output is at 0 V, Q1 is off, and the LED is dark.",
+          "Working backward: the LED comes on when V_b reaches 6 V, that is, when V_a = 6 V / 11 = 0.5455 V. From the divider, R2 = R1 × V_a / (12 V − V_a) = 100 kΩ × 0.5455 V / 11.45 V = 4.76 kΩ. A rise of only about 1.3% in the sensor (4.7 kΩ to 4.76 kΩ) trips the alarm. With no hysteresis, the LED would flicker as the temperature drifts slowly through this point; feedback to X2's + input would fix that.",
           "Stage 4, once X2 switches to 12 V: I_B = (12 V − 0.7 V) / 10 kΩ = 1.13 mA. Assume an LED drop of 2.0 V and V_CE(sat) ≈ 0.2 V: the LED current is (12 V − 2.0 V − 0.2 V) / 1 kΩ = 9.8 mA. That needs a current gain of only 9.8 mA / 1.13 mA ≈ 8.7, so Q1 is driven hard into saturation and acts as a closed switch.",
-          "The same map guides a repair: if the LED never lights on a hot day, measure a, b and ref in order. The first reading that disagrees with these numbers points at the stage just before that node, or at the next stage loading it."
+          "The same map guides a repair: if the LED never lights on a hot day, measure a, b, and ref in order. The first reading that disagrees with these numbers points at the stage just before that node, or at the next stage loading it."
         ]
       },
       "sources": [
@@ -103,10 +103,10 @@
         },
         {
           "text": "It is a difference amplifier whose output follows the difference b − ref",
-          "feedback": "A difference amplifier needs input resistors and a feedback resistor from the output to the − input. With no feedback, the op amp's gain of about 100 000 applies in full: 1 mV of difference would ask for 100 V: the output can only sit at a rail."
+          "feedback": "A difference amplifier needs input resistors and a feedback resistor from the output to the − input. With no feedback, the op amp's gain of about 100 000 applies in full: 1 mV of difference would ask for 100 V, so the output can only sit at a rail."
         }
       ],
-      "explanation": "Find the feedback first. X1's output returns to its − input through Rf–Rg, so X1 is an amplifier. X2's output goes only to RB: no feedback, so X2 is a comparator. R3–R4 hold its − input at 6 V; when node b passes 6 V, X2's output jumps to 12 V and Q1 turns the LED on. Read as a sentence: temperature → voltage → bigger voltage → yes/no → light.",
+      "explanation": "Find the feedback first. X1's output returns to its − input through Rf–Rg, so X1 is an amplifier. X2's output goes only to RB: no feedback, so X2 is a comparator. R3–R4 hold its − input at 6 V; when node b passes 6 V, X2's output jumps to 12 V and Q1 turns the LED on. The chain, in order: temperature → voltage → bigger voltage → yes/no → light.",
       "hints": [
         "Does anything connect X2's output back to one of its inputs?",
         "What fixed voltage do R3 and R4 make from the 12 V supply?"
@@ -395,14 +395,14 @@
             },
             {
               "text": "RB limits the LED's current, so the LED doesn't burn out when Q1 turns on",
-              "feedback": "The LED current flows from +12 V through the 1k, the LED and Q1's collector. The 1k resistor above the LED sets it; RB only carries the small base current."
+              "feedback": "The LED current flows from +12 V through the 1k, the LED, and Q1's collector. The 1k resistor above the LED sets it; RB only carries the small base current."
             },
             {
               "text": "RB slows the transistor's switching down, so the LED doesn't flicker at the trip point",
-              "feedback": "RB has no capacitor to make a time constant with, and slowing the switch isn't its job. It sets how much current flows into the base."
+              "feedback": "RB has no capacitor to make a time constant with, and slowing the switch isn't its job. It sets how much current flows into the base. (Flicker at the trip point comes from X2 having no hysteresis; positive feedback around X2 would fix it.)"
             }
           ],
-          "explanation": "Seen from the base, Q1 is a diode to ground, and nothing but RB limits the current into it. RB drops the 11.3 V difference and sets I_B ≈ 1.1 mA, about a tenth of the 10 mA collector current: enough to saturate Q1 (the switch from the transistor unit). (A non-rail-to-rail op amp reaching about 10.5 V still gives ≈1 mA.)"
+          "explanation": "Seen from the base, Q1 is a diode to ground, and nothing but RB limits the current into it. RB drops the 11.3 V difference and sets I_B ≈ 1.1 mA, about a tenth of the 10 mA collector current: enough to saturate Q1 (the switch from \"Transistor switches\"). (A non-rail-to-rail op amp reaching about 10.5 V still gives ≈1 mA.)"
         }
       ],
       "review": "verified"
@@ -474,7 +474,7 @@
       "misconceptions": [
         {
           "formula": "12*R2/(R1+R2)*Rf/Rg",
-          "feedback": "That uses Rf/Rg as the gain. For a non-inverting amplifier the gain is 1 + Rf/Rg: the output must be big enough that the Rf–Rg divider hands back all of V_a."
+          "feedback": "That uses Rf/Rg as the gain. For a non-inverting amplifier, the gain is 1 + Rf/Rg: the output must be big enough that the Rf–Rg divider hands back all of V_a."
         },
         {
           "formula": "12*R1/(R1+R2)*(1+Rf/Rg)",
@@ -780,7 +780,7 @@
     {
       "id": "sig_alarm_what_if_r1",
       "topicId": "schem_signal_path",
-      "prompt": "In this over-temperature alarm (R1 = {R1}, Rf = {Rf}, Rg = 4.7 kΩ), the LED comes on when the sensor R2 rises to {before}. R1 in stage 1 is swapped for {new_R1}. Nothing in stages 2, 3 or 4 changes. What happens to the sensor resistance at which the LED comes on?",
+      "prompt": "In this over-temperature alarm (R1 = {R1}, Rf = {Rf}, Rg = 4.7 kΩ), the LED comes on when the sensor R2 rises to {before}. R1 in stage 1 is swapped for {new_R1}. Nothing in stages 2, 3, or 4 changes. What happens to the sensor resistance at which the LED comes on?",
       "variables": [
         {
           "name": "R1",
@@ -809,11 +809,11 @@
           "R1": "10*R1"
         },
         "feedback": {
-          "down": "That would make the alarm trip sooner. But a bigger R1 takes a bigger share of the 12 V, so for the same sensor resistance node a is lower, node b is lower, and at the old trip resistance b now falls short of the 6 V reference.",
+          "down": "That would make the alarm trip sooner. But a bigger R1 takes a bigger share of the 12 V, so for the same sensor resistance, node a is lower, node b is lower, and at the old trip resistance b now falls short of the 6 V reference.",
           "same": "The reference stays at 6 V, but stage 3 compares it with what stages 1 and 2 hand on. A bigger R1 leaves less at node a for any given R2, and node b is node a times stage 2's gain, so a given sensor resistance no longer brings b to the same voltage."
         }
       },
-      "explanation": "The LED comes on when node b reaches the 6 V set by R3–R4, that is when V_a × (1 + Rf/Rg) = 6 V. Stage 1 sets V_a = 12 V × R2/(R1 + R2). With a bigger R1, each value of R2 gives a smaller V_a, so R2 has to rise further (the sensor must get hotter) before b reaches 6 V: {before} → {after}. A part in the first stage moved the trip point of the last one.",
+      "explanation": "The LED comes on when node b reaches the 6 V set by R3–R4, that is, when V_a × (1 + Rf/Rg) = 6 V. Stage 1 sets V_a = 12 V × R2/(R1 + R2). With a bigger R1, each value of R2 gives a smaller V_a, so R2 has to rise further (the sensor must get hotter) before b reaches 6 V: {before} → {after}. A part in the first stage moved the trip point of the last one.",
       "hints": [
         "For a fixed sensor resistance, does a bigger R1 make node a higher or lower?",
         "The comparator's reference hasn't moved. What must the sensor do so that node b still reaches it?"
@@ -1122,12 +1122,12 @@
       "choices": [
         {
           "text": "A low-pass filter: the DC level passes, and C1 shunts fast ripple to ground",
-          "feedback": "Right: R3 is in series with the signal and C1 goes from the signal to ground. That is the RC low-pass from the filters unit. C1 sees R3 plus the divider's own R1∥R2 = 5 kΩ, so f_c = 1/(2π × 15 kΩ × 1 µF) ≈ 11 Hz.",
+          "feedback": "Right: R3 is in series with the signal and C1 goes from the signal to ground. That is the RC low-pass from \"RC low-pass cutoff frequency.\" C1 sees R3 plus the divider's own R1∥R2 = 5 kΩ, so f_c = 1/(2π × 15 kΩ × 1 µF) ≈ 11 Hz.",
           "correct": true
         },
         {
           "text": "A high-pass filter: it removes the DC level and passes the fast changes on",
-          "feedback": "A high-pass puts the capacitor in series with the signal and the resistor to ground. Here it's the other way round: C1 goes to ground, so it removes the fast changes, and the DC passes."
+          "feedback": "A high-pass puts the capacitor in series with the signal and the resistor to ground. Here it's the other way around: C1 goes to ground, so it removes the fast changes, and the DC passes."
         },
         {
           "text": "A DC block: C1 stops the DC, like a coupling capacitor between two stages",
@@ -1138,7 +1138,7 @@
           "feedback": "At DC, C1 carries no current and neither does X1's + input, so no current flows in R3 and it drops nothing: node f equals node a. Only changes see C1 as a path to ground."
         }
       ],
-      "explanation": "Stage 2 is a series R with a C to ground: a low-pass filter. At DC the capacitor is an open circuit, and X1's + input takes no current, so nothing flows through R3 and f = a. Fast changes (supply ripple at 120 Hz, noise) see C1's small reactance, and R3–C1 divide them down. The follower then copies the clean node f to the load.",
+      "explanation": "Stage 2 is a series R with a C to ground: a low-pass filter. At DC, the capacitor is an open circuit, and X1's + input takes no current, so nothing flows through R3 and f = a. Fast changes (supply ripple at 120 Hz, noise) see C1's small reactance, and R3–C1 divide them down. The follower then copies the clean node f to the load.",
       "hints": [
         "Which part is in series with the signal, and which goes from the signal to ground?",
         "What is a capacitor's reactance at DC, and at high frequency?"
@@ -1356,12 +1356,12 @@
           "choices": [
             {
               "text": "C1's reactance is huge at DC but small for ripple, so only the ripple gets divided down",
-              "feedback": "Right: the same parts form a divider whose ratio depends on frequency. At DC the ratio is 1; at 120 Hz, about eleven times above f_c, it is roughly 1/11.",
+              "feedback": "Right: the same parts form a divider whose ratio depends on frequency. At DC, the ratio is 1; at 120 Hz, about eleven times above f_c, it is roughly 1/11.",
               "correct": true
             },
             {
               "text": "C1 charges up to the ripple's peak and holds node f there, so the ripple disappears",
-              "feedback": "That is a peak detector, which needs a diode to stop the capacitor discharging. Here C1 settles at the average level, node a's DC voltage."
+              "feedback": "That is a peak detector, which needs a diode to stop the capacitor from discharging. Here C1 settles at the average level, node a's DC voltage."
             },
             {
               "text": "The op amp after it is too slow to follow fast signals, so it only passes the DC",
@@ -1655,7 +1655,7 @@
             },
             {
               "text": "C1 blocks the load's current from reaching the divider",
-              "feedback": "C1 goes from node f to ground; it isn't between the load and the divider. At DC it simply carries nothing."
+              "feedback": "C1 goes from node f to ground; it isn't between the load and the divider. At DC, it carries nothing."
             },
             {
               "text": "R3 is ten times bigger than the load, so the load barely matters",
@@ -1674,7 +1674,7 @@
     {
       "id": "sig_ref_fault",
       "topicId": "schem_signal_path",
-      "prompt": "This reference circuit runs from {Vcc} (R1 = {R1}, R2 = {R2}); X1 runs from ±15 V supplies (not drawn). Stage 1 (R1, R2) sets the level at node a, stage 2 (R3 = 10 kΩ, C1) filters it to node f, and stage 3 (X1) drives a 1 kΩ load through a cable. Node a, node f and the load should all read {h0}. The meter readings at the stage boundaries are below. Which fault explains them?",
+      "prompt": "This reference circuit runs from {Vcc} (R1 = {R1}, R2 = {R2}); X1 runs from ±15 V supplies (not drawn). Stage 1 (R1, R2) sets the level at node a, stage 2 (R3 = 10 kΩ, C1) filters it to node f, and stage 3 (X1) drives a 1 kΩ load through a cable. Node a, node f, and the load should all read {h0}. The meter readings at the stage boundaries are below. Which fault explains them?",
       "variables": [
         {
           "name": "Vcc",
@@ -1725,19 +1725,19 @@
             "text": "R1 is open (stage 1)",
             "open": "R1",
             "feedback": "An open R1 would cut stage 1 off from the supply: R2 would pull node a to 0 V, and every later node would pass the 0 V on.",
-            "why": "Every node reads 0 V, so the signal is already missing at node a: the fault is in stage 1. With R1 open nothing feeds the divider, and R2 pulls node a to ground."
+            "why": "Every node reads 0 V, so the signal is already missing at node a: the fault is in stage 1. With R1 open, nothing feeds the divider, and R2 pulls node a to ground."
           },
           {
             "text": "R2 is open (stage 1)",
             "open": "R2",
-            "feedback": "An open R2 would leave nothing pulling node a down: node a, node f and the load would all read nearly the full supply.",
-            "why": "Node a already reads nearly the full {Vcc} supply (the meters' 10 MΩ loads it through R1), so the fault is in stage 1. Nothing pulls node a down any more, so R1 carries almost no current and drops almost nothing; the filter and the follower pass the wrong level on unchanged."
+            "feedback": "An open R2 would leave nothing pulling node a down: node a, node f, and the load would all read nearly the full supply.",
+            "why": "Node a already reads nearly the full {Vcc} supply (the meters' 10 MΩ loads it through R1), so the fault is in stage 1. Nothing pulls node a down anymore, so R1 carries almost no current and drops almost nothing; the filter and the follower pass the wrong level on unchanged."
           },
           {
             "text": "C1 is shorted (stage 2)",
             "short": "C1",
             "feedback": "A shorted C1 would pin node f and the load at 0 V, and it would draw current through R3, pulling node a below its normal {h0}.",
-            "why": "Node a still has a voltage but node f is 0 V, so the signal dies in stage 2. A short from f to ground explains both readings: it holds f at 0 V and draws current through R3, which loads the divider and pulls node a down to {m0}."
+            "why": "Node a still has a voltage, but node f is 0 V, so the signal dies in stage 2. A short from f to ground explains both readings: it holds f at 0 V and draws current through R3, which loads the divider and pulls node a down to {m0}."
           },
           {
             "text": "The cable to the load is broken (after stage 3)",
@@ -1747,10 +1747,10 @@
           }
         ]
       },
-      "explanation": "Follow the signal from the source and find the first boundary that reads wrong: the fault is in the stage just before it. Wrong already at node a points at stage 1 (0 V or the full supply tells you which leg). Beware: a short in stage 2 also pulls node a down, because it draws current back through R3.",
+      "explanation": "Follow the signal from the source and find the first boundary that reads wrong: the fault is in the stage just before it. A wrong reading already at node a points at stage 1 (0 V or the full supply tells you which leg). Beware: a short in stage 2 also pulls node a down, because it draws current back through R3.",
       "hints": [
         "Start at node a and move along the chain. Where is the first reading that differs from {h0}?",
-        "A short in a later stage can load the stage before it. Does node a read normal, lower, 0 V or the full supply?"
+        "A short in a later stage can load the stage before it. Does node a read normal, lower, 0 V, or the full supply?"
       ],
       "bridge": [
         "circuit",
@@ -1963,7 +1963,7 @@
     {
       "id": "sig_alarm_trip_node_a",
       "topicId": "schem_signal_path",
-      "prompt": "In this over-temperature alarm (one 12 V supply), stage 2 has Rf = {Rf} and Rg = {Rg}, and R3 = R4 = 10 kΩ set the comparator's reference at node ref. The LED comes on when node b rises past ref. Work backwards from the comparator: what voltage at node a turns the LED on?",
+      "prompt": "In this over-temperature alarm (one 12 V supply), stage 2 has Rf = {Rf} and Rg = {Rg}, and R3 = R4 = 10 kΩ set the comparator's reference at node ref. The LED comes on when node b rises past ref. Work backward from the comparator: what voltage at node a turns the LED on?",
       "variables": [
         {
           "name": "Rf",
@@ -2013,7 +2013,7 @@
         },
         {
           "formula": "12*10000/(10000+10000)*(1+Rf/Rg)",
-          "feedback": "That multiplies by the gain, going forward through stage 2. Working backwards from node b to node a, you undo the gain: divide by 1 + Rf/Rg."
+          "feedback": "That multiplies by the gain, going forward through stage 2. Working backward from node b to node a, you undo the gain: divide by 1 + Rf/Rg."
         },
         {
           "formula": "12*10000/(10000+10000)/(Rf/Rg)",

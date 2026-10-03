@@ -20,7 +20,7 @@
         }
       ],
       "prerequisiteNotes": {
-        "mosfet_switching": "An H-bridge is four MOSFET switches; the losses, gate drive and dead time of one switch decide how the bridge behaves."
+        "mosfet_switching": "An H-bridge is four MOSFET switches; the losses, gate drive, and dead time of one switch decide how the bridge behaves."
       },
       "goals": [
         "Choose which switches to turn on to drive a motor either way or brake it, and name the combinations that short the supply",
@@ -29,24 +29,24 @@
         "Explain why shoot-through destroys a bridge and how dead time prevents it"
       ],
       "intuition": "With one switch on in each leg of an H-bridge, each end of the motor is tied to the supply or to ground: a diagonal pair ties the two ends to opposite rails, and which pair is on sets the direction of the current.",
-      "why": "A spinning motor generates a back-EMF E_b, in proportion to its speed, that opposes the driving voltage. With Q1 and Q4 on, the current runs supply → Q1 → winding → Q4 → ground, so two R_DS(on) sit in series with the winding and I = (V_s − E_b)/(R_m + 2R_DS(on)). At start or stall E_b = 0 and the current is largest. With Q1 and Q2 both on, the supply sees only two R_DS(on) and no winding: shoot-through, a near short circuit. A MOSFET takes time to turn off while its gate discharges, so the controller leaves a dead time.",
-      "explanation": "One MOSFET switch can run a motor in only one direction. An H-bridge can reverse the motor's voltage, using four switches. On each side of the motor, a high-side switch connects to the supply and a low-side switch to ground; each pair is a leg. An NMOS high side conducts with its source near V_s, so its gate must be driven about 5–10 V above the supply; driver ICs make that voltage with a charge pump or bootstrap capacitor. With Q1 (left high) and Q4 (right low) on, current flows through the motor left to right; with Q3 and Q2, right to left. Both low sides on shorts the motor's terminals, and a spinning motor's own voltage then drives a current that brakes it. Never turn on both switches in one leg: that shorts the supply (shoot-through). A turning motor generates a back-EMF E_b opposing the supply, so I = (V_s − E_b)/(R_m + 2R_DS(on)); at start or stall E_b = 0 and the current is largest. The current always passes through two switches, so the bridge's conduction loss is 2·I²·R_DS(on). A MOSFET takes time to turn off, so the controller waits a short dead time before turning on the other switch in a leg; meanwhile the winding keeps its current flowing through a body diode. PWM on a diagonal pair sets the speed.",
+      "why": "A spinning motor generates a back-EMF E_b, in proportion to its speed, that opposes the driving voltage. With Q1 and Q4 on, the current runs supply → Q1 → winding → Q4 → ground, so two R_DS(on) sit in series with the winding and I = (V_s − E_b)/(R_m + 2R_DS(on)). At start or stall, E_b = 0 and the current is largest. With Q1 and Q2 both on, the supply sees only two R_DS(on) and no winding: shoot-through, a near short circuit. A MOSFET takes time to turn off while its gate discharges, so the controller leaves a dead time.",
+      "explanation": "One MOSFET switch can run a motor in only one direction. An H-bridge can reverse the motor's voltage, using four switches. On each side of the motor, a high-side switch connects to the supply and a low-side switch to ground; each pair is a leg. An NMOS high side conducts with its source near V_s, so its gate must be driven about 5–10 V above the supply; driver ICs make that voltage with a charge pump or bootstrap capacitor. With Q1 (left high) and Q4 (right low) on, current flows through the motor from left to right; with Q3 and Q2, from right to left. Turning on both low sides shorts the motor's terminals, and a spinning motor's own voltage then drives a current that brakes it. Never turn on both switches in one leg: that shorts the supply (shoot-through). A turning motor generates a back-EMF E_b opposing the supply, so I = (V_s − E_b)/(R_m + 2R_DS(on)); at start or stall, E_b = 0 and the current is largest. The current always passes through two switches, so the bridge's conduction loss is 2·I²·R_DS(on). A MOSFET takes time to turn off, so the controller waits a short dead time before turning on the other switch in a leg; meanwhile the winding keeps its current flowing through a body diode. PWM on a diagonal pair sets the speed.",
       "workedExample": {
         "problem": "A motor-driver IC (an H-bridge of four MOSFETs; assume R_DS(on) = 0.33 Ω per switch) runs from 12 V and drives a DC motor with winding resistance R_m = 2.7 Ω. Q1 and Q3 are the left and right high sides, Q2 and Q4 the left and right low sides. Find the current and the bridge's loss at start, and when running with a back-EMF of 9.0 V. What happens if the motor is reversed at full speed, or if Q2 turns on together with Q1?",
         "steps": [
           "Forward (left to right through the motor): turn on the diagonal pair Q1 and Q4, and keep Q2 and Q3 off. The current path is 12 V → Q1 → winding → Q4 → ground: two switches and the winding in series.",
           "At start, or stalled, the motor is not turning, so E_b = 0 and only resistance limits the current: I = 12 V / (2.7 Ω + 2 × 0.33 Ω) = 12 V / 3.36 Ω = 3.57 A.",
           "Bridge loss at start: 2 × (3.57 A)² × 0.33 Ω = 8.42 W. A small driver IC cannot shed that for long, which is why many such chips include current limiting and thermal shutdown.",
-          "Running, E_b = 9.0 V opposes the supply: I = (12 V − 9.0 V) / 3.36 Ω = 0.893 A. Bridge loss: 2 × (0.893 A)² × 0.33 Ω = 0.526 W. Each switch drops 0.893 A × 0.33 Ω = 0.295 V, so the motor's terminals see 12 V − 2 × 0.295 V = 11.41 V.",
+          "When the motor is running, E_b = 9.0 V opposes the supply: I = (12 V − 9.0 V) / 3.36 Ω = 0.893 A. Bridge loss: 2 × (0.893 A)² × 0.33 Ω = 0.526 W. Each switch drops 0.893 A × 0.33 Ω = 0.295 V, so the motor's terminals see 12 V − 2 × 0.295 V = 11.41 V.",
           "Reverse: turn off Q1 and Q4, wait the dead time, then turn on Q3 and Q2. At full speed the motor still spins the same way, so its 9.0 V back-EMF now adds to the reversed supply: the current heads for (12 V + 9.0 V) / 3.36 Ω = 6.25 A in the reverse direction (the winding's inductance sets how fast it gets there), more than the start current, until the motor slows.",
-          "Shoot-through: if Q2 turns on while Q1 is still on, the left leg puts only 2 × 0.33 Ω = 0.66 Ω across the supply. In this fixed-resistance model, 12 V / 0.66 Ω = 18.2 A flows, and each switch dissipates (18.2 A)² × 0.33 Ω = 109 W. Real supplies and wiring limit the peak, but it is still far beyond the switches' rating: never both switches in one leg."
+          "Shoot-through: if Q2 turns on while Q1 is still on, the left leg puts only 2 × 0.33 Ω = 0.66 Ω across the supply. In this fixed-resistance model, 12 V / 0.66 Ω = 18.2 A flows, and each switch dissipates (18.2 A)² × 0.33 Ω = 109 W. Real supplies and wiring limit the peak, but it is still far beyond the switches' rating: never turn on both switches in one leg."
         ]
       },
       "sources": [
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Transistor Switching Circuits\" (last update 5 May 2026), section 3.8 \"H-bridge networks\" (p. 40)",
           "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_qswitch.pdf",
-          "note": "An H-bridge reverses the load's polarity by turning on the transistors in opposite corners, an upper one sourcing and a lower one sinking the load current, and swapping to the other diagonal pair reverses the current."
+          "note": "An H-bridge reverses the load's polarity by turning on the transistors in opposite corners, an upper one sourcing and a lower one sinking the load current; swapping to the other diagonal pair reverses the current."
         },
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Transistor Switching Circuits\" (last update 5 May 2026), section 2.4 \"Example: high-side N-channel switch\" (p. 13)",
@@ -78,11 +78,11 @@
         },
         {
           "text": "Q3 and Q2",
-          "feedback": "That drives current right to left, the reverse direction."
+          "feedback": "That drives current from right to left, the reverse direction."
         },
         {
           "text": "Q2 and Q4",
-          "feedback": "Both low sides on shorts the motor terminals together: that brakes the motor, it doesn't drive it."
+          "feedback": "Turning on both low sides shorts the motor terminals together: that brakes the motor rather than driving it."
         }
       ],
       "schematic": {
@@ -225,16 +225,16 @@
         ],
         "labels": []
       },
-      "explanation": "Diagonal pairs drive the motor: Q1 + Q4 gives left → right, Q3 + Q2 gives right → left. Both low sides on is dynamic braking.",
+      "explanation": "Diagonal pairs drive the motor: Q1 + Q4 gives left → right, Q3 + Q2 gives right → left. Turning on both low sides is dynamic braking.",
       "review": "verified"
     },
     {
       "id": "hb_shoot_through",
       "topicId": "h_bridge",
-      "prompt": "Why does an H-bridge controller add a short 'dead time' between switching one side's high switch off and its low switch on?",
+      "prompt": "Why does an H-bridge controller add a short \"dead time\" between switching one side's high switch off and its low switch on?",
       "choices": [
         {
-          "text": "A MOSFET takes time to turn off, or both switches in the leg would conduct at once and short the supply",
+          "text": "A MOSFET takes time to turn off; without the gap, both switches in the leg would conduct at once and short the supply",
           "correct": true,
           "feedback": "Yes: during any overlap, current flows straight from the supply to ground through both switches of the leg (shoot-through), limited only by their on-resistance and the wiring."
         },
@@ -665,8 +665,8 @@
           "prompt": "Why does a stalled motor draw so much more current than the same motor running?",
           "choices": [
             {
-              "text": "A spinning motor is also a generator, and its back-EMF opposes the supply; stalled, there is no back-EMF, so only the winding resistance and the two switches limit the current",
-              "feedback": "Right: with E_b = 0 the whole supply is across a few ohms.",
+              "text": "A spinning motor is also a generator, and its back-EMF opposes the supply; when it is stalled, there is no back-EMF, so only the winding resistance and the two switches limit the current",
+              "feedback": "Right: with E_b = 0, the whole supply is across a few ohms.",
               "correct": true
             },
             {
@@ -682,7 +682,7 @@
               "feedback": "Inductance only slows changes in current. At steady DC it limits nothing, turning or not."
             }
           ],
-          "explanation": "I = (V_s − E_b)/(R_m + 2R_DS(on)). Running, the back-EMF E_b is close to V_s, so only a small difference drives the current. Stalled, E_b = 0 and Kirchhoff's voltage law puts the whole supply across the winding and two switches. That is the current the MOSFETs must survive, or that a current limit must catch."
+          "explanation": "I = (V_s − E_b)/(R_m + 2R_DS(on)). When the motor is running, the back-EMF E_b is close to V_s, so only a small difference drives the current. When it is stalled, E_b = 0, and Kirchhoff's voltage law puts the whole supply across the winding and two switches. That is the current the MOSFETs must survive, or that a current limit must catch."
         }
       ],
       "review": "verified",
@@ -958,7 +958,7 @@
               "feedback": "An off channel doesn't conduct. The path is the body diode that every power MOSFET has from source to drain."
             }
           ],
-          "explanation": "It is the flyback diode from 'LEDs, Zener regulators and flyback diodes' again: an inductor's current keeps going when its switch opens. During the dead time it flows through a body diode, which drops about 0.7–1 V instead of I·R_DS(on). A well-chosen channel drops far less than that (often only tens of millivolts), so the diode usually loses more than the on channel would, and dead time is kept as short as the switches safely allow."
+          "explanation": "It is the flyback diode from \"LEDs, Zener regulators, and flyback diodes\" again: an inductor's current keeps going when its switch opens. During the dead time it flows through a body diode, which drops about 0.7–1 V instead of I·R_DS(on). A well-chosen channel drops far less than that (often only tens of millivolts), so the diode usually loses more than the on channel would, and dead time is kept as short as the switches safely allow."
         }
       ],
       "review": "verified",
@@ -1230,7 +1230,7 @@
         "formula": "(V-frac*V)/(Rm+2*Rds)",
         "unit": "A"
       },
-      "explanation": "The spinning motor is also a generator: its back-EMF, {Eb}, opposes the supply, so only {V} − {Eb} = {Vnet} is left to push current. That current flows through Q1, the winding and Q4 in series, {Rm} + 2 × {Rds} = {Rloop}: I = {Vnet}/{Rloop} = {answer}. Stalled, with no back-EMF, the same motor would try to draw {V}/{Rloop} = {Istall}, which is why drivers limit current.",
+      "explanation": "The spinning motor is also a generator: its back-EMF, {Eb}, opposes the supply, so only {V} − {Eb} = {Vnet} is left to push current. That current flows through Q1, the winding, and Q4 in series, {Rm} + 2 × {Rds} = {Rloop}: I = {Vnet}/{Rloop} = {answer}. If it stalled, with no back-EMF, the same motor would try to draw {V}/{Rloop} = {Istall}, which is why drivers limit current.",
       "hints": [
         "The back-EMF opposes the supply. How much voltage is left to drive current around the loop?",
         "I = (V_s − E_b)/(R_m + 2R_DS(on)): the loop holds the winding and two switches."
@@ -1250,7 +1250,7 @@
         },
         {
           "formula": "(V+frac*V)/(Rm+2*Rds)",
-          "feedback": "The back-EMF opposes the supply (that is what 'back' means): subtract it, don't add it."
+          "feedback": "The back-EMF opposes the supply (that is what \"back\" means): subtract it, don't add it."
         }
       ],
       "steps": [
@@ -1469,7 +1469,7 @@
     {
       "id": "hb_fault",
       "topicId": "h_bridge",
-      "prompt": "An H-bridge on a {V} supply should drive its motor left to right, with Q1 and Q4 on and Q2 and Q3 off. Q4's gate gets 10 V; Q1 is a high-side NMOS, so its driver lifts its gate to {Vg1}, 10 V above the supply. Fully on, each MOSFET is about 0.1 Ω (V_t ≈ 2 V). In use the motor runs weakly or not at all. On the bench its shaft is clamped, so it acts as just its winding resistance, {Rm}. Healthy, the meters (10 MΩ) would read {h0} at the motor's left terminal (L), {h1} at its right terminal (R), and {h2} through the winding. The readings are below. Which fault explains them?",
+      "prompt": "An H-bridge on a {V} supply should drive its motor left to right, with Q1 and Q4 on and Q2 and Q3 off. Q4's gate gets 10 V; Q1 is a high-side NMOS, so its driver lifts its gate to {Vg1}, 10 V above the supply. Fully on, each MOSFET is about 0.1 Ω (V_t ≈ 2 V). In use the motor runs weakly or not at all. On the bench, its shaft is clamped, so it acts as its winding resistance alone, {Rm}. When the circuit is healthy, the meters (10 MΩ) read {h0} at the motor's left terminal (L), {h1} at its right terminal (R), and {h2} through the winding. The readings are below. Which fault explains them?",
       "variables": [
         {
           "name": "V",
@@ -1516,19 +1516,19 @@
           {
             "text": "Q1 has failed open",
             "open": "MQ1",
-            "feedback": "With Q1 open no current could flow, and nothing would connect the left terminal to the supply: it would be pulled down through the winding and Q4, so both terminals would read about 0 V.",
+            "feedback": "With Q1 open, no current could flow, and nothing would connect the left terminal to the supply: it would be pulled down through the winding and Q4, so both terminals would read about 0 V.",
             "why": "No current flows, and both terminals read about 0 V. The right terminal is held at ground by Q4, and the left one follows it through the idle winding, so the supply isn't reaching the left side at all. The break is between the supply and L: Q1. (Its gate drive is fine; a failed-open die doesn't respond to it.)"
           },
           {
             "text": "Q4 has failed open",
             "open": "MQ4",
-            "feedback": "With Q4 open no current could flow, and both terminals would read the supply voltage: Q1 holds the left one there, and the winding, carrying no current, drops nothing, so the right one reads the same.",
+            "feedback": "With Q4 open, no current could flow, and both terminals would read the supply voltage: Q1 holds the left one there, and the winding, carrying no current, drops nothing, so the right one reads the same.",
             "why": "No current flows, yet both terminals read the supply voltage, {m0} and {m1}. Q1 is clearly connecting L to the supply, and R follows it through the winding because no current flows to drop any voltage. So the right terminal has no path to ground: the break is in Q4."
           },
           {
             "text": "The winding is open (a broken brush lead)",
             "open": "RM",
-            "feedback": "With the winding open no current could flow, but both switches would still hold their terminals: the left one at the supply voltage through Q1, the right one at 0 V through Q4.",
+            "feedback": "With the winding open, no current could flow, but both switches would still hold their terminals: the left one at the supply voltage through Q1, the right one at 0 V through Q4.",
             "why": "No current flows, but L reads the supply voltage ({m0}) and R reads 0 V. Both switches are doing their job, and the full supply appears across the motor's terminals with no current through it: the break is in the motor itself."
           },
           {
@@ -1538,7 +1538,7 @@
               "formula": "V"
             },
             "feedback": "With Q1's gate only at the supply voltage, current would still flow, but less than healthy: Q1's source (the left terminal) can't rise above its gate minus about V_t, so L would sit several volts below the supply and Q1 would drop those volts as heat.",
-            "why": "Current flows but only {m2} of the healthy {h2}, and L reads {m0}, several volts below the {V} supply, while R is near 0 V as it should be. Q1 is conducting, just not fully on. A high-side NMOS has its source at the motor terminal, so to be fully on its gate must be about 10 V above that terminal, above the supply. With the gate only at the supply, Q1 can pull L up only to about the supply minus V_t minus the overdrive it needs to carry the current (V_t ≈ 2 V, plus 1.4–2.3 V of overdrive here), like a source follower. The volts it drops times the current are heat: Q1 will soon overheat."
+            "why": "Current flows, but only {m2} of the healthy {h2}, and L reads {m0}, several volts below the {V} supply, while R is near 0 V as it should be. Q1 is conducting, just not fully on. A high-side NMOS has its source at the motor terminal, so to be fully on its gate must be about 10 V above that terminal, above the supply. With the gate only at the supply, Q1 can pull L up only to about the supply minus V_t minus the overdrive it needs to carry the current (V_t ≈ 2 V, plus 1.4–2.3 V of overdrive here), like a source follower. The volts it drops times the current are heat: Q1 will soon overheat."
           }
         ]
       },

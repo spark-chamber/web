@@ -11,7 +11,7 @@
         "series_parallel"
       ],
       "lensNotes": {
-        "circuit": "Dividers make reference voltages, scale signals for an ADC and set transistor bias. The output only stays put if the load draws much less current than the divider itself, so either keep the load large or buffer it."
+        "circuit": "Dividers make reference voltages, scale signals for an ADC, and set transistor bias. The output stays put only if the load draws much less current than the divider itself, so either keep the load large or buffer it."
       },
       "formulas": [
         {
@@ -28,13 +28,13 @@
       },
       "goals": [
         "Find a divider's output voltage from its two resistors and the supply",
-        "Split a current between parallel branches, knowing the smaller resistance takes the larger share",
+        "Split a current between parallel branches, knowing that the smaller resistance takes the larger share",
         "Explain why an unloaded divider's output depends on the ratio of the resistors, not their size",
         "Predict how much a load pulls the output down, and choose resistor values that keep it small"
       ],
       "intuition": "An unloaded divider's output is set by the ratio of its resistors: the same current flows through both, so each takes a share of the supply in proportion to its resistance.",
       "why": "With nothing connected to the output, the same current flows through R1 and R2 (charge has nowhere else to go). Each resistor drops I·R, so the drops split the supply in the ratio R1 : R2. Multiply both resistors by ten and the current falls to a tenth, but the ratio, and so the output, stays the same. A load connected across R2 is a second path for that current: it lowers the effective bottom resistance, so the output falls.",
-      "explanation": "Two resistors in series across a supply make a voltage divider. The output is taken across the bottom resistor R2, and Vout = Vin · R2 / (R1 + R2). Only the ratio matters with nothing connected to the output. In practice something is always connected: a meter, an ADC input, a transistor's base. That load sits in parallel with R2 and pulls the output down. The rule of thumb: keep the load at least ten times R2 and the output drops by less than 10%, whatever R1 is (the exact drop depends on both resistors, as the Thevenin topic shows). Put two resistors in parallel instead and they share one voltage, so the current splits the other way: I1 = I · R2 / (R1 + R2). The smaller resistance takes the larger share of the current. Smaller resistors hold up better under load but draw more current and waste more power, so choosing a divider is a trade between accuracy and power.",
+      "explanation": "Two resistors in series across a supply make a voltage divider. The output is taken across the bottom resistor R2, and Vout = Vin · R2 / (R1 + R2). With nothing connected to the output, only the ratio matters. In practice something is always connected: a meter, an ADC input, or a transistor's base. That load sits in parallel with R2 and pulls the output down. The rule of thumb: keep the load at least ten times R2 and the output drops by less than 10%, whatever R1 is (the exact drop depends on both resistors, as the Thevenin topic shows). Put two resistors in parallel instead and they share one voltage, so the current splits the other way: I1 = I · R2 / (R1 + R2). The smaller resistance takes the larger share of the current. Smaller resistors hold up better under load but draw more current and waste more power, so choosing a divider is a trade between accuracy and power.",
       "workedExample": {
         "problem": "A 12 V supply feeds R1 = 10 kΩ on top and R2 = 4.7 kΩ on the bottom. What is the output with nothing connected, and what is it with a 10 kΩ load across R2?",
         "steps": [
@@ -332,7 +332,7 @@
             },
             {
               "text": "The output depends only on R2, so any R1 works",
-              "feedback": "The output depends on the ratio of the two. Change R1 and R2 must change in step."
+              "feedback": "The output depends on the ratio of the two. If R1 changes, R2 must change in step."
             },
             {
               "text": "It only holds when the two resistors are equal",
@@ -496,7 +496,7 @@
       "explanation": "Current divides in inverse proportion to resistance: I1 = I · R2 / (R1 + R2) = {I} × {R2} / ({R1} + {R2}) = {answer}. The smaller resistor carries the larger share.",
       "hints": [
         "Which way does more current go: through the bigger or the smaller resistor?",
-        "I1 = I · R2 / (R1 + R2): note the OTHER resistor on top."
+        "I1 = I · R2 / (R1 + R2): note that the other resistor is on top."
       ],
       "misconceptions": [
         {
@@ -668,10 +668,10 @@
         "formula": "Vin*Rp/(R+Rp)",
         "unit": "V"
       },
-      "explanation": "The load is in parallel with the bottom resistor: {R} || {RL} = {Rp}. The divider is now {R} over {Rp}, so Vout = {Vin} × {Rp} / ({R} + {Rp}) = {answer}, below the unloaded {Vnl}.",
+      "explanation": "The load is in parallel with the bottom resistor: {R} ∥ {RL} = {Rp}. The divider is now {R} over {Rp}, so Vout = {Vin} × {Rp} / ({R} + {Rp}) = {answer}, below the unloaded {Vnl}.",
       "hints": [
         "The load and the bottom resistor are in parallel.",
-        "Replace the bottom resistor with R || RL, then use the divider formula."
+        "Replace the bottom resistor with R ∥ RL, then use the divider formula."
       ],
       "misconceptions": [
         {
@@ -1138,7 +1138,7 @@
       },
       "explanation": "Vout = Vin·R2/(R1 + R2). A bigger R2 takes a bigger share: {before} → {after}. The current falls, but R2 grows by a larger factor than the current shrinks.",
       "hints": [
-        "Which resistor gets the bigger share of the voltage, the bigger or the smaller one?"
+        "Which resistor gets the bigger share of the voltage: the bigger one or the smaller one?"
       ],
       "followUps": [
         {
@@ -1622,13 +1622,13 @@
             "text": "R1 is open (cracked or not soldered)",
             "open": "R1",
             "feedback": "An open R1 would stop all current, so the supply current would read 0 A and the output would fall to 0 V.",
-            "why": "With R1 open no current flows, so R2 has nothing across it: the output reads 0 V and the supply current reads 0 A."
+            "why": "With R1 open, no current flows, so R2 has nothing across it: the output reads 0 V and the supply current reads 0 A."
           },
           {
             "text": "R2 is open",
             "open": "R2",
             "feedback": "An open R2 would stop the current (0 A), and with no drop across R1 the output would rise to the full input.",
-            "why": "With R2 open no current flows, so R1 drops nothing and the output sits at the full input, {Vin}."
+            "why": "With R2 open, no current flows, so R1 drops nothing and the output sits at the full input, {Vin}."
           },
           {
             "text": "R1 is shorted (a solder bridge across it)",
@@ -1785,7 +1785,7 @@
         },
         "feedback": {
           "down": "The current does drop to a tenth, but each drop is current × resistance: a tenth of the current through ten times the resistance gives the same drop.",
-          "up": "Bigger resistors don't raise the output. It depends only on the ratio R2 / (R1 + R2), and scaling both by ten leaves that ratio alone."
+          "up": "Bigger resistors don't raise the output. It depends only on the ratio R2 / (R1 + R2), and scaling both by ten leaves that ratio unchanged."
         }
       },
       "explanation": "Vout = Vin·R2 / (R1 + R2) depends only on the ratio of the resistors: {before} both times. What does change is the current, which falls to a tenth, so the divider wastes only a tenth as much power.",

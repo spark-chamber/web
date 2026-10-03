@@ -14,7 +14,7 @@
       ],
       "lensNotes": {
         "circuit": "Summing works because the virtual ground adds the input currents. The difference amplifier subtracts, but only as well as its resistor pairs match.",
-        "signals": "Mixers, DAC outputs and offset adders are summers. Difference amplifiers reject noise common to both wires (common mode), which is how sensor signals survive long cables."
+        "signals": "Mixers, DAC outputs, and offset adders are summers. Difference amplifiers reject noise common to both wires (common mode), which is how sensor signals survive long cables."
       },
       "formulas": [
         {
@@ -36,7 +36,7 @@
         "Find a difference amplifier's output with matched resistor pairs, and explain why a voltage common to both inputs cancels",
         "Explain why changing one input resistor of a summer leaves the other inputs' currents unchanged"
       ],
-      "intuition": "A summer adds currents at its virtual ground, each input sending its own V/R and Rf turning the total into the output, while a difference amplifier gives V1 and V2 equal and opposite gains so whatever they share cancels, but only as far as its two resistor pairs match (both need negative feedback and an output inside its swing limits).",
+      "intuition": "A summer adds currents at its virtual ground: each input sends its own V/R, and Rf turns the total into the output. A difference amplifier gives V1 and V2 equal and opposite gains, so whatever they share cancels, but only as far as its two resistor pairs match. Both circuits need negative feedback and an output inside the op amp's swing limits.",
       "why": "In the summer, with the + input grounded, feedback holds the summing node at 0 V. Each input resistor has its source on one end and 0 V on the other, so its current is V_n/R_n, whatever the other inputs do. None enters the op amp, so by KCL they add in Rf: Vout = −Rf × their sum. In the difference amplifier, take one input at a time. With V2 at 0 V, V1 meets an inverting stage with gain −Rf/R. V2 passes a divider (R on top, Rf to ground) to reach the + input as V2·Rf/(R + Rf), then the non-inverting gain 1 + Rf/R makes it exactly V2·Rf/R. A shared voltage cancels; a resistor mismatch lets some through.",
       "explanation": "Start from the inverting amplifier. Its − input is a virtual ground, so the current through Rin is Vin/Rin. Connect a second input through its own resistor to the same node. The node stays at 0 V, so each input sends its own current, V1/R1 and V2/R2, and neither affects the other. No current enters the op amp, so the currents add up in Rf: Vout = −Rf·(V1/R1 + V2/R2). Each input has its own gain, −Rf/R_n, and each source sees just its own R_n. To subtract, combine both amplifiers. V1 goes through R to the − input, with Rf as feedback: the inverting path. V2 goes through a matching divider, R then Rf to ground, into the + input: the non-inverting path. With both pairs matched, Vout = (Rf/R)·(V2 − V1). Here the − input sits at V+, not at 0 V: no virtual ground. V2's source sees R + Rf. V1's current, (V1 − V+)/R, depends on V2 as well, so V1 has no fixed input resistance. A voltage added to both inputs, such as a ground difference along a cable, cancels: common-mode rejection. It is only as good as the resistor match.",
       "workedExample": {
@@ -55,12 +55,12 @@
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 8 \"Operational Amplifiers\", section \"Averager and summer circuits\"",
           "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_8.html#xtocid90727",
-          "note": "In the inverting summer each input current is set by its own voltage and resistor into the virtual ground, the currents add in the feedback resistor, and the output is their inverted sum."
+          "note": "In the inverting summer, each input current is set by its own voltage and resistor into the virtual ground, the currents add in the feedback resistor, and the output is their inverted sum."
         },
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Operational Amplifiers\" (last update 23 September 2026), section 3.12 \"Differential amplification\" (pp. 65–69)",
           "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_opamp.pdf",
-          "note": "Superposition shows the four-resistor subtractor gives Vout = V+ − V− with equal resistors, other gains come from the resistor ratios, the + input voltage comes from an unloaded divider, and the + source sees both lower resistors in series."
+          "note": "Superposition shows that the four-resistor subtractor gives Vout = V+ − V− with equal resistors and other gains from the resistor ratios; the + input voltage comes from an unloaded divider, and the + source sees both lower resistors in series."
         },
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 8 \"Operational Amplifiers\", section \"Practical considerations\", subsection \"Common-mode gain\"",
@@ -146,7 +146,7 @@
         "formula": "-Rf*(V1/R1+V2/R2)",
         "unit": "V"
       },
-      "explanation": "The inverting input is a virtual ground, so each input sends its own current: {I1} and {I2}. Both flow through Rf: Vout = −Rf (V1/R1 + V2/R2) = {answer}.",
+      "explanation": "The inverting input is a virtual ground, so each input sends its own current: {I1} and {I2}. Both flow through Rf: Vout = −Rf·(V1/R1 + V2/R2) = {answer}.",
       "hints": [
         "Each input resistor sees its input voltage on one end and 0 V on the other.",
         "Add the currents, then Vout = −Rf × (total current)."
@@ -154,7 +154,7 @@
       "misconceptions": [
         {
           "formula": "-(V1+V2)",
-          "feedback": "Vout = −(V1 + V2) only when all three resistors are equal. Weight each input by Rf/R: Vout = −Rf (V1/R1 + V2/R2)."
+          "feedback": "Vout = −(V1 + V2) only when all three resistors are equal. Weight each input by Rf/R: Vout = −Rf·(V1/R1 + V2/R2)."
         }
       ],
       "simCheck": {
@@ -449,7 +449,7 @@
       "explanation": "With matched resistor pairs, Vout = (Rf/R)(V2 − V1) = {G} × ({V2} − {V1}) = {answer}. Anything common to both inputs cancels.",
       "hints": [
         "Which input is subtracted from which?",
-        "Vout = (Rf / R) · (V2 − V1), V2 being the non-inverting input."
+        "Vout = (Rf / R) · (V2 − V1), where V2 is the non-inverting input."
       ],
       "misconceptions": [
         {
@@ -675,7 +675,7 @@
             },
             {
               "text": "Matching only sets the overall gain; a common voltage cancels whatever the resistors are",
-              "feedback": "With a mismatch, V1 and V2 see different gains, so the same voltage on both gives a non-zero output."
+              "feedback": "With a mismatch, V1 and V2 see different gains, so the same voltage on both gives a nonzero output."
             },
             {
               "text": "Matching keeps the output away from the rails when both inputs are high",
@@ -944,7 +944,7 @@
         "unit": "Ω",
         "tolerance": 0.02
       },
-      "explanation": "Each input of an inverting summer has its own gain −Rf/R_n. For −{G}: R1 = Rf/{G} = {Rf}/{G} = {answer}. Then pick the nearest E24 value; the gain moves by the same few percent the part differs from the exact value.",
+      "explanation": "Each input of an inverting summer has its own gain −Rf/R_n. For −{G}: R1 = Rf/{G} = {Rf}/{G} = {answer}. Then pick the nearest E24 value; the gain moves by the same few percent by which the part differs from the exact value.",
       "hints": [
         "Each input sees its own inverting amplifier into the virtual ground.",
         "Gain = −Rf/R1, so R1 = Rf/G."
@@ -1154,7 +1154,7 @@
     {
       "id": "sum_three_equal",
       "topicId": "opamp_summing_difference",
-      "prompt": "Inputs of {V1}, {V2} and {V3} each go through their own input resistor into an inverting summer (op amp on ±15 V supplies, not drawn). Every input resistor and the feedback resistor are {R}. What is the output voltage?",
+      "prompt": "Inputs of {V1}, {V2}, and {V3} each go through their own input resistor into an inverting summer (op amp on ±15 V supplies, not drawn). Every input resistor and the feedback resistor are {R}. What is the output voltage?",
       "variables": [
         {
           "name": "V1",
@@ -1454,7 +1454,7 @@
     {
       "id": "sum_what_if_r1_current2",
       "topicId": "opamp_summing_difference",
-      "prompt": "An inverting summer (op amp on ±15 V supplies, not drawn) has Rf = {Rf}. Input 1 ({V1}) arrives through R1 = {R1}, input 2 ({V2}) through R2 = {R2}. R1 is swapped for {new_R1}. What happens to the current flowing in through R2?",
+      "prompt": "An inverting summer (op amp on ±15 V supplies, not drawn) has Rf = {Rf}. Input 1 ({V1}) arrives through R1 = {R1}, and input 2 ({V2}) through R2 = {R2}. R1 is swapped for {new_R1}. What happens to the current flowing in through R2?",
       "variables": [
         {
           "name": "V1",
@@ -1717,7 +1717,7 @@
     {
       "id": "sum_what_if_r1_output",
       "topicId": "opamp_summing_difference",
-      "prompt": "An inverting summer (op amp on ±15 V supplies, not drawn) has Rf = {Rf}. Input 1 ({V1}) arrives through R1 = {R1}, input 2 ({V2}) through R2 = {R2}. R1 is swapped for {new_R1}. What happens to the size of the output voltage?",
+      "prompt": "An inverting summer (op amp on ±15 V supplies, not drawn) has Rf = {Rf}. Input 1 ({V1}) arrives through R1 = {R1}, and input 2 ({V2}) through R2 = {R2}. R1 is swapped for {new_R1}. What happens to the size of the output voltage?",
       "variables": [
         {
           "name": "V1",
@@ -2032,7 +2032,7 @@
           "down": "The extra volt on V1 pushes the output down, but the same volt on V2 pushes it up by exactly as much, because the matched pairs give both inputs the same size of gain."
         }
       },
-      "explanation": "Vout = (Rf/R)(V2 − V1) stays at {after}. The ground difference raises V1 and V2 by the same amount, so V2 − V1 is unchanged: V1's path (gain −Rf/R) and V2's path (a divider then gain 1 + Rf/R, also Rf/R overall) cancel it exactly. This common-mode rejection is why difference amplifiers read sensors over long wires.",
+      "explanation": "Vout = (Rf/R)(V2 − V1) stays at {after}. The ground difference raises V1 and V2 by the same amount, so V2 − V1 is unchanged: V1's path (gain −Rf/R) and V2's path (a divider, then a gain of 1 + Rf/R, also Rf/R overall) cancel it exactly. This common-mode rejection is why difference amplifiers read sensors over long wires.",
       "hints": [
         "Work out V2 − V1 before and after."
       ],
@@ -2310,18 +2310,18 @@
           {
             "text": "Rf is open",
             "open": "RF",
-            "feedback": "With Rf open the input currents would have nowhere to go but from one input into the other, the summing node would no longer sit at 0 V, and the op amp, with no feedback, would drive its output to the −12 V rail.",
+            "feedback": "With Rf open, the input currents would have nowhere to go but from one input into the other. The summing node would no longer sit at 0 V, and the op amp, with no feedback, would drive its output to the −12 V rail.",
             "why": "The output sits at the −12 V rail: nothing feeds back, so the summing node floats up to a voltage between the two inputs, and the op amp, seeing V− above V+, saturates. R1 and R2 now carry the same small current in opposite directions (one meter reads negative): current flows from the higher input through both resistors into the lower one, and none if the inputs are equal."
           },
           {
             "text": "Rf is shorted (a solder bridge across it)",
             "short": "RF",
-            "feedback": "With Rf shorted the output would be tied to the summing node, which feedback holds at 0 V: the output would read 0 V while both inputs kept their normal currents, flowing into the bridge.",
+            "feedback": "With Rf shorted, the output would be tied to the summing node, which feedback holds at 0 V: the output would read 0 V while both inputs kept their normal currents, flowing into the bridge.",
             "why": "Both input currents are normal, so the summing node is still held at 0 V. But the output reads 0 V: the combined current flows through the Rf position without dropping any voltage, so Rf is bridged."
           }
         ]
       },
-      "explanation": "First look at the output: if it sits at a rail, the feedback path is broken (Rf open). Otherwise read the input currents: each one is V/R into a virtual ground. If one is zero, that input is cut off, and the output shows only the other input's share. If both are normal but the output is 0 V, the current is getting back without a drop (Rf bridged).",
+      "explanation": "First look at the output: if it sits at a rail, the feedback path is broken (Rf open). Otherwise, read the input currents: each one is V/R into a virtual ground. If one is zero, that input is cut off, and the output shows only the other input's share. If both are normal but the output is 0 V, the current is getting back without a drop (Rf bridged).",
       "hints": [
         "Look at the output first: is it at a rail?",
         "If not, check the two input currents: is either of them zero, or are both normal?"
@@ -2518,6 +2518,331 @@
             ]
           }
         ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "diff_design_source_rs",
+      "topicId": "opamp_summing_difference",
+      "prompt": "A difference amplifier (ideal op amp on ±12 V supplies, not drawn) subtracts a 2.5 V reference, V1, from a sensor's voltage, V2. The reference comes from a buffer with negligible output resistance; the sensor behaves as a voltage source behind its own output resistance, R_s = {Rs}. R1 = {R1} and R_f = {Rf} give V1 a gain of −{G}, and R4 = {Rf} is fitted as R_f's matched partner. Choose R3 (E24, 1 kΩ to 100 kΩ) so that V2's gain is +{G} within 0.4%: then a volt common to both inputs moves the output by at most {cmMax}. Treat the resistors as exact (in practice, 0.1% parts).",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "value": 10000
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "values": [
+            47000,
+            68000,
+            100000
+          ]
+        },
+        {
+          "name": "Rs",
+          "unit": "Ω",
+          "values": [
+            1800,
+            2500,
+            3200
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "G",
+          "formula": "Rf/R1",
+          "unit": ""
+        },
+        {
+          "name": "Gn",
+          "formula": "1+Rf/R1",
+          "unit": ""
+        },
+        {
+          "name": "cmMax",
+          "formula": "0.004*Rf/R1",
+          "unit": "V"
+        },
+        {
+          "name": "R3ex",
+          "formula": "R1-Rs",
+          "unit": "Ω"
+        },
+        {
+          "name": "Gtrap",
+          "formula": "Rf/(Rs+R1+Rf)*(1+Rf/R1)",
+          "unit": ""
+        },
+        {
+          "name": "CMtrap",
+          "formula": "abs(Rf/(Rs+R1+Rf)*(1+Rf/R1)-Rf/R1)",
+          "unit": "V"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "R3",
+            "label": "R3",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 1000,
+            "max": 100000
+          }
+        ],
+        "result": "Rf/(Rs+R3+Rf)*(1+Rf/R1)",
+        "resultLabel": "gain from V2",
+        "resultUnit": "",
+        "target": "Rf/R1",
+        "tolerance": 0.004
+      },
+      "explanation": "V2 reaches the + input through a divider: the + input draws no current, so V+ = V2 × R4/(R_s + R3 + R4). The sensor's own R_s is in series with R3, part of the divider's top. The non-inverting gain 1 + R_f/R1 = {Gn} then gives V2 a gain of {Gn} × R4/(R_s + R3 + R4). That equals V1's {G} exactly when R4/(R_s + R3) = R_f/R1, the matched-pair condition with R_s counted. With R4 = R_f, the top of the divider must total R1: R3 = {R1} − {Rs} = {R3ex}. Fitting R3 = R1, as if the sensor had no resistance, gives V2 a gain of {Gtrap} instead of {G}, so each volt common to both inputs leaks through as {CMtrap} at the output. In practice R_s also drifts with temperature, which is why sensors with real output resistance are usually buffered first (the front of an instrumentation amplifier).",
+      "hints": [
+        "Which resistances lie between the sensor's ideal voltage and the + input? R_s is one of them.",
+        "V2's gain is (1 + R_f/R1) × R4/(R_s + R3 + R4). It equals R_f/R1 when R4/(R_s + R3) = R_f/R1."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does the sensor's output resistance spoil the rejection of a voltage common to both inputs?",
+          "choices": [
+            {
+              "text": "R_s adds to R3 in V2's divider, so V2's gain no longer equals V1's, and a common voltage no longer cancels",
+              "correct": true,
+              "feedback": "Right: cancellation needs the two inputs' gains to be equal and opposite. R_s changes only V2's side, so the two gains differ and a share of any common voltage reaches the output."
+            },
+            {
+              "text": "Current flows from the sensor into the + input through R_s, adding an error at the output",
+              "feedback": "The + input draws no current. Current flows from the sensor down through R_s, R3, and R4 to ground, and R_s simply becomes part of that divider."
+            },
+            {
+              "text": "R_s only lowers the overall gain; the rejection of a common voltage is unaffected",
+              "feedback": "Rejection depends on the two inputs having equal gains. R_s lowers V2's gain alone, so the gains differ and a common voltage leaks through."
+            },
+            {
+              "text": "R_s matters only for the inverting input, where the virtual ground draws current from the source",
+              "feedback": "Here R_s is on the non-inverting side, and the − input is not at 0 V in a difference amplifier anyway. On V2's side R_s is in series with R3 and changes the divider ratio."
+            }
+          ],
+          "explanation": "A difference amplifier rejects a common voltage only because V1's path (gain −R_f/R1) and V2's path (a divider, then 1 + R_f/R1) have exactly equal sizes of gain. Any resistance in series with one input changes that input's ratio: with R3 = R1 it would leak {CMtrap} per volt of common-mode signal, against the {cmMax} allowed. Counting R_s inside R3 restores the match; an instrumentation amplifier avoids the problem by buffering each input so the source resistance doesn't matter."
+        }
+      ],
+      "schematic": {
+        "netlist": "difference amplifier with a sensor's resistance\nVR ref 0 2.5\nVS s 0 2.6\nRS s b {Rs:spice}\nR1 ref inv {R1:spice}\nRF inv out {Rf:spice}\nR3 b p {R3:spice}\nR4 p 0 {Rf:spice}\nX1 p inv out OA\n.model OA OPAMP(A=1e5)\n",
+        "parts": [
+          {
+            "ref": "VR",
+            "at": [
+              -8,
+              7
+            ],
+            "rot": 90,
+            "label": "V1\n2.5 V ref",
+            "labelOpposite": true
+          },
+          {
+            "ref": "VS",
+            "at": [
+              -5,
+              10
+            ],
+            "rot": 90,
+            "label": "V2\nsensor"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              -4,
+              8
+            ],
+            "label": "R_s {Rs}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "R1",
+            "at": [
+              4,
+              5
+            ],
+            "label": "R1 {R1}"
+          },
+          {
+            "ref": "RF",
+            "at": [
+              11,
+              2
+            ],
+            "label": "R_f {Rf}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              4,
+              8
+            ],
+            "label": "R3 {R3}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "R4",
+            "at": [
+              10,
+              10
+            ],
+            "rot": 90,
+            "label": "R4\n{Rf}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              12,
+              6
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              -8,
+              7
+            ],
+            [
+              -8,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          [
+            [
+              -5,
+              10
+            ],
+            [
+              -5,
+              8
+            ],
+            [
+              -4,
+              8
+            ]
+          ],
+          [
+            [
+              0,
+              8
+            ],
+            [
+              4,
+              8
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              12,
+              5
+            ]
+          ],
+          [
+            [
+              10,
+              5
+            ],
+            [
+              10,
+              2
+            ],
+            [
+              11,
+              2
+            ]
+          ],
+          [
+            [
+              15,
+              2
+            ],
+            [
+              17,
+              2
+            ],
+            [
+              17,
+              6
+            ]
+          ],
+          [
+            [
+              16,
+              6
+            ],
+            [
+              19,
+              6
+            ]
+          ],
+          [
+            [
+              8,
+              8
+            ],
+            [
+              11,
+              8
+            ],
+            [
+              11,
+              7
+            ],
+            [
+              12,
+              7
+            ]
+          ],
+          [
+            [
+              10,
+              8
+            ],
+            [
+              10,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            -8,
+            11
+          ],
+          [
+            -5,
+            14
+          ],
+          [
+            10,
+            14
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              19,
+              6
+            ]
+          }
+        ],
+        "noBuild": "R_s is the sensor's own output resistance, a model of the source, not a part"
       },
       "review": "verified"
     }

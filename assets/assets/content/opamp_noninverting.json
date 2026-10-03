@@ -29,14 +29,14 @@
         "opamp_ideal": "The non-inverting amplifier uses the rule V− = V+: the op amp drives its output until the feedback divider hands back the input voltage."
       },
       "goals": [
-        "Find a non-inverting amplifier's output from Rf, Rg and the input",
+        "Find a non-inverting amplifier's output from Rf, Rg, and the input",
         "Choose Rf and Rg from E-series values for a required gain, knowing the gain can never be below 1",
         "Explain why the source sees a very high input resistance, and why a voltage follower isolates a source from its load",
-        "Predict what a heavier load or a ten times larger Rf does to the output, and explain why"
+        "Predict what a heavier load or an Rf ten times larger does to the output, and explain why"
       ],
-      "intuition": "With negative feedback through the Rf–Rg divider, the op amp moves its output until the divider feeds exactly Vin back to the − input, so the output is Vin divided by the fraction Rg/(Rf + Rg), and the source only drives the + input, which draws no current (this holds only while the output stays inside its swing limits).",
+      "intuition": "With negative feedback through the Rf–Rg divider, the op amp moves its output until the divider feeds exactly Vin back to the − input. The output is therefore Vin divided by the fraction Rg/(Rf + Rg), and the source drives only the + input, which draws no current (this holds only while the output stays inside its swing limits).",
       "why": "The signal drives the + input, which draws no current, so the source is not loaded. Rf and Rg form a divider from the output to ground, with the − input at its midpoint. The − input draws no current either, so this divider is unloaded: V− = Vout·Rg/(Rf + Rg). Negative feedback drives V− to equal Vin, so Vout = Vin·(Rf + Rg)/Rg = Vin·(1 + Rf/Rg). A divider hands back at most all of its input, so the gain is at least 1. With Rf = 0 the fraction is 1, and the output follows the input.",
-      "explanation": "Start from the inverting amplifier and move the signal to the other input. The signal now goes straight to the + input. Rf runs from the output to the − input, and Rg from the − input to ground. They form a divider from the output. The − input draws no current, so the divider is unloaded. Negative feedback makes V− equal V+, which is the input. So the output must be the voltage whose divided-down share is Vin: Vout = Vin·(1 + Rf/Rg). The output is in phase with the input: no inversion. The gain is never below 1, because a divider cannot hand back more than it is given. The 1 + is also why ten times Rf gives less than ten times the gain. The input resistance is very high: the source only drives the + input, which ideally takes no current. With Rf = 0 and Rg left out, the output connects straight to the − input: a voltage follower, gain 1. It passes on the voltage but not the load current: that comes from the op amp's supply, not from the source. The output still cannot go beyond its swing limits.",
+      "explanation": "Start from the inverting amplifier and move the signal to the other input. The signal now goes straight to the + input. Rf runs from the output to the − input, and Rg from the − input to ground. They form a divider from the output. The − input draws no current, so the divider is unloaded. Negative feedback makes V− equal V+, which is the input. So the output must be the voltage whose divided-down share is Vin: Vout = Vin·(1 + Rf/Rg). The output is in phase with the input: no inversion. The gain is never below 1, because a divider cannot hand back more than it is given. The \"1 +\" is also why ten times Rf gives less than ten times the gain. The input resistance is very high: the source only drives the + input, which ideally takes no current. With Rf = 0 and Rg left out, the output connects straight to the − input: a voltage follower, gain 1. It passes on the voltage but not the load current: that comes from the op amp's supply, not from the source. The output still cannot go beyond its swing limits.",
       "workedExample": {
         "problem": "A sensor gives 0.80 V with no load and has a 10 kΩ output resistance. It drives a non-inverting amplifier on ±12 V supplies with Rf = 47 kΩ and Rg = 10 kΩ. Find the voltage at the + input, the gain, the output, and the largest sensor voltage before a rail-to-rail output clips. Then choose E24 resistors for a gain of 10 instead.",
         "steps": [
@@ -45,7 +45,7 @@
           "Vout = 0.80 V × 5.7 = 4.56 V, in phase with the input.",
           "Check with the rules: the divider returns 4.56 V × 10 kΩ / (47 kΩ + 10 kΩ) = 0.80 V to the − input, equal to V+. The divider carries 4.56 V / 57 kΩ = 80 µA, supplied by the op amp's output, not by the sensor.",
           "Clipping: 4.56 V is well inside ±12 V. A rail-to-rail output reaches +12 V when the input is 12 V / 5.7 = 2.11 V; an output that stops short of the rails clips earlier.",
-          "Compare: had the sensor driven an inverting stage with Rin = 10 kΩ and the same Rf = 47 kΩ, its 10 kΩ would sit in series with Rin: gain −47 kΩ / 20 kΩ = −2.35 instead of the −4.7 the resistors promise, half. The non-inverting stage does not load the sensor at all.",
+          "Compare: had the sensor driven an inverting stage with Rin = 10 kΩ and the same Rf = 47 kΩ, its 10 kΩ would sit in series with Rin: gain −47 kΩ / 20 kΩ = −2.35, half the −4.7 the resistors promise. The non-inverting stage does not load the sensor at all.",
           "Gain of 10: Rf/Rg = 10 − 1 = 9. With Rg = 10 kΩ, Rf = 90 kΩ is not an E24 value; the nearest is 91 kΩ, giving 1 + 91 kΩ / 10 kΩ = 10.1, 1% high. Freeing Rg does better: 18 kΩ and 2.0 kΩ (or 27 kΩ and 3.0 kΩ) are both E24 with a ratio of exactly 9, so the gain is 10.0."
         ]
       },
@@ -53,7 +53,7 @@
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 8 \"Operational Amplifiers\", section \"Divided feedback\"",
           "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_8.html#xtocid90724",
-          "note": "A divider in the feedback path gives a gain of 1 + Rfeedback/Rground with the same polarity as the input, never below 1, reducing to the follower when the feedback resistor is zero, and the signal source supplies no current."
+          "note": "A divider in the feedback path gives a gain of 1 + Rfeedback/Rground with the same polarity as the input; the gain is never below 1 and reduces to the follower when the feedback resistor is zero; and the signal source supplies no current."
         },
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 8 \"Operational Amplifiers\", section \"Negative feedback\"",
@@ -113,9 +113,9 @@
         "formula": "Vin*(1+Rf/Rg)",
         "unit": "V"
       },
-      "explanation": "Rf and Rg form a divider from the output back to the inverting input, which must equal Vin. So Vout = Vin (1 + Rf/Rg) = {Vin} × {G} = {answer}.",
+      "explanation": "Rf and Rg form a divider from the output back to the inverting input, whose voltage must equal Vin. So Vout = Vin·(1 + Rf/Rg) = {Vin} × {G} = {answer}.",
       "hints": [
-        "The inverting input sees Vout through the Rf–Rg divider, and must equal Vin.",
+        "The inverting input sees Vout through the Rf–Rg divider and must equal Vin.",
         "Gain = 1 + Rf / Rg."
       ],
       "misconceptions": [
@@ -279,7 +279,7 @@
             },
             {
               "text": "Current flows into the non-inverting input and adds to the output",
-              "feedback": "Ideal op amp inputs draw no current."
+              "feedback": "Ideal op-amp inputs draw no current."
             },
             {
               "text": "It isn't; the gain of a non-inverting amplifier is Rf/Rg",
@@ -519,10 +519,10 @@
         },
         {
           "text": "It isn't needed: {Rs} into {RL} works fine",
-          "feedback": "Connected directly, {Rs} and {RL} form a divider and most of the sensor voltage would be lost."
+          "feedback": "Connected directly, {Rs} and {RL} would form a divider, and most of the sensor voltage would be lost."
         }
       ],
-      "explanation": "Directly connected, {Rs} and {RL} form a divider that would lose most of the signal. A follower has near-infinite input resistance (no loading) and near-zero output resistance (drives the load), with a gain of 1.",
+      "explanation": "Connected directly, {Rs} and {RL} would form a divider that would lose most of the signal. A follower has near-infinite input resistance (no loading) and near-zero output resistance (drives the load), with a gain of 1.",
       "schematic": {
         "netlist": "buffered sensor\nVS s 0 1\nRS s in {Rs:spice}\nX1 in out out OA\nRL out 0 {RL:spice}\n.model OA OPAMP(A=1e5)\n",
         "parts": [
@@ -1021,7 +1021,7 @@
     {
       "id": "noninv_what_if_load",
       "topicId": "opamp_noninverting",
-      "prompt": "A non-inverting amplifier (Rf = {Rf}, Rg = {Rg}, input {Vin}, op amp on ±15 V supplies, not drawn) drives a load RL = {RL}. RL is swapped for {new_RL}, a ten times heavier load. What happens to the output voltage?",
+      "prompt": "A non-inverting amplifier (Rf = {Rf}, Rg = {Rg}, input {Vin}, op amp on ±15 V supplies, not drawn) drives a load RL = {RL}. RL is swapped for {new_RL}, a load ten times heavier. What happens to the output voltage?",
       "variables": [
         {
           "name": "Vin",
@@ -1274,7 +1274,7 @@
         },
         {
           "formula": "Rg/(Rf+Rg)",
-          "feedback": "That's the fraction of the output fed back to V−. The gain is its inverse, (Rf + Rg)/Rg = 1 + Rf/Rg."
+          "feedback": "That's the fraction of the output fed back to V−. The gain is its reciprocal, (Rf + Rg)/Rg = 1 + Rf/Rg."
         }
       ],
       "simCheck": {
@@ -1408,6 +1408,228 @@
           }
         ]
       }
+    },
+    {
+      "id": "noninv_fault",
+      "topicId": "opamp_noninverting",
+      "prompt": "This non-inverting amplifier runs from ±12 V supplies (rail-to-rail output, not drawn). With Rf = {Rf}, Rg = {Rg}, and {Vin} in, the output should be {h0}. The meter readings are below. Which fault explains them?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 0.2,
+            "max": 0.5,
+            "step": 0.1
+          }
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "values": [
+            3300,
+            4700,
+            6800,
+            10000
+          ]
+        },
+        {
+          "name": "Rg",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500,
+            2200
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Ishort",
+          "formula": "12/Rf",
+          "unit": "A"
+        },
+        {
+          "name": "Inorm",
+          "formula": "Vin/Rg",
+          "unit": "A"
+        }
+      ],
+      "fault": {
+        "netlist": "non-inverting\nV1 in 0 {Vin:spice}\nX1 in inv out OA\nRF out inv {Rf:spice}\nRG inv 0 {Rg:spice}\n.model OA OPAMP(VPOS=12 VNEG=-12)\n",
+        "probes": [
+          {
+            "label": "Output voltage",
+            "probe": "v(out)"
+          },
+          {
+            "label": "Voltage at the − input",
+            "probe": "v(inv)"
+          },
+          {
+            "label": "Current through Rf (ammeter in series)",
+            "probe": "i(RF)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "Rf is open (cracked, or a dry joint)",
+            "open": "RF",
+            "feedback": "With Rf open, nothing would feed back from the output: Rg would hold the − input at 0 V, Rf would carry no current, and with the + input at {Vin} the op amp would drive its output to the +12 V rail.",
+            "why": "The output is at the +12 V rail, the − input reads 0 V, and Rf carries no current. Nothing reaches the − input from the output, so Rg holds it at ground. With V+ = {Vin} above V− = 0 V and no feedback, the op amp runs open loop and saturates high."
+          },
+          {
+            "text": "Rg is open",
+            "open": "RG",
+            "feedback": "With Rg open, the divider would have no path to ground: Rf would carry no current and drop nothing, so the − input would sit at the output voltage. Feedback would then make the output equal the input, {Vin}, with 0 A in Rf.",
+            "why": "The output equals the input and the − input reads the same voltage, yet Rf carries no current. With no path to ground, Rf drops nothing, so the whole output is fed back: the stage has become a voltage follower with a gain of 1. Rg's connection to ground is broken."
+          },
+          {
+            "text": "Rf is shorted (a solder bridge across it)",
+            "short": "RF",
+            "feedback": "With Rf shorted, the output would be tied to the − input, so feedback would make the output equal the input, {Vin}. Rg would still carry its normal {Inorm} from the − input to ground, and that current would arrive through the bridge.",
+            "why": "The output equals the input, a follower, but the current through Rf's position is still the normal {Inorm}: Rg still pulls Vin/Rg from the − input, so the path to ground is intact. That current arrives without any voltage drop, so Rf is bridged."
+          },
+          {
+            "text": "Rg is shorted",
+            "short": "RG",
+            "feedback": "With Rg shorted, the − input would be tied to ground, so no output voltage could raise it to {Vin}. The op amp would drive its output to the +12 V rail, and Rf would carry 12 V/Rf = {Ishort} into the short.",
+            "why": "The output is at the +12 V rail and the − input reads 0 V, as if feedback were lost, but Rf carries {Ishort}, far more than normal: the feedback path is intact and its current goes straight to ground. The − input is shorted to ground, so the op amp can never pull it up to {Vin}, and it saturates trying."
+          }
+        ]
+      },
+      "explanation": "Compare the output with the input first. An output equal to the input means the stage has become a follower: the feedback divider returns all of the output, either because Rg's path to ground is gone (then Rf carries no current) or because Rf is bridged (then Rf's position still carries the normal Vin/Rg). An output at the +12 V rail means the − input can't reach Vin: it reads 0 V, either because nothing feeds back (Rf open, no current in it) or because the − input is shorted to ground (Rf then carries 12 V/Rf). The voltmeter readings alone can't separate them: Rf open and Rg shorted both put the output at the rail and the − input at 0 V. In every case, the current through Rf separates the two.",
+      "hints": [
+        "Is the output still above the input, equal to it, or at a rail?",
+        "Then use the current through Rf: zero means the divider is broken; current means its path is intact."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              5
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              8,
+              4
+            ],
+            "flip": true,
+            "label": ""
+          },
+          {
+            "ref": "RG",
+            "at": [
+              7,
+              8
+            ],
+            "rot": 90,
+            "label": "Rg\n{Rg}"
+          },
+          {
+            "ref": "RF",
+            "at": [
+              13,
+              8
+            ],
+            "rot": 180,
+            "label": "Rf {Rf}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              8,
+              3
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              4
+            ],
+            [
+              15,
+              4
+            ]
+          ],
+          [
+            [
+              13,
+              4
+            ],
+            [
+              13,
+              8
+            ]
+          ],
+          [
+            [
+              9,
+              8
+            ],
+            [
+              7,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ],
+          [
+            7,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              0,
+              3
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              15,
+              4
+            ]
+          }
+        ]
+      },
+      "review": "verified"
     }
   ]
 }

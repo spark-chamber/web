@@ -36,11 +36,11 @@
         "Find an unknown current at a node from the others, using Kirchhoff's current law (KCL)",
         "Find an unknown voltage in a loop from the source and the other drops, using Kirchhoff's voltage law (KVL)",
         "Write KCL at a node with Ohm's law for each branch and solve for the node voltage",
-        "Explain which conservation law each rule expresses, and use them to reason about a circuit backwards from meter readings"
+        "Explain which conservation law each rule expresses, and use them to reason about a circuit backward from meter readings"
       ],
       "intuition": "Charge cannot accumulate at a junction, so the current into a node equals the current out; and every node has one voltage, so any path that returns to its starting node has risen exactly as much as it has fallen (in a lumped circuit, where any changing magnetic field stays inside components such as inductors).",
       "why": "KCL is conservation of charge. A node is a small piece of metal with almost no capacitance, so it cannot store charge: if more flowed in than out, the excess would raise its voltage within nanoseconds (picofarads of stray capacitance, kilohm resistors), and the higher voltage pushes more current out through the branches until in equals out. KVL is conservation of energy. The voltage between two points is the energy per coulomb gained or lost moving between them, and each point has one potential, so any closed loop sums to zero. Both assume a lumped circuit, where every changing magnetic field stays inside components such as inductors and transformers. A wire loop that itself encloses changing flux (a long scope ground lead next to a transformer, say) picks up an induced voltage that no component shows, and KVL written only over the components no longer balances.",
-      "explanation": "You already know two special cases. Series parts carry one current; parallel parts share one voltage. Kirchhoff's laws are the general rules behind both. Kirchhoff's current law (KCL): at any node, the currents flowing in add up to the currents flowing out. Kirchhoff's voltage law (KVL): going around any closed loop, the voltage rises equal the voltage drops, so the signed sum is zero. To use them, first pick a direction for each unknown current and mark it. If the answer comes out negative, the current flows the other way; the magnitude is still right. Current enters a resistor at its more positive end, so walking through it with the current is a drop. Together with Ohm's law, these two rules solve any circuit of resistors and sources. The standard method, nodal analysis, writes KCL at each node whose voltage is unknown, with each branch current written as a voltage difference divided by a resistance. The simulator in this app does the same with a matrix (modified nodal analysis, which also adds each voltage source's current as an unknown). The laws also work backwards: if two of three currents at a node are known, the third needs no meter.",
+      "explanation": "You already know two special cases. Series parts carry one current; parallel parts share one voltage. Kirchhoff's laws are the general rules behind both. Kirchhoff's current law (KCL): at any node, the currents flowing in add up to the currents flowing out. Kirchhoff's voltage law (KVL): going around any closed loop, the voltage rises equal the voltage drops, so the signed sum is zero. To use them, first pick a direction for each unknown current and mark it. If the answer comes out negative, the current flows the other way; the magnitude is still right. Current enters a resistor at its more positive end, so walking through it with the current is a drop. Together with Ohm's law, these two rules solve any circuit of resistors and sources. The standard method, nodal analysis, writes KCL at each node whose voltage is unknown, with each branch current written as a voltage difference divided by a resistance. The simulator in this app does the same with a matrix (modified nodal analysis, which also adds each voltage source's current as an unknown). The laws also work backward: if two of three currents at a node are known, the third needs no meter.",
       "workedExample": {
         "problem": "A 12 V source drives R1 = 1 kΩ into node a. From node a, R2 = 2.2 kΩ and R3 = 3.3 kΩ both go to ground. Find the voltage at node a and the current in each resistor, then check both laws.",
         "steps": [
@@ -49,7 +49,7 @@
           "Collect Va: 12 V / 1 kΩ = Va × (1/1 kΩ + 1/2.2 kΩ + 1/3.3 kΩ) = Va × 1.758 mS, so Va = 12 mA / 1.758 mS = 6.83 V.",
           "Currents: I1 = (12 V − 6.83 V) / 1 kΩ = 5.17 mA; I2 = 6.83 V / 2.2 kΩ = 3.10 mA; I3 = 6.83 V / 3.3 kΩ = 2.07 mA.",
           "Check KCL: 3.10 mA + 2.07 mA = 5.17 mA, equal to the current in through R1.",
-          "Check KVL around the loop through the source, R1 and R2: +12 V − 5.17 V − 6.83 V = 0 V.",
+          "Check KVL around the loop through the source, R1, and R2: +12 V − 5.17 V − 6.83 V = 0 V.",
           "Cross-check with series and parallel: R2 ∥ R3 = 1.32 kΩ, and 12 V × 1.32 kΩ / (1 kΩ + 1.32 kΩ) = 6.83 V."
         ]
       },
@@ -125,7 +125,7 @@
       "misconceptions": [
         {
           "formula": "I1+I2+I3",
-          "feedback": "{I3} is leaving the node, so it counts on the 'out' side: I4 = I1 + I2 − I3."
+          "feedback": "{I3} is leaving the node, so it counts on the \"out\" side: I4 = I1 + I2 − I3."
         }
       ],
       "noDrawing": "a bare junction of four wires whose branches aren't described; drawing parts on them would invent a circuit",
@@ -474,7 +474,7 @@
         },
         {
           "text": "Ohm's law",
-          "feedback": "Ohm's law relates V, I and R for one component. KCL holds for any components at all."
+          "feedback": "Ohm's law relates V, I, and R for one component. KCL holds for any components at all."
         },
         {
           "text": "Current is used up by resistors",
@@ -634,7 +634,7 @@
     {
       "id": "kcl_parallel_total",
       "topicId": "kirchhoff",
-      "prompt": "A {V} source feeds three resistors in parallel: R1 = {R1}, R2 = {R2} and R3 = {R3}. What total current does the source supply?",
+      "prompt": "A {V} source feeds three resistors in parallel: R1 = {R1}, R2 = {R2}, and R3 = {R3}. What total current does the source supply?",
       "variables": [
         {
           "name": "V",
@@ -708,7 +708,7 @@
             },
             {
               "text": "The current is the same in each branch, so the voltage is too",
-              "feedback": "The currents differ: V / R1, V / R2 and V / R3. It's the voltage that's shared."
+              "feedback": "The currents differ: V / R1, V / R2, and V / R3. It's the voltage that's shared."
             }
           ],
           "explanation": "Each branch and the source form a closed loop. KVL around it: the source's rise equals the resistor's drop, so every branch has {V} across it and draws its own current V / R. KCL at the top node then adds the branch currents to give the supply current."
@@ -817,7 +817,7 @@
     {
       "id": "kcl_what_if_branch",
       "topicId": "kirchhoff",
-      "prompt": "An ideal source of {V} feeds three resistors in parallel: R1 = {R1}, R2 = {R2} and R3 = {R3}. R3 is swapped for {new_R3}, ten times smaller, which draws more current. What happens to the current through R1?",
+      "prompt": "An ideal source of {V} feeds three resistors in parallel: R1 = {R1}, R2 = {R2}, and R3 = {R3}. R3 is swapped for {new_R3}, ten times smaller, which draws more current. What happens to the current through R1?",
       "variables": [
         {
           "name": "V",
@@ -1001,7 +1001,7 @@
     {
       "id": "kcl_fault",
       "topicId": "kirchhoff",
-      "prompt": "A source of {V} drives R1 = {R1} into node a, and R2 = {R2} and R3 = {R3} both go from node a to ground. Healthy, node a should sit at {h0}. There is no meter on R3. The readings are below. Which fault explains them?",
+      "prompt": "A source of {V} drives R1 = {R1} into node a, and R2 = {R2} and R3 = {R3} both go from node a to ground. When the circuit is healthy, node a sits at {h0}. There is no meter on R3. The readings are below. Which fault explains them?",
       "variables": [
         {
           "name": "V",
@@ -1089,7 +1089,7 @@
           }
         ]
       },
-      "explanation": "KCL at node a: the supply current, which flows in through R1, equals the currents out through R2 and R3, so I_R3 = I_supply − I_R2 even without a meter on R3. KVL puts node a somewhere between 0 V and {V}; where it moves shows which side of the node changed. This is the series-parallel network from Series and parallel, read backwards.",
+      "explanation": "KCL at node a: the supply current, which flows in through R1, equals the currents out through R2 and R3, so I_R3 = I_supply − I_R2 even without a meter on R3. KVL puts node a somewhere between 0 V and {V}; where it moves shows which side of the node changed. This is the series-parallel network from Series and parallel, read backward.",
       "hints": [
         "Work out the current in R3 from the other two: KCL at node a.",
         "Zero current everywhere means the shared path is broken; 0 V at a node with current still flowing means a short to ground."
@@ -1201,6 +1201,266 @@
             "at": [
               10,
               0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "kcl_syn_shared_return",
+      "topicId": "kirchhoff",
+      "connects": [
+        "kirchhoff",
+        "series_parallel",
+        "ohms_law"
+      ],
+      "prompt": "A {V} battery runs a heater pad ({RA}) and a sensor module (which draws current like a {RB} resistor). Each has its own short, thick + lead; treat those as perfect. To save wire, their − leads join at the sensor's ground pin, node g, and one return wire of {Rg} carries both currents back to the battery's − terminal. With the heater on, what voltage does a meter read from node g to the battery's − terminal?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "value": 12
+        },
+        {
+          "name": "RA",
+          "unit": "Ω",
+          "values": [
+            4.7,
+            5.6,
+            6.8,
+            8.2,
+            10
+          ]
+        },
+        {
+          "name": "RB",
+          "unit": "Ω",
+          "values": [
+            680,
+            1000,
+            1500
+          ]
+        },
+        {
+          "name": "Rg",
+          "unit": "Ω",
+          "values": [
+            0.1,
+            0.15,
+            0.22
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rp",
+          "formula": "RA || RB",
+          "unit": "Ω"
+        },
+        {
+          "name": "I",
+          "formula": "V/(Rg + (RA || RB))",
+          "unit": "A"
+        },
+        {
+          "name": "Vg",
+          "formula": "V*Rg/(Rg + (RA || RB))",
+          "unit": "V"
+        },
+        {
+          "name": "Vs",
+          "formula": "V - V*Rg/(Rg + (RA || RB))",
+          "unit": "V"
+        },
+        {
+          "name": "IA",
+          "formula": "(V - V*Rg/(Rg + (RA || RB)))/RA",
+          "unit": "A"
+        },
+        {
+          "name": "IB",
+          "formula": "(V - V*Rg/(Rg + (RA || RB)))/RB",
+          "unit": "A"
+        },
+        {
+          "name": "VgB",
+          "formula": "Rg*(V - V*Rg/(Rg + (RA || RB)))/RB",
+          "unit": "V"
+        },
+        {
+          "name": "VgA",
+          "formula": "Rg*(V - V*Rg/(Rg + (RA || RB)))/RA",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "V*Rg/(Rg + (RA || RB))",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "Three ideas meet here. Kirchhoff's current law at node g: both loads' currents arrive there and leave through the one return wire, so it carries I_A + I_B. Series and parallel: from the battery's + terminal to node g, the heater and the sensor join the same two nodes, so they act as {RA} ∥ {RB} = {Rp}, in series with the return wire, and the battery delivers {V} / ({Rp} + {Rg}) = {I}. Ohm's law on the return wire: V_g = {I} × {Rg} = {answer}. By Kirchhoff's voltage law around the sensor's loop, the sensor itself gets only {V} − {answer} = {Vs}. The heater's {IA} sets almost all of the drop; the sensor's own {IB} alone would lift node g by only {VgB}.",
+      "hints": [
+        "By KCL at node g, which currents flow through the return wire?",
+        "The heater and sensor share the same two nodes (+ and g), so they are in parallel; that pair is in series with the return wire. Find the current, then V = IR for the wire."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V*Rg/(Rg+RB)",
+          "feedback": "That counts only the sensor's own current through the return. By KCL, the heater's current also arrives at node g and leaves through the same wire, and it is far larger."
+        },
+        {
+          "formula": "V - V*Rg/(Rg + (RA || RB))",
+          "feedback": "That is the voltage left across the sensor (KVL around its loop). The meter is between node g and the battery's − terminal, so it reads only the return wire's drop."
+        }
+      ],
+      "simCheck": {
+        "netlist": "shared return\nV1 p 0 {V:spice}\nRA p g {RA:spice}\nRB p g {RB:spice}\nRW1 g 0 {Rg:spice}\n",
+        "probe": "v(g)"
+      },
+      "followUps": [
+        {
+          "prompt": "The sensor's output signal is measured from its own ground pin, but the controller reads it relative to the battery's − terminal. What happens to the controller's reading when the heater switches on?",
+          "choices": [
+            {
+              "text": "It rises by about {VgA}: the heater's current through the shared return lifts node g, and everything referred to node g rises with it",
+              "correct": true,
+              "feedback": "Right: by KVL, the controller sees the sensor's output plus the return wire's drop, and that drop is mostly the heater's current."
+            },
+            {
+              "text": "It doesn't change: the heater is in parallel with the sensor, and parallel branches don't affect each other",
+              "feedback": "Parallel branches are independent only when the wires joining them have no resistance. Here both currents share the {Rg} return, so the heater's current changes the voltage at node g."
+            },
+            {
+              "text": "It falls by about {VgA}, because the heater takes current away from the sensor",
+              "feedback": "Each load draws its own current from the battery; the heater doesn't take the sensor's. Its current through the return lifts node g above the battery's − terminal, so readings referred to node g go up, not down."
+            },
+            {
+              "text": "It rises by only about {VgB}, the sensor's own current times the return resistance",
+              "feedback": "By KCL the return carries both currents. The heater's {IA} flows through the same {Rg}, so switching it on lifts node g by about {VgA}, not {VgB}."
+            }
+          ],
+          "explanation": "Going from the battery's − terminal up the return wire to node g and then through the sensor's output, KVL adds the return wire's drop to whatever the sensor produces. The drop is (I_A + I_B) × {Rg}, and the heater's current dominates it. This is why a circuit that measures small voltages gets its own return wire to the battery's − terminal (a star ground): a shared return turns one load's current into a voltage error for another."
+        }
+      ],
+      "schematic": {
+        "noBuild": "the return wire's resistance is a model of the wiring, not a part",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "RA",
+            "at": [
+              6,
+              2
+            ],
+            "rot": 90,
+            "label": "heater\n{RA}"
+          },
+          {
+            "ref": "RB",
+            "at": [
+              11,
+              2
+            ],
+            "rot": 90,
+            "label": "sensor\n{RB}"
+          },
+          {
+            "ref": "RW1",
+            "at": [
+              6,
+              9
+            ],
+            "rot": 180,
+            "label": "shared return\n{Rg}",
+            "labelOpposite": true
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              11,
+              0
+            ],
+            [
+              11,
+              2
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          [
+            [
+              6,
+              6
+            ],
+            [
+              11,
+              6
+            ]
+          ],
+          [
+            [
+              6,
+              6
+            ],
+            [
+              6,
+              9
+            ]
+          ],
+          [
+            [
+              2,
+              9
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              0,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            9
+          ]
+        ],
+        "labels": [
+          {
+            "text": "g",
+            "at": [
+              9,
+              6
             ]
           }
         ]

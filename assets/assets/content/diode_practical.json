@@ -2,7 +2,7 @@
   "topics": [
     {
       "id": "diode_practical",
-      "title": "LEDs, Zener regulators and flyback diodes",
+      "title": "LEDs, Zener regulators, and flyback diodes",
       "summary": "Set LED current with a resistor, hold a voltage steady with a Zener, and protect switches from inductive kickback.",
       "lenses": [
         "circuit",
@@ -43,12 +43,12 @@
         "Explain how a series diode protects against a reversed supply and how a flyback diode protects a switch driving a coil"
       ],
       "intuition": "Once it conducts, forward for an LED or in breakdown for a Zener, a diode's voltage stays nearly fixed over a wide range of current, so the series resistor, which takes the rest of the supply, is what sets the current.",
-      "why": "A conducting junction's current rises steeply with its voltage: forward, about tenfold for every 60–120 mV; in reverse breakdown, where the junction's strong field pulls electrons straight out of their bonds (the Zener effect, below about 5 V) or speeds them up enough to knock others free (avalanche, above about 7 V), steeply too. So its voltage barely moves while its current changes a lot, and in series with a resistor a supply change lands across the resistor. So an LED needs something, usually a series resistor, to set its current, and a Zener holds a voltage while taking whatever current the load leaves. A coil's current cannot stop instantly (v = L·di/dt); a flyback diode lets it die away instead of forcing a spike.",
-      "explanation": "An LED is a diode that emits light; a red one drops about 2 V when lit. Its current rises steeply with voltage, so a series resistor sets it: R = (V_s − V_F)/I. Round R up to a standard value so the current stays under target. The resistor dissipates (V_s − V_F)·I and the LED V_F·I. A Zener diode is made to break down at a chosen reverse voltage, V_Z, and holds close to it over a wide current range. In a regulator, a series resistor carries (V_in − V_Z)/R; the load takes V_Z/R_L and the Zener takes the rest. Size R so the Zener still carries a few milliamps, enough to stay well into breakdown, at the lowest input and heaviest load, and check its power, V_Z·I_Z, at the highest input with no load. A diode in series with the supply blocks a reversed battery, at the cost of its forward drop. A coil keeps its current flowing when a switch opens, and v = L·di/dt would reach hundreds of volts, enough to break down the transistor. A flyback diode across the coil gives that current a path and holds the switch one drop above the supply.",
+      "why": "A conducting junction's current rises steeply with its voltage. In forward bias, it rises about tenfold for every 60–120 mV. In reverse breakdown, it rises steeply too, whether the junction's strong field pulls electrons straight out of their bonds (the Zener effect, below about 5 V) or speeds free carriers up enough to knock others free (avalanche, above about 7 V). So its voltage barely moves while its current changes a lot, and in series with a resistor, a supply change lands across the resistor. That is why an LED needs something, usually a series resistor, to set its current, and a Zener holds a voltage while taking whatever current the load leaves. A coil's current cannot stop instantly (v = L·di/dt); a flyback diode lets it die away instead of forcing a spike.",
+      "explanation": "An LED is a diode that emits light; a red one drops about 2 V when lit. Its current rises steeply with voltage, so a series resistor sets it: R = (V_s − V_F)/I. Round R up to a standard value so that the current stays under the target. The resistor dissipates (V_s − V_F)·I and the LED V_F·I. A Zener diode is made to break down at a chosen reverse voltage, V_Z, and holds close to it over a wide current range. In a regulator, a series resistor carries (V_in − V_Z)/R; the load takes V_Z/R_L and the Zener takes the rest. Size R so the Zener still carries a few milliamps, enough to stay well into breakdown, at the lowest input and heaviest load, and check its power, V_Z·I_Z, at the highest input with no load. A diode in series with the supply blocks a reversed battery, at the cost of its forward drop. A coil keeps its current flowing when a switch opens, and v = L·di/dt would reach hundreds of volts, enough to break down the transistor. A flyback diode across the coil gives that current a path and holds the switch one drop above the supply.",
       "workedExample": {
         "problem": "A board runs from an unregulated DC input that can be anywhere from 9 V to 12 V. A 1N4007 in series with the positive lead protects it from a reversed connection. After the diode, a red LED (V_F ≈ 2.0 V) must never exceed 10 mA, and a 5.1 V Zener (rated 500 mW) with a series resistor feeds a load drawing 0 to 10 mA while keeping at least 5 mA in the Zener. Choose both resistors (E12) and check the powers.",
         "steps": [
-          "Protection diode (0.7 V model): the board's rail is 9 V − 0.7 V = 8.3 V at the lowest input and 12 V − 0.7 V = 11.3 V at the highest. Connected backwards, the 1N4007 is reverse biased and passes only a tiny leakage current, so nothing on the board sees the reversed voltage.",
+          "Protection diode (0.7 V model): the board's rail is 9 V − 0.7 V = 8.3 V at the lowest input and 12 V − 0.7 V = 11.3 V at the highest. Connected backward, the 1N4007 is reverse biased and passes only a tiny leakage current, so nothing on the board sees the reversed voltage.",
           "LED resistor (LED as a fixed 2.0 V drop): the current is highest at the highest rail, so R ≥ (11.3 V − 2.0 V) / 10 mA = 930 Ω. The next E12 value up is 1.0 kΩ.",
           "LED current with 1.0 kΩ: (11.3 V − 2.0 V) / 1.0 kΩ = 9.3 mA at the highest rail and (8.3 V − 2.0 V) / 1.0 kΩ = 6.3 mA at the lowest. The LED is dimmer on a low input, but never over 10 mA.",
           "Powers at 9.3 mA: the resistor dissipates 9.3 V × 9.3 mA = 86.5 mW and the LED 2.0 V × 9.3 mA = 18.6 mW. A ¼ W resistor is fine.",
@@ -62,7 +62,7 @@
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 3 \"Diodes and Rectifiers\", section \"Zener diodes\"",
           "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_3.html#xtocid902712",
-          "note": "A reverse-biased Zener holds close to its Zener voltage while its current varies, the series dropping resistor's current divides between load and Zener, the Zener's dissipation is its voltage times its current and must stay inside its rating, and too large a dropping resistor or too heavy a load takes it out of breakdown so it stops regulating."
+          "note": "A reverse-biased Zener holds close to its Zener voltage while its current varies. The series dropping resistor's current divides between the load and the Zener. The Zener's dissipation is its voltage times its current and must stay inside its rating, and too large a dropping resistor or too heavy a load takes it out of breakdown, so it stops regulating."
         },
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 3 \"Diodes and Rectifiers\", section \"Special-purpose diodes\", subsection \"Light-emitting diodes\"",
@@ -488,7 +488,7 @@
         "formula": "Vz*(Vin-Vz)/R",
         "unit": "W"
       },
-      "explanation": "With no load, all the resistor current {Iz} goes through the Zener. P = V_Z · I_Z = {Vz} × {Iz} = {answer}. No-load is the worst case for the Zener.",
+      "explanation": "With no load, all the resistor current {Iz} goes through the Zener. P = V_Z · I_Z = {Vz} × {Iz} = {answer}. No load is the worst case for the Zener.",
       "hints": [
         "With no load, where does all of the resistor current go?",
         "P = V_Z × I_Z."
@@ -724,7 +724,7 @@
         },
         {
           "text": "In series with the coil",
-          "feedback": "In series it carries the same current as the coil and adds no other path, so when the transistor opens the coil's current still has nowhere to go."
+          "feedback": "In series, it carries the same current as the coil and adds no other path, so when the transistor opens the coil's current still has nowhere to go."
         },
         {
           "text": "From the transistor's base to ground",
@@ -881,7 +881,7 @@
           "prompt": "Why does an LED need a series resistor, rather than a supply set to exactly V_F?",
           "choices": [
             {
-              "text": "LED current rises steeply with voltage, so a fixed voltage can't hold the current; a resistor can",
+              "text": "An LED's current rises steeply with voltage, so a fixed voltage can't hold the current; a resistor can",
               "feedback": "Right: with a resistor, more current means more drop across R, which pulls the current back. With a fixed voltage, nothing reduces the drive as the current rises.",
               "correct": true
             },
@@ -890,15 +890,15 @@
               "feedback": "A fixed drop (another diode, say) leaves the same steep problem. A resistor's drop grows with current, and that is what holds the current steady."
             },
             {
-              "text": "Without it the LED would only be a little too bright, but otherwise it would be fine",
+              "text": "Without it, the LED would be only a little too bright, but otherwise it would be fine",
               "feedback": "The current isn't limited by anything but the steep diode curve, so it can run far past the LED's rating and destroy it."
             },
             {
-              "text": "The resistor stops current flowing backwards through the LED when the supply is reversed",
+              "text": "The resistor stops current flowing backward through the LED when the supply is reversed",
               "feedback": "A resistor conducts both ways. Blocking reverse current is what the LED (a diode) does itself."
             }
           ],
-          "explanation": "From Practical diodes: a diode's current grows about tenfold for every 0.06–0.12 V more across it, and V_F drifts with temperature and from part to part. Set the voltage and the current is anyone's guess; set the current with a resistor and the LED's voltage settles wherever it needs to. That's why LEDs are driven by current, not voltage."
+          "explanation": "From Practical diodes: a diode's current grows about tenfold for every 0.06–0.12 V more across it, and V_F drifts with temperature and from part to part. Set the voltage, and the current is unpredictable; set the current with a resistor, and the LED's voltage settles wherever it needs to. That's why LEDs are driven by current, not voltage."
         }
       ],
       "schematic": {
@@ -989,7 +989,7 @@
         "physics",
         "circuit"
       ],
-      "prompt": "A red LED turns on at about 1.8 V, a blue one at about 3 V. Why?",
+      "prompt": "A red LED turns on at about 1.8 V and a blue one at about 3 V. Why?",
       "choices": [
         {
           "text": "Blue photons carry more energy (shorter wavelength), so each electron must cross a bigger energy gap",
@@ -998,7 +998,7 @@
         },
         {
           "text": "Blue LEDs have more internal resistance",
-          "feedback": "Resistance affects the slope of the I-V curve, not where it turns on. The turn-on voltage is set by the band gap."
+          "feedback": "Resistance affects the slope of the I–V curve, not where it turns on. The turn-on voltage is set by the band gap."
         },
         {
           "text": "Blue light is brighter, so it needs more power",
@@ -1009,7 +1009,7 @@
           "feedback": "Doping sets the carrier concentrations, but the photon energy (and so the color and turn-on voltage) is fixed by the semiconductor's band gap."
         }
       ],
-      "explanation": "An LED emits one photon for each electron that drops across its band gap, so V ≈ E_photon/q = hc/(qλ). Blue (≈450 nm) photons carry about 2.8 eV, red (≈630 nm) about 2 eV: the band gap shows up in the circuit as the turn-on voltage.",
+      "explanation": "An LED emits one photon for each electron that drops across its band gap, so V ≈ E_photon/q = hc/(qλ). Blue (≈450 nm) photons carry about 2.8 eV and red (≈630 nm) photons about 2 eV: the band gap shows up in the circuit as the turn-on voltage.",
       "noDrawing": "about band gaps and photon energy, no circuit",
       "review": "verified"
     },
@@ -1366,12 +1366,12 @@
         },
         "askFactor": true,
         "feedback": {
-          "down": "The Zener's voltage stays at {Vz}, but its current rises: all the extra input appears across R, so R passes more current, and with no load all of it goes through the Zener.",
+          "down": "The Zener's voltage stays at {Vz}, but its current rises: all the extra input appears across R, so R passes more current, and with no load, all of it goes through the Zener.",
           "same": "The Zener voltage stays at {Vz}, but the power is V_Z × I_Z, and the current is not fixed: with no load, I_Z is all of R's current, (V_in − V_Z)/R, and the extra input voltage lands across R."
         },
         "factorHint": "P = V_Z·(V_in − V_Z)/R: V_Z and R stay put, so only R's voltage, V_in − V_Z, changes. Compare it before and after, keeping in mind that V_Z doesn't grow with the input."
       },
-      "explanation": "The Zener clamps at {Vz}, so R carries (V_in − V_Z)/R, and with no load all of it flows through the Zener. R's voltage goes from {VR} to {new_Vin} − {Vz}, more than three times as much, so P = V_Z · I_Z goes {before} → {after}. Doubling the input more than triples the Zener's heat, because V_Z stays put: size R and the Zener for the highest input.",
+      "explanation": "The Zener clamps at {Vz}, so R carries (V_in − V_Z)/R, and with no load, all of it flows through the Zener. R's voltage goes from {VR} to {new_Vin} − {Vz}, more than three times as much, so P = V_Z · I_Z goes {before} → {after}. Doubling the input more than triples the Zener's heat, because V_Z stays put: size R and the Zener for the highest input.",
       "hints": [
         "The Zener voltage stays fixed. What happens to the voltage across R?"
       ],
@@ -1459,7 +1459,7 @@
     {
       "id": "led_fault",
       "topicId": "diode_practical",
-      "prompt": "A red LED indicator runs from {Vs}: the LED is on the supply side and R1 = {R} goes from the LED to ground. Healthy, about {h1} flows. The meter readings are below. Which fault explains them?",
+      "prompt": "A red LED indicator runs from {Vs}: the LED is on the supply side and R1 = {R} goes from the LED to ground. When the circuit is healthy, about {h1} flows. The meter readings are below. Which fault explains them?",
       "variables": [
         {
           "name": "Vs",
@@ -1505,7 +1505,7 @@
             "text": "The LED is shorted",
             "short": "D1",
             "feedback": "A shorted LED would put the whole supply across R1, so R1 would carry more current than normal.",
-            "why": "With the LED shorted, R1 has the whole {Vs} across it and carries {Vs}/{R}, more than the normal {h1}: nothing takes away the LED's V_F any more."
+            "why": "With the LED shorted, R1 has the whole {Vs} across it and carries {Vs}/{R}, more than the normal {h1}: nothing takes away the LED's V_F anymore."
           },
           {
             "text": "R1 is 6.8 kΩ instead of 680 Ω (blue-gray-red, not blue-gray-brown)",
@@ -1513,7 +1513,7 @@
               "ref": "R1",
               "formula": "R*10"
             },
-            "feedback": "A ten-times resistor would cut the current to about a tenth, while R1's voltage would change only a little.",
+            "feedback": "A resistor ten times too large would cut the current to about a tenth, while R1's voltage would change only a little.",
             "why": "The current is only about a tenth of normal, yet R1's voltage has risen by only about 0.1 V: an LED's current changes steeply with voltage, so a tenth of the current lowers its drop only a little, and R1 gets that bit extra. The LED glows dimly; R1 is ten times too big."
           }
         ]
@@ -1614,7 +1614,7 @@
     {
       "id": "zener_fault",
       "topicId": "diode_practical",
-      "prompt": "A {Vz} Zener regulator (500 mW Zener) is fed from {Vin} through R = {R} (¼ W) and drives a load R_L = {RL}. Healthy, the output reads about {h0}. The meter readings are below. Which fault explains them?",
+      "prompt": "A {Vz} Zener regulator (500 mW Zener) is fed from {Vin} through R = {R} (¼ W) and drives a load R_L = {RL}. When the circuit is healthy, the output reads about {h0}. The meter readings are below. Which fault explains them?",
       "variables": [
         {
           "name": "Vin",
@@ -1665,14 +1665,14 @@
           {
             "text": "R is open",
             "open": "RS",
-            "feedback": "An open R would cut off everything after it: the output, R's current and the load current would all read zero.",
-            "why": "With R open nothing feeds the output, so every reading is zero."
+            "feedback": "An open R would cut off everything after it: the output, R's current, and the load current would all read zero.",
+            "why": "With R open, nothing feeds the output, so every reading is zero."
           },
           {
             "text": "The Zener is open",
             "open": "DZ",
             "feedback": "Without the Zener, R and the load would form a plain divider: the output would rise above {Vz}, and R and the load would carry the same current.",
-            "why": "Nothing clamps the output any more. R and the load form a plain divider, so the output rises above {Vz}, and R carries exactly what the load draws."
+            "why": "Nothing clamps the output anymore. R and the load form a plain divider, so the output rises above {Vz}, and R carries exactly what the load draws."
           },
           {
             "text": "The Zener is shorted",
@@ -1688,7 +1688,7 @@
           }
         ]
       },
-      "explanation": "Healthy, R carries (V_in − V_Z)/R and the load takes V_Z/R_L; the Zener takes the rest. Zero everywhere means the feed is broken; an output above {Vz} means the clamp is gone; 0 V at the output with a large current in R means a short, and the load's current says whether the short is in the Zener or in the load.",
+      "explanation": "When the circuit is healthy, R carries (V_in − V_Z)/R and the load takes V_Z/R_L; the Zener takes the rest. Zero everywhere means the feed is broken. An output above {Vz} means the clamp is gone. An output of 0 V with a large current in R means a short, and the load's current says whether the short is in the Zener or in the load.",
       "hints": [
         "First check the output: at {Vz}, above it, or at 0 V?"
       ],

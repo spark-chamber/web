@@ -3,7 +3,7 @@
     {
       "id": "app_led_driver",
       "title": "Constant-current LED driver",
-      "summary": "An op amp, a MOSFET and a sense resistor hold the LED current steady whatever the supply or the LEDs do, as long as there is enough headroom.",
+      "summary": "An op amp, a MOSFET, and a sense resistor hold the LED current steady whatever the supply or the LEDs do, as long as there is enough headroom.",
       "lenses": [
         "circuit",
         "physics",
@@ -42,20 +42,20 @@
         "Find the LED current from the sense resistor, I = V_set/R_s, and choose R_s for a target current",
         "Find the MOSFET's voltage and heat, P = (V_s − n·V_f − V_set)·I, and the supply that leaves it enough headroom",
         "Find the gate voltage the op amp must reach, V_G = V_set + V_t + √(I/K)",
-        "Explain why the current holds when the supply, the LEDs' V_f or the MOSFET's threshold change, and when it stops holding"
+        "Explain why the current holds when the supply, the LEDs' V_f, or the MOSFET's threshold changes, and when it stops holding"
       ],
       "intuition": "The op amp adjusts the MOSFET until V_set appears across R_s, so the current is fixed at V_set/R_s, and the MOSFET takes up whatever voltage the supply and the LEDs leave over, as heat.",
       "why": "An LED's current rises exponentially with its voltage, and its V_f falls as it warms. Driven from a voltage, or through a resistor that takes only a small share of it, a small change in V_f or in the supply makes a large change in current. The driver measures the current instead: R_s turns it into a voltage, and the op amp compares that with V_set. If the current is low, the op amp raises the gate, the channel gains charge, and the current rises until I·R_s = V_set. The MOSFET's V_DS takes up the rest of the supply. The control lasts only while the MOSFET has voltage to spare; once the gate is driven as high as it can go, the loop can no longer hold the current.",
-      "explanation": "In LED and Zener circuits a series resistor set an LED's current: R = (V_s − V_F)/I. That works only because the resistor's voltage dominates; a changing supply or V_F still moves the current. A constant-current driver measures the current and corrects it. The LEDs, an NMOS and a small sense resistor R_s sit in series from the supply to ground. An op amp's + input gets a reference, V_set; its − input reads the top of R_s; its output drives the gate. Negative feedback, as in the non-inverting amplifier, makes the inputs equal, so I·R_s = V_set and I = V_set/R_s. Neither the LEDs nor the supply appears. Everything else settles around that current. The LEDs drop n·V_f, R_s drops V_set, and the MOSFET takes the rest: V_DS = V_s − n·V_f − V_set, dissipating V_DS·I. The gate sits at V_set + V_t + √(I/K), which the op amp must reach. The limit is headroom. Designs keep V_DS above the overdrive, √(I/K), so the MOSFET stays in saturation; with the gate pushed higher it can hold the current a little further in triode, but once the gate reaches the op amp's top rail the loop has nothing left and the current falls. Above the minimum supply, every extra volt only heats the MOSFET. A small V_set keeps the loss in R_s low.",
+      "explanation": "In \"LEDs, Zener regulators, and flyback diodes,\" a series resistor set an LED's current: R = (V_s − V_F)/I. That works only because the resistor's voltage dominates; a changing supply or V_F still moves the current. A constant-current driver measures the current and corrects it. The LEDs, an NMOS and a small sense resistor R_s sit in series from the supply to ground. An op amp's + input gets a reference, V_set; its − input reads the top of R_s; its output drives the gate. Negative feedback, as in the non-inverting amplifier, makes the inputs equal, so I·R_s = V_set and I = V_set/R_s. Neither the LEDs nor the supply appears. Everything else settles around that current. The LEDs drop n·V_f, R_s drops V_set, and the MOSFET takes the rest: V_DS = V_s − n·V_f − V_set, dissipating V_DS·I. The gate sits at V_set + V_t + √(I/K), which the op amp must reach. The limit is headroom. Designs keep V_DS above the overdrive, √(I/K), so the MOSFET stays in saturation; with the gate pushed higher it can hold the current a little further in triode, but once the gate reaches the op amp's top rail, the loop has nothing left and the current falls. Above the minimum supply, every extra volt only heats the MOSFET. A small V_set keeps the loss in R_s low.",
       "workedExample": {
-        "problem": "A 12 V supply drives three white LEDs in series (assume V_f = 3.0 V each at this current) through an NMOS (assume V_t = 2.0 V and K = 1.0 A/V², with I_D = K(V_GS − V_t)² in saturation) and a sense resistor R_s. The op amp's reference is V_set = 0.33 V. Choose R_s for 150 mA, then find the MOSFET's heat, the gate voltage and the lowest supply that keeps the MOSFET in saturation. Compare with a plain series resistor when the LEDs warm up (assume V_f falls by 0.1 V each) and when the supply sags to 11 V.",
+        "problem": "A 12 V supply drives three white LEDs in series (assume V_f = 3.0 V each at this current) through an NMOS (assume V_t = 2.0 V and K = 1.0 A/V², with I_D = K(V_GS − V_t)² in saturation) and a sense resistor R_s. The op amp's reference is V_set = 0.33 V. Choose R_s for 150 mA, then find the MOSFET's heat, the gate voltage, and the lowest supply that keeps the MOSFET in saturation. Compare with a plain series resistor when the LEDs warm up (assume V_f falls by 0.1 V each) and when the supply sags to 11 V.",
         "steps": [
           "Sense resistor: R_s = V_set / I = 0.33 V / 0.15 A = 2.2 Ω, an E12 value. It dissipates 0.33 V × 0.15 A = 49.5 mW.",
           "MOSFET: V_DS = 12 V − 3 × 3.0 V − 0.33 V = 2.67 V, so P = 2.67 V × 0.15 A = 0.40 W. The LEDs take 9.0 V × 0.15 A = 1.35 W.",
           "Gate: saturation at 150 mA needs V_GS = V_t + √(I/K) = 2.0 V + √(0.15 A / 1.0 A/V²) = 2.0 V + 0.39 V = 2.39 V. The source sits at V_set, so V_G = 0.33 V + 2.39 V = 2.72 V, easily within the op amp's reach on 12 V.",
-          "Headroom: saturation needs V_DS ≥ V_GS − V_t = 0.39 V, so the supply must be at least 9.0 V + 0.33 V + 0.39 V = 9.72 V. Below about that the gate has to climb toward the op amp's rail, and not far below, the current falls.",
+          "Headroom: saturation needs V_DS ≥ V_GS − V_t = 0.39 V, so the supply must be at least 9.0 V + 0.33 V + 0.39 V = 9.72 V. Below about that, the gate has to climb toward the op amp's rail, and not far below, the current falls.",
           "LEDs warm up: the string drops 8.7 V instead of 9.0 V. The current stays 0.33 V / 2.2 Ω = 150 mA; V_DS rises to 12 V − 8.7 V − 0.33 V = 2.97 V, and the MOSFET's heat to 2.97 V × 0.15 A = 0.45 W.",
-          "Plain resistor for comparison: R = (12 V − 9.0 V) / 0.15 A = 20 Ω (an E24 value). Warm LEDs: (12 V − 8.7 V) / 20 Ω = 165 mA, 10 % more. Supply at 11 V: (11 V − 9.0 V) / 20 Ω = 100 mA, a third less. The driver still gives 150 mA at 11 V, with V_DS = 11 V − 9.0 V − 0.33 V = 1.67 V."
+          "Plain resistor for comparison: R = (12 V − 9.0 V) / 0.15 A = 20 Ω (an E24 value). Warm LEDs: (12 V − 8.7 V) / 20 Ω = 165 mA, 10% more. Supply at 11 V: (11 V − 9.0 V) / 20 Ω = 100 mA, a third less. The driver still gives 150 mA at 11 V, with V_DS = 11 V − 9.0 V − 0.33 V = 1.67 V."
         ]
       },
       "sources": [
@@ -67,7 +67,7 @@
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 3 \"Diodes and Rectifiers\", section \"Special-purpose diodes\", subsection \"Light-emitting diodes\"",
           "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_3.html#xtocid902716",
-          "note": "A series dropping resistor is sized as (supply minus LED forward voltage) over the wanted current, a series string shares one current, and white LEDs drop roughly 3 to 4 V."
+          "note": "A series dropping resistor is sized as (supply minus LED forward voltage) over the wanted current; a series string shares one current; and white LEDs drop roughly 3 to 4 V."
         },
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Linear Current Regulators\" (last update 9 May 2021), ch. 2 \"Tutorial\" (pp. 5-15)",
@@ -145,7 +145,7 @@
             {
               "text": "The loop sets the gate so R_s has V_set across it; the supply and LEDs only shift the MOSFET's V_DS",
               "correct": true,
-              "feedback": "Right: the loop measures the current itself, through R_s, and corrects it. Anything else in the string just shifts the MOSFET's V_DS."
+              "feedback": "Right: the loop measures the current itself, through R_s, and corrects it. Anything else in the string only shifts the MOSFET's V_DS."
             },
             {
               "text": "An LED's forward voltage is fixed, so the LEDs always take the same share of the supply voltage",
@@ -153,14 +153,14 @@
             },
             {
               "text": "The MOSFET is switched fully on, so it acts as a small fixed resistance that barely matters here",
-              "feedback": "A fully-on MOSFET would let the current rise to whatever the supply and LEDs allowed. Here the op amp holds it part-way on, at exactly the gate voltage that gives V_set across R_s."
+              "feedback": "A fully on MOSFET would let the current rise to whatever the supply and LEDs allowed. Here the op amp holds it partway on, at exactly the gate voltage that gives V_set across R_s."
             },
             {
               "text": "The formula assumes a regulated supply; with a varying supply the LED current would change too",
               "feedback": "The supply can vary: if it rises, the sense voltage starts to rise, and the op amp lowers the gate until it is back at V_set. Rejecting supply changes is the point of the loop, as long as there is enough headroom."
             }
           ],
-          "explanation": "This is the non-inverting op amp's rule from 'Non-inverting amplifier and follower': with negative feedback the op amp drives its output until its two inputs match. Here the − input sits on R_s, so the loop forces V_set across it and I = V_set/R_s. The LEDs are in series with R_s, so they carry that same current. The supply and the LEDs' V_f only decide the MOSFET's V_DS, which is why it gets warm (see the dissipation problem)."
+          "explanation": "This is the non-inverting op amp's rule from \"Non-inverting amplifier and follower\": with negative feedback, the op amp drives its output until its two inputs match. Here the − input sits on R_s, so the loop forces V_set across it and I = V_set/R_s. The LEDs are in series with R_s, so they carry that same current. The supply and the LEDs' V_f only decide the MOSFET's V_DS, which is why it gets warm (see the dissipation problem)."
         }
       ],
       "schematic": {
@@ -375,7 +375,7 @@
             },
             {
               "text": "A small V_set makes the LED current more accurate, because the op amp's errors matter less",
-              "feedback": "It works the other way: the op amp's input offset (a few millivolts) is a bigger fraction of a small V_set: 5 mV on 0.1 V is a 5 % current error. A small V_set is chosen for power and headroom, and designers pay for it with a low-offset op amp."
+              "feedback": "It works the other way: the op amp's input offset (a few millivolts) is a bigger fraction of a small V_set (5 mV on 0.1 V is a 5% current error). A small V_set is chosen for power and headroom, and designers pay for it with a low-offset op amp."
             },
             {
               "text": "A larger V_set would push more current through the LEDs than the design is meant to carry",
@@ -633,7 +633,7 @@
           "prompt": "Used as a switch, a MOSFET like this one stays cool. Why does it get hot in this driver?",
           "choices": [
             {
-              "text": "The loop holds it part-way on, so it has volts across it and full current through it at once",
+              "text": "The loop holds it partway on, so it has volts across it and full current through it at once",
               "correct": true,
               "feedback": "Right: that is what regulating means. It turns the leftover supply voltage into heat."
             },
@@ -647,7 +647,7 @@
             },
             {
               "text": "The LED current flows through its gate as well as through its channel, heating the gate too",
-              "feedback": "The gate is insulated: it draws no DC current. All the LED current flows drain to source, through the channel."
+              "feedback": "The gate is insulated: it draws no DC current. All the LED current flows from drain to source, through the channel."
             }
           ],
           "explanation": "As a switch, a MOSFET is either off (no current) or fully on (V_DS = I·R_DS(on), tens of millivolts), so V·I stays small. In a linear regulator it sits in between on purpose: the whole idea is that its V_DS takes up whatever the supply and LEDs leave over. That's why linear LED drivers run from a supply just above n·V_f, or give way to switching (buck) drivers at high power."
@@ -818,7 +818,7 @@
     {
       "id": "led_cc_gate_voltage",
       "topicId": "app_led_driver",
-      "prompt": "In a constant-current LED driver the sense resistor holds V_set = {Vset}. The MOSFET has V_t = {Vt} and K = {K} A/V² (I_D = K(V_GS − V_t)²). At {I}, what voltage must the op amp put on the gate?",
+      "prompt": "In a constant-current LED driver, the sense resistor holds V_set = {Vset}. The MOSFET has V_t = {Vt} and K = {K} A/V² (I_D = K(V_GS − V_t)²). At {I}, what voltage must the op amp put on the gate?",
       "variables": [
         {
           "name": "Vset",
@@ -911,7 +911,7 @@
               "feedback": "The gate doesn't push the current: the supply does. The gate only opens the channel, and how far depends on V_GS. The extra V_set is there because the source terminal isn't at ground."
             }
           ],
-          "explanation": "Same as a source follower or an emitter resistor on a BJT: the transistor sees the voltage between its control terminal and its source (or emitter), not the voltage to ground. With the source lifted to V_set by R_s, the op amp must reach V_set + V_t + √(I/K). A 5 V op amp and a MOSFET with V_t = 2.5 V can run out of room here, which is why logic-level MOSFETs are used in low-voltage drivers."
+          "explanation": "It is the same as with a source follower or an emitter resistor on a BJT: the transistor sees the voltage between its control terminal and its source (or emitter), not the voltage to ground. With the source lifted to V_set by R_s, the op amp must reach V_set + V_t + √(I/K). A 5 V op amp and a MOSFET with V_t = 2.5 V can run out of room here, which is why logic-level MOSFETs are used in low-voltage drivers."
         }
       ],
       "schematic": {
@@ -1096,7 +1096,7 @@
         },
         {
           "text": "It rises a little, then settles: the op amp corrects only the part of the change it sees across R_s",
-          "feedback": "The loop sees the whole current through R_s; with open-loop gain of 10⁵ the remaining error is far below 1 %."
+          "feedback": "The loop sees the whole current through R_s; with an open-loop gain of 10⁵, the remaining error is far below 1%."
         }
       ],
       "explanation": "Feedback holds the sense voltage at V_set, so the current stays at V_set/R_s. Changes in the MOSFET's threshold or K (or in the LEDs' forward voltage) only move the gate voltage, as long as there's enough supply headroom.",
@@ -1338,7 +1338,7 @@
         },
         "factorHint": "The current doesn't change, so the heat follows V_DS alone. V_DS is what is left of the supply after the LEDs and R_s take their fixed share: work it out before and after."
       },
-      "explanation": "The loop holds {I}, so the LEDs still drop {n} × {Vf} and R_s still drops {Vset}. The MOSFET gets the rest: V_DS = {Vs} − {n}×{Vf} − {Vset} = {Vds} before, and {new_Vs} − {n}×{Vf} − {Vset} = {Vds2} after. P = V_DS × I: {before} → {after}. A 20 % rise in the supply multiplies the heat by {ratio}, because all of the rise lands on the one part whose voltage was small to begin with. Linear drivers are designed (and heatsinked) for the highest supply they will see, or replaced by a switching driver.",
+      "explanation": "The loop holds {I}, so the LEDs still drop {n} × {Vf} and R_s still drops {Vset}. The MOSFET gets the rest: V_DS = {Vs} − {n}×{Vf} − {Vset} = {Vds} before, and {new_Vs} − {n}×{Vf} − {Vset} = {Vds2} after. P = V_DS × I: {before} → {after}. A 20% rise in the supply multiplies the heat by {ratio}, because all of the rise lands on the one part whose voltage was small to begin with. Linear drivers are designed (and heatsinked) for the highest supply they will see, or replaced by a switching driver.",
       "hints": [
         "Does the LED current change? Then which voltages around the loop can change?"
       ],
@@ -1364,7 +1364,7 @@
               "feedback": "A car battery's internal resistance is a few milliohms; it can deliver hundreds of amps. The current here is set by the loop, not by the source."
             }
           ],
-          "explanation": "This is the constant-current idea from 'LEDs, Zener regulators and flyback diodes' done properly: an LED's brightness follows its current, and the loop sets the current by V_set/R_s alone. The price is heat: every extra volt of supply becomes V_DS, and V_DS × I is the MOSFET's dissipation."
+          "explanation": "This is the constant-current idea from \"LEDs, Zener regulators, and flyback diodes\" done properly: an LED's brightness follows its current, and the loop sets the current by V_set/R_s alone. The price is heat: every extra volt of supply becomes V_DS, and V_DS × I is the MOSFET's dissipation."
         }
       ],
       "schematic": {
@@ -1737,7 +1737,7 @@
     {
       "id": "led_cc_what_if_add_led",
       "topicId": "app_led_driver",
-      "prompt": "A constant-current driver runs {n} white LEDs in series (V_f ≈ {Vf} each) from {Vs} at {I}, with V_set = {Vset} across R_s. One more identical LED is added to the string. The MOSFET still has about 2 V or more across it afterwards, so it stays in control. What happens to the LED current?",
+      "prompt": "A constant-current driver runs {n} white LEDs in series (V_f ≈ {Vf} each) from {Vs} at {I}, with V_set = {Vset} across R_s. One more identical LED is added to the string. The MOSFET still has about 2 V or more across it afterward, so it stays in control. What happens to the LED current?",
       "variables": [
         {
           "name": "Vs",
@@ -1823,7 +1823,7 @@
               "feedback": "The op amp only drives the gate, which draws no DC current, so nothing from the op amp reaches the MOSFET's channel. All the LED current comes from the supply, and a series string has one current, not an extra one per LED."
             }
           ],
-          "explanation": "The series resistor from 'LEDs, Zener regulators and flyback diodes' sets I = (V_s − n·V_f)/R: any change in n or V_f changes the current. The driver replaces the fixed resistor with one that adjusts itself (the MOSFET, whose gate the op amp sets), so I = V_set/R_s regardless, within the headroom."
+          "explanation": "The series resistor from \"LEDs, Zener regulators, and flyback diodes\" sets I = (V_s − n·V_f)/R: any change in n or V_f changes the current. The driver replaces the fixed resistor with one that adjusts itself (the MOSFET, whose gate the op amp sets), so I = V_set/R_s regardless, within the headroom."
         }
       ],
       "schematic": {
@@ -1990,7 +1990,7 @@
     {
       "id": "led_cc_fault",
       "topicId": "app_led_driver",
-      "prompt": "This driver runs two 1 W white LEDs (rated 350 mA) from 12 V. The op amp (powered from the 12 V supply, rail-to-rail output, not drawn) holds V_set = 0.5 V across R_s = {Rs} (a ½ W resistor), so the LEDs should carry {I}. M1 has V_t ≈ 2 V. Healthy, the meters would read {h0} at the gate, {h1} at the source (across R_s) and {h2} at the drain. The meter readings (10 MΩ meters) are below. Which fault explains them?",
+      "prompt": "This driver runs two 1 W white LEDs (rated 350 mA) from 12 V. The op amp (powered from the 12 V supply, rail-to-rail output, not drawn) holds V_set = 0.5 V across R_s = {Rs} (a ½ W resistor), so the LEDs should carry {I}. M1 has V_t ≈ 2 V. When the circuit is healthy, the meters read {h0} at the gate, {h1} at the source (across R_s), and {h2} at the drain. The meter readings (10 MΩ meters) are below. Which fault explains them?",
       "variables": [
         {
           "name": "Rs",
@@ -2030,26 +2030,26 @@
           {
             "text": "M1 has failed short, drain to source",
             "short": "M1",
-            "feedback": "With M1 shorted nothing would limit the current but R_s: the source and drain would read the same few volts, far above 0.5 V, R_s would be dissipating several watts, and the op amp, seeing its − input far too high, would pull the gate down to about 0 V.",
-            "why": "The source reads {m1}, far above V_set, so R_s carries {m1} ÷ {Rs}: about ten times the {I} it should. The drain reads the same as the source, so M1 has no voltage across it: it's a short. The op amp has done the right thing and pulled the gate to its bottom rail, but a shorted MOSFET no longer obeys its gate. Now only R_s limits the current, and the power shows the damage: R_s dissipates ({m1})² ÷ {Rs}, several watts in a ½ W part, and both LEDs carry that same current, far past their 350 mA rating. Resistor and LEDs overheat within seconds; an overdriven LED often fails open, which then stops the current. (These are the readings just after the failure, with LEDs modeled without internal resistance. A real LED's internal resistance raises its voltage at this current, so the source would read somewhat lower, but still several times V_set.)"
+            "feedback": "With M1 shorted, nothing would limit the current but R_s: the source and drain would read the same few volts, far above 0.5 V, R_s would be dissipating several watts, and the op amp, seeing its − input far too high, would pull the gate down to about 0 V.",
+            "why": "The source reads {m1}, far above V_set, so R_s carries {m1} ÷ {Rs}: about ten times the {I} it should. The drain reads the same as the source, so M1 has no voltage across it: it's a short. The op amp has done the right thing and pulled the gate to its bottom rail, but a shorted MOSFET no longer obeys its gate. Now only R_s limits the current, and the power shows the damage: R_s dissipates ({m1})² ÷ {Rs}, several watts in a ½ W part, and both LEDs carry that same current, far past their 350 mA rating. The resistor and the LEDs overheat within seconds; an overdriven LED often fails open, which then stops the current. (These are the readings just after the failure, with LEDs modeled without internal resistance. A real LED's internal resistance raises its voltage at this current, so the source would read somewhat lower, but still several times V_set.)"
           },
           {
             "text": "M1 has failed open: no path from drain to source",
             "open": "M1",
-            "feedback": "With M1 open no current could flow: R_s would read 0 V, the op amp would drive the gate to its top rail trying to raise it, and the drain would sit well above 0 V (around 7 V). It is still tied to 12 V through the LEDs, but each white LED drops over 2 V even at the meter's sub-microamp current.",
+            "feedback": "With M1 open, no current could flow: R_s would read 0 V, the op amp would drive the gate to its top rail trying to raise it, and the drain would sit well above 0 V (around 7 V). It is still tied to 12 V through the LEDs, but each white LED drops over 2 V even at the meter's sub-microamp current.",
             "why": "The source reads 0 V, so no current flows. The op amp has driven the gate to its rail ({m0}) trying to get V_set back, which would turn any working MOSFET hard on, so M1 isn't responding. The drain reads {m2}: still connected to 12 V through the LEDs, so the break is below it, in M1. (It reads well below 12 V because the meter's 10 MΩ draws under a microamp through the LEDs, and a white LED still drops over 2 V at a microamp. What matters is that it isn't 0 V: compare D1 open, where the drain is cut off from the supply.)"
           },
           {
             "text": "LED D1 has failed open",
             "open": "D1",
-            "feedback": "With D1 open no current could flow: R_s would read 0 V, the op amp would drive the gate to its top rail, and the drain, cut off from the supply, would read 0 V through the on MOSFET.",
+            "feedback": "With D1 open, no current could flow: R_s would read 0 V, the op amp would drive the gate to its top rail, and the drain, cut off from the supply, would read 0 V through the on MOSFET.",
             "why": "The source reads 0 V: no current. The op amp has driven the gate to its rail ({m0}), so M1 is hard on, and the drain reads 0 V: M1 is connecting it to ground, and nothing from the supply is reaching it. The break is above the drain, in the LED string. A broken MOSFET would leave the drain high instead."
           },
           {
             "text": "LED D2 has failed short",
             "short": "D2",
-            "feedback": "With D2 shorted the current would stay at V_set/R_s: the gate and source would read normally, but the drain would read about one LED's forward voltage (around 3 V) higher, because M1 now drops the voltage D2 used to.",
-            "why": "Gate and source read normally, so the loop still holds {I}. Only the drain has moved, up by about 3 V ({h2} → {m2}): one LED's forward voltage. The string is dropping one V_f less, and the MOSFET takes it up, as it would any supply change. One LED is dark but the other is at full brightness, and M1 now runs hotter."
+            "feedback": "With D2 shorted, the current would stay at V_set/R_s: the gate and source would read normally, but the drain would read about one LED's forward voltage (around 3 V) higher, because M1 now drops the voltage D2 used to.",
+            "why": "The gate and source read normally, so the loop still holds {I}. Only the drain has moved, up by about 3 V ({h2} → {m2}): one LED's forward voltage. The string is dropping one V_f less, and the MOSFET takes it up, as it would any supply change. One LED is dark, but the other is at full brightness, and M1 now runs hotter."
           }
         ]
       },
@@ -2282,7 +2282,7 @@
         "formula": "n*Vf+Vset+Vds",
         "unit": "V"
       },
-      "explanation": "The LEDs, the MOSFET and the sense resistor are in series, so the supply must cover all three drops at once: {n} × {Vf} = {Vled} for the LEDs, {Vset} across R_s and at least {Vds} across the MOSFET. V_s(min) = {Vled} + {Vset} + {Vds} = {answer}. The current, {I}, doesn't enter the sum; it only sets how much headroom the MOSFET needs. Every volt of supply above this just heats the MOSFET.",
+      "explanation": "The LEDs, the MOSFET, and the sense resistor are in series, so the supply must cover all three drops at once: {n} × {Vf} = {Vled} for the LEDs, {Vset} across R_s, and at least {Vds} across the MOSFET. V_s(min) = {Vled} + {Vset} + {Vds} = {answer}. The current, {I}, doesn't enter the sum; it only sets how much headroom the MOSFET needs. Every volt of supply above this only heats the MOSFET.",
       "hints": [
         "Walk down the series string from the supply to ground. What does each part drop?",
         "V_s(min) = n·V_f + V_set + V_DS(min)."
@@ -2467,6 +2467,274 @@
       },
       "review": "verified",
       "placement": true
+    },
+    {
+      "id": "led_cc_design_heat_limit",
+      "topicId": "app_led_driver",
+      "prompt": "A constant-current driver runs three white power LEDs in series from a regulated 12 V supply. The op amp holds V_set = 0.5 V across the sense resistor R_s (a ½ W part), and M1 drops whatever voltage is left. The LEDs are rated 700 mA. Their datasheet gives V_f anywhere from 2.8 V to 3.4 V per LED at these currents and at their working temperature (a typical spread for white power LEDs); even with the highest V_f, M1 keeps enough voltage to regulate. M1 sits on a small heat sink that lets it dissipate at most {Pmax}. Choose R_s (an E12 value) for as much light as possible: M1's dissipation must not exceed {Pmax} with any LEDs the datasheet allows, and should be no more than 20% below it.",
+      "variables": [
+        {
+          "name": "n",
+          "unit": "",
+          "value": 3
+        },
+        {
+          "name": "Pmax",
+          "unit": "W",
+          "values": [
+            0.8,
+            1.2,
+            1.4,
+            1.8
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vds",
+          "formula": "12-n*2.8-0.5",
+          "unit": "V"
+        },
+        {
+          "name": "Imax",
+          "formula": "Pmax/(12-n*2.8-0.5)",
+          "unit": "A"
+        },
+        {
+          "name": "Rmin",
+          "formula": "0.5/(Pmax/(12-n*2.8-0.5))",
+          "unit": "Ω"
+        },
+        {
+          "name": "VdsHi",
+          "formula": "12-n*3.4-0.5",
+          "unit": "V"
+        },
+        {
+          "name": "Vstring",
+          "formula": "n*2.8",
+          "unit": "V"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "RS",
+            "label": "R_s",
+            "unit": "Ω",
+            "series": "E12",
+            "min": 0.1,
+            "max": 10
+          }
+        ],
+        "result": "(12-n*2.8-0.5)*0.5/RS",
+        "resultLabel": "M1's worst-case dissipation",
+        "resultUnit": "W",
+        "target": "Pmax",
+        "tolerance": 0.2,
+        "mode": "atMost"
+      },
+      "explanation": "The loop fixes the current at I = 0.5 V/R_s, and M1 takes what the supply leaves: P_M = (12 V − n·V_f − 0.5 V)·I. At a fixed current, M1's heat depends only on its voltage, and that is largest when the LEDs drop the least: the worst case is the lowest V_f, 2.8 V. Then the string drops {n} × 2.8 V = {Vstring}, M1 has 12 V − {Vstring} − 0.5 V = {Vds} across it, and P_M ≤ {Pmax} allows I ≤ {Pmax}/{Vds} = {Imax}. So R_s ≥ 0.5 V/{Imax} = {Rmin}; take the next E12 value up. With typical or high-V_f LEDs, M1 runs cooler: at 3.4 V per LED it has only {VdsHi} across it. Sizing for those would let a low-V_f set overheat M1. The LEDs' 700 mA rating doesn't limit this design; the heat sink does.",
+      "hints": [
+        "M1's heat is its V_DS times the LED current. Which LEDs, low V_f or high V_f, leave M1 the most voltage?",
+        "With V_f = 2.8 V: I_max = P_max/(12 V − 3 × 2.8 V − 0.5 V), then R_s = 0.5 V/I_max, rounded up to E12."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why is the worst case for M1 the set of LEDs with the lowest V_f, not the highest?",
+          "choices": [
+            {
+              "text": "The loop holds the current at 0.5 V/R_s whatever the LEDs; LEDs that drop less leave more of the 12 V across M1, so M1 dissipates more at the same current",
+              "correct": true,
+              "feedback": "Right: the current is fixed, so M1's heat follows its voltage, and its voltage is what the LEDs don't use."
+            },
+            {
+              "text": "LEDs with a low V_f draw more current, so M1 has to carry more",
+              "feedback": "From a plain resistor they would; here the op amp holds the current at V_set/R_s. Only M1's voltage changes with V_f."
+            },
+            {
+              "text": "Low-V_f LEDs are less efficient, so more of their heat reaches M1",
+              "feedback": "M1's heat is its own V_DS × I. How efficiently the LEDs make light doesn't enter it."
+            },
+            {
+              "text": "It isn't: high-V_f LEDs are the worst case, because M1 has to work harder to push the current through them",
+              "feedback": "M1 doesn't push the current; it drops whatever voltage is left over. High-V_f LEDs leave less across M1, so it dissipates less at the same current."
+            }
+          ],
+          "explanation": "In a constant-current driver, the current is set by V_set and R_s, and M1 absorbs the difference between the supply and everything else in the loop. Anything that lowers the string's voltage (a lower V_f, or LEDs running hotter, since V_f falls about 2 mV per °C) or raises the supply moves that voltage onto M1 at the same current, as heat. A shorted LED moves a whole V_f onto M1 at once, which this heat sink can't absorb; drivers that must survive one add thermal or overvoltage protection. That's why a linear driver is checked at the lowest string voltage and the highest supply."
+        }
+      ],
+      "schematic": {
+        "netlist": "LED driver (drawing)\nVS vs 0 12\nD1 vs a DL\nD2 a a2 DL\nD3 a2 d DL\nM1 d g s NM\nRS s 0 1\nVSET set 0 0.5\nX1 set s g OA\n.model DL D(IS=1e-27 N=2)\n.model NM NMOS(VTO=2 KP=2)\n.model OA OPAMP(VPOS=12 VNEG=0 VHEAD=0.05)\n",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              4,
+              0
+            ],
+            "rot": 90,
+            "label": "D1",
+            "symbol": "led"
+          },
+          {
+            "ref": "D2",
+            "at": [
+              4,
+              4
+            ],
+            "rot": 90,
+            "label": "D2",
+            "symbol": "led"
+          },
+          {
+            "ref": "D3",
+            "at": [
+              4,
+              8
+            ],
+            "rot": 90,
+            "label": "D3",
+            "symbol": "led"
+          },
+          {
+            "ref": "M1",
+            "at": [
+              2,
+              14
+            ],
+            "label": "M1"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              4,
+              16
+            ],
+            "rot": 90,
+            "label": "R_s = ?"
+          },
+          {
+            "ref": "VSET",
+            "at": [
+              -6,
+              15
+            ],
+            "rot": 90,
+            "label": "0.5 V"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              -4,
+              14
+            ],
+            "flip": true,
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              4,
+              0
+            ]
+          ],
+          [
+            [
+              -6,
+              15
+            ],
+            [
+              -6,
+              13
+            ],
+            [
+              -4,
+              13
+            ]
+          ],
+          [
+            [
+              0,
+              14
+            ],
+            [
+              2,
+              14
+            ]
+          ],
+          [
+            [
+              4,
+              16
+            ],
+            [
+              5,
+              16
+            ]
+          ],
+          [
+            [
+              -4,
+              15
+            ],
+            [
+              -5,
+              15
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            4,
+            20
+          ],
+          [
+            -6,
+            19
+          ]
+        ],
+        "labels": [
+          {
+            "text": "s",
+            "at": [
+              5,
+              16
+            ]
+          },
+          {
+            "text": "s",
+            "at": [
+              -5,
+              15
+            ]
+          }
+        ],
+        "noBuild": "Runs from a 12 V bench supply rather than a battery or USB, and M1 must shed up to about 1.5 W into a heat sink."
+      },
+      "review": "verified"
     }
   ]
 }

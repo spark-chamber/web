@@ -3,7 +3,7 @@
     {
       "id": "schem_passive_blocks",
       "title": "Spotting passive building blocks",
-      "summary": "Recognize dividers, RC filters, RC timers, pull-ups and decoupling capacitors at a glance, and say what each does to a signal.",
+      "summary": "Recognize dividers, RC filters, RC timers, pull-ups, and decoupling capacitors at a glance, and say what each does to a signal.",
       "lenses": [
         "circuit",
         "signals"
@@ -44,7 +44,7 @@
       ],
       "intuition": "Most of a schematic is a few passive patterns repeated: find which part the signal must pass through and which part goes to ground, and the pattern (divider, filter, timer, pull-up, decoupling) tells you what it does.",
       "why": "Each block rests on one physical fact. Two resistors in series carry one current, so the voltage splits in the ratio of their resistances: a divider. A capacitor's voltage changes only as charge flows in, so a resistor feeding it limits how fast it can follow: slow changes reach the capacitor and fast ones are lost across the resistor (low-pass), and a step becomes a curve rising with τ = RC (timer). Swap the two and only changes get across the capacitor (high-pass). A logic input draws almost no current, so a resistor to the supply sets its voltage whenever nothing stronger drives it. A capacitor at a chip holds charge close by, so fast current spikes need not come through long, inductive supply wires.",
-      "explanation": "You know the divider and the RC filter as circuits to calculate; now find them inside a larger drawing. Use the node reading from the last topic: trace the path the signal takes from input to output, then ask of each part whether the signal passes through it (series) or whether it connects the path to ground or a supply (shunt). Two resistors in series from a source to ground, with the output taken between them, form a divider: it scales the voltage by R2/(R1 + R2). Series R then shunt C is a low-pass filter; series C then shunt R is a high-pass filter. Both have the corner f_c = 1/(2πRC), where R is all the resistance the capacitor sees, including a source's output resistance. Drive the low-pass shape with a step instead of a sine and it is an RC timer, such as a power-on reset. A resistor from a logic input to the supply is a pull-up (to ground, a pull-down): it sets the level while a switch is open. A small capacitor from a chip's supply pin straight to ground is decoupling. A drawing shows only connections, so which way a part is drawn never decides the block.",
+      "explanation": "You know the divider and the RC filter as circuits to calculate; now find them inside a larger drawing. Use the node reading from \"Reading a schematic: nodes, symbols, and ground\": trace the path the signal takes from input to output, then ask of each part whether the signal passes through it (series) or whether it connects the path to ground or a supply (shunt). Two resistors in series from a source to ground, with the output taken between them, form a divider: it scales the voltage by R2/(R1 + R2). Series R then shunt C is a low-pass filter; series C then shunt R is a high-pass filter. Both have the corner f_c = 1/(2πRC), where R is all the resistance the capacitor sees, including a source's output resistance. Drive the low-pass shape with a step instead of a sine and it is an RC timer, such as a power-on reset. A resistor from a logic input to the supply is a pull-up (to ground, a pull-down): it sets the level while a switch is open. A small capacitor from a chip's supply pin straight to ground is decoupling. A drawing shows only connections, so which way a part is drawn never decides the block.",
       "workedExample": {
         "problem": "A battery monitor on a 3.3 V microcontroller board is described part by part. R1 = 33 kΩ runs from the 12 V battery's + terminal to node a, and R2 = 10 kΩ from a to ground. C1 = 1 µF, drawn off to one side, also runs from a to ground, and a feeds an ADC input (assume it draws no current). R3 = 10 kΩ runs from a button input pin to 3.3 V, and the button connects that pin to ground. C2 = 100 nF runs from the microcontroller's 3.3 V pin straight to its ground pin. Name each block, say what it does, and put numbers on it.",
         "steps": [
@@ -52,7 +52,7 @@
           "C1 connects a to ground, the same two nodes as R2, so it is in parallel with R2 wherever it is drawn. The signal reaches it through R1: series R, shunt C, a low-pass filter.",
           "The filter's R: seen from C1, the divider is a 2.79 V source with output resistance R1 ∥ R2 = 33 kΩ × 10 kΩ / 43 kΩ = 7.67 kΩ. So f_c = 1 / (2π × 7.67 kΩ × 1 µF) = 20.7 Hz: fast noise on the battery line is filtered out, while the slow battery voltage passes, scaled by the divider. Using R1 alone would give 4.8 Hz; R2 matters.",
           "The same pair is also a timer: at power-up C1 starts at 0 V and charges with τ = 7.67 kΩ × 1 µF = 7.67 ms, so a reads correctly only after about 5τ ≈ 38 ms.",
-          "R3, from a logic input to the supply: a pull-up. With the button open the pin draws almost no current, so it sits at 3.3 V (high). Pressed, the button connects the pin to ground (low), and 3.3 V / 10 kΩ = 0.33 mA flows through R3.",
+          "R3, from a logic input to the supply: a pull-up. With the button open, the pin draws almost no current, so it sits at 3.3 V (high). Pressed, the button connects the pin to ground (low), and 3.3 V / 10 kΩ = 0.33 mA flows through R3.",
           "C2, from a chip's supply pin straight to ground with nothing in series: decoupling. It carries no signal. It supplies the chip's fast current spikes from its own charge, which is why it must sit right at the pins."
         ]
       },
@@ -93,7 +93,7 @@
         },
         {
           "text": "A voltage divider: out is a fixed fraction of in at every frequency, like two resistors",
-          "feedback": "A divider needs a DC current through both parts. C1 lets no steady current through, so for DC R1 drops nothing and out sits at 0 V. The fraction that gets through depends on frequency."
+          "feedback": "A divider needs a DC current through both parts. C1 lets no steady current through, so at DC, R1 drops nothing and out sits at 0 V. The fraction that gets through depends on frequency."
         },
         {
           "text": "An RC timer: it delays the input, so out rises slowly after a step at in and then stays",
@@ -199,7 +199,7 @@
             },
             {
               "text": "A capacitor's reactance is zero at DC, so C1 shorts the whole signal away",
-              "feedback": "It's the other way round: X_C = 1/(2πfC) grows without limit as f → 0. At DC a capacitor is an open circuit."
+              "feedback": "It's the other way around: X_C = 1/(2πfC) grows without limit as f → 0. At DC, a capacitor is an open circuit."
             },
             {
               "text": "C1 soaks up the steady DC current itself, so none of it reaches R1",
@@ -207,10 +207,10 @@
             },
             {
               "text": "R1 is much larger than C1, so R1 takes all of the input voltage",
-              "feedback": "A resistance and a capacitance can't be compared like that (ohms vs farads). At DC the point is that C1 lets no current through."
+              "feedback": "A resistance and a capacitance can't be compared like that (ohms versus farads). At DC, the point is that C1 lets no current through."
             }
           ],
-          "explanation": "At DC a charged capacitor is an open circuit. With no current, Ohm's law gives 0 V across R1, so out equals ground. That is why a series capacitor is used to block DC between stages while passing the signal (a coupling capacitor)."
+          "explanation": "At DC, a charged capacitor is an open circuit. With no current, Ohm's law gives 0 V across R1, so out equals ground. That is why a series capacitor is used to block DC between stages while passing the signal (a coupling capacitor)."
         }
       ],
       "review": "verified",
@@ -441,8 +441,8 @@
           {
             "text": "R1 is open",
             "open": "R1",
-            "feedback": "An open R1 would cut the supply off: node a, out and the R1 current would all read zero.",
-            "why": "With R1 open nothing connects the circuit to {Vin}, so node a and out fall to 0 V and no current flows."
+            "feedback": "An open R1 would cut the supply off: node a, out, and the R1 current would all read zero.",
+            "why": "With R1 open, nothing connects the circuit to {Vin}, so node a and out fall to 0 V and no current flows."
           },
           {
             "text": "R2 is open",
@@ -460,11 +460,11 @@
             "text": "C1 is shorted (failed short)",
             "short": "C1",
             "feedback": "A shorted C1 would pull out to 0 V and make R3 a load on the divider, so node a would sag below normal and the R1 current would rise.",
-            "why": "Healthy, C1 is open at DC, so R3 carries no current and out equals node a. Shorted, C1 ties out to ground, R3 now loads node a in parallel with R2, node a sags, and R1 carries more current."
+            "why": "When the circuit is healthy, C1 is open at DC, so R3 carries no current and out equals node a. When C1 is shorted, it ties out to ground: R3 now loads node a in parallel with R2, node a sags, and R1 carries more current."
           }
         ]
       },
-      "explanation": "At DC a capacitor is an open circuit, so a healthy filter carries no current through R3 and out equals node a. So in the healthy circuit out reads the same as node a. When out drops to 0 V, node a and the R1 current tell you whether C1 or the divider is to blame. (An open C1 would change nothing at DC: a DC meter can't find that fault; you'd need a signal and a scope.) If out and node a both rise to the full input with no current, the bottom of the divider is open.",
+      "explanation": "At DC, a capacitor is an open circuit, so a healthy filter carries no current through R3, and out reads the same as node a. When out drops to 0 V, node a and the R1 current tell you whether C1 or the divider is to blame. (An open C1 would change nothing at DC: a DC meter can't find that fault; you'd need a signal and a scope.) If out and node a both rise to the full input with no current, the bottom of the divider is open.",
       "hints": [
         "In a healthy circuit at DC, how much current flows through R3? What does that make out?",
         "Zero current means something is open; more than normal means something is shorted."
@@ -620,7 +620,7 @@
         },
         {
           "text": "C2, because it's a capacitor to ground",
-          "feedback": "C2 can only push current back through R1's 10 kΩ: even a 0.5 V dip on VCC draws just 50 µA from it, far too little for a current spike (and draining C2 would pull RESET low). It goes to the RESET pin, where with R1 it forms a delay."
+          "feedback": "C2 can only push current back through R1's 10 kΩ: even a 0.5 V dip on VCC draws only 50 µA from it, far too little for a current spike (and draining C2 would pull RESET low). It goes to the RESET pin, where, with R1, it forms a delay."
         },
         {
           "text": "R3, because it holds the REF pin steady",
@@ -628,7 +628,7 @@
         },
         {
           "text": "None is needed: the 5 V supply already holds VCC steady",
-          "feedback": "The supply is steady at its own terminals, but the long wires have inductance and resistance that stop them delivering fast current spikes. Without a local capacitor VCC would dip each time the chip switches."
+          "feedback": "The supply is steady at its own terminals, but the long wires have inductance and resistance that stop them from delivering fast current spikes. Without a local capacitor, VCC would dip each time the chip switches."
         }
       ],
       "explanation": "A decoupling capacitor goes directly from a chip's supply pin to ground, with nothing in series. It is a small local store of charge: fast spikes come from the capacitor, and the distant supply only has to refill it slowly. Here only C1 fits that pattern. The schematic shows only the connection; placing it right beside the pin is a layout rule for the board, not something the drawing's position tells you.",
@@ -828,7 +828,7 @@
     {
       "id": "spb_rc_reset",
       "topicId": "schem_passive_blocks",
-      "prompt": "R1 and C2 connect to the chip's RESET pin, which holds the chip in reset while it's low. At power-up VCC jumps from 0 V to 5 V. What does the RESET pin do?",
+      "prompt": "R1 and C2 connect to the chip's RESET pin, which holds the chip in reset while it's low. At power-up, VCC jumps from 0 V to 5 V. What does the RESET pin do?",
       "variables": [],
       "choices": [
         {
@@ -1019,7 +1019,7 @@
               "feedback": "Ohms and farads can't be compared. What matters is that the current is zero."
             }
           ],
-          "explanation": "In steady DC a capacitor is an open circuit. The same reasoning makes R1 a pull-up: with no current through it, it simply passes VCC to the pin."
+          "explanation": "In steady DC, a capacitor is an open circuit. The same reasoning makes R1 a pull-up: with no current through it, it passes VCC to the pin."
         }
       ],
       "review": "verified",
@@ -1042,7 +1042,7 @@
         },
         {
           "text": "It's a divider: it brings 3.3 V down to a safer logic level for the pin",
-          "feedback": "A divider needs two resistors carrying current. With the button open no current flows, so the pin sees the full 3.3 V."
+          "feedback": "A divider needs two resistors carrying current. With the button open, no current flows, so the pin sees the full 3.3 V."
         },
         {
           "text": "It protects the pin from too much current flowing into it from the 3.3 V supply",
@@ -1064,14 +1064,14 @@
             },
             {
               "text": "A wire can't hold the pin at 3.3 V the way a resistor can",
-              "feedback": "A wire carries any voltage; the problem is what happens when the button closes."
+              "feedback": "A wire holds the pin at 3.3 V even more firmly than a resistor; the problem is what happens when the button closes."
             },
             {
               "text": "The pin would then read low all the time, pressed or not",
-              "feedback": "With a wire to 3.3 V, pressing the button shorts the supply to ground: the pin never gets a clean low, and the supply sags or its protection trips."
+              "feedback": "Unpressed, the wire holds the pin solidly at 3.3 V. Pressed, the button shorts the supply to ground: the pin never gets a clean low, and the supply sags or its protection trips."
             },
             {
-              "text": "It makes no difference, a resistor just looks tidier",
+              "text": "It makes no difference; a resistor just looks tidier",
               "feedback": "It makes all the difference: with a wire, pressing the button is a dead short."
             }
           ],
@@ -1191,7 +1191,7 @@
         "unit": "Hz"
       },
       "estimate": true,
-      "explanation": "C1 is in series from in to out and R1 goes from out to ground: a high-pass filter. Its corner is where C1's reactance equals R1: f_c = 1/(2πR1C1) = 1/(2π × {R} × {C}) = {answer}. Below it C1's reactance is larger than R1 and takes most of the signal; above it R1 takes most of it and the signal passes. The low-pass (the parts swapped) has the same formula; the layout decides which side of f_c gets through.",
+      "explanation": "C1 is in series from in to out and R1 goes from out to ground: a high-pass filter. Its corner is where C1's reactance equals R1: f_c = 1/(2πR1C1) = 1/(2π × {R} × {C}) = {answer}. Below it, C1's reactance is larger than R1 and takes most of the signal; above it, R1 takes most of it and the signal passes. The low-pass (the parts swapped) has the same formula; the layout decides which side of f_c gets through.",
       "hints": [
         "Which part is in series with the signal, and which goes to ground?",
         "The corner of any single RC filter is f_c = 1/(2πRC)."

@@ -50,26 +50,26 @@
         "Find an emitter follower's input resistance, about (β + 1)·R_E, and explain why it can buffer a weak source driving a heavy load",
         "Check that the output swing keeps the transistor in its active region"
       ],
-      "intuition": "In the active region the base signal appears across the emitter path, the transistor's own r_e plus any unbypassed R_E, and sets a signal current that the collector passes on to R_C, so the voltage gain is the resistance ratio −R_C/(r_e + R_E).",
+      "intuition": "In the active region, the base signal appears across the emitter path, the transistor's own r_e plus any unbypassed R_E, and sets a signal current that the collector passes on to R_C, so the voltage gain is the resistance ratio −R_C/(r_e + R_E).",
       "why": "The collector current rises exponentially with V_BE, like a diode's current with its voltage. Around the bias point, a small change v_be changes the emitter current by v_be/r_e, where r_e = V_T/I_E ≈ 26 mV/I_E: 26 Ω at 1 mA. So a base signal v_in drives an emitter signal current v_in/(r_e + R_E), with R_E counted only if it is not bypassed. Nearly all of it flows in the collector, and more current through R_C pulls the collector down: the output inverts. β enters the gain from base to collector only through I_C ≈ I_E. It does set the input resistance, about β·(r_e + R_E) in parallel with the bias divider, so when the source has its own resistance, a low-β part loads it more and the gain measured from the source drops. A large R_E also swamps r_e, which drifts with temperature and changes with the signal itself.",
-      "explanation": "A biased transistor rests at its operating point; an amplifier adds a small signal on top, fed through a coupling capacitor that passes the signal but blocks DC, so the bias stays put. In the common-emitter stage the signal enters at the base and leaves at the collector. The signal appears across the emitter path: R_E plus r_e = V_T/I_E, not a part but the slope of the base–emitter curve: 26 Ω at 1 mA (since I_E ≈ I_C, the problems write V_T/I_C). That sets an emitter signal current, and almost all of it flows through R_C, so the gain is −R_C/(r_e + R_E). The minus sign means the output inverts: more current, more drop across R_C, a lower collector. With R_E much larger than r_e, the gain is close to R_C/R_E, fixed by two resistors. A bypass capacitor across R_E shorts it for signals but keeps its DC bias action. The gain rises to −R_C/r_e, often over a hundred, but it now depends on I_C and temperature, and large signals distort. The emitter follower takes its output at the emitter instead: gain just under 1, no inversion, and the source sees R_E multiplied by β + 1: a buffer.",
+      "explanation": "A biased transistor rests at its operating point; an amplifier adds a small signal on top, fed through a coupling capacitor that passes the signal but blocks DC, so the bias stays put. In the common-emitter stage, the signal enters at the base and leaves at the collector. The signal appears across the emitter path: R_E plus r_e = V_T/I_E. The resistance r_e is not a part but the slope of the base–emitter curve, 26 Ω at 1 mA (since I_E ≈ I_C, the problems write V_T/I_C). That sets an emitter signal current, and almost all of it flows through R_C, so the gain is −R_C/(r_e + R_E). The minus sign means the output inverts: more current, more drop across R_C, a lower collector. With R_E much larger than r_e, the gain is close to R_C/R_E, fixed by two resistors. A bypass capacitor across R_E shorts it for signals but keeps its DC bias action. The gain rises to −R_C/r_e, often over a hundred, but it now depends on I_C and temperature, and large signals distort. The emitter follower takes its output at the emitter instead: gain just under 1, no inversion, and the source sees R_E multiplied by β + 1: a buffer.",
       "workedExample": {
-        "problem": "A common-emitter stage runs from 12 V with divider bias: R1 = 47 kΩ from the supply to the base, R2 = 10 kΩ to ground, R_E = 1.0 kΩ and R_C = 3.9 kΩ. The transistor is a small-signal NPN such as a 2N3904 (assume β = 100, V_BE = 0.7 V and V_T = 26 mV), and the signal arrives through a large coupling capacitor. Find the voltage gain with R_E unbypassed and with R_E fully bypassed, check that the transistor stays active for a sensible input in each case, and compare the resistance the signal source sees.",
+        "problem": "A common-emitter stage runs from 12 V with divider bias: R1 = 47 kΩ from the supply to the base, R2 = 10 kΩ to ground, R_E = 1.0 kΩ and R_C = 3.9 kΩ. The transistor is a small-signal NPN such as a 2N3904 (assume β = 100, V_BE = 0.7 V, and V_T = 26 mV), and the signal arrives through a large coupling capacitor. Find the voltage gain with R_E unbypassed and with R_E fully bypassed, check that the transistor stays active for a sensible input in each case, and compare the resistance the signal source sees.",
         "steps": [
-          "DC first (stiff-divider bias model, V_BE = 0.7 V): V_B = 12 V × 10 kΩ / (47 kΩ + 10 kΩ) = 2.105 V, V_E = 2.105 V − 0.7 V = 1.405 V and I_E = 1.405 V / 1.0 kΩ = 1.405 mA. At rest V_C = 12 V − 1.405 mA × 3.9 kΩ = 6.519 V, so V_CE = 6.519 V − 1.405 V = 5.11 V.",
+          "DC first (stiff-divider bias model, V_BE = 0.7 V): V_B = 12 V × 10 kΩ / (47 kΩ + 10 kΩ) = 2.105 V, V_E = 2.105 V − 0.7 V = 1.405 V, and I_E = 1.405 V / 1.0 kΩ = 1.405 mA. At rest, V_C = 12 V − 1.405 mA × 3.9 kΩ = 6.519 V, so V_CE = 6.519 V − 1.405 V = 5.11 V.",
           "Small-signal model: r_e = V_T/I_E = 26 mV / 1.405 mA = 18.5 Ω.",
           "R_E unbypassed: gain = −R_C/(r_e + R_E) = −3.9 kΩ / (18.5 Ω + 1000 Ω) = −3.83. The quick estimate R_C/R_E = 3.9 is within 2%, because R_E is 54 times r_e.",
           "Swing check, unbypassed, with a 0.4 V peak input: the collector swings 3.83 × 0.4 V = 1.53 V peak around 6.519 V, from 4.99 V to 8.05 V. The emitter swings 0.4 V × 1000 Ω / 1018.5 Ω = 0.393 V peak around 1.405 V, up to 1.80 V at the moment the collector is lowest. The smallest V_CE is 4.99 V − 1.80 V = 3.19 V, far above 0.2 V: active throughout.",
           "R_E bypassed by a large capacitor: the capacitor carries no DC, so the bias is unchanged, but for signals only r_e is left in the emitter path. Gain = −R_C/r_e = −3.9 kΩ / 18.5 Ω = −211, 55 times more.",
-          "Swing check, bypassed: the input must now stay at a few millivolts, because r_e itself changes with the signal current: even at 4 mV peak the collector current swings +17% and −14% of I_C, a few percent distortion, so the ±0.844 V below is approximate. With 4 mV peak the collector swings 211 × 4 mV = 0.844 V peak, while the capacitor holds the emitter at 1.405 V. The smallest V_CE is 6.519 V − 0.844 V − 1.405 V = 4.27 V: active throughout.",
-          "What the source sees: as with a follower, the base presents (β + 1) times its emitter path: 101 × (18.5 Ω + 1000 Ω) = 103 kΩ unbypassed, but only 101 × 18.5 Ω = 1.87 kΩ bypassed. For signals the supply counts as ground, so R1 and R2 are in parallel with that: 47 kΩ ∥ 10 kΩ ∥ 103 kΩ = 7.63 kΩ against 47 kΩ ∥ 10 kΩ ∥ 1.87 kΩ = 1.52 kΩ. The high-gain version loads its source about five times harder."
+          "Swing check, bypassed: the input must now stay at a few millivolts, because r_e itself changes with the signal current: even at 4 mV peak the collector current swings +17% and −14% of I_C, a few percent distortion, so the ±0.844 V below is approximate. With 4 mV peak, the collector swings 211 × 4 mV = 0.844 V peak, while the capacitor holds the emitter at 1.405 V. The smallest V_CE is 6.519 V − 0.844 V − 1.405 V = 4.27 V: active throughout.",
+          "What the source sees: as with a follower, the base presents (β + 1) times its emitter path: 101 × (18.5 Ω + 1000 Ω) = 103 kΩ unbypassed, but only 101 × 18.5 Ω = 1.87 kΩ bypassed. For signals, the supply counts as ground, so R1 and R2 are in parallel with that: 47 kΩ ∥ 10 kΩ ∥ 103 kΩ = 7.63 kΩ against 47 kΩ ∥ 10 kΩ ∥ 1.87 kΩ = 1.52 kΩ. The high-gain version loads its source about five times harder."
         ]
       },
       "sources": [
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Single-Stage BJT Amplifiers\" (last update 22 September 2026), ch. 3 \"Tutorial\", section 3.4 \"Common-emitter amplifier\"",
           "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_bjtamp.pdf",
-          "note": "The AC input appears across the dynamic emitter resistance plus any unbypassed R_E, so the gain is about R_C/(r'_E + R_E), a large R_E swamps r'_E for predictable gain, and a bypass capacitor removes R_E for signals while keeping its DC bias action."
+          "note": "The AC input appears across the dynamic emitter resistance plus any unbypassed R_E, so the gain is about R_C/(r'_E + R_E). A large R_E swamps r'_E for predictable gain, and a bypass capacitor removes R_E for signals while keeping its DC bias action."
         },
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Single-Stage BJT Amplifiers\" (last update 22 September 2026), ch. 3 \"Tutorial\", section 3.6 \"Amplifier gain comparisons\"",
@@ -117,7 +117,7 @@
       "misconceptions": [
         {
           "formula": "Ic/VT",
-          "feedback": "That's the transconductance g_m (in siemens). r_e is its inverse: V_T / I_C."
+          "feedback": "That's the transconductance g_m (in siemens). r_e is its reciprocal: V_T / I_C."
         }
       ],
       "noDrawing": "r_e of a transistor from its bias current alone; no circuit is described",
@@ -208,7 +208,7 @@
         "unit": "",
         "unitless": true
       },
-      "explanation": "r_e = {VT} / {Ic} = {re}. The gain is −R_C / (r_e + R_E) = −{Rc} / ({re} + {Re}) = {answer}. The minus sign is the phase inversion. The divider only sets the DC operating point, and C1 passes the signal to the base while blocking DC, so the source can't upset the bias. At rest the collector sits at {Vcc} − {Ic} × {Rc} = {Vc} and the emitter at {Ve}, so V_CE = {Vce}. The collector can rise {VRc} before the transistor cuts off and fall nearly V_CE before it saturates: at least 2 V either way, so it stays in the active region. A real stage usually puts a bypassed resistor in series with this R_E to lift V_E to about 1 V for bias stability; that resistor is shorted for signals and doesn't change the gain.",
+      "explanation": "r_e = {VT} / {Ic} = {re}. The gain is −R_C / (r_e + R_E) = −{Rc} / ({re} + {Re}) = {answer}. The minus sign is the phase inversion. The divider only sets the DC operating point, and C1 passes the signal to the base while blocking DC, so the source can't upset the bias. At rest, the collector sits at {Vcc} − {Ic} × {Rc} = {Vc} and the emitter at {Ve}, so V_CE = {Vce}. The collector can rise {VRc} before the transistor cuts off and fall nearly V_CE before it saturates: at least 2 V either way, so it stays in the active region. A real stage usually puts a bypassed resistor in series with this R_E to lift V_E to about 1 V for bias stability; that resistor is shorted for signals and doesn't change the gain.",
       "hints": [
         "Find r_e = V_T / I_C first.",
         "A_v = −R_C / (r_e + R_E)."
@@ -488,7 +488,7 @@
         "unit": "",
         "unitless": true
       },
-      "explanation": "C_E carries no DC, so R_E still sets the bias, but for signals C_E shorts R_E and only r_e = {VT} / {Ic} = {re} is left in the emitter path. A_v = −R_C / r_e = −{Rc} / {re} = {answer}. At rest V_CE = {Vcc} − {Ic} × ({Rc} + {Re}) = {Vce}. High gain, but it depends on I_C and temperature, and because r_e changes with the signal current, the input must stay well below V_T (about 1 mV peak keeps distortion near 1%).",
+      "explanation": "C_E carries no DC, so R_E still sets the bias, but for signals C_E shorts R_E and only r_e = {VT} / {Ic} = {re} is left in the emitter path. A_v = −R_C / r_e = −{Rc} / {re} = {answer}. At rest, V_CE = {Vcc} − {Ic} × ({Rc} + {Re}) = {Vce}. The gain is high, but it depends on I_C and temperature, and because r_e changes with the signal current, the input must stay well below V_T (about 1 mV peak keeps distortion near 1%).",
       "hints": [
         "For signals, the bypass capacitor shorts R_E.",
         "A_v = −R_C / r_e = −g_m R_C."
@@ -725,7 +725,7 @@
       "misconceptions": [
         {
           "formula": "Re",
-          "feedback": "The base only supplies 1/(β + 1) of the emitter current, so R_E looks (β + 1) times larger from the base."
+          "feedback": "The base supplies only 1/(β + 1) of the emitter current, so R_E looks (β + 1) times larger from the base."
         }
       ],
       "followUps": [
@@ -747,7 +747,7 @@
             },
             {
               "text": "The collector current flows back out through the base",
-              "feedback": "Collector current flows from the supply into the collector and out of the emitter; the base carries only the small base current."
+              "feedback": "The collector current flows from the supply into the collector and out of the emitter; the base carries only the small base current."
             }
           ],
           "explanation": "The emitter voltage follows the base, so R_E carries i_e = v/R_E. Of that, only i_b = i_e/(β + 1) comes from the source; the rest comes from the supply through the collector. The source therefore sees v/i_b = (β + 1)·R_E. That's why a follower can sit between a weak source and a heavy load."
@@ -1243,7 +1243,7 @@
     {
       "id": "amp_what_if_rc_gain",
       "topicId": "bjt_amplifiers",
-      "prompt": "A common-emitter stage on a 12 V supply is biased at I_C = {Ic} by its divider and emitter resistor, with R_C = {Rc} and an unbypassed R_E = {Re}. Using V_T = {VT}, a second {Rc} resistor is soldered in parallel with R_C. What happens to the size of the voltage gain?",
+      "prompt": "A common-emitter stage on a 12 V supply is biased at I_C = {Ic} by its divider and emitter resistor, with R_C = {Rc} and an unbypassed R_E = {Re}. Use V_T = {VT}. A second {Rc} resistor is soldered in parallel with R_C. What happens to the size of the voltage gain?",
       "variables": [
         {
           "name": "Ic",
@@ -1307,7 +1307,7 @@
           "same": "The signal current i_e = v_in/(r_e + R_E) is unchanged (and so is the DC collector current), but the output swing is that current times the collector resistance, and the parallel resistor has changed that resistance."
         }
       },
-      "explanation": "The divider and R_E set the DC collector current (bias topic), so I_C stays at {Ic} and r_e = V_T/I_C stays at {re}. The gain magnitude is R_C/(r_e + R_E); two equal resistors in parallel give R_C/2 (Series and parallel), so the gain halves: {before} → {after}. The collector's DC voltage rises, because the smaller R_C drops only half as much.",
+      "explanation": "The divider and R_E set the DC collector current (Biasing a bipolar transistor), so I_C stays at {Ic} and r_e = V_T/I_C stays at {re}. The gain magnitude is R_C/(r_e + R_E); two equal resistors in parallel give R_C/2 (Series and parallel resistance), so the gain halves: {before} → {after}. The collector's DC voltage rises, because the smaller R_C drops only half as much.",
       "hints": [
         "Does adding the parallel resistor change the bias current, and so r_e?",
         "Gain = R_C/(r_e + R_E); what is R_C now?"
@@ -1318,12 +1318,12 @@
           "choices": [
             {
               "text": "Nothing: the divider and R_E set it; R_C only decides how far below the supply the collector sits",
-              "feedback": "Right: in the active region the transistor sets the current, and R_C turns it into a voltage.",
+              "feedback": "Right: in the active region, the transistor sets the current, and R_C turns it into a voltage.",
               "correct": true
             },
             {
               "text": "It doubled, because R_C halved",
-              "feedback": "That would be Ohm's law with R_C alone across the supply. In the active region I_C ≈ (V_B − 0.7 V)/R_E, and R_C just takes whatever drop results."
+              "feedback": "That would be Ohm's law with R_C alone across the supply. In the active region, I_C ≈ (V_B − 0.7 V)/R_E, and R_C only takes whatever drop results."
             },
             {
               "text": "It halved, along with the gain",
@@ -1334,7 +1334,7 @@
               "feedback": "With divider bias and R_E, I_C hardly depends on β, whatever R_C is."
             }
           ],
-          "explanation": "In the active region the transistor acts as a current source controlled from the base side: I_C ≈ (V_B − 0.7 V)/R_E. R_C converts current into voltage, both for DC (V_C = V_CC − I_C·R_C) and for signals (gain = R_C/(r_e + R_E)). Change R_C and the voltages change, not the current, as long as the collector stays well above the emitter."
+          "explanation": "In the active region, the transistor acts as a current source controlled from the base side: I_C ≈ (V_B − 0.7 V)/R_E. R_C converts current into voltage, both for DC (V_C = V_CC − I_C·R_C) and for signals (gain = R_C/(r_e + R_E)). Change R_C, and the voltages change, not the current, as long as the collector stays well above the emitter."
         }
       ],
       "schematic": {
@@ -1496,7 +1496,7 @@
     {
       "id": "amp_what_if_follower_load",
       "topicId": "bjt_amplifiers",
-      "prompt": "An emitter follower, driven from a low-resistance source, is biased at I_C = {Ic} (its emitter bias resistor is large enough to ignore) and drives a load R_L = {Rl} through a coupling capacitor. Using V_T = {VT}, the load is swapped for one ten times smaller, {new_Rl}. What happens to the voltage gain?",
+      "prompt": "An emitter follower, driven from a low-resistance source, is biased at I_C = {Ic} (its emitter bias resistor is large enough to ignore) and drives a load R_L = {Rl} through a coupling capacitor. Use V_T = {VT}. The load is swapped for one ten times smaller, {new_Rl}. What happens to the voltage gain?",
       "variables": [
         {
           "name": "Ic",
@@ -1541,7 +1541,7 @@
           "same": "The follower's gain is close to 1, not exactly 1: r_e = V_T/I_C sits in series with the load like the top of a divider; look at which leg R_L is."
         }
       },
-      "explanation": "For signals the follower is a divider: r_e = V_T/I_C = {re} on top, R_L at the bottom (Dividers topic). Gain = R_L/(R_L + r_e): {before} → {after}. It's just under 1 because r_e is small, and even a tenfold heavier load costs at most about a fifth of the small-signal gain: that small r_e is the follower's low output resistance.",
+      "explanation": "For signals, the follower is a divider: r_e = V_T/I_C = {re} on top, R_L at the bottom (Voltage and current dividers). Gain = R_L/(R_L + r_e): {before} → {after}. It's just under 1 because r_e is small, and even a tenfold heavier load costs at most about a fifth of the small-signal gain: that small r_e is the follower's low output resistance.",
       "hints": [
         "Draw the follower as r_e = V_T/I_C in series with the load.",
         "Gain = R_L/(R_L + r_e)."
@@ -1557,11 +1557,11 @@
             },
             {
               "text": "Because its emitter resistor is small",
-              "feedback": "The emitter bias resistor is large here (we ignored it). The low output resistance comes from the transistor: r_e = V_T/I_C."
+              "feedback": "The emitter bias resistor is large here (the problem ignores it). The low output resistance comes from the transistor: r_e = V_T/I_C."
             },
             {
               "text": "Because the coupling capacitor has a low reactance",
-              "feedback": "The capacitor just passes the signal on; it can't make the stage behind it any stiffer."
+              "feedback": "The capacitor only passes the signal on; it can't make the stage behind it any stiffer."
             },
             {
               "text": "Because its gain is 1, so its output resistance must be low",
@@ -1729,19 +1729,19 @@
           {
             "text": "R1 (base to supply) is open",
             "open": "R1",
-            "feedback": "With R1 open nothing would pull the base up: it would read 0 V, the transistor would be off, and the emitter would read 0 V too.",
+            "feedback": "With R1 open, nothing would pull the base up: it would read 0 V, the transistor would be off, and the emitter would read 0 V too.",
             "why": "The base reads 0 V, so nothing is feeding it: R1, the only path from the supply to the base, is open. With no base drive the transistor is off and the emitter sits at 0 V."
           },
           {
             "text": "R2 (base to ground) is open",
             "open": "R2",
-            "feedback": "With R2 open only R1 and the base current would set the base: the base would rise far above half the supply, and the emitter would follow it, still about 0.7 V below.",
-            "why": "The emitter still follows the base about 0.7 V below, so the transistor works, but the base is far above half the supply. Only R1 is feeding it: the leg that holds it down, R2, is missing, and just the small base current through R1 limits the rise."
+            "feedback": "With R2 open, only R1 and the base current would set the base: the base would rise far above half the supply, and the emitter would follow it, still about 0.7 V below.",
+            "why": "The emitter still follows the base about 0.7 V below, so the transistor works, but the base is far above half the supply. Only R1 is feeding it: the leg that holds it down, R2, is missing, and only the small base current through R1 limits the rise."
           },
           {
             "text": "R_E is open",
             "open": "RE",
-            "feedback": "With R_E open there would be no emitter current: the base would sit at the plain divider voltage (half the supply), and the emitter, loaded only by the meter, would read only about 0.4–0.5 V below it instead of 0.7 V.",
+            "feedback": "With R_E open, there would be no emitter current: the base would sit at the plain divider voltage (half the supply), and the emitter, loaded only by the meter, would read only about 0.4–0.5 V below it instead of 0.7 V.",
             "why": "The base is at exactly half the supply, so the divider carries no base current at all, and the base–emitter voltage is smaller than a working junction's 0.7 V: almost no emitter current flows. The path it should take, R_E, is open; the meter's own tiny current is all that's left. The emitter still rises well above 0 V, so the transistor is conducting: that is what separates this from a transistor failed open, where the emitter would read 0 V."
           },
           {
@@ -1753,8 +1753,8 @@
           {
             "text": "A solder bridge joins the base to the emitter",
             "add": "Rbridge b e 0.1",
-            "feedback": "A base–emitter bridge would put R_E straight across R2, dragging the base far down, and base and emitter would read the same voltage.",
-            "why": "Base and emitter read the same voltage, so they are joined: the junction is bypassed and the transistor is off. R_E now sits in parallel with R2, which pulls the divider's output far down."
+            "feedback": "A base–emitter bridge would put R_E straight across R2, dragging the base far down, and the base and emitter would read the same voltage.",
+            "why": "The base and emitter read the same voltage, so they are joined: the junction is bypassed and the transistor is off. R_E now sits in parallel with R2, which pulls the divider's output far down."
           },
           {
             "text": "The transistor has failed open (no junction conducts)",
@@ -1764,7 +1764,7 @@
           }
         ]
       },
-      "explanation": "Read the two voltages as a story. In a working follower the base sits near the divider voltage (a little below half the supply, since the base current loads the divider) and the emitter follows about 0.7 V below. Base at 0 V: nothing feeds it. Base too high: the lower divider leg is gone. Base at half the supply with the emitter at 0 V, or with a base–emitter gap well under 0.7 V: no emitter current. Emitter above the base: something drives the emitter directly. Base and emitter equal: they are joined. The divider-bias fault problem in Reading schematics uses the same reasoning on a common-emitter stage.",
+      "explanation": "Read the two voltages as a story. In a working follower, the base sits near the divider voltage (a little below half the supply, since the base current loads the divider) and the emitter follows about 0.7 V below. If the base reads 0 V, nothing feeds it. If the base is too high, the lower divider leg is gone. If the base sits at half the supply with the emitter at 0 V, or with a base–emitter gap well under 0.7 V, no emitter current flows. If the emitter is above the base, something drives the emitter directly. If the base and emitter read the same, they are joined. The divider-bias fault problem in the Reading schematics unit uses the same reasoning on a common-emitter stage.",
       "hints": [
         "Start with V_B − V_E. Is it still about 0.7 V?",
         "Then compare V_B with half the supply: the divider's unloaded voltage."
@@ -1908,7 +1908,7 @@
         "bjt_bias",
         "bjt_amplifiers"
       ],
-      "prompt": "A common-emitter stage runs from {Vcc}. R1 = {R1} runs from the supply to the base and R2 = {R2} from the base to ground; the divider is stiff enough to ignore the base current. The emitter goes to ground through R_E = {Re}, fully bypassed for signals by a large capacitor, and the collector to the supply through R_C = {Rc}. Taking V_BE = 0.7 V and V_T = {VT}, what is the small-signal voltage gain?",
+      "prompt": "A common-emitter stage runs from {Vcc}. R1 = {R1} runs from the supply to the base and R2 = {R2} from the base to ground; the divider is stiff enough to ignore the base current. The emitter goes to ground through R_E = {Re}, fully bypassed for signals by a large capacitor, and the collector to the supply through R_C = {Rc}. Take V_BE = 0.7 V and V_T = {VT}. What is the small-signal voltage gain?",
       "variables": [
         {
           "name": "Vcc",
@@ -1981,7 +1981,7 @@
         "unit": "",
         "unitless": true
       },
-      "explanation": "Three topics, one after the other. Voltage and current dividers: the base sits at V_B = {Vcc} × R2/(R1 + R2) = {VB}. Biasing a bipolar transistor: the emitter is one V_BE lower, and R_E turns that into the current, I_C ≈ I_E = (V_B − 0.7 V)/R_E = {Ic}. Common-emitter amplifiers and emitter followers: that current sets r_e = V_T/I_C = {re}, and with R_E bypassed only r_e is left in the emitter for signals, so A_v = −R_C/r_e = −{Rc}/{re} = {answer}. The minus sign is the inversion. Notice that the gain equals the DC drop across R_C ({VRc}) divided by V_T: the bias decides the gain.",
+      "explanation": "Three topics, one after the other. Voltage and current dividers: the base sits at V_B = {Vcc} × R2/(R1 + R2) = {VB}. Biasing a bipolar transistor: the emitter is one V_BE lower, and R_E turns that into the current, I_C ≈ I_E = (V_B − 0.7 V)/R_E = {Ic}. Common-emitter amplifiers and emitter followers: that current sets r_e = V_T/I_C = {re}, and with R_E bypassed, only r_e is left in the emitter for signals, so A_v = −R_C/r_e = −{Rc}/{re} = {answer}. The minus sign is the inversion. Notice that the gain equals the DC drop across R_C ({VRc}) divided by V_T: the bias decides the gain.",
       "hints": [
         "Work from DC to signal: the base voltage, then the emitter current, then r_e.",
         "V_B = V_CC·R2/(R1 + R2); I_C ≈ (V_B − 0.7 V)/R_E; A_v = −R_C/r_e with r_e = V_T/I_C."
@@ -1989,7 +1989,7 @@
       "misconceptions": [
         {
           "formula": "-Rc*VB/(Re*VT)",
-          "feedback": "You put all of V_B across R_E. The emitter sits 0.7 V below the base, so R_E only has V_B − 0.7 V across it; that sets a smaller I_C, and a smaller I_C means a larger r_e and less gain."
+          "feedback": "You put all of V_B across R_E. The emitter sits 0.7 V below the base, so R_E has only V_B − 0.7 V across it; that sets a smaller I_C, and a smaller I_C means a larger r_e and less gain."
         },
         {
           "formula": "-Rc*(Vcc*R1/(R1+R2)-0.7)/(Re*VT)",
@@ -2285,14 +2285,14 @@
         },
         "askFactor": false,
         "feedback": {
-          "up": "A stiffer divider holds the DC bias more firmly, but for the signal R1 and R2 are two more paths from the base to ground (the supply is ground for signals). Smaller resistors make those paths easier, which pulls the input resistance R1 ∥ R2 ∥ (β + 1)·R_E down, and the source's {Rs} forms a divider with that input resistance.",
+          "up": "A stiffer divider holds the DC bias more firmly, but for the signal, R1 and R2 are two more paths from the base to ground (the supply is ground for signals). Smaller resistors make those paths easier, which pulls the input resistance R1 ∥ R2 ∥ (β + 1)·R_E down, and the source's {Rs} forms a divider with that input resistance.",
           "same": "The bias point doesn't move, so the stage's own gain from base to collector doesn't either. But the source sees R1 ∥ R2 ∥ (β + 1)·R_E, and ten-times-smaller divider resistors drag that down, and the source's own {Rs} forms a divider with it."
         }
       },
-      "explanation": "Four ideas meet at the base. Biasing a bipolar transistor: V_B = 12 V × R2/(R1 + R2) depends only on the ratio, so V_B, I_C and the stage's own gain stay put. Series and parallel resistance: for signals the supply counts as ground, so R1 and R2 both run from the base to ground, in parallel with what the transistor presents, (β + 1)·R_E = {Rbase} (the (β + 1) rule from Common-emitter amplifiers and emitter followers). The input resistance falls from {Rin} to {Rin2}. Voltage and current dividers: the source's {Rs} and that input resistance form a divider, so the base gets R_in/(R_s + R_in): {before} → {after}. That is the trade-off in divider bias: the stiffer the divider, the more it loads the signal, which is why designers aim for a divider current of about ten times the base current and go no stiffer: enough to hold the bias, not so little resistance that it swamps the input.",
+      "explanation": "Four ideas meet at the base. Biasing a bipolar transistor: V_B = 12 V × R2/(R1 + R2) depends only on the ratio, so V_B, I_C, and the stage's own gain stay put. Series and parallel resistance: for signals, the supply counts as ground, so R1 and R2 both run from the base to ground, in parallel with what the transistor presents, (β + 1)·R_E = {Rbase} (the (β + 1) rule from Common-emitter amplifiers and emitter followers). The input resistance falls from {Rin} to {Rin2}. Voltage and current dividers: the source's {Rs} and that input resistance form a divider, so the base gets R_in/(R_s + R_in): {before} → {after}. That is the trade-off in divider bias: the stiffer the divider, the more it loads the signal. That is why designers aim for a divider current of about ten times the base current and go no stiffer: enough to hold the bias, but not so little resistance that it swamps the input.",
       "hints": [
         "Does the bias point change? Then ask what the source is looking into.",
-        "For signals the supply is ground: R1, R2 and (β + 1)·R_E are all in parallel, and that forms a divider with the source resistance."
+        "For signals, the supply is ground: R1, R2, and (β + 1)·R_E are all in parallel, and that forms a divider with the source resistance."
       ],
       "followUps": [
         {
@@ -2305,7 +2305,7 @@
             },
             {
               "text": "Because both resistors carry the same DC current from the supply, so the signal arriving at the base sees the two of them side by side",
-              "feedback": "Carrying the same current makes them series for DC. For signals what matters is what each end is tied to: both run from the base to a point with no signal on it."
+              "feedback": "Carrying the same current makes them a series pair for DC. For signals, what matters is what each end is tied to: both run from the base to a point with no signal on it."
             },
             {
               "text": "Because the coupling capacitor ties their far ends together, so both resistors end up connected across the source",

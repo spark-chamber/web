@@ -3,7 +3,7 @@
     {
       "id": "mosfet_switching",
       "title": "MOSFET switches and losses",
-      "summary": "A fully-on MOSFET is a small resistance R_DS(on); losses come from I²R while on and from the time spent switching.",
+      "summary": "A fully on MOSFET is a small resistance R_DS(on); losses come from I²R while on and from the time spent switching.",
       "lenses": [
         "circuit",
         "physics"
@@ -41,14 +41,14 @@
         "mosfet_intro": "Switching uses the two MOSFET extremes: off below threshold, and fully on with a low R_DS(on) when the gate is driven well above it."
       },
       "goals": [
-        "Find a fully-on MOSFET's voltage drop and conduction loss from R_DS(on): V_DS = I·R_DS(on) and P = I²·R_DS(on)",
+        "Find a fully on MOSFET's voltage drop and conduction loss from R_DS(on): V_DS = I·R_DS(on) and P = I²·R_DS(on)",
         "Estimate the switching time from the gate charge and drive current, t ≈ Q_g/I_G, and the switching loss with P ≈ ½·V·I·(t_on + t_off)·f",
         "Check that a gate drive turns a MOSFET fully on by comparing it with the V_GS at which R_DS(on) is specified, not with the threshold",
         "Explain why a half-on MOSFET runs hot, why conduction loss grows with the square of the current, and why switching loss grows with frequency"
       ],
-      "intuition": "A MOSFET switch dissipates V_DS·I_D, so it stays cool only at the two extremes: driven fully on (to the V_GS its R_DS(on) is specified at) it has little voltage across it, and off it carries no current.",
-      "why": "The power in any part is V_DS·I_D. Off, there is no channel and I_D is nearly zero. Driven well above threshold, the channel holds so much charge that it acts as a small resistor, R_DS(on); V_DS = I·R_DS(on) is a small fraction of a volt, and P = I²·R_DS(on). In between, while the gate charges or discharges, the channel is partly formed and the MOSFET has a large voltage and a large current together. The gate is a capacitor, so the driver sets how long this lasts: t ≈ Q_g/I_G (the time to charge the whole gate; voltage and current overlap only while the Miller charge Q_gd moves, so using Q_g gives a safe overestimate of the switching loss). With an inductive load held by a diode, each transition costs roughly ½·V·I·t of energy, every cycle.",
-      "explanation": "In MOSFET basics, a large overdrive made the channel a resistor. A switch uses two states: off, with V_GS below threshold, or fully on, where the channel is a small resistance R_DS(on), milliohms for a power MOSFET. Fully on, V_DS = I·R_DS(on) and the conduction loss is I²·R_DS(on): double the current and the loss quadruples. R_DS(on) is guaranteed only at the V_GS the datasheet states, often 10 V; a logic-level part also states it at 4.5 V or 2.5 V. The threshold is where the channel just starts to form, so a 3.3 V pin driving a part with a 2–4 V threshold can leave it half on, with a large voltage and a large current at once (watts of heat), or not on at all. Switching takes time. The gate is a capacitor, and the driver must deliver the gate charge Q_g: t ≈ Q_g/I_G (the time to charge the whole gate; voltage and current overlap only while the Miller charge Q_gd moves, so using Q_g gives a safe overestimate of the switching loss). During each transition the MOSFET has voltage and current together. With an inductive load whose current a diode holds steady (motors, converters), the switching loss is about ½·V·I·(t_on + t_off)·f; a resistive load loses about a third of that. Either way it grows with frequency. A gate driver supplying amps, not milliamps, shortens the transitions. Power MOSFETs also contain a body diode. In an NMOS its anode is the source and its cathode the drain, so it conducts when the MOSFET is off and the drain is pulled about 0.7 V below the source.",
+      "intuition": "A MOSFET switch dissipates V_DS·I_D, so it stays cool only at the two extremes: when driven fully on (to the V_GS at which its R_DS(on) is specified), it has little voltage across it, and when off, it carries no current.",
+      "why": "The power in any part is V_DS·I_D. When the MOSFET is off, there is no channel and I_D is nearly zero. When the gate is driven well above threshold, the channel holds so much charge that it acts as a small resistor, R_DS(on); V_DS = I·R_DS(on) is a small fraction of a volt, and P = I²·R_DS(on). In between, while the gate charges or discharges, the channel is partly formed and the MOSFET has a large voltage and a large current together. The gate is a capacitor, so the driver sets how long this lasts: t ≈ Q_g/I_G (the time to charge the whole gate; voltage and current overlap only while the Miller charge Q_gd moves, so using Q_g gives a safe overestimate of the switching loss). With an inductive load held by a diode, each transition costs roughly ½·V·I·t of energy, every cycle.",
+      "explanation": "In MOSFET basics, a large overdrive made the channel a resistor. A switch uses two states: off, with V_GS below threshold, or fully on, where the channel is a small resistance R_DS(on), milliohms for a power MOSFET. When it is fully on, V_DS = I·R_DS(on) and the conduction loss is I²·R_DS(on): double the current and the loss quadruples. R_DS(on) is guaranteed only at the V_GS the datasheet states, often 10 V; a logic-level part also states it at 4.5 V or 2.5 V. The threshold is where the channel just starts to form, so a 3.3 V pin driving a part with a 2–4 V threshold can leave it half on, with a large voltage and a large current at once (watts of heat), or not on at all. Switching takes time. The gate is a capacitor, and the driver must deliver the gate charge Q_g: t ≈ Q_g/I_G (the time to charge the whole gate; voltage and current overlap only while the Miller charge Q_gd moves, so using Q_g gives a safe overestimate of the switching loss). During each transition the MOSFET has voltage and current together. With an inductive load whose current a diode holds steady (motors, converters), the switching loss is about ½·V·I·(t_on + t_off)·f; a resistive load loses about a third of that. Either way it grows with frequency. A gate driver supplying amps, not milliamps, shortens the transitions. Power MOSFETs also contain a body diode. In an NMOS its anode is the source and its cathode the drain, so it conducts when the MOSFET is off and the drain is pulled about 0.7 V below the source.",
       "workedExample": {
         "problem": "A logic-level NMOS on the low side switches a motor from 12 V at 20 kHz and 50% duty cycle (assume V_t ≈ 2 V, R_DS(on) = 33 mΩ at V_GS = 5 V, total gate charge Q_g = 15 nC at V_GS = 5 V). At this duty cycle the motor carries 3.0 A, nearly steady through each cycle: a diode across the motor carries it while the MOSFET is off. The gate is driven from a 5 V microcontroller pin that can supply about 20 mA. Estimate the MOSFET's losses, then again with a gate driver that supplies 1.0 A.",
         "steps": [
@@ -65,12 +65,12 @@
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Transistor Switching Circuits\", ch. 2 \"Case Tutorial\", section 2.7 \"Example: designing a MOSFET switching circuit\"",
           "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_qswitch.pdf",
-          "note": "With V_GS at or above the datasheet's V_GS(on) the switch drops only its on-resistance, milliohms for power MOSFETs, and dissipates I²·R_DS(on) (equivalently I·V_DS), while the gate behaves as a small capacitance that has to be charged and discharged."
+          "note": "With V_GS at or above the datasheet's V_GS(on), the switch drops only its on-resistance, milliohms for power MOSFETs, and dissipates I²·R_DS(on) (equivalently I·V_DS), while the gate behaves as a small capacitance that has to be charged and discharged."
         },
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Transistor Switching Circuits\", ch. 3 \"Tutorial\", section 3.5 \"MOSFET switching\"",
           "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_qswitch.pdf",
-          "note": "The insulated gate passes no continuous current, an n-channel MOSFET needs a gate-source voltage several volts past its threshold to be fully on, and a gate drive that falls short leaves it partly on with a large drain-source voltage and much heat."
+          "note": "The insulated gate passes no continuous current; an n-channel MOSFET needs a gate-source voltage several volts past its threshold to be fully on; and a gate drive that falls short leaves it partly on with a large drain-source voltage and much heat."
         },
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Field-Effect Transistors\", ch. 4 \"Full Tutorial\", section 4.3 \"Insulated-gate field-effect transistors\"",
@@ -199,7 +199,7 @@
       "misconceptions": [
         {
           "formula": "I^2*Rds",
-          "feedback": "That's the power. The voltage is just I · R_DS(on)."
+          "feedback": "That's the power. The voltage is I · R_DS(on)."
         }
       ],
       "review": "verified"
@@ -242,7 +242,7 @@
         "unit": "s"
       },
       "noDrawing": "gate charge divided by driver current; no particular circuit",
-      "explanation": "Charge = current × time, as in the capacitor topics, so t = Q_g / I_G = {Qg} / {Ig} = {answer}. A weak driver (like a microcontroller pin with ~20 mA) switches slowly and wastes power in the transition.",
+      "explanation": "Charge = current × time, as in the capacitor topics, so t = Q_g / I_G = {Qg} / {Ig} = {answer}. A weak driver (like a microcontroller pin with about 20 mA) switches slowly and wastes power in the transition.",
       "hints": [
         "The gate is a capacitor that needs Q_g of charge.",
         "t = Q / I."
@@ -275,7 +275,7 @@
               "feedback": "R_DS(on) depends on the gate voltage once the gate is charged, not on the current used to get there. The current only sets how quickly the gate reaches that voltage."
             }
           ],
-          "explanation": "It is the RC time constant idea again: the gate capacitance has to be charged through whatever drives it, and charge = current × time. A 20 mA microcontroller pin takes 50 times longer than a 1 A driver, and for all that time the MOSFET is part-way on, with voltage across it and current through it, wasting power (see the switching loss problem)."
+          "explanation": "It is the RC time constant idea again: the gate capacitance has to be charged through whatever drives it, and charge = current × time. A 20 mA microcontroller pin takes 50 times longer than a 1 A driver, and for all that time the MOSFET is partway on, with voltage across it and current through it, wasting power (see the switching loss problem)."
         }
       ],
       "review": "verified",
@@ -362,7 +362,7 @@
           "prompt": "Why does a MOSFET waste so much more power during a transition than when it is fully on or fully off?",
           "choices": [
             {
-              "text": "Part-way through, it has a large voltage across it and a large current through it at the same time, and P = V·I",
+              "text": "Partway through, it has a large voltage across it and a large current through it at the same time, and P = V·I",
               "feedback": "Right: at either end one of the two is close to zero, so their product is small.",
               "correct": true
             },
@@ -379,7 +379,7 @@
               "feedback": "Off, no current flows, so V·I = 0 however large the voltage is."
             }
           ],
-          "explanation": "Fully off: V_DS is large but I_D = 0. Fully on: I_D is large but V_DS = I·R_DS(on) is tiny. In between, both are large at once, and the MOSFET dissipates watts for as long as the transition lasts. The same holds for a BJT switch that lingers in its active region ('Transistor switches'): a switch should spend as little time half-on as possible, which is why fast edges and strong gate drive matter."
+          "explanation": "Fully off: V_DS is large but I_D = 0. Fully on: I_D is large but V_DS = I·R_DS(on) is tiny. In between, both are large at once, and the MOSFET dissipates watts for as long as the transition lasts. The same holds for a BJT switch that lingers in its active region (\"Transistor switches\"): a switch should spend as little time half on as possible, which is why fast edges and strong gate drive matter."
         }
       ],
       "review": "verified",
@@ -779,7 +779,7 @@
     {
       "id": "msw_what_if_frequency",
       "topicId": "mosfet_switching",
-      "prompt": "A MOSFET switches {I} at {V}, {f}. Each on and off transition takes {tsw}, so its switching loss is about ½·V·I·(t_on + t_off)·f. The switching frequency is raised to {new_f} with the same MOSFET, gate driver and load. What happens to the switching loss?",
+      "prompt": "A MOSFET switches {I} at {V}, {f}. Each on and off transition takes {tsw}, so its switching loss is about ½·V·I·(t_on + t_off)·f. The switching frequency is raised to {new_f} with the same MOSFET, gate driver, and load. What happens to the switching loss?",
       "variables": [
         {
           "name": "V",
@@ -828,7 +828,7 @@
         },
         "askFactor": true,
         "feedback": {
-          "down": "A higher frequency doesn't make each transition quicker: t_sw is set by the MOSFET's gate charge and the driver. There are simply more transitions every second.",
+          "down": "A higher frequency doesn't make each transition quicker: t_sw is set by the MOSFET's gate charge and the driver. There are more transitions every second.",
           "same": "Each transition wastes the same energy, about ½·V·I·t_sw, but now there are more transitions every second, and power is energy per second."
         },
         "factorHint": "The energy lost per transition is unchanged; only the number of transitions per second changes, in step with f."
@@ -843,7 +843,7 @@
     {
       "id": "msw_fault",
       "topicId": "mosfet_switching",
-      "prompt": "A 5 V microcontroller pin switches a {RL} heater from 12 V through a logic-level MOSFET Q1 (V_th ≈ 2 V, R_DS(on) ≈ 33 mΩ at V_GS = 5 V, rated 30 V). R1 (100 Ω) is the gate resistor and R2 (100 kΩ) the gate pull-down. The pin is high, so the heater should be on, reading {h0} at the gate, {h1} at the drain and {h2} through the heater. The meter readings are below. Which fault explains them?",
+      "prompt": "A 5 V microcontroller pin switches a {RL} heater from 12 V through a logic-level MOSFET Q1 (V_t ≈ 2 V, R_DS(on) ≈ 33 mΩ at V_GS = 5 V, rated 30 V). R1 (100 Ω) is the gate resistor and R2 (100 kΩ) the gate pull-down. The pin is high, so the heater should be on; a healthy circuit reads {h0} at the gate, {h1} at the drain, and {h2} through the heater. The meter readings are below. Which fault explains them?",
       "variables": [
         {
           "name": "RL",
@@ -875,8 +875,8 @@
           {
             "text": "R1, the gate resistor, is open",
             "open": "RG",
-            "feedback": "With R1 open the pin couldn't reach the gate: R2 would pull the gate to 0 V, Q1 would be off, no current would flow and the drain would sit at the full 12 V.",
-            "why": "The gate reads 0 V although the pin is high, so the pin's voltage isn't arriving: R1 is open, and R2 holds the gate at 0 V, just as it is meant to when nothing drives the gate (see 'What is each part for?'). With no gate voltage Q1 is off: no current, and the drain sits at 12 V."
+            "feedback": "With R1 open, the pin couldn't reach the gate: R2 would pull the gate to 0 V, Q1 would be off, no current would flow, and the drain would sit at the full 12 V.",
+            "why": "The gate reads 0 V although the pin is high, so the pin's voltage isn't arriving: R1 is open, and R2 holds the gate at 0 V, just as it is meant to when nothing drives the gate (see \"What is each part for?\"). With no gate voltage, Q1 is off: no current, and the drain sits at 12 V."
           },
           {
             "text": "Q1 has failed open: no path from drain to source even with the gate driven",
@@ -888,7 +888,7 @@
             "text": "The heater is open (a burnt-out element or a loose connector)",
             "open": "RLOAD",
             "feedback": "With the heater open, Q1 would be on (gate at 5 V) with nothing to conduct: no current, and the drain would read 0 V because the on MOSFET ties it to ground.",
-            "why": "Gate at 5 V and drain at 0 V say Q1 is on and doing its job, yet no current flows. The break must be between the 12 V supply and the drain: the heater. A drain still connected to 12 V through the heater would read 12 V with Q1 off, not 0 V."
+            "why": "A gate at 5 V and a drain at 0 V show that Q1 is on and doing its job, yet no current flows. The break must be between the 12 V supply and the drain: the heater. A drain still connected to 12 V through the heater would read 12 V with Q1 off, not 0 V."
           },
           {
             "text": "R2, the pull-down, was fitted as 100 Ω instead of 100 kΩ",
@@ -897,11 +897,11 @@
               "formula": "100"
             },
             "feedback": "A 100 Ω R2 would form an equal divider with R1: the gate would sit at only 2.5 V, just above threshold, so Q1 would be half on, with a reduced current and several volts at the drain.",
-            "why": "The gate sits at about half the pin voltage, so R1 and R2 must be splitting the 5 V equally: R2 is as small as R1, 100 Ω. The gate is still driven from a low resistance (R1 ∥ R2 = 50 Ω), but the pin now has to source 5 V / 200 Ω = 25 mA, at or beyond what many microcontroller pins are rated for. Only about 0.5 V above threshold, Q1 is half on: it limits the current to {m2} and drops {m1} itself, several watts of heat in a part meant to lose a fraction of a watt. It will overheat, and as it heats its V_th falls, so the current creeps up further."
+            "why": "The gate sits at about half the pin voltage, so R1 and R2 must be splitting the 5 V equally: R2 is as small as R1, 100 Ω. The gate is still driven from a low resistance (R1 ∥ R2 = 50 Ω), but the pin now has to source 5 V / 200 Ω = 25 mA, at or beyond what many microcontroller pins are rated for. Only about 0.5 V above threshold, Q1 is half on: it limits the current to {m2} and drops {m1} itself, several watts of heat in a part meant to lose a fraction of a watt. It will overheat, and as it heats, its V_t falls, so the current creeps up further."
           }
         ]
       },
-      "explanation": "Read the gate first: is the pin's 5 V arriving? Then the drain: near 0 V means Q1 is on, 12 V means no current is being pulled through the heater, and in between means Q1 is half on. The current confirms it. The half-on case is the dangerous one: V_DS and I_D are both large, so P = V·I is watts, where a fully-on switch loses I²·R_DS(on), a fraction of a watt. The reasoning is the same as for the divider fault in Foundations: an open part stops the current, and the voltages show which side of the break each node is on.",
+      "explanation": "Read the gate first: is the pin's 5 V arriving? Then the drain: near 0 V means Q1 is on, 12 V means no current is being pulled through the heater, and in between means Q1 is half on. The current confirms it. The half-on case is the dangerous one: V_DS and I_D are both large, so P = V·I is watts, where a fully on switch loses I²·R_DS(on), a fraction of a watt. The reasoning is the same as for the divider fault in Foundations: an open part stops the current, and the voltages show which side of the break each node is on.",
       "hints": [
         "Start at the gate: is the pin's 5 V getting there?",
         "Then the drain: near 0 V (Q1 on), 12 V (no current pulled), or somewhere in between (Q1 half on)?"
@@ -1262,7 +1262,7 @@
               "feedback": "The gate is insulated: no drain current reaches it. The slowdown comes from where the gate voltage has to sit."
             },
             {
-              "text": "R_DS(on) rises with the current, so the fully-on channel takes longer to reach its low resistance and finish",
+              "text": "R_DS(on) rises with the current, so the fully on channel takes longer to reach its low resistance and finish",
               "feedback": "R_DS(on) describes the switch after the transition. During the transition what matters is the gate current through R_G."
             }
           ],
@@ -1474,7 +1474,7 @@
             },
             {
               "text": "The gate driver now supplies part of the heater current itself, so much less of it has to flow through the MOSFET's own channel",
-              "feedback": "The gate is insulated and draws no DC current once charged. All the heater current still flows drain to source; what changes is the voltage across the channel."
+              "feedback": "The gate is insulated and draws no DC current once charged. All the heater current still flows from drain to source; what changes is the voltage across the channel."
             },
             {
               "text": "R_DS(on) gets lower at higher current, so the bigger heater current flowing through the channel now meets much less resistance on its way",

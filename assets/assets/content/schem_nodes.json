@@ -2,7 +2,7 @@
   "topics": [
     {
       "id": "schem_nodes",
-      "title": "Reading a schematic: nodes, symbols and ground",
+      "title": "Reading a schematic: nodes, symbols, and ground",
       "summary": "A schematic is a map of connections, not of positions: find the nodes first, then ask which parts sit between them.",
       "lenses": [
         "circuit"
@@ -37,15 +37,15 @@
         "Redraw a messy schematic more tidily without changing a single connection"
       ],
       "intuition": "A schematic is a map of connections, not of positions: every piece of joined wire is one node at one voltage, and what a part does depends only on which two nodes it connects.",
-      "why": "A wire in a schematic stands for a conductor whose resistance is negligible next to the parts it joins. With next to no resistance, even the full current through it makes next to no voltage (V = I·R), so every point on joined wire sits at the same voltage: one node. Where a line is drawn and how long it is carry no information. Ground symbols are shorthand for one shared wire, so all of them are the same node. A part only 'sees' the voltages at its two terminals. That is why parts between the same pair of nodes share one voltage (parallel), and why two parts joined at a node that nothing else touches share one current (series, by KCL).",
-      "explanation": "In series and parallel circuits the drawings were tidy, so series and parallel could be read off by eye. Real schematics are drawn for convenience: wires loop over the top, parts sit wherever there was room, and ground appears as many small symbols instead of one wire along the bottom. Read them in three passes. First, name the nodes. Start at one terminal, follow every wire joined to it, through junction dots and long detours, and give the whole connected set one name; repeat until every terminal belongs to a node. All ground symbols are one node. Likewise, points carrying the same net label are one node even with no wire drawn between them. Wires that cross without a dot are not joined. Second, list each part by the two nodes it connects: R1 from the supply to a, R2 from a to ground. Third, group them. Parts between the same two nodes are in parallel. Two parts are in series only if the node between them touches nothing else, so all of one's current must pass through the other. Parts drawn in a line can fail this test, and parts drawn far apart can pass it. A voltmeter between two points on one node reads 0 V, however far apart they are drawn.",
+      "why": "A wire in a schematic stands for a conductor whose resistance is negligible next to the parts it joins. With next to no resistance, even the full current through it makes next to no voltage (V = I·R), so every point on joined wire sits at the same voltage: one node. Where a line is drawn and how long it is carry no information. Ground symbols are shorthand for one shared wire, so all of them are the same node. A part only \"sees\" the voltages at its two terminals. That is why parts between the same pair of nodes share one voltage (parallel), and why two parts joined at a node that nothing else touches share one current (series, by KCL).",
+      "explanation": "In \"Series and parallel resistance,\" the drawings were tidy, so series and parallel could be read off by eye. Real schematics are drawn for convenience: wires loop over the top, parts sit wherever there was room, and ground appears as many small symbols instead of one wire along the bottom. Read them in three passes. First, name the nodes. Start at one terminal, follow every wire joined to it, through junction dots and long detours, and give the whole connected set one name; repeat until every terminal belongs to a node. All ground symbols are one node. Likewise, points carrying the same net label are one node even with no wire drawn between them. Wires that cross without a dot are not joined. Second, list each part by the two nodes it connects: R1 from the supply to a, R2 from a to ground. Third, group them. Parts between the same two nodes are in parallel. Two parts are in series only if the node between them touches nothing else, so all of one's current must pass through the other. Parts drawn in a line can fail this test, and parts drawn far apart can pass it. A voltmeter between two points on one node reads 0 V, however far apart they are drawn.",
       "workedExample": {
         "problem": "A 12 V supply feeds five resistors. R1 = 2.2 kΩ runs from +12 V to a junction a. R2 = 10 kΩ runs from a down to a ground symbol. R3 = 1.8 kΩ runs from a to a junction b, and R4 = 3.3 kΩ from b to a second ground symbol. R5 = 10 kΩ is drawn at the far right, next to R4; its top connects by a long wire over the top of the drawing back to a, and its bottom goes to a third ground symbol. Find the nodes, sort the parts into series and parallel, and find the voltages at a and b.",
         "steps": [
-          "Nodes: the +12 V wire; a (R1's lower end, R2's top, R3's left end and, through the long wire over the top, R5's top); b (R3's right end and R4's top, nothing else); and ground (all three ground symbols are one node). Four nodes in all.",
+          "Nodes: the +12 V wire; a (R1's lower end, R2's top, R3's left end, and, through the long wire over the top, R5's top); b (R3's right end and R4's top, nothing else); and ground (all three ground symbols are one node). Four nodes in all.",
           "Parts by node pair: R1 from +12 V to a; R2 from a to ground; R5 from a to ground; R3 from a to b; R4 from b to ground.",
           "Series: R3 and R4 meet at b, which nothing else touches, so they carry one current and act as R3 + R4 = 1.8 kΩ + 3.3 kΩ = 5.1 kΩ from a to ground.",
-          "Parallel: R2, R5 and the R3–R4 string all connect a to ground. R5 is drawn beside R4 but is not across it. R2 ∥ R5 = 10 kΩ ∥ 10 kΩ = 5 kΩ, and 5 kΩ ∥ 5.1 kΩ = 2.52 kΩ.",
+          "Parallel: R2, R5, and the R3–R4 string all connect a to ground. R5 is drawn beside R4 but is not across it. R2 ∥ R5 = 10 kΩ ∥ 10 kΩ = 5 kΩ, and 5 kΩ ∥ 5.1 kΩ = 2.52 kΩ.",
           "Node a: R1 and the 2.52 kΩ from a to ground form a divider: V_a = 12 V × 2.52 kΩ / (2.2 kΩ + 2.52 kΩ) = 6.41 V.",
           "Node b: R3 and R4 divide V_a: V_b = 6.41 V × 3.3 kΩ / 5.1 kΩ = 4.15 V. So R5 has 6.41 V across it, not the 4.15 V across R4 that its position suggests.",
           "KCL check at a: R1 brings in (12 V − 6.41 V) / 2.2 kΩ = 2.54 mA. R2 and R5 each take 6.41 V / 10 kΩ = 0.641 mA, and the R3–R4 string takes 6.41 V / 5.1 kΩ = 1.26 mA: 0.641 mA + 0.641 mA + 1.26 mA = 2.54 mA. What flows in flows out."
@@ -847,7 +847,7 @@
               "feedback": "A schematic isn't a scale drawing of a board at all. It shows connections, not distances."
             }
           ],
-          "explanation": "In a schematic every wire is ideal. Joined wires form one node, and a node has a single voltage. Length, bends and position on the page carry no electrical meaning."
+          "explanation": "In a schematic, every wire is ideal. Joined wires form one node, and a node has a single voltage. Length, bends, and position on the page carry no electrical meaning."
         }
       ],
       "review": "verified",
@@ -877,7 +877,7 @@
           "feedback": "Position doesn't decide voltage shares; resistance and connections do. Those haven't changed."
         }
       ],
-      "explanation": "A schematic is a map of connections, not of positions. As long as each terminal joins the same node, the circuit is the same circuit: tidier drawings just make it easier to read. Here R2 and R3 are in series across node a to ground before and after the move.",
+      "explanation": "A schematic is a map of connections, not of positions. As long as each terminal joins the same node, the circuit is the same circuit: tidier drawings only make it easier to read. Here R2 and R3 are in series across node a to ground before and after the move.",
       "hints": [
         "List each part's two nodes before and after the move. Did any change?"
       ],
@@ -1370,7 +1370,7 @@
           "c": "node c"
         }
       },
-      "explanation": "Name each part by the two nodes it touches. V1, R2, R5 and C1 each end on a ground symbol, and all ground symbols are one node, so all four connect to ground. R4 is drawn pointing down toward the ground row, but its lower end stops at node c, the junction with R5; it never reaches a ground symbol. Node b is R3's right end, R4's top and, through the long wire to the right, C1's top.",
+      "explanation": "Name each part by the two nodes it touches. V1, R2, R5, and C1 each end on a ground symbol, and all ground symbols are one node, so all four connect to ground. R4 is drawn pointing down toward the ground row, but its lower end stops at node c, the junction with R5; it never reaches a ground symbol. Node b is R3's right end, R4's top, and, through the long wire to the right, C1's top.",
       "hints": [
         "Look at each part's two ends in turn. Does that end reach a ground symbol, or does it stop at a junction with another part?"
       ],

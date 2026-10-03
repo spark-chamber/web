@@ -3,7 +3,7 @@
     {
       "id": "schem_opamp_blocks",
       "title": "Spotting op-amp building blocks",
-      "summary": "Tell inverting, non-inverting, follower, summing, difference, comparator and integrator circuits apart from how the feedback is wired.",
+      "summary": "Tell inverting, non-inverting, follower, summing, difference, comparator, and integrator circuits apart from how the feedback is wired.",
       "lenses": [
         "circuit",
         "signals"
@@ -44,13 +44,13 @@
       ],
       "goals": [
         "Decide from the feedback path whether an op-amp stage amplifies (output back to the − input) or switches (no feedback, or feedback to the + input)",
-        "Tell inverting, non-inverting, follower, summing, difference and integrator stages apart by where the signal enters and what part sits in the feedback",
+        "Tell inverting, non-inverting, follower, summing, difference, and integrator stages apart by where the signal enters and what part sits in the feedback",
         "Use V− = V+ to check a stage with negative feedback and find its output from the resistor ratio",
         "Find a comparator's trip point from the reference at its other input"
       ],
       "intuition": "Read an op-amp stage from its feedback first: output back to the − input means an amplifier that holds V− = V+, feedback to + or none means a comparator that sits at a rail; then where the signal enters and what sits in the feedback say which kind.",
-      "why": "An op amp multiplies the difference V+ − V− by a gain of 100 000 or more. With nothing feeding the output back, a difference of more than a fraction of a millivolt drives the output to a supply rail: a comparator. Feed the output back to the − input and the loop corrects itself: if the output rises too far, V− rises, the difference shrinks and the output is pulled back. It settles only where V− ≈ V+, so the feedback network, not the op amp, sets the gain. Feed it back to the + input instead and any rise pushes the output further the same way, so it snaps to a rail. There the feedback shifts the + input, so the input must cross back past a second, different threshold to switch it again: hysteresis.",
-      "explanation": "Each op-amp topic showed one circuit. In a real schematic the op amp is a triangle with parts around it, and you have to name the stage before you can use its formula. Ask three questions in order. First, where does the output connect back? To the − input: negative feedback, an amplifier or filter, and V− = V+. To the + input, or nowhere: a comparator, its output at one rail or the other; feedback to + adds hysteresis and makes a Schmitt trigger. Second, where does the signal enter? Through a resistor to the − pin, with + held at a fixed voltage: inverting, gain −Rf/Rin. Several input resistors into that pin make a summing amplifier. Straight into the + pin: non-inverting, gain 1 + Rf/Rg, and with the output wired straight back to − it is the follower, gain 1. Signals at both pins through matched resistor pairs: a difference amplifier. Third, what is in the feedback? A resistor gives a fixed gain. A capacitor makes the gain depend on frequency: an inverting stage with a capacitor from output to − is an integrator. The passive blocks reappear too: Rf and Rg form a divider from the output.",
+      "why": "An op amp multiplies the difference V+ − V− by a gain of 100 000 or more. With nothing feeding the output back, a difference of more than a fraction of a millivolt drives the output to a supply rail: a comparator. Feed the output back to the − input and the loop corrects itself: if the output rises too far, V− rises, the difference shrinks, and the output is pulled back. It settles only where V− ≈ V+, so the feedback network, not the op amp, sets the gain. Feed it back to the + input instead and any rise pushes the output further the same way, so it snaps to a rail. There the feedback shifts the + input, so the input must cross back past a second, different threshold to switch it again: hysteresis.",
+      "explanation": "Each op-amp topic showed one circuit. In a real schematic, the op amp is a triangle with parts around it, and you have to name the stage before you can use its formula. Ask three questions in order. First, where does the output connect back? To the − input: negative feedback, an amplifier or filter, and V− = V+. To the + input, or nowhere: a comparator, its output at one rail or the other; feedback to + adds hysteresis and makes a Schmitt trigger. Second, where does the signal enter? Through a resistor to the − pin, with + held at a fixed voltage: inverting, gain −Rf/Rin. Several input resistors into that pin make a summing amplifier. Straight into the + pin: non-inverting, gain 1 + Rf/Rg, and with the output wired straight back to − it is the follower, gain 1. Signals at both pins through matched resistor pairs: a difference amplifier. Third, what is in the feedback? A resistor gives a fixed gain. A capacitor makes the gain depend on frequency: an inverting stage with a capacitor from output to − is an integrator. The passive blocks reappear too: Rf and Rg form a divider from the output.",
       "workedExample": {
         "problem": "A light detector runs from a single 5 V supply (assume rail-to-rail op amps). A sensor stage gives 0.5 V at node s. Op amp X1: s goes straight to its + pin; Rf = 22 kΩ runs from its output (node b) to its − pin, and Rg = 10 kΩ from the − pin to ground. Op amp X2: its + pin connects to b; its − pin sits on node ref, between R3 = 10 kΩ (to 5 V) and R4 = 10 kΩ (to ground); its output drives an LED through a resistor and connects to nothing else. Name each stage, find V_b, and find the voltage at s that turns the LED on.",
         "steps": [
@@ -59,7 +59,7 @@
           "V_b = 3.2 × 0.5 V = 1.6 V. Check with V− = V+: the Rf–Rg divider hands back 1.6 V × 10 kΩ / (22 kΩ + 10 kΩ) = 0.5 V to the − pin, equal to V+.",
           "X2's feedback: its output goes only to the LED, with nothing back to either input. X2 is a comparator: its output sits at 5 V when V+ > V−, and at 0 V otherwise.",
           "X2's reference: R3 and R4 divide the supply, V_ref = 5 V × 10 kΩ / (10 kΩ + 10 kΩ) = 2.5 V on the − pin. Now V_b = 1.6 V is below 2.5 V, so X2's output is at 0 V and the LED is off.",
-          "Trip point: the LED turns on when V_b passes 2.5 V, that is when V_s passes 2.5 V / 3.2 = 0.781 V.",
+          "Trip point: the LED turns on when V_b passes 2.5 V, that is, when V_s passes 2.5 V / 3.2 = 0.781 V.",
           "Both stages use the same triangle. Only where the output connects back made X1 an amplifier and X2 a switch."
         ]
       },
@@ -95,7 +95,7 @@
         },
         {
           "text": "A non-inverting amplifier with a gain of 1 + R2/R1",
-          "feedback": "A non-inverting amplifier feeds a fraction of the output back to the − input (with a leg from − to ground), and the signal goes straight to +. Here the feedback lands on +, and the − input is simply grounded."
+          "feedback": "A non-inverting amplifier feeds a fraction of the output back to the − input (with a leg from − to ground), and the signal goes straight to +. Here the feedback lands on +, and the − input is grounded."
         },
         {
           "text": "An inverting amplifier with a gain of −R2/R1",
@@ -106,7 +106,7 @@
           "feedback": "A plain comparator has no feedback at all: just the signal on one input and a reference on the other. R2 carries part of the output back to the input, which moves the threshold after each switch; that is hysteresis."
         }
       ],
-      "explanation": "Read an op-amp stage in two steps. First, where does the feedback go? Here R2 runs from the output to the + input: positive feedback, so this is a comparator, not an amplifier. Second, where does the signal enter? Through R1 to the same + input, with − at 0 V. That is a non-inverting Schmitt trigger: it switches high when the signal rises past about +1.2 V and low when it falls past about −1.2 V (the rail × R1/R2). That gap is the hysteresis, and it stops noise making it chatter.",
+      "explanation": "Read an op-amp stage in two steps. First, where does the feedback go? Here R2 runs from the output to the + input: positive feedback, so this is a comparator, not an amplifier. Second, where does the signal enter? Through R1 to the same + input, with − at 0 V. That is a non-inverting Schmitt trigger: it switches high when the signal rises past about +1.2 V and low when it falls past about −1.2 V (the rail × R1/R2). That gap is the hysteresis, and it stops noise from making it chatter.",
       "hints": [
         "Follow the wire from the output back to an input. Which pin does it reach, + or −?",
         "Feedback to the − input makes an amplifier; feedback to the + input makes a switch."
@@ -122,7 +122,7 @@
             },
             {
               "text": "The op amp has no supply drawn in this circuit, so it can't hold any middle voltage",
-              "feedback": "The op amp is powered as usual (the supply pins just aren't drawn). The wiring, not the supply, makes it switch."
+              "feedback": "The op amp is powered as usual (the supply pins aren't drawn). The wiring, not the supply, makes it switch."
             },
             {
               "text": "R2 is too large for an amplifier; with R2 smaller than R1 the stage would settle",
@@ -742,7 +742,7 @@
         },
         {
           "text": "A short circuit: the output is joined to the input, so the op amp fights the sensor",
-          "feedback": "The output is joined to the − input, not to the signal. The − input draws no current, so nothing is shorted; the op amp simply drives its output until it matches the + input."
+          "feedback": "The output is joined to the − input, not to the signal. The − input draws no current, so nothing is shorted; the op amp drives its output until it matches the + input."
         },
         {
           "text": "An inverting amplifier with a gain of −1",
@@ -1133,7 +1133,7 @@
           "choices": [
             {
               "text": "The op amp amplifies V+ − V− enormously, and because the feedback returns to −, the output always moves to shrink that difference; it settles only when V− = V+",
-              "feedback": "Right: this is what \"feedback to the − pin means V− = V+\" is. Any difference of more than tens of microvolts would drive the output hard toward closing it.",
+              "feedback": "Right: this is why feedback to the − pin means V− = V+. Any difference of more than tens of microvolts would drive the output hard toward closing it.",
               "correct": true
             },
             {
@@ -1284,7 +1284,7 @@
     {
       "id": "opb_fault_noninv",
       "topicId": "schem_opamp_blocks",
-      "prompt": "This non-inverting amplifier runs from ±12 V supplies (not drawn). With Rf = {Rf}, Rg = {Rg} and {Vin} in, the output should be {h0}. The meter readings are below. Which fault explains them?",
+      "prompt": "This non-inverting amplifier runs from ±12 V supplies (not drawn). With Rf = {Rf}, Rg = {Rg}, and {Vin} in, the output should be {h0}. The meter readings are below. Which fault explains them?",
       "variables": [
         {
           "name": "Vin",
@@ -1334,30 +1334,30 @@
           {
             "text": "Rf is open (cracked, or a dry joint)",
             "open": "RF",
-            "feedback": "With Rf open nothing brings the output back: Rg would hold the − input at 0 V, the op amp would drive its output to near the +12 V rail, and Rf would carry no current.",
+            "feedback": "With Rf open, nothing brings the output back: Rg would hold the − input at 0 V, the op amp would drive its output to near the +12 V rail, and Rf would carry no current.",
             "why": "The − input reads 0 V instead of {Vin}, so the feedback loop is broken, and no current flows in Rf. With V+ above V− and no feedback, the op amp drives its output to near the +12 V rail."
           },
           {
             "text": "Rg is open",
             "open": "RG",
-            "feedback": "With Rg open no current could flow through Rf, so it would drop nothing: the − input would equal the output, and the stage would become a follower with output = input and 0 A in Rf.",
-            "why": "The output equals the input and the − input equals both, so the loop works but the gain is 1. No current flows in Rf, so there is no drop across it: the leg to ground (Rg) is missing."
+            "feedback": "With Rg open, no current could flow through Rf, so it would drop nothing: the − input would equal the output, and the stage would become a follower with output = input and 0 A in Rf.",
+            "why": "The output equals the input, and the − input equals both, so the loop works but the gain is 1. No current flows in Rf, so there is no drop across it: the leg to ground (Rg) is missing."
           },
           {
             "text": "Rf is shorted (a solder bridge across it)",
             "short": "RF",
-            "feedback": "With Rf shorted the output would connect straight to the − input, so the stage would become a follower (output = input), while the normal current, Vin/Rg, still flowed through the bridge where Rf is.",
+            "feedback": "With Rf shorted, the output would connect straight to the − input, so the stage would become a follower (output = input), while the normal current, Vin/Rg, still flowed through the bridge where Rf is.",
             "why": "The output equals the input, so the gain has become 1, yet the normal current Vin/Rg still flows where Rf is. So the Rf position still conducts but drops no voltage: it is bridged."
           },
           {
             "text": "Rg is shorted",
             "short": "RG",
-            "feedback": "With Rg shorted the − input would be tied to 0 V, so the op amp could never make V− equal V+: the output would go to near the +12 V rail and push 12 V/Rf through Rf into the short.",
+            "feedback": "With Rg shorted, the − input would be tied to 0 V, so the op amp could never make V− equal V+: the output would go to near the +12 V rail and push 12 V/Rf through Rf into the short.",
             "why": "The − input reads 0 V even though a large current flows in Rf: the output is pushing current through Rf into a dead short to ground. The op amp can't pull V− up to {Vin}, so its output sits near the +12 V rail."
           }
         ]
       },
-      "explanation": "Read the readings the way you read the drawing. In a working stage the feedback makes V− = V+. If V− has fallen to 0 V, the loop is broken and the output sits at a rail; the current in Rf then tells you whether Rf is open (no current) or Rg is shorted (a large current). If the output only equals the input, the stage has become a follower; the current in Rf tells you whether Rg is missing (no current) or Rf is bridged (normal current).",
+      "explanation": "Read the readings the way you read the drawing. In a working stage, the feedback makes V− = V+. If V− has fallen to 0 V, the loop is broken and the output sits at a rail; the current in Rf then tells you whether Rf is open (no current) or Rg is shorted (a large current). If the output only equals the input, the stage has become a follower; the current in Rf tells you whether Rg is missing (no current) or Rf is bridged (normal current).",
       "hints": [
         "First check the − input: is it still equal to the input? If not, the feedback loop is broken.",
         "Then use the current in Rf to tell the two possibilities apart."
@@ -1535,7 +1535,7 @@
         "formula": "-Vin*Rf/Rin",
         "unit": "V"
       },
-      "explanation": "R2 runs from the output to the − input: negative feedback, so V− = V+. The signal enters the − input through R1 and the + input is grounded: an inverting amplifier. V− is held at 0 V, so R1 carries {Vin}/{Rin}; that current can't enter the op amp, so it flows on through R2, and the output must sit below 0 V by that current times R2. Vout = −({Vin} × {Rf}/{Rin}) = {answer}, inside the ±12 V rails.",
+      "explanation": "R2 runs from the output to the − input: negative feedback, so V− = V+. The signal enters the − input through R1, and the + input is grounded: an inverting amplifier. V− is held at 0 V, so R1 carries {Vin}/{Rin}; that current can't enter the op amp, so it flows on through R2, and the output must sit below 0 V by that current times R2. Vout = −({Vin} × {Rf}/{Rin}) = {answer}, inside the ±12 V rails.",
       "hints": [
         "Which input does the feedback reach, and which input does the signal reach?",
         "An inverting amplifier's gain is −R2/R1."

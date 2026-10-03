@@ -3,7 +3,7 @@
     {
       "id": "app_power_supply",
       "title": "Building a DC power supply",
-      "summary": "Transformer, bridge, reservoir capacitor and a Zener or regulator: follow the voltage through each stage.",
+      "summary": "Transformer, bridge, reservoir capacitor, and a Zener or regulator: follow the voltage through each stage.",
       "lenses": [
         "circuit"
       ],
@@ -44,17 +44,17 @@
       ],
       "intuition": "Follow the voltage down the chain: the capacitor charges to the secondary's peak less two diode drops and sags by the ripple between peaks; the regulator works only while that lowest point stays above its minimum input, and every volt of input above its output is burned in it as heat.",
       "why": "The secondary is rated in RMS; its peak is √2 times that. The two conducting bridge diodes pass current only while the winding is about 1.4 V above the capacitor, so the capacitor charges to near the peak in short pulses, then alone feeds the load until the next peak, about 1/(2f) later. Losing charge I/(2f) from capacitance C, it sags by ΔV ≈ I/(2fC). A linear regulator is a transistor in series with the load, adjusted by feedback: it passes the whole load current and drops the difference between input and output, so it dissipates (V_in − V_out)·I. It can regulate only while its input stays above its output plus its dropout.",
-      "explanation": "Rectifiers ended with a raw DC: a capacitor charged to the peak, sagging by the ripple between peaks. A supply adds a stage that removes the ripple. Work down the chain. A secondary rated V_rms peaks at V_rms·√2. A bridge puts two diodes in each path, so the capacitor charges to about V_rms·√2 − 1.4 V. Between peaks it alone feeds the load and sags by ΔV ≈ I/(2fC), where f is the line frequency, 60 Hz from a US wall outlet (full-wave recharges twice per cycle, 120 times a second). The regulator's limit is that waveform's lowest point: a 5 V linear regulator may need 7 V in, and below that the ripple passes straight to the output. So design for the worst case: low line voltage (take 10 % down, 108 V instead of 120 V, the usual low end for US equipment) and full load. For small currents a Zener regulator does the same job; its series resistor must still pass the load current plus a few milliamps for the Zener at the lowest input: R = (V_min − V_Z)/(I_L + I_Z(min)). A linear regulator turns its excess voltage into heat. It carries the full load current and drops everything above its output: P = (V_in − V_out)·I, efficiency V_out/V_in. Extra transformer voltage is not a safety margin; it is heat. Check the heat at the other extreme, high line (10 % up, 132 V), where the regulator drops the most. Choose the smallest secondary that still clears the regulator's minimum at low line voltage and full load. Safety: a transformer's primary is at line voltage, 120 V RMS (about 170 V peak) from the wall outlet, enough to kill. Study these supplies on paper and in the simulator; for anything you build, power it from a ready-made, enclosed adapter of 12 V DC or less.",
+      "explanation": "\"Rectifiers and ripple\" ended with raw DC: a capacitor charged to the peak, sagging by the ripple between peaks. A supply adds a stage that removes the ripple. Work down the chain. A secondary rated V_rms peaks at V_rms·√2. A bridge puts two diodes in each path, so the capacitor charges to about V_rms·√2 − 1.4 V. Between peaks, it alone feeds the load and sags by ΔV ≈ I/(2fC), where f is the line frequency, 60 Hz from a US wall outlet (full-wave recharges twice per cycle, 120 times a second). The regulator's limit is that waveform's lowest point: a 5 V linear regulator may need 7 V in, and below that the ripple passes straight to the output. So design for the worst case: low line voltage (take 10% down, 108 V instead of 120 V, the usual low end for US equipment) and full load. For small currents, a Zener regulator does the same job; its series resistor must still pass the load current plus a few milliamps for the Zener at the lowest input: R = (V_min − V_Z)/(I_L + I_Z(min)). A linear regulator turns its excess voltage into heat. It carries the full load current and drops everything above its output: P = (V_in − V_out)·I, efficiency V_out/V_in. Extra transformer voltage is not a safety margin; it is heat. Check the heat at the other extreme, high line (10% up, 132 V), where the regulator drops the most. Choose the smallest secondary that still clears the regulator's minimum at low line voltage and full load. Safety: a transformer's primary is at line voltage, 120 V RMS (about 170 V peak) from the wall outlet, enough to kill. Study these supplies on paper and in the simulator; for anything you build, power it from a ready-made, enclosed adapter of 12 V DC or less.",
       "workedExample": {
-        "problem": "A 5 V linear regulator (assume it needs at least 7 V at its input) must supply a steady 0.5 A. It is fed by a silicon bridge (0.7 V per diode) and a 3300 µF reservoir capacitor on 120 V, 60 Hz line power. Transformers with 9 V and 12 V RMS secondaries are on the shelf, and the line voltage can be 10 % low or high. Check that each keeps the regulator working, and find the regulator's heat with each.",
+        "problem": "A 5 V linear regulator (assume it needs at least 7 V at its input) must supply a steady 0.5 A. It is fed by a silicon bridge (0.7 V per diode) and a 3300 µF reservoir capacitor on 120 V, 60 Hz line power. Transformers with 9 V and 12 V RMS secondaries are on the shelf, and the line voltage can be 10% low or high. Check that each keeps the regulator working, and find the regulator's heat with each.",
         "steps": [
           "9 V secondary: the peak is 9 V × √2 = 12.73 V. Two diodes conduct on each half-cycle, so the capacitor charges to 12.73 V − 1.4 V = 11.33 V.",
           "Ripple: ΔV = I/(2fC) = 0.5 A / (2 × 60 Hz × 3300 µF) = 1.26 V. The trough is 11.33 V − 1.26 V = 10.07 V, 3.07 V above the 7 V the regulator needs.",
-          "Low line, 10 % down (108 V instead of 120 V): the secondary gives 8.1 V RMS, so the capacitor peaks at 8.1 V × √2 − 1.4 V = 10.06 V and falls to 10.06 V − 1.26 V = 8.80 V: still 1.80 V of headroom. The line voltage fell 10 %, but the headroom fell about 41 % (from 3.07 V to 1.80 V), because the diode drops, the ripple and the 7 V don't shrink with it.",
-          "Heat with the 9 V transformer at nominal line voltage: the capacitor averages about the middle of the ripple, 11.33 V − 1.26 V/2 = 10.70 V, so P = (10.70 V − 5 V) × 0.5 A = 2.85 W. Efficiency: 5 V / 10.70 V = 47 %.",
-          "High line, 10 % up (132 V): the secondary gives 9.9 V RMS, so the capacitor peaks at 9.9 V × √2 − 1.4 V = 12.60 V and averages 12.60 V − 0.63 V = 11.97 V: P = (11.97 V − 5 V) × 0.5 A ≈ 3.5 W. That is the heat to size the heatsink for.",
-          "12 V secondary: 12 V × √2 − 1.4 V = 15.57 V at the peak, 15.57 V − 1.26 V = 14.31 V at the trough (7.31 V of headroom; at low line 10.8 V × √2 − 1.4 V − 1.26 V = 12.61 V, so 5.61 V). Average 15.57 V − 0.63 V = 14.94 V, so P = (14.94 V − 5 V) × 0.5 A = 4.97 W. Efficiency: 5 V / 14.94 V = 33 %.",
-          "Both regulate, even at 108 V. The 12 V transformer gives headroom the regulator doesn't need, at the cost of 4.97 W − 2.85 W = 2.12 W more heat, about 75 % more. Choose the 9 V one: the regulator's heatsink can be smaller."
+          "Low line, 10% down (108 V instead of 120 V): the secondary gives 8.1 V RMS, so the capacitor peaks at 8.1 V × √2 − 1.4 V = 10.06 V and falls to 10.06 V − 1.26 V = 8.80 V: still 1.80 V of headroom. The line voltage fell 10%, but the headroom fell about 41% (from 3.07 V to 1.80 V), because the diode drops, the ripple, and the 7 V don't shrink with it.",
+          "Heat with the 9 V transformer at nominal line voltage: the capacitor averages about the middle of the ripple, 11.33 V − 1.26 V/2 = 10.70 V, so P = (10.70 V − 5 V) × 0.5 A = 2.85 W. Efficiency: 5 V / 10.70 V = 47%.",
+          "High line, 10% up (132 V): the secondary gives 9.9 V RMS, so the capacitor peaks at 9.9 V × √2 − 1.4 V = 12.60 V and averages 12.60 V − 0.63 V = 11.97 V: P = (11.97 V − 5 V) × 0.5 A ≈ 3.5 W. That is the heat to size the heatsink for.",
+          "12 V secondary: 12 V × √2 − 1.4 V = 15.57 V at the peak, 15.57 V − 1.26 V = 14.31 V at the trough (7.31 V of headroom; at low line 10.8 V × √2 − 1.4 V − 1.26 V = 12.61 V, so 5.61 V). Average: 15.57 V − 0.63 V = 14.94 V, so P = (14.94 V − 5 V) × 0.5 A = 4.97 W. Efficiency: 5 V / 14.94 V = 33%.",
+          "Both regulate, even at 108 V. The 12 V transformer gives headroom the regulator doesn't need, at the cost of 4.97 W − 2.85 W = 2.12 W more heat, about 75% more. Choose the 9 V one: the regulator's heatsink can be smaller."
         ]
       },
       "sources": [
@@ -66,7 +66,7 @@
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Linear Voltage Regulators\", ch. 2 \"Case Tutorial\", section 2.2 \"Example: 7805 power dissipation\"; ch. 3 \"Tutorial\", section 3.4 \"Automatic series regulation\"",
           "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_linvreg.pdf",
-          "note": "A series regulator passes the full load current and dissipates (V_in − V_out)·I, its efficiency is P_out/P_in, worst-case heat comes at maximum input and full load, and the input must exceed the output by at least the dropout voltage."
+          "note": "A series regulator passes the full load current and dissipates (V_in − V_out)·I; its efficiency is P_out/P_in; worst-case heat comes at maximum input and full load; and the input must exceed the output by at least the dropout voltage."
         },
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 3 \"Diodes and Rectifiers\", section \"Zener diodes\"",
@@ -169,10 +169,10 @@
             },
             {
               "text": "The lowest point sets how much heat the regulator makes, so it is the limit for the heatsink",
-              "feedback": "At a steady load current the heat follows the average voltage the regulator drops, (V_avg − V_out)·I, so the trough is not the heatsink figure. The trough matters because it is when the regulator is closest to dropping out."
+              "feedback": "At a steady load current, the heat follows the average voltage the regulator drops, (V_avg − V_out)·I, so the trough is not the heatsink figure. The trough matters because it is when the regulator is closest to dropping out."
             }
           ],
-          "explanation": "Between peaks the capacitor alone feeds the load and loses charge I·Δt, so its voltage sags by I/(2fC) (the full-wave ripple from Rectifiers). A linear regulator needs V_out plus its dropout (assume about 7 V in total for a 7805) at every instant. Design so the trough, at low line voltage and full load, stays above that."
+          "explanation": "Between peaks, the capacitor alone feeds the load and loses charge I·Δt, so its voltage sags by I/(2fC) (the full-wave ripple from \"Rectifiers and ripple\"). A linear regulator needs V_out plus its dropout (assume about 7 V in total for a 7805) at every instant. Design so the trough, at low line voltage and full load, stays above that."
         }
       ],
       "schematic": {
@@ -445,7 +445,7 @@
               "feedback": "While the Zener regulates, the load always sees V_Z, so its current doesn't depend on the input. Low input and full load are two separate conditions; each one leaves the Zener less current, so the design takes both at once."
             }
           ],
-          "explanation": "R carries I_R = (V_in − V_Z)/R, and KCL at the output (the Zener regulator from LEDs, Zener regulators and flyback diodes) splits it: the load takes I_L and the Zener the rest. The Zener's share is smallest when I_R is smallest (lowest input) and I_L is largest (full load). Size R for that corner, then check the Zener's power at the other corner: highest input, no load."
+          "explanation": "R carries I_R = (V_in − V_Z)/R, and KCL at the output (the Zener regulator from \"LEDs, Zener regulators, and flyback diodes\") splits it: the load takes I_L and the Zener the rest. The Zener's share is smallest when I_R is smallest (lowest input) and I_L is largest (full load). Size R for that corner, then check the Zener's power at the other corner: highest input, no load."
         }
       ],
       "schematic": {
@@ -559,12 +559,12 @@
     {
       "id": "ps_why_capacitor",
       "topicId": "app_power_supply",
-      "prompt": "A supply on 60 Hz line power has a bridge rectifier, a reservoir capacitor and a linear regulator. What happens if the reservoir capacitor is much too small?",
+      "prompt": "A supply on 60 Hz line power has a bridge rectifier, a reservoir capacitor, and a linear regulator. What happens if the reservoir capacitor is much too small?",
       "choices": [
         {
           "text": "The troughs fall below the regulator's minimum input, so the output dips at each trough, 120 times a second",
           "correct": true,
-          "feedback": "Yes: every regulator needs a minimum input (V_out plus its dropout). A small capacitor sags further between peaks, and wherever the trough falls below that minimum the ripple passes through to the output."
+          "feedback": "Yes: every regulator needs a minimum input (V_out plus its dropout). A small capacitor sags further between peaks, and wherever the trough falls below that minimum, the ripple passes through to the output."
         },
         {
           "text": "The peaks rise above the regulator's maximum input, so the output jumps at each peak, 120 times a second",
@@ -572,7 +572,7 @@
         },
         {
           "text": "The regulator removes the ripple whatever its depth, so the output stays at a steady voltage",
-          "feedback": "A regulator can hold its output only while its input stays above its minimum. Below that it has no voltage to drop, and the ripple passes through."
+          "feedback": "A regulator can hold its output only while its input stays above its minimum. Below that, it has no voltage to drop, and the ripple passes through."
         },
         {
           "text": "The diodes stop conducting between peaks, so the output falls to zero at each trough",
@@ -833,7 +833,7 @@
               "feedback": "A smooth input above V_out still has to be dropped across the regulator at the full load current. The loss is (V_in − V_out)·I, ripple or not."
             }
           ],
-          "explanation": "Series circuit, as in Foundations: the regulator and the load carry the same current, and their voltages add up to V_in (KVL). The load gets V_out·I; the regulator gets the rest, (V_in − V_out)·I, as heat. That is why a linear supply wants just enough input headroom and no more."
+          "explanation": "It is a series circuit, as in Foundations: the regulator and the load carry the same current, and their voltages add up to V_in (KVL). The load gets V_out·I; the regulator gets the rest, (V_in − V_out)·I, as heat. That is why a linear supply wants just enough input headroom and no more."
         }
       ],
       "schematic": {
@@ -962,10 +962,10 @@
         "unitless": true,
         "tolerance": 0.01
       },
-      "explanation": "The same current flows in and out, so efficiency = P_out/P_in = V_out/V_in = {Vout}/{Vin} = {answer} %. Dropping a lot of voltage wastes a lot: that's why switching supplies exist.",
+      "explanation": "The same current flows in and out, so efficiency = P_out/P_in = V_out/V_in = {Vout}/{Vin} = {answer}%. Dropping a lot of voltage wastes a lot: that's why switching supplies exist.",
       "hints": [
         "The input and output currents are the same.",
-        "Efficiency = V_out/V_in × 100 %."
+        "Efficiency = V_out/V_in × 100%."
       ],
       "misconceptions": [
         {
@@ -984,7 +984,7 @@
             },
             {
               "text": "A linear regulator draws less input current as the input voltage rises, keeping the input power the same",
-              "feedback": "That is what a switching regulator does. A linear one draws the load current from its input whatever the input voltage, so a higher input just means more heat."
+              "feedback": "That is what a switching regulator does. A linear one draws the load current from its input whatever the input voltage, so a higher input means more heat."
             },
             {
               "text": "A higher input pushes more current through the load, and that extra current cancels in the ratio",
@@ -992,7 +992,7 @@
             },
             {
               "text": "Every linear regulator is built to about the same efficiency, and V_out/V_in is how that figure is quoted",
-              "feedback": "There is no fixed figure: the efficiency depends on how much voltage is dropped. 5 V from 6 V is 83 %; 5 V from 15 V is 33 %."
+              "feedback": "There is no fixed figure: the efficiency depends on how much voltage is dropped. 5 V from 6 V is 83%; 5 V from 15 V is 33%."
             }
           ],
           "explanation": "The pass element sits in series with the load, so one current flows through both (KCL). Input power is V_in·I, output power V_out·I, and the ratio is V_out/V_in. Every volt of headroom above what the regulator needs is wasted, which is why a supply is designed with just enough input voltage at low line voltage and why switching regulators exist."
@@ -1149,11 +1149,11 @@
           "I": "2*I"
         },
         "feedback": {
-          "up": "More current doesn't hold the capacitor up. Between peaks the capacitor alone feeds the load, and the load's current drains charge from it until the next peak: more current, more charge drained in the same time.",
+          "up": "More current doesn't hold the capacitor up. Between peaks, the capacitor alone feeds the load, and the load's current drains charge from it until the next peak: more current, more charge drained in the same time.",
           "same": "The peak stays at {Vpk}, but the trough is the peak minus the sag, and the sag, I/(2fC), is set by how much charge the load drains from the capacitor between peaks."
         }
       },
-      "explanation": "The peak is set by the transformer and the diodes, {Vrms} × √2 − 1.4 V = {Vpk}, and doesn't change. The sag between peaks is I/(2fC): {Vr} before, twice that after. So the trough falls by one more {Vr}: {before} → {after}. It does not halve with the doubled current; it drops by the extra ripple only. For a 7805 (assume it needs at least 7 V in) it still stays above 7 V here, but every extra amp lowers the trough by another 1 A/(2fC).",
+      "explanation": "The peak is set by the transformer and the diodes, {Vrms} × √2 − 1.4 V = {Vpk}, and doesn't change. The sag between peaks is I/(2fC): {Vr} before, twice that after. So the trough falls by one more {Vr}: {before} → {after}. It does not halve with the doubled current; it drops by the extra ripple only. For a 7805 (assume it needs at least 7 V in), it still stays above 7 V here, but every extra amp lowers the trough by another 1 A/(2fC).",
       "hints": [
         "Which part of the lowest voltage depends on the current: the peak or the sag?"
       ],
@@ -1476,7 +1476,7 @@
     {
       "id": "ps_what_if_low_mains",
       "topicId": "app_power_supply",
-      "prompt": "A supply for a 7805 regulator (5 V out; assume it needs at least 7 V in) uses an ideal {Vrms} RMS transformer, a silicon bridge and a {C} reservoir capacitor on 120 V, {f} line power. The load draws {I}. The line voltage sags by 10 % (to 108 V at the outlet), so the secondary becomes {new_Vrms} RMS. What happens to the headroom: how far the lowest capacitor voltage stays above 7 V?",
+      "prompt": "A supply for a 7805 regulator (5 V out; assume it needs at least 7 V in) uses an ideal {Vrms} RMS transformer, a silicon bridge and a {C} reservoir capacitor on 120 V, {f} line power. The load draws {I}. The line voltage sags by 10% (to 108 V at the outlet), so the secondary becomes {new_Vrms} RMS. What happens to the headroom: how far the lowest capacitor voltage stays above 7 V?",
       "variables": [
         {
           "name": "Vrms",
@@ -1525,13 +1525,13 @@
           "Vrms": "0.9*Vrms"
         },
         "askFactor": true,
-        "factorHint": "Only the peak, V_rms·√2, falls by 10 %. The diode drops (1.4 V), the ripple ({Vr}) and the 7 V the regulator needs stay the same, so the whole loss comes out of a much smaller margin.",
+        "factorHint": "Only the peak, V_rms·√2, falls by 10%. The diode drops (1.4 V), the ripple ({Vr}), and the 7 V the regulator needs stay the same, so the whole loss comes out of a much smaller margin.",
         "feedback": {
           "up": "A lower line voltage means a lower secondary and a lower peak on the capacitor. Nothing else changes to make up for it, and the headroom is measured from that capacitor voltage.",
           "same": "The regulator still makes 5 V, but its input doesn't: the capacitor's peak follows the line voltage through the transformer, while the sag, I/(2fC) with the load still drawing {I}, and the 7 V the regulator needs stay where they were. The headroom is the gap between the trough and that 7 V."
         }
       },
-      "explanation": "Headroom = V_rms·√2 − 1.4 V − I/(2fC) − 7 V. Only the first term scales with the line voltage: it drops by 10 % of {Vrms} × √2. The diode drops, the ripple {Vr} and the 7 V are fixed, so the headroom falls by much more than 10 %: {before} → {after}. That's why supplies are designed at low line voltage and full load: a margin that looks comfortable at a nominal 120 V can vanish when the line sags.",
+      "explanation": "Headroom = V_rms·√2 − 1.4 V − I/(2fC) − 7 V. Only the first term scales with the line voltage: it drops by 10% of {Vrms} × √2. The diode drops, the ripple {Vr}, and the 7 V are fixed, so the headroom falls by much more than 10%: {before} → {after}. That's why supplies are designed at low line voltage and full load: a margin that looks comfortable at a nominal 120 V can vanish when the line sags.",
       "hints": [
         "Which terms in the lowest capacitor voltage scale with the line voltage, and which stay fixed?"
       ],
@@ -1714,7 +1714,7 @@
     {
       "id": "ps_fault",
       "topicId": "app_power_supply",
-      "prompt": "A bench supply runs from a {Vrms} RMS transformer secondary on 60 Hz line power. A bridge of four silicon diodes (D1–D4) charges a reservoir capacitor C1 = {C}, which feeds a resistive load R_L = {RL}. Healthy, the meter reads about {h0} at the output, the scope shows {h1} of ripple, and the load takes {h2}. Now the supply reads as below. Which fault explains it?",
+      "prompt": "A bench supply runs from a {Vrms} RMS transformer secondary on 60 Hz line power. A bridge of four silicon diodes (D1–D4) charges a reservoir capacitor C1 = {C}, which feeds a resistive load R_L = {RL}. When the supply is healthy, the meter reads about {h0} at the output, the scope shows {h1} of ripple, and the load takes {h2}. Now the supply reads as below. Which fault explains it?",
       "variables": [
         {
           "name": "Vrms",
@@ -1774,21 +1774,21 @@
           {
             "text": "C1 has failed open",
             "open": "C1",
-            "feedback": "With no reservoir at all, the output would follow the rectified sine down to zero every half-cycle: the scope would show ripple of nearly the full peak, and the meter would read well below the healthy value: the average of the humps, about 0.9 × {Vrms} minus the two diode drops.",
+            "feedback": "With no reservoir at all, the output would follow the rectified sine down to zero every half-cycle: the scope would show ripple of nearly the full peak, and the meter would read well below the healthy value (the average of the humps, about 0.9 × {Vrms} minus the two diode drops).",
             "why": "The scope shows ripple of almost the whole peak: nothing holds the output up between peaks, so it falls to zero every half-cycle. The meter shows the average of the rectified humps, about 0.9 × {Vrms} − 1.4 V (that is, (2/π) of the peak, less the diodes), well below the healthy {h0}, and the load current falls with it."
           },
           {
-            "text": "C1 has dried out and lost about 90 % of its capacitance",
+            "text": "C1 has dried out and lost about 90% of its capacitance",
             "value": {
               "ref": "C1",
               "formula": "C/10"
             },
             "feedback": "A dried-out capacitor would leave the load current near normal but make the ripple about ten times larger, since ΔV = I/(2fC) with a tenth of C; the DC reading would dip only a little, by less than half that extra ripple.",
-            "why": "The ripple is about ten times the healthy value, but the load current is close to normal, so the load is not asking for more. Same current, a tenth of the capacitance: ΔV = I/(2fC) grows tenfold, and the DC reading dips by a little less than half the extra ripple, since C1 still sits near the peak while it recharges. Dried-out electrolytics are one of the commonest faults in old supplies."
+            "why": "The ripple is about ten times the healthy value, but the load current is close to normal, so the load is not asking for more. Same current, a tenth of the capacitance: ΔV = I/(2fC) grows tenfold, and the DC reading dips by a little less than half the extra ripple, since C1 still sits near the peak while it recharges. Dried-out electrolytics are one of the most common faults in old supplies."
           }
         ]
       },
-      "explanation": "Read the instruments together. The ripple says how well C1 holds up between peaks: doubled means it is recharged half as often (a bridge diode open, so the bridge works half-wave), about ten times means a tenth of the capacitance at the same load current, and nearly the whole peak means no reservoir at all. The load current confirms the load hasn't changed. The DC meter alone can miss a half-wave fault; the scope can't. This is the ripple ΔV ≈ I/(2fC) from Rectifiers, read backwards.",
+      "explanation": "Read the instruments together. The ripple says how well C1 holds up between peaks: doubled means it is recharged half as often (a bridge diode open, so the bridge works half-wave), about ten times means a tenth of the capacitance at the same load current, and nearly the whole peak means no reservoir at all. The load current confirms the load hasn't changed. The DC meter alone can miss a half-wave fault; the scope can't. This is the ripple ΔV ≈ I/(2fC) from \"Rectifiers and ripple,\" read backward.",
       "hints": [
         "Compare the ripple with the healthy {h1}: roughly doubled, about ten times, or almost the whole peak?",
         "Which part sets how often C1 is recharged, and which sets how far it sags each time?"
@@ -2080,7 +2080,7 @@
               "feedback": "The heat is (V_in − V_out) × I. Less ripple lifts the average input, so the regulator drops more voltage, not less."
             },
             {
-              "text": "It cuts it roughly in half, because the ripple and so the voltage the regulator has to remove both halve",
+              "text": "It cuts it roughly in half, because the ripple and the voltage the regulator has to remove both halve",
               "feedback": "Only the ½ΔV term changes; the peak and the 5 V output stay put, so the heat changes by at most ½ΔV × I."
             },
             {
@@ -2366,7 +2366,7 @@
         "formula": "Is-Iled",
         "unit": "A"
       },
-      "explanation": "Rectifiers and ripple: the capacitor charges to {Vrms} × √2 − 1.4 V = {Vpk} and sags by I/(2fC) = {Vr} between peaks, so its lowest point is {Vmin}. LEDs, Zener regulators and flyback diodes: the Zener holds its node at {Vz}, so at the trough R_S has {Vmin} − {Vz} across it and carries I_S = {Is}; the LED branch loses V_f = {Vf} in the LED and the rest across R_LED, so I_LED = ({Vz} − {Vf})/{Rled} = {Iled}. Building a DC power supply: by Kirchhoff's current law at the Zener node, the Zener gets what the LED doesn't take: I_Z = {Is} − {Iled} = {answer}. This is the worst moment for the regulator: if the trough fell far enough for I_S to drop below the LED current, the Zener would stop conducting and the output would sag with the ripple.",
+      "explanation": "Rectifiers and ripple: the capacitor charges to {Vrms} × √2 − 1.4 V = {Vpk} and sags by I/(2fC) = {Vr} between peaks, so its lowest point is {Vmin}. LEDs, Zener regulators, and flyback diodes: the Zener holds its node at {Vz}, so at the trough R_S has {Vmin} − {Vz} across it and carries I_S = {Is}; the LED branch loses V_f = {Vf} in the LED and the rest across R_LED, so I_LED = ({Vz} − {Vf})/{Rled} = {Iled}. Building a DC power supply: by Kirchhoff's current law at the Zener node, the Zener gets what the LED doesn't take: I_Z = {Is} − {Iled} = {answer}. This is the worst moment for the regulator: if the trough fell far enough for I_S to drop below the LED current, the Zener would stop conducting and the output would sag with the ripple.",
       "hints": [
         "First find the lowest capacitor voltage: peak minus two diode drops, minus the ripple.",
         "I_Z = (V_min − V_Z)/R_S − (V_Z − V_f)/R_LED."
@@ -2421,7 +2421,7 @@
               "feedback": "The Zener is still connected and still in breakdown, so it carries all of (V_min − V_Z)/R_S."
             }
           ],
-          "explanation": "In a Zener (shunt) regulator the series resistor's current is set by the input and the Zener voltage only. The load and the Zener share it: whatever the load stops taking, the Zener takes. So the Zener runs hottest with no load, at the top of the ripple."
+          "explanation": "In a Zener (shunt) regulator, the series resistor's current is set by the input and the Zener voltage only. The load and the Zener share it: whatever the load stops taking, the Zener takes. So the Zener runs hottest with no load, at the top of the ripple."
         }
       ],
       "schematic": {
@@ -2709,7 +2709,7 @@
         "formula": "I/(2*f*C)",
         "unit": "V"
       },
-      "explanation": "A bridge is full-wave, so the capacitor is recharged at every peak of the rectified waveform: twice per line cycle, {fr}. Between peaks it alone feeds the load and loses charge I·Δt with Δt ≈ 1/(2f), so its voltage sags by ΔV ≈ I/(2fC) = {I}/(2 × {f} × {C}) = {answer}. To this approximation the transformer voltage doesn't enter: the ripple depends only on the current, the capacitance and how often the capacitor is refilled. It slightly overstates the ripple, because the capacitor starts recharging a little before the next peak, which errs on the safe side for a design.",
+      "explanation": "A bridge is full-wave, so the capacitor is recharged at every peak of the rectified waveform: twice per line cycle, {fr}. Between peaks it alone feeds the load and loses charge I·Δt with Δt ≈ 1/(2f), so its voltage sags by ΔV ≈ I/(2fC) = {I}/(2 × {f} × {C}) = {answer}. To this approximation the transformer voltage doesn't enter: the ripple depends only on the current, the capacitance, and how often the capacitor is refilled. It slightly overstates the ripple, because the capacitor starts recharging a little before the next peak, which errs on the safe side for a design.",
       "hints": [
         "How often does a bridge recharge the capacitor, and what feeds the load in between?",
         "ΔV ≈ I/(2fC) for a full-wave rectifier."

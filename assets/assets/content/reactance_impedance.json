@@ -52,7 +52,7 @@
         "Explain why a capacitor's current leads its voltage by 90° and an inductor's current lags by 90°",
         "Predict how a series RC or RL circuit behaves at DC, at very high frequency, and in between"
       ],
-      "intuition": "For a steady sine wave, a capacitor opposes current less as the frequency rises and an inductor more, and because a reactance's current and voltage peak a quarter cycle apart, in series it combines with resistance like the sides of a right triangle, not like plain numbers.",
+      "intuition": "For a steady sine wave, a capacitor opposes current less as the frequency rises and an inductor more. Because a reactance's current and voltage peak a quarter cycle apart, in series it combines with resistance like the sides of a right triangle, not like plain numbers.",
       "why": "A capacitor's current is i = C·dv/dt: it flows only while the voltage is changing. At twice the frequency and the same amplitude, the voltage changes twice as fast, twice the current flows, and X_C = 1/(2πfC) halves. An inductor's voltage is v = L·di/dt, so the same current at a higher frequency takes more voltage: X_L = 2πfL rises. For a sine, the rate of change is largest at the zero crossings, so a capacitor's current peaks a quarter cycle before its voltage and an inductor's a quarter cycle after. That 90° offset is why reactance and resistance cannot simply be added.",
       "explanation": "In a resistor, Ohm's law sets the current: I = V/R. With a sine wave, a capacitor or an inductor also limits the current, by an amount that depends on frequency: its reactance, X, in ohms. A capacitor's is X_C = 1/(2πfC): infinite at DC (an open circuit) and falling toward zero as the frequency rises. An inductor's is X_L = 2πfL: zero at DC (just a wire) and rising with frequency. With ω in rad/s instead of f in hertz, they are 1/(ωC) and ωL. Reactance differs from resistance in timing. In a resistor, current and voltage peak together. In a capacitor the current peaks a quarter cycle (90°) before the voltage; in an inductor, 90° after. So a resistance and a reactance in series add like the sides of a right triangle: |Z| = √(R² + X²). This is the impedance, and Ohm's law carries over as I = V/|Z|. The phase angle of a series RL is +atan(X_L/R), the voltage leading the current; of a series RC, −atan(X_C/R), the voltage lagging. As complex numbers, Z = R + jX_L or R − jX_C, and impedances combine by the same rules as resistances.",
       "workedExample": {
@@ -80,7 +80,7 @@
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. II (AC), ch. 4 \"Reactance and Impedance -- Capacitive\", section \"Series resistor-capacitor circuits\"",
           "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/AC/AC_4.html#xtocid88942",
-          "note": "In a series RC circuit Z = R − jX_C, so |Z| = √(R² + X_C²) at a negative angle of arctan(X_C/R), with the source voltage lagging the current, and I = V/Z."
+          "note": "In a series RC circuit, Z = R − jX_C, so |Z| = √(R² + X_C²) at a negative angle of arctan(X_C/R), with the source voltage lagging the current, and I = V/Z."
         }
       ]
     }
@@ -122,7 +122,7 @@
       "misconceptions": [
         {
           "formula": "2*pi*f*C",
-          "feedback": "That's 2πfC (the susceptance, in siemens). Reactance is its inverse: X_C = 1/(2πfC)."
+          "feedback": "That's 2πfC (the susceptance, in siemens). Reactance is its reciprocal: X_C = 1/(2πfC)."
         }
       ],
       "followUps": [
@@ -147,7 +147,7 @@
               "feedback": "The opposite: at high frequency it never has time to charge much, so it builds up little voltage to oppose the current."
             }
           ],
-          "explanation": "Every half cycle the plates take on a charge Q = C·V and give it back. At twice the frequency the same charge moves in half the time: twice the current for the same voltage, so half the reactance. At DC nothing moves once the capacitor is charged, so X_C is infinite. This is why a capacitor 'passes' high frequencies and blocks DC."
+          "explanation": "Every half cycle the plates take on a charge Q = C·V and give it back. At twice the frequency the same charge moves in half the time: twice the current for the same voltage, so half the reactance. At DC nothing moves once the capacitor is charged, so X_C is infinite. This is why a capacitor \"passes\" high frequencies and blocks DC."
         }
       ],
       "noDrawing": "the reactance of a single capacitor at a frequency; no circuit",
@@ -190,7 +190,7 @@
       "misconceptions": [
         {
           "formula": "1/(2*pi*f*L)",
-          "feedback": "That's the capacitor's form. For an inductor, X_L = 2πfL: more frequency, more reactance."
+          "feedback": "That's the capacitor's form. For an inductor, X_L = 2πfL: higher frequency, more reactance."
         }
       ],
       "noDrawing": "the reactance of a single inductor at a frequency; no circuit",
@@ -273,7 +273,7 @@
             },
             {
               "text": "The capacitor's reactance is negative, so it partly cancels R",
-              "feedback": "In complex form the capacitor's part is indeed −jX_C, but the j puts it at right angles to R, so it can't cancel it. Opposite reactances cancel (a capacitor against an inductor); R and X_C add at right angles, like the two short sides of a right triangle. |Z| is bigger than either, smaller than their sum."
+              "feedback": "In complex form the capacitor's part is indeed −jX_C, but the j puts it at right angles to R, so it can't cancel it. Opposite reactances cancel (a capacitor against an inductor); R and X_C add at right angles, like the two short sides of a right triangle. |Z| is bigger than either but smaller than their sum."
             },
             {
               "text": "The capacitor wastes some energy, which makes the total smaller",
@@ -660,7 +660,7 @@
           "feedback": "At high frequency the plates charge and discharge so fast that current flows almost freely: X_C → 0."
         }
       ],
-      "explanation": "X_C = 1/(2πfC): infinite at DC (open circuit), and tiny at high frequency (nearly a short). Inductors do the opposite, X_L = 2πfL.",
+      "explanation": "X_C = 1/(2πfC): infinite at DC (open circuit), and tiny at high frequency (nearly a short). Inductors do the opposite: X_L = 2πfL.",
       "noDrawing": "a conceptual question about any capacitor; no specific circuit",
       "level": "recall",
       "review": "verified"
@@ -730,7 +730,7 @@
           "same": "Only a resistor ignores frequency. A capacitor's current follows how fast its voltage changes, i = C·dv/dt, and the same amplitude at a higher frequency changes faster, so the ratio of voltage amplitude to current amplitude, X_C = 1/(2πfC), depends on f."
         }
       },
-      "explanation": "X_C = 1/(2πfC), so X_C goes as 1/f. Twice the frequency moves the same charge in half the time, twice the current for the same voltage: {before} → {after}.",
+      "explanation": "X_C = 1/(2πfC), so X_C goes as 1/f. Twice the frequency moves the same charge in half the time, which gives twice the current for the same voltage: {before} → {after}.",
       "hints": [
         "Does a capacitor pass high frequencies or block them?"
       ],
@@ -1051,6 +1051,218 @@
             ],
             "rot": 90,
             "label": "sine\n{f}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R\n{R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
+      "id": "z_fault_rc",
+      "topicId": "reactance_impedance",
+      "prompt": "A function generator (treat it as ideal) drives a {V} peak sine at {f} into R = {R} in series with C = {C}. A current probe reads the current through R, and a scope probe reads the voltage across C, both peak to peak. Healthy, the scope would show {h1} peak to peak across C. The readings are below. Which fault explains them?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "range": {
+            "min": 2,
+            "max": 5,
+            "step": 1
+          }
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "values": [
+            1000,
+            2000
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            4.7e-08,
+            6.8e-08,
+            1e-07
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vpp",
+          "formula": "2*V",
+          "unit": "V"
+        },
+        {
+          "name": "Xc",
+          "formula": "1/(2*pi*f*C)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Z",
+          "formula": "sqrt(R^2+(1/(2*pi*f*C))^2)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Ishort",
+          "formula": "2*V/R",
+          "unit": "A"
+        },
+        {
+          "name": "Csmall",
+          "formula": "C/10",
+          "unit": "F"
+        },
+        {
+          "name": "Xcs",
+          "formula": "10/(2*pi*f*C)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rbig",
+          "formula": "10*R",
+          "unit": "Ω"
+        }
+      ],
+      "fault": {
+        "netlist": "series RC from a generator\nV1 in 0 SIN(0 {V:spice} {f:spice})\nR1 in m {R:spice}\nC1 m 0 {C:spice}\n.tran 2u 20m\n",
+        "probes": [
+          {
+            "label": "Current through R (current probe, peak to peak)",
+            "probe": "pp:i(R1)"
+          },
+          {
+            "label": "Voltage across C (scope, peak to peak)",
+            "probe": "pp:v(m)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "C is open (a cracked capacitor)",
+            "open": "C1",
+            "feedback": "With C open, no current could flow, so the current probe would read 0 A. R, carrying nothing, would drop nothing, and the scope would show the generator's full {Vpp} peak to peak across the gap.",
+            "why": "No current flows, yet the scope shows the generator's whole {Vpp} peak to peak across C. R drops nothing because it carries nothing, so all of the voltage appears across the capacitor's position: the loop is broken there, and C is open."
+          },
+          {
+            "text": "C is shorted (a cracked ceramic that failed short)",
+            "short": "C1",
+            "feedback": "With C shorted, the scope would read 0 V across it, and R alone would limit the current: 2 × {V}/{R} = {Ishort} peak to peak, more than the healthy {h0}.",
+            "why": "Current flows, more than healthy, yet C shows no voltage at all. The current is {V}/R in amplitude, {Ishort} peak to peak, set by R alone. A capacitor that carries current with no voltage across it has no reactance left: it is shorted."
+          },
+          {
+            "text": "C is a tenth of its value ({Csmall} fitted in its place)",
+            "value": {
+              "ref": "C1",
+              "formula": "C/10"
+            },
+            "feedback": "A tenth of the capacitance would make X_C ten times larger, {Xcs}. |Z| = √(R² + X_C²) would rise, so the current would fall well below {h0}, and the capacitor, now most of the impedance, would take most of the generator's voltage: more than the healthy {h1}.",
+            "why": "The current fell, but not to zero, while the voltage across C rose toward the generator's {Vpp}. Divide one by the other: V_C/I is about {Xcs}, ten times the healthy X_C of {Xc}. X_C = 1/(2πfC) grows as C shrinks, so a capacitor a tenth of the value was fitted."
+          },
+          {
+            "text": "R is ten times its value ({Rbig}: an orange multiplier band instead of red)",
+            "value": {
+              "ref": "R1",
+              "formula": "10*R"
+            },
+            "feedback": "With R ten times larger, |Z| would rise and the current would fall well below {h0}. X_C would be unchanged, so the capacitor's voltage, I·X_C, would fall in the same proportion, below the healthy {h1}.",
+            "why": "The current fell, and the voltage across C fell in the same proportion: V_C/I is still the healthy X_C of {Xc}. The capacitor is fine, so the extra impedance is resistance: R is too large."
+          },
+          {
+            "text": "R is open",
+            "open": "R1",
+            "feedback": "With R open, no current could flow, and nothing would reach the capacitor: the scope would show 0 V across it.",
+            "why": "No current, and no voltage across C either: nothing reaches the capacitor. The break is ahead of it, in R."
+          }
+        ]
+      },
+      "explanation": "Healthy, X_C = 1/(2πfC) = {Xc}, and the impedance is |Z| = √(R² + X_C²) = {Z}, so the current is 2 × {V}/{Z} = {h0} peak to peak and the capacitor shows I·X_C = {h1}. Read the faulty circuit the same way. No current means the loop is open somewhere; the scope then tells you where: the full {Vpp} across C means C is open, 0 V means the break is ahead of it, in R. Current with no voltage across C means C is shorted. When both readings are nonzero but wrong, divide the capacitor's voltage by the current: that is X_C as the circuit sees it. Ten times {Xc} means a capacitor a tenth of the value; an unchanged X_C with less current means the extra impedance is resistance.",
+      "hints": [
+        "Is any current flowing? If not, does the capacitor show the full generator voltage or none?",
+        "If both readings are nonzero, divide the capacitor's voltage by the current and compare it with the healthy X_C = 1/(2πfC)."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V} peak\n{f}"
           },
           {
             "ref": "R1",

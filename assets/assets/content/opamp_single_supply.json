@@ -40,16 +40,16 @@
         "Work out the largest undistorted output and input swing from the supply and how close the op amp gets to each rail",
         "Explain what each capacitor in a single-supply AC amplifier does at DC and at signal frequencies"
       ],
-      "intuition": "On a single supply, picture the signal riding on a DC level at mid-rail so it can swing both ways without hitting ground or V_CC, with coupling capacitors passing the signal but blocking that DC from the source and the load, at frequencies well above their corners.",
+      "intuition": "On a single supply, picture the signal riding on a DC level at mid-rail so it can swing both ways without hitting ground or V_CC. Coupling capacitors pass the signal but block that DC from the source and the load, at frequencies well above their corners.",
       "why": "An op amp's output can only move between its two supply rails, and in practice only to somewhat inside them. On a single supply the lower rail is ground, so a sine centered on 0 V would lose its whole negative half. A DC bias of about V_CC/2 lifts the resting point to the middle, with equal room above and below. A capacitor passes no steady current, so it keeps the bias out of the source and load, but its reactance 1/(2πfC) is small at signal frequencies, so the signal passes. With the resistance it drives, it forms a high-pass filter.",
-      "explanation": "On ± supplies the signal rests at 0 V. On a single supply, say 0 V and 12 V, the output cannot go below ground, so such a signal loses its negative half. Bias the input at mid-rail instead. Two equal resistors from V_CC to ground put the + input at V_CC/2. An input coupling capacitor passes the signal but keeps the bias away from the source. With the bias resistors it forms a high-pass filter: a decoupled V_CC is an AC ground, so the capacitor sees R1 ∥ R2 (plus any source resistance), and f_c = 1/(2πC · R1∥R2). Put f_c below the lowest signal frequency. With Rg straight to ground, the gain 1 + Rf/Rg would amplify the bias too: a gain of 3 turns 6 V into 18 V, past the rail. A capacitor Cg in series with Rg blocks DC, so the DC gain is 1: the output rests at the bias and only the signal is amplified. An output capacitor keeps it off the load.  A rail-to-rail op amp gets within a few tens of millivolts of each rail at light load; many general-purpose parts stop a volt or more below V_CC, inputs too.",
+      "explanation": "On ± supplies the signal rests at 0 V. On a single supply, say 0 V and 12 V, the output cannot go below ground, so such a signal loses its negative half. Bias the input at mid-rail instead. Two equal resistors from V_CC to ground put the + input at V_CC/2. An input coupling capacitor passes the signal but keeps the bias away from the source. With the bias resistors it forms a high-pass filter: a decoupled V_CC is an AC ground, so the capacitor sees R1 ∥ R2 (plus any source resistance), and f_c = 1/(2πC · R1∥R2). Put f_c below the lowest signal frequency. With Rg straight to ground, the gain 1 + Rf/Rg would amplify the bias too: a gain of 3 turns 6 V into 18 V, past the rail. A capacitor Cg in series with Rg blocks DC, so the DC gain is 1: the output rests at the bias and only the signal is amplified. An output capacitor keeps it off the load. A rail-to-rail op amp gets within a few tens of millivolts of each rail at light load; many general-purpose parts stop a volt or more below V_CC, and their inputs do too.",
       "workedExample": {
         "problem": "An audio preamplifier runs from a single 12 V supply. The op amp's output (and its inputs) work from 0.1 V up to 1.5 V below V_CC; it is not rail-to-rail at the top. The + input is biased by R1 = R2 = 100 kΩ, the signal comes in through Cin = 1 µF, the gain is set by Rf = 22 kΩ and Rg = 10 kΩ with Cg = 10 µF in series with Rg, and Cout = 10 µF couples the output to a 10 kΩ load. Find the bias point, the input corner, the gain, and the largest input sine that comes out unclipped.",
         "steps": [
           "Bias: the + input draws no current, so the divider is unloaded: 12 V × 100 kΩ / (100 kΩ + 100 kΩ) = 6 V.",
           "Input corner: 12 V is an AC ground, so Cin sees 100 kΩ ∥ 100 kΩ = 50 kΩ. f_c = 1 / (2π × 1 µF × 50 kΩ) = 3.18 Hz, well below the 20 Hz bottom of the audio band.",
           "Signal gain: 1 + Rf/Rg = 1 + 22 kΩ / 10 kΩ = 3.2. Cg's reactance equals Rg at 1 / (2π × 10 kΩ × 10 µF) = 1.59 Hz, so at audio frequencies Cg is close to a short.",
-          "DC gain: at DC Cg is open, so Rg carries no current and the stage is a follower with gain 1. The output rests at 6 V. Without Cg the 6 V bias would be multiplied by 3.2 to 19.2 V, above the 12 V supply, and the output would sit at its upper limit.",
+          "DC gain: at DC Cg is open, so Rg carries no current and the stage is a follower with gain 1. The output rests at 6 V. Without Cg, the 6 V bias would be multiplied by 3.2 to 19.2 V, above the 12 V supply, and the output would sit at its upper limit.",
           "Room above: the output can rise from 6 V to 12 V − 1.5 V = 10.5 V, which is 4.5 V. Room below: it can fall from 6 V to 0.1 V, which is 5.9 V. A sine swings equally both ways, so the smaller, 4.5 V, is the largest output peak.",
           "Largest input: 4.5 V / 3.2 = 1.41 V peak. The + input then swings from 6 V − 1.41 V = 4.59 V to 6 V + 1.41 V = 7.41 V, inside its 0.1 V to 10.5 V range.",
           "Output coupling: Cout and the 10 kΩ load give 1 / (2π × 10 kΩ × 10 µF) = 1.59 Hz, and the load sees the signal centered on 0 V, with no 6 V bias."
@@ -59,7 +59,7 @@
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 4 \"Bipolar Junction Transistors\", section \"Input and output coupling\"",
           "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_4.html#xtocid903614",
-          "note": "A coupling capacitor lets a divider-biased amplifier take an AC signal while keeping the bias away from the source, acts as a high-pass filter so low frequencies are lost, and an output capacitor keeps DC off the load."
+          "note": "A coupling capacitor lets a divider-biased amplifier take an AC signal while keeping the bias away from the source; it acts as a high-pass filter, so low frequencies are lost; and an output capacitor keeps DC off the load."
         },
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. II (AC), ch. 8 \"Filters\", section \"High-pass filters\"",
@@ -69,7 +69,7 @@
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Operational Amplifiers\" (last update 23 September 2026), section 5.7.1 \"Output voltage limits\" and 5.7.2 \"Input voltage limits and latch-up\" (pp. 181–183)",
           "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_opamp.pdf",
-          "note": "The output cannot pass the supply rails, bipolar output stages stop roughly 0.7 V short while rail-to-rail FET outputs come within millivolts, and inputs must stay inside a common-mode range that can be narrower than the rails."
+          "note": "The output cannot pass the supply rails: bipolar output stages stop roughly 0.7 V short, while CMOS rail-to-rail outputs come within millivolts at light load; inputs must stay inside a common-mode range that can be narrower than the rails."
         }
       ]
     }
@@ -309,7 +309,7 @@
         "formula": "1/(2*pi*C*R/2)",
         "unit": "Hz"
       },
-      "explanation": "For AC signals the supply is a ground, so the two bias resistors are in parallel: {R} || {R} = {Rin}. The coupling capacitor and that resistance form a high-pass: f_c = 1 / (2π × {C} × {Rin}) = {answer}.",
+      "explanation": "For AC signals the supply is a ground, so the two bias resistors are in parallel: {R} ∥ {R} = {Rin}. The coupling capacitor and that resistance form a high-pass filter: f_c = 1 / (2π × {C} × {Rin}) = {answer}.",
       "hints": [
         "What resistance does the capacitor see? The supply rail counts as AC ground.",
         "The two resistors are in parallel, so use R/2 in f_c = 1/(2πRC)."
@@ -330,23 +330,23 @@
           "choices": [
             {
               "text": "For signals the Vcc rail is as good as ground, because the supply holds it steady, so both resistors run from the input node to AC ground",
-              "feedback": "Right: the signal sees one resistor to one AC ground and one to another, which is parallel.",
+              "feedback": "Right: the signal sees one resistor to one AC ground and one to another, which puts them in parallel.",
               "correct": true
             },
             {
-              "text": "Because the two resistors are equal, and only equal resistors from the same node count as parallel",
+              "text": "The two resistors are equal, and only equal resistors from the same node count as parallel",
               "feedback": "Equal values only make the answer R/2. Unequal resistors are still in parallel for the signal: R1 ∥ R2."
             },
             {
-              "text": "Because the op amp's + input joins the two resistors and returns their currents to ground",
-              "feedback": "The op amp input draws no current, so it adds no path; the Vcc rail being an AC ground is what matters."
+              "text": "The op amp's + input joins the two resistors and returns their currents to ground",
+              "feedback": "The op-amp input draws no current, so it adds no path; the Vcc rail being an AC ground is what matters."
             },
             {
               "text": "They aren't in parallel: for the signal they are in series, from the Vcc rail down to ground",
-              "feedback": "Series is the DC current path from Vcc to ground. The signal enters at the middle node and leaves through both resistors to AC ground, so for it they are in parallel."
+              "feedback": "The series path is the DC current path from Vcc to ground. The signal enters at the middle node and leaves through both resistors to AC ground, so for it they are in parallel."
             }
           ],
-          "explanation": "A stiff supply (with its decoupling capacitor) carries no AC voltage, just like ground. So the signal at the bias node sees R to one AC ground and R to another: {R} ∥ {R} = {Rin}, the Thévenin resistance of the divider (Thevenin and Norton equivalents). The coupling capacitor charges through that resistance, so f_c = 1/(2π·{Rin}·{C}) = {answer}: the RC low-pass cutoff rule with R and C swapped round into a high-pass."
+          "explanation": "A stiff supply (with its decoupling capacitor) carries no AC voltage, just like ground. So the signal at the bias node sees R to one AC ground and R to another: {R} ∥ {R} = {Rin}, the Thevenin resistance of the divider (Thevenin and Norton equivalents). The coupling capacitor charges through that resistance, so f_c = 1/(2π·{Rin}·{C}) = {answer}: the RC low-pass cutoff rule with R and C swapped around into a high-pass."
         }
       ],
       "schematic": {
@@ -656,7 +656,7 @@
             },
             {
               "text": "Neither: at that amplitude the sine is only {pp} peak-to-peak, which fits inside the {lo} to {hi} range",
-              "feedback": "Fitting the peak-to-peak into the range isn't enough: the sine is centered on {Vb}, not on the middle of the range, so it goes {answer} up and {answer} down from there. Any larger and the top reaches {hi} while the bottom is still clear of {lo}."
+              "feedback": "Fitting the peak-to-peak into the range isn't enough: the sine is centered on {Vb}, not on the middle of the range, so it goes {answer} up and {answer} down from there. Any larger, and the top reaches {hi} while the bottom is still clear of {lo}."
             }
           ],
           "explanation": "The op amp's output can move only between {lo} and {hi}. A sine centered on {Vb} goes the same distance up as down, so the side with less room, here the top, clips first. Biasing at mid-rail makes the two sides equal and gives the largest clean swing."
@@ -965,7 +965,7 @@
             },
             {
               "text": "Neither: at that amplitude the sine is only {pp} peak-to-peak, which fits inside the {lo} to {hi} range",
-              "feedback": "Fitting the peak-to-peak into the range isn't enough: the sine is centered on {Vb}, not on the middle of the range, so it goes {answer} up and {answer} down from there. Any larger and the bottom reaches {lo} while the top is still clear of {hi}."
+              "feedback": "Fitting the peak-to-peak into the range isn't enough: the sine is centered on {Vb}, not on the middle of the range, so it goes {answer} up and {answer} down from there. Any larger, and the bottom reaches {lo} while the top is still clear of {hi}."
             }
           ],
           "explanation": "The op amp's output can move only between {lo} and {hi}. A sine centered on {Vb} goes the same distance up as down, so the side with less room, here the bottom, clips first. Biasing at mid-rail makes the two sides equal and gives the largest clean swing."
@@ -1524,7 +1524,7 @@
     {
       "id": "ss_fault_bias",
       "topicId": "opamp_single_supply",
-      "prompt": "This single-supply amplifier runs from {Vcc}; X1 has rail-to-rail inputs and output. The input capacitor Cin feeds node b, which R1 (to Vcc) and R2 (to ground), both {R}, bias at mid-rail. X1 is a non-inverting stage: Rf = {Rf} from the output to the − input, and Rg = {Rg} in series with Cg from the − input to ground. Cout couples the output to the load, RL = {RL}. With no signal, node b and the output should both read {h0} and the load 0 V. The DC readings are below. Which fault explains them?",
+      "prompt": "This single-supply amplifier runs from {Vcc}; X1 has rail-to-rail inputs and output. The input capacitor Cin feeds node b, which R1 (to Vcc) and R2 (to ground), both {R}, bias at mid-rail. X1 is a non-inverting stage: Rf = {Rf} from the output to the − input, and Rg = {Rg} in series with Cg from the − input to ground. Cout couples the output to the load, RL = {RL}. With no signal, node b and the output should both read {h0}, and the load should read 0 V. The DC readings are below. Which fault explains them?",
       "variables": [
         {
           "name": "Vcc",
@@ -1592,30 +1592,30 @@
           {
             "text": "R1 is open",
             "open": "R1",
-            "feedback": "With R1 open nothing would feed node b from the supply: R2 would pull it to 0 V, and the output, which copies b at DC, would sit at the bottom rail, about 0 V.",
+            "feedback": "With R1 open, nothing would feed node b from the supply: R2 would pull it to 0 V, and the output, which copies b at DC, would sit at the bottom rail, about 0 V.",
             "why": "Node b reads 0 V, so the bias is gone before the op amp: only R2 is left, pulling b to ground. At DC the stage has a gain of 1 (Cg blocks DC through Rg), so the output copies it and sits at the bottom rail, just above 0 V ({m1} here). Every negative half of the signal would now be clipped."
           },
           {
             "text": "R2 is open",
             "open": "R2",
-            "feedback": "With R2 open nothing would pull node b down: it would rise to the full supply ({Vcc}; the meter reads slightly less because its 10 MΩ loads the node), and the output would follow it to the top rail.",
+            "feedback": "With R2 open, nothing would pull node b down: it would rise to the full supply ({Vcc}; the meter reads slightly less because its 10 MΩ loads the node), and the output would follow it to the top rail.",
             "why": "Node b reads the full supply. With R2 gone, no current flows in R1, so it drops nothing, and b sits at the full supply ({Vcc}; the meter reads slightly less because its 10 MΩ loads the node). The output follows b to the top rail, so every positive half of the signal would be clipped."
           },
           {
             "text": "Cg is shorted",
             "short": "CG",
             "feedback": "A shorted Cg would leave node b at mid-rail, but the stage would then amplify the DC bias by 1 + Rf/Rg, so the output would clip at the top rail (a rail-to-rail output gets within a few tens of mV of it) while the load still read 0 V.",
-            "why": "Node b is normal but the output sits at the {Vcc} rail. Healthy, Cg blocks DC, so the stage has a DC gain of 1 and the output rests at the bias. With Cg shorted, the full gain 1 + Rf/Rg acts on the {h0} bias too, which asks for more than the supply can give, so the output clips at the top rail (a rail-to-rail output gets within a few tens of mV of it)."
+            "why": "Node b is normal, but the output sits at the {Vcc} rail. In a healthy circuit, Cg blocks DC, so the stage has a DC gain of 1 and the output rests at the bias. With Cg shorted, the full gain 1 + Rf/Rg acts on the {h0} bias too, which asks for more than the supply can give, so the output clips at the top rail (a rail-to-rail output gets within a few tens of mV of it)."
           },
           {
             "text": "Cout is shorted",
             "short": "COUT",
             "feedback": "A shorted Cout would leave node b and the output normal, but the load would no longer be shielded from the bias: it would read {h0} instead of 0 V.",
-            "why": "Node b and the output are both normal, so the amplifier itself works; only the load is wrong. Healthy, Cout blocks the DC bias and the load sits at 0 V. With Cout shorted, the load reads the bias, {m2}, and a DC current flows through it all the time."
+            "why": "Node b and the output are both normal, so the amplifier itself works; only the load is wrong. In a healthy circuit, Cout blocks the DC bias and the load sits at 0 V. With Cout shorted, the load reads the bias, {m2}, and a DC current flows through it all the time."
           }
         ]
       },
-      "explanation": "At DC every healthy capacitor is open, so read the circuit that is left: R1 and R2 set node b to Vcc/2 (an unloaded divider), the stage has a DC gain of 1 because Cg cuts Rg off from ground (the Non-inverting amplifier with Rg missing is a follower), and Cout keeps the bias off the load. That is why a single-supply amplifier needs each part: the mid-rail bias lets the signal swing both ways, Cg stops the gain from amplifying the bias into the rail, and Cin and Cout keep the bias out of the source and the load. Read node b first: 0 V or the full supply points at the divider. If b is right, the output shows whether the DC gain has gone wrong, and the load shows whether Cout still blocks DC. An open capacitor would read healthy on a DC meter; finding it needs a signal test.",
+      "explanation": "At DC every healthy capacitor is open, so read the circuit that is left: R1 and R2 set node b to Vcc/2 (an unloaded divider), the stage has a DC gain of 1 because Cg cuts Rg off from ground (a non-inverting amplifier with Rg missing is a follower), and Cout keeps the bias off the load. That is why a single-supply amplifier needs each part: the mid-rail bias lets the signal swing both ways, Cg stops the gain from amplifying the bias into the rail, and Cin and Cout keep the bias out of the source and the load. Read node b first: 0 V or the full supply points at the divider. If b is right, the output shows whether the DC gain has gone wrong, and the load shows whether Cout still blocks DC. An open capacitor would read healthy on a DC meter; finding it needs a signal test.",
       "hints": [
         "At DC, what does each healthy capacitor look like? Redraw the circuit without them.",
         "Start at node b: is the bias still at mid-rail?"

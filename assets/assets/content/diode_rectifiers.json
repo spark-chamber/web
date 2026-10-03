@@ -3,7 +3,7 @@
     {
       "id": "diode_rectifiers",
       "title": "Rectifiers and ripple",
-      "summary": "Diodes turn AC into pulsing DC; a reservoir capacitor smooths it, leaving a ripple that depends on load current, frequency and capacitance.",
+      "summary": "Diodes turn AC into pulsing DC; a reservoir capacitor smooths it, leaving a ripple that depends on load current, frequency, and capacitance.",
       "lenses": [
         "circuit",
         "signals"
@@ -45,21 +45,21 @@
       "goals": [
         "Find the peak output of a half-wave or bridge rectifier from the transformer's RMS voltage, subtracting one or two diode drops",
         "Estimate the peak-to-peak ripple: ΔV ≈ I/(f·C) for half-wave and I/(2f·C) for full-wave, where f is the line frequency, because full-wave refills the capacitor twice per cycle",
-        "Predict how the ripple responds to the load current, the capacitance and the rectifier type, and explain why a higher input voltage alone need not change it",
+        "Predict how the ripple responds to the load current, the capacitance, and the rectifier type, and explain why a higher input voltage alone need not change it",
         "Find the peak inverse voltage a rectifier diode must block, and explain why the diodes carry short current pulses much larger than the load current"
       ],
       "intuition": "With a reservoir capacitor large enough to keep the ripple small, a rectifier's output charges to the input's peak minus the conducting diodes' drops, then sags while the capacitor alone feeds the load until the next peak refills it.",
       "why": "Once the capacitor has charged to near the peak, the diodes are reverse biased for most of the cycle, conducting only while the input climbs back above the capacitor's voltage. In between, the capacitor alone supplies the load, losing charge Q = I·Δt, so its voltage falls by ΔV = Q/C. A bridge refills on both half-cycles, halving Δt and so the ripple, but its current passes through two diodes in series. All the charge the load used returns in those brief intervals, so the diode current peaks far above the load current.",
       "explanation": "A transformer secondary gives a sine wave, rated by its RMS value; its peak is √2 times that. A single diode, a half-wave rectifier, passes only the positive half-cycles. A bridge of four diodes steers both halves the same way through the load (full-wave), but each half-cycle's current passes through two diodes in series. With the 0.7 V model, the output peaks at V_p − 0.7 V for half-wave and V_p − 1.4 V for a bridge. A reservoir capacitor across the output charges to that peak and feeds the load in between, sagging by the ripple: ΔV ≈ I/(f·C) for half-wave and I/(2f·C) for full-wave, where f is the line frequency (full-wave refills twice per cycle, so its ripple is at 2f). This estimate assumes the capacitor feeds the load for the whole gap between peaks, so it slightly overstates the ripple. The diodes refill the capacitor only in short pulses near each peak, so their peak current is many times the load current. When off, each diode must block the peak inverse voltage (PIV): about V_p in a bridge, but about 2V_p in a half-wave rectifier with a capacitor, whose stored voltage adds to the winding's negative peak (without the capacitor, only about V_p).",
       "workedExample": {
-        "problem": "A transformer steps the 120 V RMS, 60 Hz AC line down to 9 V RMS. Its secondary feeds a bridge of four 1N4007 diodes, a 2200 µF reservoir capacitor and a load drawing a steady 100 mA. Find the peak output, the ripple and the average output, compare a half-wave rectifier with the same capacitor, find the reverse voltage each diode must block, and estimate the current while the capacitor recharges. Model: 0.7 V per conducting diode, an ideal transformer, and a load current that stays at 100 mA.",
+        "problem": "A transformer steps the 120 V RMS, 60 Hz AC line down to 9 V RMS. Its secondary feeds a bridge of four 1N4007 diodes, a 2200 µF reservoir capacitor, and a load drawing a steady 100 mA. Find the peak output, the ripple, and the average output; compare a half-wave rectifier with the same capacitor; find the reverse voltage each diode must block; and estimate the current while the capacitor recharges. Model: 0.7 V per conducting diode, an ideal transformer, and a load current that stays at 100 mA.",
         "steps": [
           "Peak of the secondary: V_p = 9 V × √2 = 12.73 V.",
           "Bridge (0.7 V model): each half-cycle's current passes through two conducting diodes, so the capacitor charges to 12.73 V − 2 × 0.7 V = 11.33 V.",
           "Both half-cycles refill the capacitor, so the ripple frequency is 2 × 60 Hz = 120 Hz and the gap between refills is 1/120 Hz = 8.33 ms. ΔV ≈ I/(2f·C) = 0.1 A / (2 × 60 Hz × 2200 µF) = 0.379 V peak to peak.",
           "The output swings between 11.33 V and about 11.33 V − 0.379 V = 10.95 V, an average of about 11.33 V − 0.379 V / 2 = 11.14 V.",
           "Half-wave with the same capacitor (0.7 V model): one diode drop, so the peak is 12.73 V − 0.7 V = 12.03 V, but the capacitor is refilled only once per cycle, at 60 Hz: ΔV ≈ I/(f·C) = 0.1 A / (60 Hz × 2200 µF) = 0.758 V, twice the bridge's ripple.",
-          "Reverse voltage (0.7 V model). In the bridge, an off diode blocks the output plus one conducting diode's drop: 11.33 V + 0.7 V = 12.03 V, which is V_p − 0.7 V. In the half-wave circuit the capacitor holds up to 12.03 V while the winding swings to −12.73 V, so the diode must block up to 12.03 V + 12.73 V = 24.76 V, about twice V_p. Choose diodes rated well above these, with margin.",
+          "Reverse voltage (0.7 V model). In the bridge, an off diode blocks the output plus one conducting diode's drop: 11.33 V + 0.7 V = 12.03 V, which is V_p − 0.7 V. In the half-wave circuit, the capacitor holds up to 12.03 V while the winding swings to −12.73 V, so the diode must block up to 12.03 V + 12.73 V = 24.76 V, about twice V_p. Choose diodes rated well above these, with margin.",
           "Recharge pulses: the bridge conducts only while the rectified input, less 1.4 V, is above the capacitor, which has sagged by 0.379 V. The input must climb back to within 0.379 V of its peak: |sin θ| = 1 − 0.379 V / 12.73 V = 0.970, so θ = 76.0°. Conduction ends near the peak at 90°: about 14.0° of each 180° half-cycle, or 14.0/180 × 8.33 ms = 0.65 ms.",
           "In those 0.65 ms the diodes must replace all the charge the load took in 8.33 ms: 100 mA × 8.33 ms = 0.833 mC. The average diode current during the pulse is about 0.833 mC / 0.65 ms = 1.3 A, about thirteen times the load current, and its peak is higher still. At these pulse currents each diode also drops more than 0.7 V, closer to 0.8–1 V, and a real transformer's winding resistance lowers and widens the pulses; both pull the peak output below 11.33 V."
         ]
@@ -68,7 +68,7 @@
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Brute-Force Power Supplies\", ch. 3 \"Tutorial\", section 3.3 \"Diodes and rectifiers\"",
           "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_bruteforce.pdf",
-          "note": "The peak rectified output is √2 times the RMS input less one diode drop for a half-wave rectifier and less two drops (1.4 V) for a bridge, whose current passes through two diodes in series, and an unfiltered half-wave diode blocks the full source voltage."
+          "note": "The peak rectified output is √2 times the RMS input less one diode drop for a half-wave rectifier and less two drops (1.4 V) for a bridge, whose current passes through two diodes in series. An unfiltered half-wave diode blocks the full source voltage."
         },
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Brute-Force Power Supplies\", ch. 3 \"Tutorial\", section 3.5 \"Ripple\"",
@@ -462,7 +462,7 @@
         "formula": "I/(f*C)",
         "unit": "V"
       },
-      "explanation": "Between peaks the capacitor alone feeds the load for about one period, 1/f. It loses ΔV = I·Δt / C = I / (f·C) = {I} / ({f} × {C}) = {answer}.",
+      "explanation": "Between peaks, the capacitor alone feeds the load for about one period, 1/f. It loses ΔV = I·Δt / C = I / (f·C) = {I} / ({f} × {C}) = {answer}.",
       "hints": [
         "The capacitor supplies the load for about one period between recharges.",
         "ΔV = I / (f · C) for a half-wave rectifier."
@@ -478,13 +478,13 @@
           "prompt": "Why does the ripple grow with the load current and shrink with a bigger capacitor?",
           "choices": [
             {
-              "text": "Between peaks the capacitor alone feeds the load, losing charge I·Δt, and its voltage falls by that charge over C",
+              "text": "Between peaks, the capacitor alone feeds the load, losing charge I·Δt, and its voltage falls by that charge over C",
               "feedback": "Right: more current drains more charge in the same gap, and a bigger capacitor loses less voltage for the same charge.",
               "correct": true
             },
             {
               "text": "The diode's drop grows with the load current, and a bigger capacitor pulls that drop back down again",
-              "feedback": "Between peaks the diode isn't conducting at all. The droop comes from the capacitor discharging into the load, not from the diode."
+              "feedback": "Between peaks, the diode isn't conducting at all. The droop comes from the capacitor discharging into the load, not from the diode."
             },
             {
               "text": "More load current charges the capacitor to a lower peak, and a bigger capacitor reaches a higher peak",
@@ -492,10 +492,10 @@
             },
             {
               "text": "The ripple is AC leaking through the diode, and a bigger load current lets more of it get through",
-              "feedback": "Between peaks the diode is reverse biased and blocks. The sag comes from the capacitor feeding the load on its own."
+              "feedback": "Between peaks, the diode is reverse biased and blocks. The sag comes from the capacitor feeding the load on its own."
             }
           ],
-          "explanation": "This is the RC discharge from the RC time constant topic. The load drains the capacitor between peaks; over a short gap the exponential is almost a straight line falling at I/C volts per second. Over one period, 1/f, that gives ΔV = I/(f·C)."
+          "explanation": "This is the RC discharge from the RC time constant topic. The load drains the capacitor between peaks; over a short gap, the exponential is almost a straight line falling at I/C volts per second. Over one period, 1/f, that gives ΔV = I/(f·C)."
         }
       ],
       "schematic": {
@@ -640,7 +640,7 @@
         "formula": "I/(2*f*C)",
         "unit": "V"
       },
-      "explanation": "Full-wave rectification recharges the capacitor twice per cycle, so it only has to hold up for 1/(2f): ΔV = I / (2f·C) = {I} / (2 × {f} × {C}) = {answer}.",
+      "explanation": "Full-wave rectification recharges the capacitor twice per cycle, so it has to hold up only for 1/(2f): ΔV = I / (2f·C) = {I} / (2 × {f} × {C}) = {answer}.",
       "hints": [
         "How often does a full-wave rectifier recharge the capacitor?",
         "Twice per cycle: ΔV = I / (2f·C)."
@@ -652,7 +652,7 @@
         }
       ],
       "steps": [
-        "Between peaks the capacitor supplies the load alone.",
+        "Between peaks, the capacitor supplies the load alone.",
         "A full-wave rectifier recharges twice per cycle, so the gap is 1/(2f).",
         "ΔV = I·Δt/C = {I}/(2 × {f} × {C}) = {answer}."
       ],
@@ -1291,7 +1291,7 @@
       "choices": [
         {
           "text": "It roughly doubles",
-          "feedback": "Right: ΔV ≈ I/(fC) (or I/(2fC) full-wave), so ripple is proportional to load current.",
+          "feedback": "Right: ΔV ≈ I/(fC) (or I/(2fC) full-wave), so the ripple is proportional to the load current.",
           "correct": true
         },
         {
@@ -1358,7 +1358,7 @@
         },
         "factorHint": "The charge lost between refills, I·Δt, is unchanged, and ΔV = Q/C: look at where C sits."
       },
-      "explanation": "Between peaks the capacitor alone feeds the load, losing charge Q = I·Δt with Δt ≈ 1/(2f). Its voltage falls by Q/C, so ten times the capacitance gives a tenth of the ripple: {before} → {after}. This is the RC discharge from the RC time constant topic: over a short gap the exponential is nearly a straight line with slope I/C.",
+      "explanation": "Between peaks, the capacitor alone feeds the load, losing charge Q = I·Δt with Δt ≈ 1/(2f). Its voltage falls by Q/C, so ten times the capacitance gives a tenth of the ripple: {before} → {after}. This is the RC discharge from the RC time constant topic: over a short gap, the exponential is nearly a straight line with slope I/C.",
       "hints": [
         "Between charging peaks, what supplies the load, and how much voltage does it lose for a given charge?"
       ],
@@ -1828,11 +1828,11 @@
         "askFactor": true,
         "feedback": {
           "up": "The bridge does lose an extra 0.7 V of peak, but ripple is the sag between refills, not the height of the peak. The capacitor sags only while it alone feeds the load, ΔV = I·Δt/C, and a bridge refills it on both half-cycles, so each stretch of discharging is shorter.",
-          "same": "Same capacitor, same current, so the capacitor sags at the same rate, I/C. But a bridge refills it on both half-cycles instead of once per cycle, so the sag runs for less time before the next peak tops it up."
+          "same": "With the same capacitor and the same current, the capacitor sags at the same rate, I/C. But a bridge refills it on both half-cycles instead of once per cycle, so the sag runs for less time before the next peak tops it up."
         },
         "factorHint": "Ripple is the charge drained between refills over C, ΔV = I·Δt/C, with I and C unchanged. Work out the gap Δt for a rectifier that refills once per cycle and for one that refills on both half-cycles."
       },
-      "explanation": "Ripple is the charge drained between refills divided by C: ΔV = I·Δt/C. Half-wave refills once per cycle (Δt ≈ 1/f), a bridge twice (Δt ≈ 1/(2f)), so the ripple halves: {before} → {after}. At the same time the ripple frequency doubles, from {f} to {f2}.",
+      "explanation": "Ripple is the charge drained between refills divided by C: ΔV = I·Δt/C. A half-wave rectifier refills once per cycle (Δt ≈ 1/f) and a bridge twice (Δt ≈ 1/(2f)), so the ripple halves: {before} → {after}. At the same time, the ripple frequency doubles, from {f} to {f2}.",
       "hints": [
         "How often does each rectifier top up the capacitor?"
       ],
@@ -1994,7 +1994,7 @@
           "down": "A higher voltage doesn't make the capacitor hold up better. The sag depends only on the charge drawn between peaks and the capacitance, and neither changed."
         }
       },
-      "explanation": "The capacitor charges to a higher peak, but between peaks it still loses Q = I·Δt with the same current {I} and the same gap, 1/(2f). ΔV = Q/C is unchanged: it stays at {before}. The whole waveform moves up; its sag stays the same. With a plain resistor load it would differ: a higher voltage would push more current through the resistor.",
+      "explanation": "The capacitor charges to a higher peak, but between peaks it still loses Q = I·Δt with the same current {I} and the same gap, 1/(2f). ΔV = Q/C is unchanged: it stays at {before}. The whole waveform moves up; its sag stays the same. With a plain resistor load, it would differ: a higher voltage would push more current through the resistor.",
       "hints": [
         "Which quantities set the charge the capacitor loses between peaks?"
       ],
@@ -2170,6 +2170,270 @@
               0
             ]
           }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "rect_design_reservoir_c",
+      "topicId": "diode_rectifiers",
+      "prompt": "A transformer steps 120 V, 60 Hz line power down to {Vrms} RMS (simulation only). Its secondary feeds a bridge of four silicon diodes, a reservoir capacitor C1, and a {RL} load. Choose C1 from the E6 series (1.0, 1.5, 2.2, 3.3, 4.7, 6.8 times a power of ten) so the ripple at the output is at most {Vr} peak to peak, but no less than half that: a larger capacitor costs more, takes more space, and draws larger charging pulses through the diodes. The simulator checks your choice with real diodes.",
+      "variables": [
+        {
+          "name": "Vrms",
+          "unit": "V",
+          "values": [
+            9,
+            12
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            100,
+            150,
+            220
+          ]
+        },
+        {
+          "name": "Vr",
+          "unit": "V",
+          "values": [
+            0.6,
+            1.2
+          ]
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "value": 60
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vp",
+          "formula": "sqrt(2)*Vrms",
+          "unit": "V"
+        },
+        {
+          "name": "Vdc",
+          "formula": "sqrt(2)*Vrms-1.6",
+          "unit": "V"
+        },
+        {
+          "name": "I",
+          "formula": "(sqrt(2)*Vrms-1.6)/RL",
+          "unit": "A"
+        },
+        {
+          "name": "Cmin",
+          "formula": "(sqrt(2)*Vrms-1.6)/RL/(2*f*Vr)",
+          "unit": "F"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "C",
+            "label": "C1",
+            "unit": "F",
+            "series": "E6",
+            "min": 0.0001,
+            "max": 0.01
+          }
+        ],
+        "result": "(sqrt(2)*Vrms-1.6)/RL/(2*f*C)",
+        "resultLabel": "ripple",
+        "resultUnit": "V",
+        "target": "Vr",
+        "tolerance": 0.5,
+        "mode": "atMost",
+        "sim": {
+          "netlist": "Bridge rectifier\nV1 a b SIN(0 {Vp:spice} 60)\nR0 b 0 1meg\nD1 a out DSIL\nD2 b out DSIL\nD3 0 a DSIL\nD4 0 b DSIL\nC1 out 0 {C:spice}\nRL out 0 {RL:spice}\n.model DSIL D(IS=2.5n N=1.75)\n.tran 50u 100m\n",
+          "measure": "pp:v(out)",
+          "note": "The estimate I/(2fC) assumes C1 feeds the load for the whole 1/(2f). In fact the diodes start recharging it a little before each peak, and the load current falls slightly as the output sags, so the simulated ripple here is about 15–20% below the estimate."
+        }
+      },
+      "explanation": "Start with the load current. C1 charges to the secondary's peak, √2 × {Vrms} = {Vp}, less two diode drops (about 0.8 V each while charging): about {Vdc}. The load therefore draws about I = {Vdc}/{RL} = {I}. A bridge refills C1 twice per cycle, so between refills C1 feeds the load alone for about 1/(2 × 60 Hz) = 8.33 ms and sags by ΔV ≈ I/(2fC). For ΔV ≤ {Vr}: C ≥ I/(2f·ΔV) = {I}/(2 × 60 Hz × {Vr}) = {Cmin}. Take the next E6 value up. The value one step below may also pass in the simulator, because the real ripple is smaller than the estimate; the next value up is the one the estimate guarantees. In the simulator the ripple comes out about 15–20% below this estimate, for two reasons: the rising half-sine meets the sagging output and starts recharging C1 before the full 8.33 ms has passed (the diodes conduct for a short stretch before each peak), and the output averages below its peak, so the load draws a little less than I. The estimate therefore errs on the safe side. The sag is close to a straight line because, for the next E6 value up, R_L·C1 is about 100 ms or more, over ten times the 8.33 ms gap: the RC discharge from the RC time constant topic, seen over a small fraction of τ.",
+      "hints": [
+        "First find the load current: what DC voltage does C1 hold, and what does the load draw at that voltage?",
+        "A bridge refills C1 every 1/(2f), so ΔV ≈ I/(2fC). Solve for C and round up to the next E6 value."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vrms} rms",
+            "symbol": "transformer"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              7,
+              4
+            ],
+            "rot": 270,
+            "label": "D1"
+          },
+          {
+            "ref": "D3",
+            "at": [
+              7,
+              8
+            ],
+            "rot": 270,
+            "label": "D3"
+          },
+          {
+            "ref": "D2",
+            "at": [
+              11,
+              4
+            ],
+            "rot": 270,
+            "label": "D2"
+          },
+          {
+            "ref": "D4",
+            "at": [
+              11,
+              8
+            ],
+            "rot": 270,
+            "label": "D4"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              18,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              24,
+              2
+            ],
+            "rot": 90,
+            "label": "R_L\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              5,
+              4
+            ],
+            [
+              7,
+              4
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              10
+            ],
+            [
+              15,
+              10
+            ],
+            [
+              15,
+              4
+            ],
+            [
+              11,
+              4
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              18,
+              2
+            ]
+          ],
+          [
+            [
+              18,
+              6
+            ],
+            [
+              18,
+              8
+            ]
+          ],
+          [
+            [
+              7,
+              0
+            ],
+            [
+              24,
+              0
+            ],
+            [
+              24,
+              2
+            ]
+          ],
+          [
+            [
+              7,
+              8
+            ],
+            [
+              24,
+              8
+            ],
+            [
+              24,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            22,
+            8
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              20,
+              0
+            ]
+          }
+        ],
+        "hidden": [
+          "R0"
         ]
       },
       "review": "verified"

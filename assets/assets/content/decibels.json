@@ -42,7 +42,7 @@
       "workedExample": {
         "problem": "A preamp multiplies a 10 mV microphone signal by 100. The stage after it passes half of the voltage it receives. What is each stage's gain in dB, what is the overall gain, and what voltage comes out?",
         "steps": [
-          "Preamp, a voltage ratio, so use 20·log₁₀: 20·log₁₀(100) = 20 × 2 = 40 dB.",
+          "Preamp: a voltage ratio, so use 20·log₁₀: 20·log₁₀(100) = 20 × 2 = 40 dB.",
           "Second stage: 20·log₁₀(0.5) = 20 × (−0.301) = −6.02 dB. A ratio below 1 gives a negative value: a loss.",
           "Overall: 40 dB + (−6.02 dB) = 33.98 dB. Check by multiplying the ratios instead: 100 × 0.5 = 50, and 20·log₁₀(50) = 33.98 dB.",
           "Output: the overall ratio is 10^(33.98 / 20) = 50, so 10 mV × 50 = 500 mV = 0.50 V.",
@@ -53,7 +53,7 @@
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 1 \"Amplifiers and Active Devices\", section \"Decibels\"",
           "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_1.html#xtocid90094",
-          "note": "A power ratio takes 10·log₁₀ and a voltage or current ratio 20·log₁₀ (the same load impedance assumed), going back uses powers of ten, a gain is positive, a loss negative, unity 0 dB, and stage gains in dB add."
+          "note": "A power ratio takes 10·log₁₀ and a voltage or current ratio 20·log₁₀ (assuming the same load impedance); going back uses powers of ten; a gain is positive, a loss negative, and unity is 0 dB; and stage gains in dB add."
         },
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 1 \"Amplifiers and Active Devices\", section \"Absolute dB scales\"",
@@ -63,7 +63,7 @@
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Elementary Filter Circuits\", ch. 5 \"Derivations and Technical References\", section 5.1 \"Decibels\"",
           "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_filters.pdf",
-          "note": "The 20 for voltage comes from P = V²/R in a fixed resistance, and as estimates every 10 dB is a factor of 10 in power and every 3 dB roughly a factor of 2."
+          "note": "The 20 for voltage comes from P = V²/R in a fixed resistance; as rules of thumb, every 10 dB is a factor of 10 in power and every 3 dB roughly a factor of 2."
         }
       ],
       "remediation": true
@@ -426,12 +426,12 @@
           "feedback": "Yes: −3 dB is half the power and 1/√2 of the voltage, the same point seen two ways."
         },
         {
-          "text": "Because the voltage has dropped by half",
+          "text": "The voltage has dropped by half",
           "feedback": "Half the voltage is −6 dB. At −3 dB the voltage is 0.707."
         },
         {
-          "text": "Because the phase is 45°",
-          "feedback": "The phase is 45° there for a first-order filter, but 'half power' is about the magnitude."
+          "text": "The phase is 45°",
+          "feedback": "The phase is 45° there for a first-order filter, but \"half power\" is about the magnitude."
         },
         {
           "text": "It's just a naming convention",
@@ -463,7 +463,7 @@
           "feedback": "Doubling the voltage is 6 dB (20·log₁₀ 2)."
         },
         {
-          "text": "The power rose by 3 watts",
+          "text": "The power rose by 3 W",
           "feedback": "Decibels are ratios, not amounts."
         }
       ],
@@ -499,8 +499,8 @@
         },
         "askFactor": false,
         "feedback": {
-          "down": "Decibels are 20·log10 of the voltage ratio, and a logarithm only increases when the ratio it is taken of increases. Adding dB means multiplying the ratio by 10^(ΔdB/20), a factor above one.",
-          "same": "The dB value is 20·log10 of the ratio, and each ratio has exactly one dB value. A different dB value describes a different ratio: adding dB multiplies the ratio, it doesn't relabel it."
+          "down": "Decibels are 20·log₁₀ of the voltage ratio, and a logarithm only increases when the ratio it is taken of increases. Adding dB means multiplying the ratio by 10^(ΔdB/20), a factor above one.",
+          "same": "The dB value is 20·log₁₀ of the ratio, and each ratio has exactly one dB value. A different dB value describes a different ratio: adding dB multiplies the ratio, it doesn't relabel it."
         }
       },
       "explanation": "Ratio = 10^(dB/20). Adding 6 dB multiplies it by 10^(6/20) = 10^0.3 ≈ 2: {before} → {after}. Whatever the starting gain, +6 dB doubles the voltage. In power the same +6 dB is ×4, because power goes as voltage squared.",
@@ -529,7 +529,7 @@
             },
             {
               "text": "About ×{dbr}, the new dB value over the old ({new_GdB} ÷ {GdB})",
-              "feedback": "dB are logarithms; adding dB multiplies the ratio by a fixed factor, not by the ratio of the dB numbers."
+              "feedback": "Decibels are logarithms; adding dB multiplies the ratio by a fixed factor, not by the ratio of the dB numbers."
             },
             {
               "text": "×6",
@@ -672,6 +672,338 @@
       "noDrawing": "about how the dB values of cascaded stages combine; the stages' circuits don't enter into it",
       "review": "verified",
       "placement": true
+    },
+    {
+      "id": "db_design_pad",
+      "topicId": "decibels",
+      "prompt": "A signal generator's output is too large for an amplifier you are testing: the amplifier needs the signal {A} lower. Build a pad (an attenuator) from two E24 resistors, each between 1 kΩ and 10 kΩ: R1 in series from the generator to the amplifier's input, and R2 from the input to ground. The generator's 50 Ω output resistance is small next to the pad, and the amplifier's 1 MΩ input resistance draws negligible current. The pad's V_out/V_in must be within 5% of the ratio that gives −{A} (about ±0.4 dB).",
+      "variables": [
+        {
+          "name": "A",
+          "unit": "dB",
+          "values": [
+            6,
+            10,
+            12,
+            14,
+            16,
+            20
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "An",
+          "formula": "A",
+          "unit": ""
+        },
+        {
+          "name": "k",
+          "formula": "10^(-A/20)",
+          "unit": ""
+        },
+        {
+          "name": "m",
+          "formula": "10^(A/20) - 1",
+          "unit": ""
+        },
+        {
+          "name": "R1ex",
+          "formula": "1000*(10^(A/20) - 1)",
+          "unit": "Ω"
+        },
+        {
+          "name": "kp",
+          "formula": "10^(-A/10)",
+          "unit": ""
+        },
+        {
+          "name": "A2",
+          "formula": "2*A",
+          "unit": "dB"
+        },
+        {
+          "name": "Ah",
+          "formula": "A/2",
+          "unit": "dB"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "R1",
+            "label": "R1",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 1000,
+            "max": 10000
+          },
+          {
+            "name": "R2",
+            "label": "R2",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 1000,
+            "max": 10000
+          }
+        ],
+        "result": "R2/(R1+R2)",
+        "resultLabel": "V_out/V_in",
+        "resultUnit": "",
+        "target": "10^(-A/20)",
+        "tolerance": 0.05
+      },
+      "explanation": "−{A} compares the signal at the amplifier's input with and without the pad. Both voltages are across the same input resistance, so the power ratio is the voltage ratio squared, and you undo 20·log₁₀: V_out/V_in = 10^(−{An}/20) = {k}. The same current flows through R1 and R2 (the input draws none), so the output is the share of the voltage across R2: V_out/V_in = R2/(R1 + R2). Setting that to {k} gives R1/R2 = 1/{k} − 1 = {m}. Pick R2 = 1 kΩ; then R1 = {R1ex}. Round R1 to a nearby E24 value and check R2/(R1 + R2). If it misses by more than 5%, move R2 one E24 step and try again. Only the ratio of R1 to R2 sets the attenuation; their size sets how much current the pad draws from the generator.",
+      "hints": [
+        "Is −{A} here a voltage ratio or a power ratio? Which formula undoes it?",
+        "V_out/V_in = 10^(−{An}/20) = R2/(R1 + R2). Fix R2, solve for R1, and round to E24."
+      ],
+      "followUps": [
+        {
+          "prompt": "A classmate converts −{A} with 10·log₁₀ instead and builds a pad (any resistor values, not limited to 1–10 kΩ) for V_out/V_in = 10^(−{An}/10) = {kp}. How much attenuation does that pad really give?",
+          "choices": [
+            {
+              "text": "{A2}, twice as much: 10^(−A/10) is the square of the right voltage ratio, and squaring a ratio doubles its dB",
+              "correct": true,
+              "feedback": "Right: 20·log₁₀({kp}) = −{A2}, so the pad attenuates by {A2}. The classmate built for the power ratio, then applied it to voltage."
+            },
+            {
+              "text": "{A}, as intended: a dB figure means the same whichever formula you use",
+              "feedback": "Each formula belongs to one kind of ratio. 10·log₁₀ undoes a power ratio; the pad sets a voltage ratio, and 20·log₁₀({kp}) = −{A2}."
+            },
+            {
+              "text": "{Ah}, half as much: the 10·log₁₀ formula gives half the dB of the 20·log₁₀ one",
+              "feedback": "The classmate's ratio {kp} is smaller than the right one, {k}, so the pad cuts more, not less: 20·log₁₀({kp}) = −{A2}."
+            },
+            {
+              "text": "It can't be said without the resistor values, only their ratio is known",
+              "feedback": "The attenuation of an unloaded pad depends only on the ratio R2/(R1 + R2), and that is {kp}: 20·log₁₀({kp}) = −{A2}."
+            }
+          ],
+          "explanation": "Decibels are defined on power, and a voltage ratio enters squared (P = V²/R across the same resistance), which is where the 20 comes from. Taking 10^(−A/10) as a voltage ratio squares the right ratio, so 20·log₁₀ of it is twice the intended loss: {A2} of attenuation instead of {A}."
+        }
+      ],
+      "schematic": {
+        "netlist": "resistive pad\nV1 in 0 1\nR1 in out {R1:spice}\nR2 out 0 {R2:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "signal\ngenerator"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              12,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "to amplifier",
+            "at": [
+              12,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified"
+    },
+    {
+      "id": "db_syn_power_gain",
+      "topicId": "decibels",
+      "connects": [
+        "decibels",
+        "power_heat"
+      ],
+      "prompt": "A battery-powered speaker amplifier has an input resistance of {Rin} and drives a speaker that, at the test frequency, acts as a resistor of {RL}. Playing a steady test tone, a true-RMS meter reads {Vin} across the amplifier's input and {Vout} across the speaker. (RMS values are defined so that P = V²/R gives the average power, just as at DC.) What is the amplifier's power gain in dB?",
+      "variables": [
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "values": [
+            10000,
+            22000,
+            47000
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            4,
+            8
+          ]
+        },
+        {
+          "name": "Vin",
+          "unit": "V",
+          "values": [
+            0.1,
+            0.2,
+            0.5
+          ]
+        },
+        {
+          "name": "Vout",
+          "unit": "V",
+          "values": [
+            1,
+            1.5,
+            2
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Gv",
+          "formula": "Vout/Vin",
+          "unit": ""
+        },
+        {
+          "name": "GvdB",
+          "formula": "20*log10(Vout/Vin)",
+          "unit": "dB"
+        },
+        {
+          "name": "Pin",
+          "formula": "Vin^2/Rin",
+          "unit": "W"
+        },
+        {
+          "name": "Pout",
+          "formula": "Vout^2/RL",
+          "unit": "W"
+        },
+        {
+          "name": "Rdb",
+          "formula": "10*log10(Rin/RL)",
+          "unit": "dB"
+        }
+      ],
+      "answer": {
+        "formula": "10*log10((Vout^2/RL)/(Vin^2/Rin))",
+        "unit": "dB",
+        "tolerance": 0.02
+      },
+      "explanation": "Two ideas meet here. Power: the input takes P_in = V²/R = ({Vin})² / {Rin} = {Pin}, and the speaker receives P_out = ({Vout})² / {RL} = {Pout}. Decibels: a power ratio takes 10·log₁₀, so the power gain is 10·log₁₀({Pout} / {Pin}) = {answer}. The voltage gain is 20·log₁₀({Gv}) = {GvdB}, far smaller. The two agree only when both voltages are across the same resistance; here the power ratio is (V_out/V_in)² × (R_in/R_L), so the power gain is the voltage gain plus 10·log₁₀({Rin} / {RL}) = {Rdb}. The extra power comes from the battery, not from the signal: the amplifier uses the small input to control a much larger flow of energy.",
+      "hints": [
+        "Find the power at the input and at the speaker separately, each with P = V²/R and its own resistance.",
+        "Power gain in dB is 10·log₁₀(P_out / P_in). The voltage gain in dB equals it only when both resistances are the same."
+      ],
+      "misconceptions": [
+        {
+          "formula": "20*log10(Vout/Vin)",
+          "feedback": "That is the voltage gain. It equals the power gain only when both voltages are across the same resistance. Here the input is across {Rin} and the output across {RL}, so find each power with P = V²/R first."
+        },
+        {
+          "formula": "10*log10((Vout^2/Rin)/(Vin^2/RL))",
+          "feedback": "The resistances are swapped. The input voltage is across the input resistance, {Rin}, and the output voltage across the speaker, {RL}: P_in = V_in²/R_in and P_out = V_out²/R_L."
+        },
+        {
+          "formula": "20*log10((Vout^2/RL)/(Vin^2/Rin))",
+          "feedback": "That applies 20·log₁₀ to a power ratio. 20·log₁₀ is for voltage ratios; a power ratio takes 10·log₁₀."
+        },
+        {
+          "formula": "10*log10(Vout/Vin)",
+          "feedback": "That applies the power formula to a voltage ratio. Convert the voltages to powers first (P = V²/R, each with its own resistance), then take 10·log₁₀ of the power ratio."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why is this amplifier's power gain so much larger than its voltage gain?",
+          "choices": [
+            {
+              "text": "The output voltage is across a far smaller resistance, so each volt there delivers far more power: the power ratio is (V_out/V_in)² × (R_in/R_L)",
+              "correct": true,
+              "feedback": "Right: the extra {Rdb} is 10·log₁₀({Rin} / {RL}), the ratio of the two resistances."
+            },
+            {
+              "text": "Power gain in dB is always twice the voltage gain in dB, because power goes as voltage squared",
+              "feedback": "The square is already accounted for by using 20·log₁₀ for voltage and 10·log₁₀ for power. Across equal resistances the two figures are the same; here they differ by 10·log₁₀({Rin} / {RL}) = {Rdb}, set by the resistances."
+            },
+            {
+              "text": "The meter reads RMS values, and RMS voltages overstate the power at the output",
+              "feedback": "RMS values are defined so that V²/R gives the true average power, at the input and the output alike. The difference comes from the two resistances, not from the meter."
+            },
+            {
+              "text": "The voltage gain counts only the output voltage, while the power gain counts the input as well",
+              "feedback": "Both are ratios of output to input. They differ because the input and output voltages are across different resistances, {Rin} and {RL}."
+            }
+          ],
+          "explanation": "A decibel is defined on power. The voltage form, 20·log₁₀, gives the same number only when the two voltages are across the same resistance, because then the power ratio is the voltage ratio squared. An amplifier with a high input resistance and a low-resistance load turns a tiny input power into a much larger output power, and its power gain exceeds its voltage gain by 10·log₁₀(R_in/R_L)."
+        }
+      ],
+      "noDrawing": "the amplifier is described only by its terminal readings and resistances; no circuit inside it to analyze",
+      "review": "verified"
     }
   ]
 }

@@ -3,7 +3,7 @@
     {
       "id": "circuit_modeling",
       "title": "Circuit modeling with SPICE (LTspice)",
-      "summary": "Read and write netlists, choose .op, .dc, .ac or .tran, and avoid the classic SPICE mistake of reading 1M as mega (it means milli).",
+      "summary": "Read and write netlists, choose .op, .dc, .ac, or .tran, and avoid the classic SPICE mistake of reading 1M as mega (it means milli).",
       "lenses": [
         "circuit"
       ],
@@ -38,21 +38,21 @@
       },
       "goals": [
         "Read a SPICE netlist line by line (part, nodes, value) and draw the circuit it describes",
-        "Read SPICE value suffixes correctly, including the classic SPICE mistake: M means milli and a megohm is written meg",
-        "Choose .op, .dc, .ac or .tran for a question, and predict the result by hand before running it",
+        "Read SPICE value suffixes correctly, including the classic SPICE mistake: M means milli, and a megohm is written meg",
+        "Choose .op, .dc, .ac, or .tran for a question, and predict the result by hand before running it",
         "Interpret SPICE's sign convention for a voltage source's current and its direction for a current source"
       ],
       "intuition": "A netlist is the circuit written as text, one line per part naming the nodes it joins, and the simulator solves exactly the KCL equations you would write by hand, so predict first and let it check you.",
       "why": "A simulator such as SPICE has no picture of the circuit, only a list of which nodes each part joins. From that list it writes KCL at every node, using each part's own law (V/R for a resistor, C·dV/dt for a capacitor, the diode equation for a diode), and solves all the equations together. Node 0 is the reference every voltage is measured from, so every node needs a DC path to it or its voltage is undefined. The analysis line chooses which problem to solve: .op for DC with capacitors open, .dc for a sweep of DC points, .ac for small sine waves across frequency, .tran for the circuit in time, step by step. It solves exactly what you typed, typos included.",
-      "explanation": "With Kirchhoff's laws you wrote one equation per node and solved them. SPICE (LTspice is one version) does the same for every node at once, but it reads the circuit from a netlist. Each line is one part: a name whose first letter gives its type (R, C, L, V, I, D, Q), the nodes it connects, then its value. R1 in out 10k is a 10 kΩ resistor between nodes in and out. Node 0 is ground, and every node needs a DC path to it. Values use suffixes that ignore case: k is 10³, meg is 10⁶, u is 10⁻⁶, n is 10⁻⁹, and m or M is 10⁻³. So 1M is one milliohm, not a megohm; the netlist still runs, it is just wrong. Letters after a suffix are ignored, so 10uF means 10u. A unit letter that is itself a suffix is not ignored: 1F is one femtofarad, not a farad. (This is SPICE's rule; in the app's answer boxes, M means mega as in SI.) The dot lines choose the analysis. .op finds DC voltages and currents with capacitors open and inductors shorted. .tran 10u 5m runs time from 0 to 5 ms; the first number is only a step hint. .ac dec 20 10 100k sweeps from 10 Hz to 100 kHz with 20 points per decade. Predict by hand before you run: a simulator can only check a prediction you have made.",
+      "explanation": "With Kirchhoff's laws you wrote one equation per node and solved them. SPICE (LTspice is one version) does the same for every node at once, but it reads the circuit from a netlist. Each line is one part: a name whose first letter gives its type (R, C, L, V, I, D, Q), the nodes it connects, then its value. R1 in out 10k is a 10 kΩ resistor between nodes in and out. Node 0 is ground, and every node needs a DC path to it. Values use suffixes that ignore case: k is 10³, meg is 10⁶, u is 10⁻⁶, n is 10⁻⁹, and m or M is 10⁻³. So 1M is one milliohm, not a megohm; the netlist still runs; it is just wrong. Letters after a suffix are ignored, so 10uF means 10u. A unit letter that is itself a suffix is not ignored: 1F is one femtofarad, not a farad. (This is SPICE's rule; in the app's answer boxes, M means mega as in SI.) The dot lines choose the analysis. .op finds DC voltages and currents with capacitors open and inductors shorted. .tran 10u 5m runs time from 0 to 5 ms; the first number is only a step hint. .ac dec 20 10 100k sweeps from 10 Hz to 100 kHz with 20 points per decade. Predict by hand before you run: a simulator can only check a prediction you have made.",
       "workedExample": {
         "problem": "Read this netlist, draw it, and predict what the simulator will show before running it:\n\nV1 in 0 PULSE(0 5 0 1n 1n 1 2)\nR1 in out 10k\nC1 out 0 100n\n.tran 1u 5m\n\nThen a colleague changes R1's value to 10M, meaning 10 MΩ. What happens?",
         "steps": [
-          "V1 connects in to 0 (ground). PULSE(0 5 0 1n 1n 1 2) starts at 0 V, rises to 5 V after a 0 s delay with 1 ns edges, and stays high for 1 s of a 2 s period. Within the 5 ms simulated it is simply a 5 V step at t = 0.",
+          "V1 connects in to 0 (ground). PULSE(0 5 0 1n 1n 1 2) starts at 0 V, rises to 5 V after a 0 s delay with 1 ns edges, and stays high for 1 s of a 2 s period. Within the 5 ms simulated, it is a 5 V step at t = 0.",
           "R1 in out 10k is 10 kΩ from in to out; C1 out 0 100n is 100 nF from out to ground. Drawn, it is a series R with C to ground: an RC low-pass, here charging from a step.",
           "Every node has a DC path to 0: in through V1, and out through R1 and V1. The circuit is solvable.",
           "Predict: τ = R·C = 10 kΩ × 100 nF = 1 ms, and V(out) = 5 V × (1 − e^(−t/τ)). At t = 1 ms, V(out) = 5 V × (1 − e^(−1)) = 3.16 V; at t = 5 ms, 5 V × (1 − e^(−5)) = 4.97 V. The .tran 1u 5m window shows five time constants: nearly the whole curve.",
-          "Current: just after the step C1 is still at 0 V, so R1 carries 5 V / 10 kΩ = 0.5 mA. V1 delivers it out of its + terminal, so SPICE reports I(V1) = −0.5 mA at that instant, falling toward 0.",
+          "Current: just after the step, C1 is still at 0 V, so R1 carries 5 V / 10 kΩ = 0.5 mA. V1 delivers it out of its + terminal, so SPICE reports I(V1) = −0.5 mA at that instant, falling toward 0.",
           "The edit: 10M means 10 milliohms, not 10 MΩ. Then τ = 10 mΩ × 100 nF = 1 ns, the plot shows V(out) reaching 5 V within a few nanoseconds, and the simulator reports no error. A 10 MΩ resistor must be written 10meg; then τ = 1 s, and V(out) at 5 ms would be only 5 V × (1 − e^(−0.005)) ≈ 25 mV."
         ]
       },
@@ -60,17 +60,17 @@
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. V (Reference), ch. 7 \"Using the SPICE Circuit Simulation Program\", sections \"Circuit components\" and \"Analysis options\"",
           "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Ref/REF_7.html#xtocid93584",
-          "note": "The first letter of a part's name sets its type, SPICE ignores case so m and M both mean milli while meg means mega and f means femto, and .ac dec N f1 f2 takes N points per decade."
+          "note": "The first letter of a part's name sets its type; SPICE ignores case, so m and M both mean milli, while meg means mega and f means femto; and .ac dec N f1 f2 takes N points per decade."
         },
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. V (Reference), ch. 7 \"Using the SPICE Circuit Simulation Program\", section \"Quirks\"",
           "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Ref/REF_7.html#xtocid935817",
-          "note": "Node 0 is ground and the reference for every node voltage, DC analysis treats capacitors as open and inductors as shorted, and a voltage source delivering current to a load reports a negative current."
+          "note": "Node 0 is ground and the reference for every node voltage; DC analysis treats capacitors as open and inductors as shorted; and a voltage source delivering current to a load reports a negative current."
         },
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"SPICE Modeling of Resistor Circuits\", ch. 3 \"Using SPICE\", section 3.5 \"Idiosyncrasies of SPICE\"",
           "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_spice_r.pdf",
-          "note": "Every node needs a DC path to node 0 or SPICE refuses to run, whatever the analysis, and a source's current is negative when conventional current leaves its + terminal."
+          "note": "Every node needs a DC path to node 0, or SPICE refuses to run, whatever the analysis; and a source's current is negative when conventional current leaves its + terminal."
         }
       ]
     }
@@ -155,7 +155,7 @@
           "feedback": "Sweeping a source value is .dc. .tran is time."
         }
       ],
-      "explanation": ".tran tstep tstop simulates from 0 to tstop. tstep is a hint for plotting and the first step; the simulator picks its own steps (ngspice also limits its step to tstep by default; LTspice does not), and in LTspice you cap them with the optional maximum-step argument (.tran 0 5m 0 1u).",
+      "explanation": ".tran tstep tstop simulates from 0 to tstop. tstep is a hint for plotting and the first step; the simulator picks its own steps (by default ngspice also caps its step at tstep or (tstop − tstart)/50, whichever is smaller; LTspice does not use tstep as a cap), and in LTspice you cap them with the optional maximum-step argument (.tran 0 5m 0 1u).",
       "noDrawing": "about SPICE syntax and what an analysis command does, not about a particular circuit",
       "level": "recall",
       "review": "verified"
@@ -196,7 +196,7 @@
         {
           "text": "Node voltages are measured relative to node 0; a node with no DC path to it has no defined voltage",
           "correct": true,
-          "feedback": "Yes: that's the 'floating node' error, often from a node connected only through capacitors."
+          "feedback": "Yes: that's the \"floating node\" error, often from a node connected only through capacitors."
         },
         {
           "text": "Ground supplies the current for the circuit",
@@ -288,7 +288,7 @@
       },
       "followUps": [
         {
-          "prompt": "The netlist never says 'divider'. What tells you that R1 and R2 form one, with V(out) across R2?",
+          "prompt": "The netlist never says \"divider.\" What tells you that R1 and R2 form one, with V(out) across R2?",
           "choices": [
             {
               "text": "R1 and R2 are the only parts on node out, so one current runs through both from in to ground",
@@ -301,14 +301,14 @@
             },
             {
               "text": "The node is called out, and SPICE always treats the node named out as the circuit's output",
-              "feedback": "Node names are just labels; SPICE would solve the same circuit if out were called n7. What makes this a divider is which parts share that node."
+              "feedback": "Node names are only labels; SPICE would solve the same circuit if out were called n7. What makes this a divider is which parts share that node."
             },
             {
               "text": "A netlist with one source and two resistors always makes a divider, whatever the node names",
               "feedback": "Not always: with R1 in 0 and R2 in 0, both resistors sit straight across V1 in parallel, and nothing divides. You have to read the nodes."
             }
           ],
-          "explanation": "Each line is name, node, node, value. Collect the parts on each node: in has V1 and R1, out has R1 and R2, 0 has V1 and R2. With only R1 and R2 on out, KCL (from 'Kirchhoff's current and voltage laws') says they carry the same current, so they are in series across V1 and share its voltage in proportion to their resistances."
+          "explanation": "Each line is name, node, node, value. Collect the parts on each node: in has V1 and R1, out has R1 and R2, 0 has V1 and R2. With only R1 and R2 on out, KCL (from \"Kirchhoff's current and voltage laws\") says they carry the same current, so they are in series across V1 and share its voltage in proportion to their resistances."
         }
       ],
       "noDrawing": "the exercise is turning the netlist text into a circuit; a drawing would do that reading for the student",
@@ -379,7 +379,7 @@
               "feedback": "That's the voltage-source habit, and it points the wrong way here. For a current source, the current leaves the source at the second node; if it left at node 0, it would flow up through R1 and V(n) would be negative."
             }
           ],
-          "explanation": "SPICE uses one direction rule for every element: positive current flows from the first node through the part to the second. For I1 0 n, that is from ground, through the source, into n. KCL at n (from 'Kirchhoff's current and voltage laws') then says R1 carries the same current from n to ground, so V(n) = I·R, positive. The same rule explains why a voltage source's current reads negative when it delivers power."
+          "explanation": "SPICE uses one direction rule for every element: positive current flows from the first node through the part to the second. For I1 0 n, that is from ground, through the source, into n. KCL at n (from \"Kirchhoff's current and voltage laws\") then says R1 carries the same current from n to ground, so V(n) = I·R, positive. The same rule explains why a voltage source's current reads negative when it delivers power."
         }
       ],
       "noDrawing": "the exercise is reading which way I1 pushes from its node order; a drawn arrow would give the answer away",
@@ -450,7 +450,7 @@
               "feedback": "The first node is the + end: V1 in 0 puts in at +{V}, and V(in) reads positive. Only the current reading is negative, because SPICE measures it into the + node."
             }
           ],
-          "explanation": "SPICE treats every element alike: positive current flows into its first node and through it to the second. For R1 that gives a positive current and P = V·I > 0: the resistor absorbs power. For V1 the real current flows the other way through it (in at −, out at +), so I(V1) = −{V}/{R} and V × I is negative: the source delivers power. KCL (from 'Kirchhoff's current and voltage laws') makes the two currents equal and opposite."
+          "explanation": "SPICE treats every element alike: positive current flows into its first node and through it to the second. For R1 that gives a positive current and P = V·I > 0: the resistor absorbs power. For V1, the real current flows the other way through it (in at −, out at +), so I(V1) = −{V}/{R} and V × I is negative: the source delivers power. KCL (from \"Kirchhoff's current and voltage laws\") makes the two currents equal and opposite."
         }
       ],
       "noDrawing": "the exercise is SPICE's sign convention for I(V1) read from the netlist; a drawing would translate the netlist for the student",
@@ -548,7 +548,7 @@
               "feedback": "A 90° phase shift describes a steady sine wave, not a step, and it isn't a fixed delay. After a step the capacitor follows 1 − e^(−t/τ), set by R and C."
             }
           ],
-          "explanation": "From 'RC time constant': the capacitor's voltage can only change as charge flows in, and R1 limits that flow to (V − V(out))/R. As V(out) rises the current falls, so the approach slows: V(out) = V(1 − e^(−t/τ)). The simulator solves the same equation step by step, which is why its plot lets you check τ = R·C by eye (63 % at t = τ)."
+          "explanation": "From \"RC time constant\": the capacitor's voltage can only change as charge flows in, and R1 limits that flow to (V − V(out))/R. As V(out) rises, the current falls, so the approach slows: V(out) = V(1 − e^(−t/τ)). The simulator solves the same equation step by step, which is why its plot lets you check τ = R·C by eye (63% at t = τ)."
         }
       ],
       "noDrawing": "the exercise is reading the PULSE source and .tran line from the netlist text; a drawing would do that reading for the student",
@@ -604,11 +604,11 @@
         },
         "askFactor": false,
         "feedback": {
-          "same": "To a person {Rm}M and {R2:spice} look alike, but SPICE ignores case, so M means milli and R2 is now {new_R2}, a billion times smaller. V(out) is R2's share of {V}, R2/(R1 + R2), with R1 still {R1}.",
+          "same": "To a person, {Rm}M and {R2:spice} look alike, but SPICE ignores case, so M means milli and R2 is now {new_R2}, a billion times smaller. V(out) is R2's share of {V}, R2/(R1 + R2), with R1 still {R1}.",
           "up": "More current does flow, but it can't exceed {V}/{R1}, and SPICE reads M as milli, so R2 is now only {new_R2}. V(out) is that current times R2."
         }
       },
-      "explanation": "SPICE suffixes ignore case, so {Rm}M is {new_R2}, not {R2}. Before: V(out) = {V} × {R2}/({R1} + {R2}) = {before}. After, R2 is almost a short to ground: V(out) = {V} × {new_R2}/({R1} + {new_R2}) = {after}. The netlist is valid, so the simulator has no reason to report an error; it just isn't what was meant. Predict V(out) before you run: a result a million or more times smaller than expected stands out at once.",
+      "explanation": "SPICE suffixes ignore case, so {Rm}M is {new_R2}, not {R2}. Before: V(out) = {V} × {R2}/({R1} + {R2}) = {before}. After, R2 is almost a short to ground: V(out) = {V} × {new_R2}/({R1} + {new_R2}) = {after}. The netlist is valid, so the simulator has no reason to report an error; it isn't what was meant. Predict V(out) before you run: a result a million or more times smaller than expected stands out at once.",
       "hints": [
         "What does SPICE read the letter M as, whatever its case?"
       ],
@@ -631,7 +631,7 @@
             },
             {
               "text": "SPICE checks component values only when it sets up a .tran run, so a .op run skips the check",
-              "feedback": "Every analysis reads the same netlist the same way, and .op uses R2's value like any other. The value is simply legal: {new_R2} is a real resistance."
+              "feedback": "Every analysis reads the same netlist the same way, and .op uses R2's value like any other. The value is legal: {new_R2} is a real resistance."
             }
           ],
           "explanation": "SPICE's scale suffixes ignore case: f p n u m k meg g t. So 1M and 1m are both 0.001, and mega has to be written meg (or 1e6). A tiny resistor is legal (wires and current shunts are milliohms), so nothing flags it. The check is to predict every result by hand first: a V(out) off by a factor of a million or more is then obvious."
@@ -784,7 +784,7 @@
           "up": "A bigger capacitor stores more charge per volt, so it needs ten times the charge to reach the same voltage. The current through R1 is (V1 − V(out))/R1, never more than V1/R1, so by {t} it can't have delivered ten times the charge."
         }
       },
-      "explanation": "τ = R·C goes from {tau} to {tau2}. V(out) = {V} × (1 − e^(−t/τ)): at t = {t} that is {before} with the old C1 and {after} with the new one. The final value is still {V}; only the approach is slower. This is the RC time constant: τ grows in proportion to C, so a plot read at a fixed time moves when either R or C changes.",
+      "explanation": "τ = R·C goes from {tau} to {tau2}. V(out) = {V} × (1 − e^(−t/τ)): at t = {t}, that is {before} with the old C1 and {after} with the new one. The final value is still {V}; only the approach is slower. This is the RC time constant: τ grows in proportion to C, so a plot read at a fixed time moves when either R or C changes.",
       "hints": [
         "Work out τ = R·C before and after. Is t = {t} early or late in the charge each time?"
       ],
@@ -810,7 +810,7 @@
               "feedback": "The PULSE holds {V} for a whole second, and charge keeps flowing through R1 all that time. The rise time only shapes the first nanosecond."
             }
           ],
-          "explanation": "From 'RC time constant': Q = C·V, so each volt on C1 needs C coulombs, and R1 lets current (V − V(out))/R flow. Ten times C at the same current means ten times as long for every step of the curve: τ = R·C scales with C. The final value, set by KCL with no current flowing, doesn't depend on C at all."
+          "explanation": "From \"RC time constant\": Q = C·V, so each volt on C1 needs C coulombs, and R1 lets current (V − V(out))/R flow. Ten times C at the same current means ten times as long for every step of the curve: τ = R·C scales with C. The final value, set by KCL with no current flowing, doesn't depend on C at all."
         }
       ],
       "schematic": {
@@ -1046,12 +1046,12 @@
             "text": "R2's ground node was typed as the letter O instead of the digit 0",
             "open": "R2",
             "feedback": "Node O would be a new node that connects to nothing else, so no current could flow through R2: out would be held up by the 1 MΩ RL alone and sit near {V}, with only about {V}/1 MΩ, roughly 10 µA from the source.",
-            "why": "V(out) is almost the full {V} but the source current is tiny, a few microamps: the only path to ground left is RL's 1 MΩ. R2 is still in the netlist but its second node, O, isn't node 0, so it carries no current."
+            "why": "V(out) is almost the full {V}, but the source current is tiny, a few microamps: the only path to ground left is RL's 1 MΩ. R2 is still in the netlist, but its second node, O, isn't node 0, so it carries no current."
           },
           {
             "text": "R1's second node was typed as ot instead of out",
             "open": "R1",
-            "feedback": "R1 would then run from in to a new node ot that connects to nothing else, so no current would leave the source: I(V1) would be 0 A, and with nothing feeding it out would sit at 0 V.",
+            "feedback": "R1 would then run from in to a new node ot that connects to nothing else, so no current would leave the source: I(V1) would be 0 A, and with nothing feeding it, out would sit at 0 V.",
             "why": "The source delivers no current and out reads 0 V: nothing connects the source to out. SPICE joins parts only by identical node names, so R1 ending on ot, a node nothing else uses, leaves the divider unfed."
           }
         ],
@@ -1062,7 +1062,7 @@
       },
       "explanation": "Predict first, then compare. A typo that still parses usually gives a result rather than an error (some simulators warn about a node with only one connection), so the only check is to compare the numbers with your prediction. Read the two results together. V(out) near 0 V with more current than predicted means a short from out to ground (1M is a milliohm); V(out) near 0 V with no current means the source's path to out is broken (a misspelled node). V(out) near the full supply with more current than predicted means R1 has almost vanished (a missing suffix); near the full supply with only microamps means R2's path to ground is broken (the letter O is not node 0).",
       "hints": [
-        "Is the source current larger, smaller or about the same as you predicted? That says whether a path to ground was added or lost.",
+        "Is the source current larger, smaller, or about the same as you predicted? That says whether a path to ground was added or lost.",
         "Then look at V(out): near 0 V or near the full supply?"
       ],
       "schematic": {

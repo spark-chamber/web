@@ -44,7 +44,7 @@
         "Explain why electrons drift at well under a millimeter per second while a lamp lights almost at once"
       ],
       "intuition": "A metal wire is already full of free electrons, and a current is all of them drifting together, so the same number of coulombs passes every point of a loop each second even though each electron drifts slowly.",
-      "why": "Matter is made of positive nuclei and negative electrons, and charge is conserved: it is never created or destroyed, only moved. In a metal about one electron per atom is not bound to any single atom; copper has about 8.5 × 10²⁸ of these free electrons per cubic meter. A battery sets up an electric field along the whole circuit, and that field pushes on every free electron in the loop at once. In the steady state charge can't keep accumulating anywhere (a growing excess would repel further charge), so whatever charge enters a part each second leaves it each second: the current is the same at every point of the loop. Because the free electrons are so numerous, even an ampere needs only a slow net drift, typically well under a millimeter per second, on top of their fast random motion (around 10⁶ m/s), which averages to zero. The change in the field travels along the wires at a large fraction of the speed of light, so the whole loop starts conducting almost at once. In an insulator the electrons are held in their atoms and bonds, so there are almost no carriers to move.",
+      "why": "Matter is made of positive nuclei and negative electrons, and charge is conserved: it is never created or destroyed, only moved. In a metal, about one electron per atom is not bound to any single atom; copper has about 8.5 × 10²⁸ of these free electrons per cubic meter. A battery sets up an electric field along the whole circuit, and that field pushes on every free electron in the loop at once. In the steady state, charge can't keep accumulating anywhere (a growing excess would repel further charge), so whatever charge enters a part each second leaves it each second: the current is the same at every point of the loop. Because the free electrons are so numerous, even an ampere needs only a slow net drift, typically well under a millimeter per second, on top of their fast random motion (around 10⁶ m/s), which averages to zero. The change in the field travels along the wires at a large fraction of the speed of light, so the whole loop starts conducting almost at once. In an insulator the electrons are held in their atoms and bonds, so there are almost no carriers to move.",
       "explanation": "Electric charge is measured in coulombs (C). Every electron carries the same tiny charge, −1.602 × 10⁻¹⁹ C, so one coulomb is about 6.24 × 10¹⁸ electrons. Current is the rate at which charge passes a point: I = Q/t. One ampere is one coulomb per second. Metals conduct because some electrons in each atom are free to move through the whole metal; in an insulator such as PVC or glass they are held by their atoms. A current needs a closed path. In a single loop the same current passes every point: a lamp converts energy, not charge, so the charge leaving it each second equals the charge entering it. Schematics draw conventional current, flowing from + through the circuit to −, the way positive charge would move. In a metal the carriers are electrons, which drift the other way; the current is the same, and formulas and simulators all use the conventional direction. Each electron drifts slowly, well under a millimeter per second, yet a lamp lights at once, because the change in the electric field travels along the wire at a large fraction of the speed of light. A battery's mAh rating is a charge: 1 mAh = 3.6 C.",
       "workedExample": {
         "problem": "A phone battery is rated 3000 mAh, and the phone draws an average of 250 mA. How much charge can the battery deliver, how long does it last, and how many electrons pass through the battery each second?",
@@ -75,7 +75,7 @@
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 2 \"Ohm's Law\", section \"How voltage, current, and resistance relate\"",
           "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_2.html#xtocid87160",
-          "note": "One coulomb is about 6.25 × 10¹⁸ electrons, and one ampere is one coulomb passing a point per second."
+          "note": "One coulomb is about 6.24 × 10¹⁸ electrons, and one ampere is one coulomb passing a point per second."
         }
       ],
       "visuals": [
@@ -83,7 +83,7 @@
       ],
       "analogy": {
         "text": "A bicycle chain is a closed loop of links that all move at once: the same number of links passes every point each second, and no link is used up at the rear sprocket. The pedals deliver energy to the wheel through the chain while the links themselves come back around to the front. Current in a single loop behaves the same way: the same coulombs per second pass every point, and what the load receives is energy, not charge.",
-        "breaksDown": "Links push each other by contact, while each electron is pushed by the electric field where it is; a start travels along a chain at about the speed of sound in steel (km/s), along a circuit at a large fraction of the speed of light. A chain's links all move at one speed, but electrons drift at well under a millimeter per second and faster where the conductor is thinner or has fewer free carriers, and inside the battery ions carry the charge; the same current does not mean the same drift speed. A chain has no part where the links give up energy in collisions with a lattice, which is how a resistor turns electrical energy into heat."
+        "breaksDown": "Links push each other by contact, while each electron is pushed by the electric field where it is; a start travels along a chain at about the speed of sound in steel (km/s), but along a circuit at a large fraction of the speed of light. A chain's links all move at one speed, but electrons drift at well under a millimeter per second, faster where the conductor is thinner or has fewer free carriers, and inside the battery ions carry the charge instead. The same current does not mean the same drift speed. A chain has no part where the links give up energy in collisions with a lattice, which is how a resistor turns electrical energy into heat."
       }
     }
   ],
@@ -229,7 +229,7 @@
     {
       "id": "cc_battery_charge",
       "topicId": "charge_current",
-      "prompt": "A battery is rated {cap}h. How much charge can it move through a circuit before it is flat? Take the rating at face value.",
+      "prompt": "A battery is rated {cap}h. How much charge can it move through a circuit before it goes flat? Take the rating at face value.",
       "variables": [
         {
           "name": "cap",
@@ -282,7 +282,7 @@
               "feedback": "The rating already counts the charge each cell can deliver; at the lower voltage each of those coulombs gives up less energy."
             },
             {
-              "text": "It can't be told without knowing the load current",
+              "text": "You can't tell without knowing the load current",
               "feedback": "The load affects how fast the energy is used, not how much is stored. With the same charge, the higher-voltage cell stores more energy."
             }
           ],
@@ -492,7 +492,7 @@
       "explanation": "The current is the charge crossing a section each second: I = nAve, so v = I/(nAe). With the same current and twice the area, v halves: {before} → {after}. Either way the drift is under half a millimeter per second.",
       "hints": [
         "The same current must cross every section. How many free electrons share it in the thicker wire?",
-        "v = I/(nAe): the current and n are unchanged, A doubles."
+        "v = I/(nAe): the current and n are unchanged, and A doubles."
       ],
       "noDrawing": "about electrons in a wire; no circuit to analyze",
       "review": "verified"
@@ -547,7 +547,7 @@
           "feedback": "The direction doesn't change anything: the lamp uses up no charge, so meters on either side of it read the same, whichever way you count the flow."
         }
       ],
-      "explanation": "Charge is conserved and can't accumulate in a steady circuit, so the same current, {I}, passes every point of the loop: through R1, the lamp, the wires and the battery. What changes around the loop is the potential energy per coulomb, which the next topic measures as voltage.",
+      "explanation": "Charge is conserved and can't accumulate in a steady circuit, so the same current, {I}, passes every point of the loop: through R1, the lamp, the wires, and the battery. What changes around the loop is the potential energy per coulomb, which the next topic measures as voltage.",
       "hints": [
         "Can charge pile up inside the lamp, or disappear in it?",
         "In a single loop there is only one path. What enters each part every second must leave it."
@@ -702,12 +702,12 @@
       ],
       "followUps": [
         {
-          "prompt": "Schematics, datasheets and SPICE all use conventional current. Does that give wrong answers in a circuit where the carriers are electrons?",
+          "prompt": "Schematics, datasheets, and SPICE all use conventional current. Does that give wrong answers in a circuit where the carriers are electrons?",
           "choices": [
             {
               "text": "No: negative charge moving one way is the same current as positive charge moving the other way",
               "correct": true,
-              "feedback": "Right: only the direction of the drawn arrow is a convention. The magnitude, the voltages and the power are all unchanged."
+              "feedback": "Right: only the direction of the drawn arrow is a convention. The magnitude, the voltages, and the power are all unchanged."
             },
             {
               "text": "Yes: the voltage signs come out reversed, so engineers flip them at the end of a calculation",
@@ -719,7 +719,7 @@
             },
             {
               "text": "No, because in a metal the electrons really do flow from the + terminal to the − terminal",
-              "feedback": "In a metal, electrons drift from − through the circuit to +. The convention gives right answers because direction and sign of charge flip together, not because electrons go from + to −."
+              "feedback": "In a metal, electrons drift from − through the circuit to +. The convention gives right answers because the direction and the sign of the charge flip together, not because electrons go from + to −."
             }
           ],
           "explanation": "Current is the net charge crossing a section per second. Reversing both the sign of the carrier and its direction leaves that number unchanged, so conventional current is a consistent bookkeeping choice, used by every circuit simulator and datasheet."
@@ -879,7 +879,7 @@
     {
       "id": "cc_fault_meters",
       "topicId": "charge_current",
-      "prompt": "A {V} battery drives current through R1 = {R1} and a lamp (treat the lamp as a fixed 100 Ω). Ammeter A1 is in the wire from the battery's + terminal to R1; ammeter A2 is in the wire from R1 to the lamp. Healthy, both read {h0}. The readings are below. Which fault explains them?",
+      "prompt": "A {V} battery drives current through R1 = {R1} and a lamp (treat the lamp as a fixed 100 Ω). Ammeter A1 is in the wire from the battery's + terminal to R1; ammeter A2 is in the wire from R1 to the lamp. When the circuit is healthy, both read {h0}. The readings are below. Which fault explains them?",
       "variables": [
         {
           "name": "V",
@@ -942,7 +942,7 @@
           }
         ]
       },
-      "explanation": "In a single loop the current is the same at every point, so two series ammeters must agree. Both at zero means a break; both equal but changed means a part in the loop changed (a shorted part raises the current, a high-value part lowers it); unequal readings mean a second path branches off between the two meters; a path that bypasses a part but not a meter (like a bridge across the lamp's terminals, on the lamp side of A2) changes both readings equally.",
+      "explanation": "In a single loop the current is the same at every point, so two series ammeters must agree. Both at zero means a break; both equal but changed means that a part in the loop changed (a shorted part raises the current, a high-value part lowers it); unequal readings mean a second path branches off between the two meters; a path that bypasses a part but not a meter (like a bridge across the lamp's terminals, on the lamp side of A2) changes both readings equally.",
       "hints": [
         "First compare A1 with A2. When can two meters in one loop disagree?",
         "Zero means no closed path; equal but changed means the one loop changed; unequal means a second path branches off between the two meters."

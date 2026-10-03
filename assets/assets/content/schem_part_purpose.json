@@ -3,7 +3,7 @@
     {
       "id": "schem_part_purpose",
       "title": "What is each part for?",
-      "summary": "Give the reason for every part in a circuit: coupling and bypass capacitors, emitter and base resistors, flyback and protection diodes, gate resistors and pull-downs.",
+      "summary": "Give the reason for every part in a circuit: coupling and bypass capacitors, emitter and base resistors, flyback and protection diodes, gate resistors, and pull-downs.",
       "lenses": [
         "circuit",
         "physics"
@@ -15,11 +15,11 @@
       ],
       "prerequisiteNotes": {
         "schem_passive_blocks": "Most \"why is this here?\" parts are passive blocks doing one small job: a pull-down, a filter, a decoupling capacitor.",
-        "bjt_bias": "Emitter resistors, bias dividers and coupling capacitors exist to set and hold a transistor's operating point.",
-        "diode_practical": "Flyback, protection and reverse-polarity diodes each protect something; knowing how diodes conduct tells you what."
+        "bjt_bias": "Emitter resistors, bias dividers, and coupling capacitors exist to set and hold a transistor's operating point.",
+        "diode_practical": "Flyback, protection, and reverse-polarity diodes each protect something; knowing how diodes conduct tells you what."
       },
       "lensNotes": {
-        "circuit": "Nothing on a good schematic is decoration. For each part ask: what would happen if it were missing, or shorted? The answer is its purpose: remove a flyback diode and the transistor dies at switch-off; remove a coupling capacitor and the bias is upset by the source.",
+        "circuit": "Nothing on a good schematic is decoration. For each part, ask: what would happen if it were missing, or shorted? The answer is its purpose: remove a flyback diode and the transistor dies at switch-off; remove a coupling capacitor and the bias is upset by the source.",
         "physics": "Many parts exist because of physics the ideal models ignore: inductors resist changes in current (flyback diodes), transistors heat up and drift (emitter resistors), and wires have inductance (decoupling capacitors)."
       },
       "formulas": [
@@ -42,20 +42,20 @@
       ],
       "goals": [
         "Find the job of each part in a circuit by asking what would happen if it were missing or shorted",
-        "Explain what the bias divider, emitter resistor, bypass capacitor and coupling capacitor each do in a common-emitter amplifier, and put numbers on the bias and the gain",
-        "Explain why a flyback diode across a coil, a pull-down on a MOSFET gate and a decoupling capacitor at a chip are needed, from the physics the ideal model leaves out"
+        "Explain what the bias divider, emitter resistor, bypass capacitor, and coupling capacitor each do in a common-emitter amplifier, and put numbers on the bias and the gain",
+        "Explain why a flyback diode across a coil, a pull-down on a MOSFET gate, and a decoupling capacitor at a chip are needed, from the physics the ideal model leaves out"
       ],
       "intuition": "Every part on a good schematic is there for a reason; to find it, imagine the part missing or shorted and ask what would go wrong.",
-      "why": "Many parts exist because real components do things the ideal model ignores. A coil's current cannot change instantly (V = L·di/dt), so when a transistor cuts it off the coil makes whatever voltage keeps it flowing, often hundreds of volts; a flyback diode gives that current a path instead. A transistor's β and V_BE vary between parts and drift with temperature, so an emitter resistor turns a rise in current into a rise in V_E, which reduces V_BE and pulls the current back. A MOSFET gate is an insulated capacitor that keeps any charge it picks up, so a pull-down holds it off while nothing drives it. Supply wiring has inductance, so a decoupling capacitor supplies fast current spikes from close by.",
-      "explanation": "The passive blocks topic taught you to name groups of parts. This topic asks the question engineers ask in a design review: why is this particular part here? The method is always the same: imagine the part removed, then shorted, and ask what changes. In a divider-biased common-emitter amplifier, R1 and R2 set the base voltage. R_E sets the current, I_C ≈ (V_B − 0.7 V)/R_E, nearly independent of β. If I_C rises, V_E rises and V_BE shrinks, so the current is pulled back. That same feedback cuts the signal gain to about R_C/(r_e + R_E), so the capacitor C_E bypasses R_E for signals and the gain rises to about R_C/r_e, with the DC bias untouched. The coupling capacitor passes the signal but blocks DC, so the source cannot drag the base away from its bias. Other parts protect. A flyback diode across a relay coil clamps the voltage at switch-off. A pull-down on a MOSFET gate holds it off while a microcontroller boots. A decoupling capacitor at a chip's pins supplies its current spikes. Each exists because of physics the ideal model leaves out.",
+      "why": "Many parts exist because real components do things the ideal model ignores. A coil's current cannot change instantly (V = L·di/dt), so when a transistor cuts it off, the coil makes whatever voltage keeps it flowing, often hundreds of volts; a flyback diode gives that current a path instead. A transistor's β and V_BE vary between parts and drift with temperature, so an emitter resistor turns a rise in current into a rise in V_E, which reduces V_BE and pulls the current back. A MOSFET gate is an insulated capacitor that keeps any charge it picks up, so a pull-down holds it off while nothing drives it. Supply wiring has inductance, so a decoupling capacitor supplies fast current spikes from close by.",
+      "explanation": "\"Spotting passive building blocks\" taught you to name groups of parts. This topic asks the question engineers ask in a design review: why is this particular part here? The method is always the same: imagine the part removed, then shorted, and ask what changes. In a divider-biased common-emitter amplifier, R1 and R2 set the base voltage. R_E sets the current, I_C ≈ (V_B − 0.7 V)/R_E, nearly independent of β. If I_C rises, V_E rises and V_BE shrinks, so the current is pulled back. That same feedback cuts the signal gain to about R_C/(r_e + R_E), so the capacitor C_E bypasses R_E for signals and the gain rises to about R_C/r_e, with the DC bias untouched. The coupling capacitor passes the signal but blocks DC, so the source cannot drag the base away from its bias. Other parts protect. A flyback diode across a relay coil clamps the voltage at switch-off. A pull-down on a MOSFET gate holds it off while a microcontroller boots. A decoupling capacitor at a chip's pins supplies its current spikes. Each exists because of physics the ideal model leaves out.",
       "workedExample": {
         "problem": "A common-emitter amplifier runs from 12 V. R1 = 47 kΩ (supply to base) and R2 = 10 kΩ (base to ground) bias the base. R_C = 4.7 kΩ runs from the supply to the collector, and R_E = 1 kΩ from the emitter to ground, with C_E = 100 µF across it. The signal comes from a low-resistance source at 0 V DC, through C1 = 10 µF to the base. Assume V_BE ≈ 0.7 V and β ≈ 100. Say what each part is for, and put numbers on the bias and the gain.",
         "steps": [
           "R1 and R2 set the base voltage. Ignoring the small base current, V_B = 12 V × 10 kΩ / (47 kΩ + 10 kΩ) = 2.11 V.",
           "R_E sets the current: V_E = 2.11 V − 0.7 V = 1.41 V, so I_E = 1.41 V / 1 kΩ = 1.41 mA ≈ I_C, and β does not appear. (Counting the base current with β = 100 gives about 1.30 mA, 8% lower: β·R_E = 100 kΩ is only about twelve times R1 ∥ R2 = 8.25 kΩ.)",
           "R_C turns that current into a voltage: V_C = 12 V − 1.41 mA × 4.7 kΩ = 5.40 V, well above V_E = 1.41 V and below 12 V, so the collector has room to swing both ways.",
-          "Why R_E, by shorting it: the junction would clamp the base near 0.7 V, and R1 would feed it about (12 V − 0.7 V)/47 kΩ − 0.7 V/10 kΩ = 0.17 mA. With β ≈ 100 that asks for 17 mA, far more than R_C allows (12 V / 4.7 kΩ = 2.55 mA), so the transistor saturates. With R_E in place, a rise in I_C raises V_E, lowers V_BE and pulls I_C back. Even with a divider that avoided saturation, I_C would be β·I_B and would follow each transistor's β and temperature.",
-          "Why C_E: r_e = 25 mV / 1.41 mA = 17.8 Ω. With C_E the emitter is at signal ground and |A_v| ≈ R_C / r_e = 4.7 kΩ / 17.8 Ω = 264. If C_E dries out and opens, |A_v| ≈ 4.7 kΩ / (17.8 Ω + 1 kΩ) = 4.6. C_E carries no DC, so the bias is the same either way.",
+          "Why R_E, by shorting it: the junction would clamp the base near 0.7 V, and R1 would feed it about (12 V − 0.7 V)/47 kΩ − 0.7 V/10 kΩ = 0.17 mA. With β ≈ 100 that asks for 17 mA, far more than R_C allows (12 V / 4.7 kΩ = 2.55 mA), so the transistor saturates. With R_E in place, a rise in I_C raises V_E, lowers V_BE, and pulls I_C back. Even with a divider that avoided saturation, I_C would be β·I_B and would follow each transistor's β and temperature.",
+          "Why C_E: r_e = 25 mV / 1.41 mA = 17.8 Ω. With C_E, the emitter is at signal ground and |A_v| ≈ R_C / r_e = 4.7 kΩ / 17.8 Ω = 264. If C_E dries out and opens, |A_v| ≈ 4.7 kΩ / (17.8 Ω + 1 kΩ) = 4.6. C_E carries no DC, so the bias is the same either way.",
           "Why C1, by removing it and wiring the source straight in: the source sits at 0 V DC with a low resistance, so it would pull the base from 2.11 V to nearly 0 V, the transistor would turn off, and V_C would sit at 12 V. With C1 in place, C1 charges once to the 2.11 V difference and then passes only the signal's changes."
         ]
       },
@@ -90,8 +90,8 @@
           "correct": true
         },
         {
-          "text": "It protects Q1 and the coil if the 12 V supply is ever connected backwards",
-          "feedback": "A reverse-polarity diode goes in series with the supply, where every bit of the circuit's current passes through it. D1 sits across the coil and only matters when the coil's own voltage reverses."
+          "text": "It protects Q1 and the coil if the 12 V supply is ever connected backward",
+          "feedback": "A reverse-polarity diode goes in series with the supply (or across it, backed by a fuse), at the input where the whole circuit's current comes in. D1 sits across the coil and only matters when the coil's own voltage reverses."
         },
         {
           "text": "It makes the relay release faster when Q1 switches off, by draining the coil's stored energy",
@@ -99,10 +99,10 @@
         },
         {
           "text": "It keeps current flowing through the coil while Q1 is on, so the relay stays pulled in",
-          "feedback": "While Q1 is on, its collector sits near 0 V, so D1 has 12 V across it the wrong way round: it is reverse biased and carries nothing."
+          "feedback": "While Q1 is on, its collector sits near 0 V, so D1 has 12 V across it the wrong way around: it is reverse biased and carries nothing."
         }
       ],
-      "explanation": "An inductor resists any change in its current (V = L·di/dt). While Q1 is on, current flows down through the coil; D1 is reverse biased and idle. When Q1 turns off, the coil drives its lower end, the collector, upward to keep that current flowing. As soon as the collector passes about 12.7 V, D1 conducts and the current circulates round the coil–D1 loop until it dies away. Q1 never sees more than about 12.7 V. This is the flyback diode from the diode topic, seen in a real driver.",
+      "explanation": "An inductor resists any change in its current (V = L·di/dt). While Q1 is on, current flows down through the coil; D1 is reverse biased and idle. When Q1 turns off, the coil drives its lower end, the collector, upward to keep that current flowing. As soon as the collector passes about 12.7 V, D1 conducts and the current circulates around the coil–D1 loop until it dies away. Q1 never sees more than about 12.7 V. This is the flyback diode from \"LEDs, Zener regulators, and flyback diodes,\" seen in a real driver.",
       "hints": [
         "What does an inductor do when you try to stop its current suddenly?",
         "Is D1 forward or reverse biased while Q1 is on?"
@@ -303,14 +303,14 @@
             },
             {
               "text": "The divider current falls when I_C rises, so the base gets less drive and I_C drops",
-              "feedback": "The divider current is set by R1, R2 and the supply; it hardly changes. It is V_BE, not the divider, that changes."
+              "feedback": "The divider current is set by R1, R2, and the supply; it hardly changes. It is V_BE, not the divider, that changes."
             },
             {
               "text": "The collector voltage falls as I_C rises, and that lower voltage pushes I_C back down",
               "feedback": "In the active region a lower collector voltage barely changes I_C (only the small Early effect). The control is at the base-emitter junction."
             }
           ],
-          "explanation": "The transistor's current is set by V_BE = V_B − V_E. V_B is fixed by R1 and R2, and V_E = I_E·R_E. More current means more V_E, less V_BE, and less current: negative feedback that holds I_C near (V_B − 0.7 V)/R_E, as in the bias topic."
+          "explanation": "The transistor's current is set by V_BE = V_B − V_E. V_B is fixed by R1 and R2, and V_E = I_E·R_E. More current means more V_E, less V_BE, and less current: negative feedback that holds I_C near (V_B − 0.7 V)/R_E, as in \"Biasing a bipolar transistor.\""
         }
       ],
       "schematic": {
@@ -575,7 +575,7 @@
             },
             {
               "text": "The low frequencies would be lost",
-              "feedback": "Without C1 even DC gets through; if anything, the low end would be extended. The damage is to the bias."
+              "feedback": "Without C1, even DC gets through; if anything, the low end would be extended. The damage is to the bias."
             }
           ],
           "explanation": "Ask what happens when a part is missing to find its purpose. Without C1, the source is connected in parallel with R2. A source with far less resistance than the divider sets the base voltage itself, here 0 V, which is below the 0.7 V the transistor needs."
@@ -850,11 +850,11 @@
           "open": "1"
         },
         "feedback": {
-          "up": "Without C_E the emitter is no longer at signal ground: it follows the base, so the signal voltage across R_E is subtracted from the input before it reaches the base–emitter junction. That is negative feedback.",
-          "same": "C_E carries no DC, so the bias is indeed unchanged. But the gain is about the signal, and for signals C_E was holding the emitter at ground. Without it the emitter follows the base, and only the difference between them drives the collector current."
+          "up": "Without C_E, the emitter is no longer at signal ground: it follows the base, so the signal voltage across R_E is subtracted from the input before it reaches the base–emitter junction. That is negative feedback.",
+          "same": "C_E carries no DC, so the bias is indeed unchanged. But the gain is about the signal, and for signals C_E was holding the emitter at ground. Without it, the emitter follows the base, and only the difference between them drives the collector current."
         }
       },
-      "explanation": "The transistor's own emitter resistance is r_e = 25 mV / I_C = {re}. With C_E in place the emitter is at signal ground, so the gain is R_C/r_e = {before}. With C_E open, R_E is in the signal path too: gain = R_C/(r_e + R_E) = {after}. R_E stabilizes the bias; C_E stops that stabilizing feedback from also costing gain.",
+      "explanation": "The transistor's own emitter resistance is r_e = 25 mV / I_C = {re}. With C_E in place, the emitter is at signal ground, so the gain is R_C/r_e = {before}. With C_E open, R_E is in the signal path too: gain = R_C/(r_e + R_E) = {after}. R_E stabilizes the bias; C_E stops that stabilizing feedback from also costing gain.",
       "hints": [
         "For signals, C_E is nearly a short. What does the emitter do when it is gone?",
         "Gain ≈ R_C divided by the total resistance from emitter to signal ground."
@@ -870,12 +870,12 @@
           "choices": [
             {
               "text": "A capacitor carries no DC current, so the emitter's DC current still has to flow through R_E, and V_E and I_C stay where the bias put them",
-              "feedback": "Right: at DC, C_E is simply not there. It only acts on the signal.",
+              "feedback": "Right: at DC, C_E is not there. It only acts on the signal.",
               "correct": true
             },
             {
               "text": "It does upset it: the bias shifts when C_E is fitted",
-              "feedback": "Once C_E has charged to V_E it carries no DC, so the operating point is exactly as without it."
+              "feedback": "Once C_E has charged to V_E, it carries no DC, so the operating point is exactly as without it."
             },
             {
               "text": "C_E is too small to matter at DC",
@@ -1111,7 +1111,7 @@
       "choices": [
         {
           "text": "It holds the gate at 0 V, so Q1 stays off while the pin is undriven, as at reset",
-          "feedback": "Right: a floating gate can sit at any voltage. R2 drains its charge so \"not driven\" means \"off\".",
+          "feedback": "Right: a floating gate can sit at any voltage. R2 drains its charge so \"not driven\" means \"off.\"",
           "correct": true
         },
         {
@@ -1153,7 +1153,7 @@
               "feedback": "The gate is insulated from the channel by an oxide layer. Charge arrives by capacitive coupling (a sudden drain voltage change nudges the gate), not by conduction through the channel."
             }
           ],
-          "explanation": "The gate, oxide and channel form a capacitor, so the gate voltage is charge divided by capacitance. With nothing connected, stray charge sets it, and a few volts is enough to pass the threshold. A pull-down resistor gives that charge a path to ground."
+          "explanation": "The gate, oxide, and channel form a capacitor, so the gate voltage is charge divided by capacitance. With nothing connected, stray charge sets it, and a few volts is enough to pass the threshold. A pull-down resistor gives that charge a path to ground."
         }
       ],
       "schematic": {
@@ -1298,7 +1298,7 @@
           "feedback": "100 nF holds very little energy: at 10 mA it would drop 1 V in about 10 µs. Hold-up needs far bigger capacitors."
         }
       ],
-      "explanation": "When a logic chip switches, it draws current pulses lasting a few nanoseconds. Wiring inductance opposes fast changes of current (V = L·di/dt): 1 µH and 10 mA in 10 ns would lose 1 V across the wiring. C1, placed close to the pins, supplies each pulse from its own charge and is topped up slowly through the wiring between pulses, so V_DD stays steady. This is the physics the ideal \"wire\" ignores. One 10 mA, 10 ns pulse takes only 0.1 nC, which lowers 100 nF by just 1 mV.",
+      "explanation": "When a logic chip switches, it draws current pulses lasting a few nanoseconds. Wiring inductance opposes fast changes of current (V = L·di/dt): 1 µH and 10 mA in 10 ns would lose 1 V across the wiring. C1, placed close to the pins, supplies each pulse from its own charge and is topped up slowly through the wiring between pulses, so V_DD stays steady. This is the physics the ideal \"wire\" ignores. One 10 mA, 10 ns pulse takes only 0.1 nC, which lowers 100 nF by only 1 mV.",
       "hints": [
         "Wires have inductance. What does an inductor do to a sudden change of current?"
       ],
@@ -1328,7 +1328,7 @@
               "feedback": "At DC a capacitor carries no current, so its size has no effect on the steady V_DD. Its only job here is the fast pulses."
             }
           ],
-          "explanation": "One 10 mA, 10 ns pulse takes Q = 0.1 nC, and ΔV = Q/C = 0.1 nC / 100 nF = 1 mV: 100 nF already holds plenty. What limits a real capacitor at nanosecond speeds is its equivalent series inductance and resistance (ESL and ESR). A small surface-mount ceramic has about a nanohenry of ESL and tens of milliohms of ESR; a 100 µF aluminum electrolytic, with its wound foil and leads, has several times the inductance and roughly ten times the ESR, so during a fast edge it loses several times more voltage across its own ESL and ESR than the ceramic does. Placement matters as much: pads, vias and traces add nanohenries of their own, which is why the ceramic sits right at the chip's pins. Boards often use both: an electrolytic for slow, large load changes, and a ceramic at each chip for the fast edges."
+          "explanation": "One 10 mA, 10 ns pulse takes Q = 0.1 nC, and ΔV = Q/C = 0.1 nC / 100 nF = 1 mV: 100 nF already holds plenty. What limits a real capacitor at nanosecond speeds is its equivalent series inductance and resistance (ESL and ESR). A small surface-mount ceramic has about a nanohenry of ESL and tens of milliohms of ESR; a 100 µF aluminum electrolytic, with its wound foil and leads, has several times the inductance and roughly ten times the ESR, so during a fast edge it loses several times more voltage across its own ESL and ESR than the ceramic does. Placement matters as much: pads, vias, and traces add nanohenries of their own, which is why the ceramic sits right at the chip's pins. Boards often use both: an electrolytic for slow, large load changes, and a ceramic at each chip for the fast edges."
         }
       ],
       "schematic": {
@@ -1426,7 +1426,7 @@
     {
       "id": "purp_bias_fault",
       "topicId": "schem_part_purpose",
-      "prompt": "This divider-biased transistor stage runs from {Vcc}. It should read {h0} at the base, {h1} at the emitter and {h2} at the collector. The meter readings (to ground) are below. Which fault explains them?",
+      "prompt": "This divider-biased transistor stage runs from {Vcc}. It should read {h0} at the base, {h1} at the emitter, and {h2} at the collector. The meter readings (to ground) are below. Which fault explains them?",
       "variables": [
         {
           "name": "Vcc",
@@ -1458,8 +1458,8 @@
           {
             "text": "R1 (base to supply) is open",
             "open": "R1",
-            "feedback": "With R1 open nothing would feed the base: it would sit at 0 V, the transistor would be off, the emitter at 0 V and the collector up at the full supply.",
-            "why": "The base reads 0 V, so nothing is feeding it: R1 is gone. With no base drive the transistor is off, so no current flows in R_C and the collector sits at the full {Vcc}."
+            "feedback": "With R1 open, nothing would feed the base: it would sit at 0 V, the transistor would be off, the emitter would be at 0 V, and the collector would be up at the full supply.",
+            "why": "The base reads 0 V, so nothing is feeding it: R1 is gone. With no base drive, the transistor is off, so no current flows in R_C and the collector sits at the full {Vcc}."
           },
           {
             "text": "R2 (base to ground) is open",
@@ -1470,20 +1470,20 @@
           {
             "text": "R_E is shorted",
             "short": "RE",
-            "feedback": "With R_E shorted the emitter would read 0 V and the base would be clamped at about 0.7 V; with no R_E feedback the base drive from R1 is far more than needed, so the transistor saturates and the collector falls to about 0.1 V. Only R_C limits the current.",
-            "why": "The emitter reads 0 V and the base only about 0.7 V: the base-emitter junction is clamping the divider, because nothing lifts the emitter. With no R_E feedback the base drive is far more than needed, so the transistor saturates and the collector falls near 0 V; only R_C limits the current."
+            "feedback": "With R_E shorted, the emitter would read 0 V and the base would be clamped at about 0.7 V; with no R_E feedback, the base drive from R1 would be far more than needed, so the transistor would saturate and the collector would fall to about 0.1 V. Only R_C limits the current.",
+            "why": "The emitter reads 0 V and the base only about 0.7 V: the base-emitter junction is clamping the divider, because nothing lifts the emitter. With no R_E feedback, the base drive is far more than needed, so the transistor saturates and the collector falls near 0 V; only R_C limits the current."
           },
           {
             "text": "R_C is open",
             "open": "RC",
-            "feedback": "With R_C open no collector current could flow: only the small base current would reach R_E, so the emitter would fall to a fraction of a volt, the base would sit one junction drop above it (under 1 V), and the floating collector would read about the same as the emitter, not the supply.",
-            "why": "V_B − V_E is still about 0.6 V, so the junction conducts, but V_E is only a fraction of a volt: only base current reaches R_E. With nothing arriving through R_C the collector floats, held one junction drop below the base by the forward-biased base–collector junction. R_C is open."
+            "feedback": "With R_C open, no collector current could flow: only the small base current would reach R_E, so the emitter would fall to a fraction of a volt, the base would sit one junction drop above it (under 1 V), and the floating collector would read about the same as the emitter, not the supply.",
+            "why": "V_B − V_E is still about 0.6 V, so the junction conducts, but V_E is only a fraction of a volt: only base current reaches R_E. With nothing arriving through R_C, the collector floats, held one junction drop below the base by the forward-biased base–collector junction. R_C is open."
           },
           {
             "text": "A solder bridge joins the collector to the emitter",
             "add": "Rbridge c e 0.1",
             "feedback": "A collector–emitter bridge would put R_C and R_E in series across the supply: collector and emitter would read the same, the emitter would rise above the base, and the base would sit at the plain divider voltage.",
-            "why": "The collector and emitter read the same voltage, so something joins them. The emitter is now above the base, which means the transistor is off: the current is going round it, through R_C, the bridge and R_E."
+            "why": "The collector and emitter read the same voltage, so something joins them. The emitter is now above the base, which means the transistor is off: the current is going around it, through R_C, the bridge, and R_E."
           }
         ]
       },
@@ -1657,7 +1657,7 @@
     {
       "id": "purp_emitter_sets_ic",
       "topicId": "schem_part_purpose",
-      "prompt": "This common-emitter amplifier runs from {Vcc}. R1 = 47 kΩ and R2 = 10 kΩ bias the base, R_C = 4.7 kΩ and R_E = {Re}. Take V_BE = 0.7 V and ignore the base current (the usual first estimate; with β = 100 the real I_C comes out a few percent lower, up to about 8% here). What DC collector current does R_E set?",
+      "prompt": "This common-emitter amplifier runs from {Vcc}. R1 = 47 kΩ and R2 = 10 kΩ bias the base; R_C = 4.7 kΩ and R_E = {Re}. Take V_BE = 0.7 V and ignore the base current (the usual first estimate; with β = 100 the real I_C comes out a few percent lower, up to about 8% here). What DC collector current does R_E set?",
       "variables": [
         {
           "name": "Vcc",
@@ -1699,7 +1699,7 @@
         "formula": "(Vcc*10000/(47000+10000)-0.7)/Re",
         "unit": "A"
       },
-      "explanation": "At DC the capacitors are open, so only the bias parts matter. The divider sets the base: V_B = {Vcc} × 10 kΩ/(47 kΩ + 10 kΩ) = {Vb}. The emitter sits one junction drop lower: V_E = {Vb} − 0.7 V = {Ve}. That voltage is across R_E, so I_E = {Ve}/{Re}, and I_C ≈ I_E = {answer}. This is R_E's job: it turns a fixed base voltage into a fixed current, almost independent of the transistor's β.",
+      "explanation": "At DC, the capacitors are open, so only the bias parts matter. The divider sets the base: V_B = {Vcc} × 10 kΩ/(47 kΩ + 10 kΩ) = {Vb}. The emitter sits one junction drop lower: V_E = {Vb} − 0.7 V = {Ve}. That voltage is across R_E, so I_E = {Ve}/{Re}, and I_C ≈ I_E = {answer}. This is R_E's job: it turns a fixed base voltage into a fixed current, almost independent of the transistor's β.",
       "hints": [
         "Start with the base voltage: which resistor of the divider is it measured across?",
         "The emitter is 0.7 V below the base, and all of that emitter voltage is across R_E."

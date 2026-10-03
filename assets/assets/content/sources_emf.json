@@ -20,7 +20,7 @@
       "lensNotes": {
         "physics": "Inside a cell, reactions at the two electrodes move charge against the electric field between them, doing work on it; the work per coulomb is the EMF, set by the chemistry (about 1.5 V for alkaline, 3.6 to 3.7 V nominal for lithium-ion, about 2.0 V per lead-acid cell). The current must also cross the electrolyte, where ions drift and collide, and the electrodes and contacts: that is the internal resistance. A generator's EMF comes from its windings moving through a magnetic field, with the mechanical drive supplying the energy, and its r is mostly the windings' copper. As a cell discharges or gets cold, its reactions slow and its electrolyte conducts less well, so r rises.",
         "circuit": "Model a cell as an ideal source E in series with r. Typical ranges (not datasheet values): a fresh alkaline AA around 0.1 to 0.3 Ω at room temperature, a 9 V alkaline battery 1 to 2 Ω, a lithium-ion 18650 cell a few tens of milliohms, a car battery a few milliohms. A worn or cold cell can be many times higher. Test a battery under load: an open-circuit reading shows E, not r. A bench supply's regulation holds its set voltage within millivolts up to its current limit, then holds the current instead.",
-        "math": "V = E − I·r is a straight line on a plot of terminal voltage against current: it starts at E (no current) and falls with slope −r, reaching zero at the short-circuit current E/r. Two readings give the line: r = ΔV/ΔI. The load's power E²R/(R + r)² is largest at R = r, where the efficiency R/(R + r) is only 50 %."
+        "math": "V = E − I·r is a straight line on a plot of terminal voltage against current: it starts at E (no current) and falls with slope −r, reaching zero at the short-circuit current E/r. Two readings give the line: r = ΔV/ΔI. The load's power E²R/(R + r)² is largest at R = r, where the efficiency R/(R + r) is only 50%."
       },
       "formulas": [
         {
@@ -53,7 +53,7 @@
         }
       ],
       "goals": [
-        "Find a source's terminal voltage, current and internal power loss from its EMF and internal resistance (V = E − I·r)",
+        "Find a source's terminal voltage, current, and internal power loss from its EMF and internal resistance (V = E − I·r)",
         "Measure internal resistance from an open-circuit reading and a reading under a known load, and find a weak cell in a pack from loaded readings",
         "Explain why the voltage falls under load and with a cold or worn cell, and why a short across a lithium-ion cell is dangerous",
         "Combine cells in series and parallel, and say when a bench supply acts as an ideal source"
@@ -91,7 +91,7 @@
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Maximum Power Transfer Theorem\", section 1.2 \"Challenging concepts related to the Maximum Power Transfer Theorem\"",
           "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_maxpower.pdf",
-          "note": "Checked that the load receives the most power when its resistance equals the source's, that the efficiency is then only 50 %, and that efficiency is highest when the load resistance is large compared with the source's."
+          "note": "Checked that the load receives the most power when its resistance equals the source's, that the efficiency is then only 50%, and that efficiency is highest when the load resistance is large compared with the source's."
         }
       ],
       "analogy": {
@@ -472,7 +472,7 @@
     {
       "id": "src_r_two_loads",
       "topicId": "sources_emf",
-      "prompt": "A bench test of a lithium-ion cell (3.7 V nominal) with an electronic load: at {I1} its terminals read {V1}; at {I2} they read {V2}. What is the cell's internal resistance?",
+      "prompt": "A lithium-ion cell (3.7 V nominal) is tested on the bench with an electronic load: at {I1} its terminals read {V1}; at {I2} they read {V2}. What is the cell's internal resistance?",
       "variables": [
         {
           "name": "V1",
@@ -626,7 +626,7 @@
         "unit": "A"
       },
       "estimate": true,
-      "explanation": "With the terminals bridged, the only resistance left in the loop is the cell's own: I = E/r = {E} / {r} = {answer}. All the power, E²/r = {Psc}, is turned into heat inside the cell, inside a sealed metal can a few centimeters long. That is why a shorted lithium-ion cell can overheat, vent and catch fire, and why loose cells are carried with their terminals covered.",
+      "explanation": "With the terminals bridged, the only resistance left in the loop is the cell's own: I = E/r = {E} / {r} = {answer}. All the power, E²/r = {Psc}, is turned into heat inside the cell, inside a sealed metal can a few centimeters long. That is why a shorted lithium-ion cell can overheat, vent, and catch fire, and why loose cells are carried with their terminals covered.",
       "hints": [
         "With the terminals shorted, what resistance is left in the loop?",
         "I = E/r. Watch the prefix on r."
@@ -647,7 +647,7 @@
           "choices": [
             {
               "text": "Into the cell itself: its internal resistance is the only resistance in the loop, so it turns about {Psc} into heat inside a sealed can",
-              "feedback": "Right: the heat is released inside the cell, which can drive it into overheating, venting and fire.",
+              "feedback": "Right: the heat is released inside the cell, which can drive it into overheating, venting, and fire.",
               "correct": true
             },
             {
@@ -660,7 +660,7 @@
             },
             {
               "text": "Nowhere dangerous: the cell limits itself to its rated discharge current",
-              "feedback": "A bare cell's current is limited only by its internal resistance. Some cells have a thermal fuse in the cap and protected packs add a circuit that disconnects on a short, but neither is something to rely on."
+              "feedback": "A bare cell's current is limited only by its internal resistance. Some cells have a thermal fuse in the cap, and protected packs add a circuit that disconnects on a short, but neither is something to rely on."
             }
           ],
           "explanation": "In a short the whole EMF appears across r: P = E·I = I²r = E²/r = {Psc}, all inside the cell. A low internal resistance is what makes a lithium-ion cell good at delivering current, and also what makes a short so violent."
@@ -845,7 +845,7 @@
     {
       "id": "src_series_current",
       "topicId": "sources_emf",
-      "prompt": "{n} alkaline AA cells in series, each with an EMF of {E} and an internal resistance of {r}, drive a {RL} power resistor (rated 10 W). What current flows?",
+      "prompt": "A string of {n} alkaline AA cells in series, each with an EMF of {E} and an internal resistance of {r}, drives a {RL} power resistor (rated 10 W). What current flows?",
       "variables": [
         {
           "name": "n",
@@ -1105,7 +1105,7 @@
               "feedback": "A cell doesn't stop by itself. The difference in EMF drives a current around the loop at once, {answer} here."
             }
           ],
-          "explanation": "Two cells in parallel are a closed loop of EMF A, EMF B and their internal resistances. Equal EMFs, no current; a difference of {dV} across {Rloop} gives {answer}. Large banks also fuse each parallel string so one cell's internal short can't draw the others' current."
+          "explanation": "Two cells in parallel are a closed loop of EMF A, EMF B, and their internal resistances. Equal EMFs, no current; a difference of {dV} across {Rloop} gives {answer}. Large banks also fuse each parallel string so one cell's internal short can't draw the others' current."
         }
       ],
       "schematic": {
@@ -1274,7 +1274,7 @@
             },
             {
               "text": "Its internal resistance is zero, because it runs from the wall outlet rather than chemistry",
-              "feedback": "A supply's transformer, wiring and transistors have resistance. It holds its voltage because its regulator measures the output and corrects for the drop, not because nothing inside it has resistance."
+              "feedback": "A supply's transformer, wiring, and transistors have resistance. It holds its voltage because its regulator measures the output and corrects for the drop, not because nothing inside it has resistance."
             },
             {
               "text": "It doesn't: its voltage falls with load just as much as a battery's, but the display hides it",
@@ -1677,7 +1677,7 @@
           "up": "More internal resistance means a larger share of the chemistry's work per coulomb becomes heat inside the cell, so less is left between the terminals. The current falls a little, but the I·r drop still grows."
         }
       },
-      "explanation": "V = E·R/(R + r). With r four times larger, the cell's own resistance takes a bigger share of the EMF: {before} → {after}. This is why a device with a heavy load stops working in the cold while a meter on the unloaded cell still reads about {E}: the EMF is fine, the internal resistance is not. Warmed up again, the cell recovers.",
+      "explanation": "V = E·R/(R + r). With r four times larger, the cell's own resistance takes a bigger share of the EMF: {before} → {after}. This is why a device with a heavy load stops working in the cold while a meter on the unloaded cell still reads about {E}: the EMF is fine; the internal resistance is not. Warmed up again, the cell recovers.",
       "hints": [
         "Which part of V = E − I·r changed, and does the drop inside the cell grow or shrink?"
       ],
@@ -1889,7 +1889,7 @@
           "feedback": "The same open-circuit voltage only says the EMFs match. Under the same load B loses 0.47 V inside itself and A only 0.07 V: B's internal resistance is about nine times A's."
         },
         {
-          "text": "B's EMF is lower than A's; its internal resistance can't be told from these readings",
+          "text": "B's EMF is lower than A's; these readings can't show its internal resistance",
           "feedback": "With nothing connected both read 1.52 V, and that reading is the EMF. The difference appears only under load, which is what internal resistance does."
         },
         {
@@ -1917,7 +1917,7 @@
         },
         {
           "text": "Nothing noticeable: 15 mA is far too small a current for internal resistance to matter",
-          "feedback": "The drop is I·r. A 15 mA burst through 20 Ω is 0.3 V, 10 % of the cell's voltage; a lithium-ion cell's milliohms would make that negligible, but a coin cell's ohms do not."
+          "feedback": "The drop is I·r. A 15 mA burst through 20 Ω is 0.3 V, 10% of the cell's voltage; a lithium-ion cell's milliohms would make that negligible, but a coin cell's ohms do not."
         },
         {
           "text": "Nothing: a lithium cell's voltage stays flat until it is nearly empty",
@@ -1949,7 +1949,7 @@
         },
         {
           "text": "Each coulomb is filled with 1.5 J inside the cell, takes that energy to the load and drops it off there",
-          "feedback": "The energy does not travel inside the charge. When the circuit closes the load works at once, yet the charge drifts at well under a millimeter per second: the charge in the load then has never been through the cell. The chemistry does work on charge inside the cell; in the load and in r, the electric field set up along the wires does work on the charge already there, 1.5 J per coulomb across those resistances together."
+          "feedback": "The energy does not travel inside the charge. When the circuit closes, the load works at once, yet the charge drifts at well under a millimeter per second: the charge in the load at that moment has never been through the cell. The chemistry does work on charge inside the cell; in the load and in r, the electric field set up along the wires does work on the charge already there, 1.5 J per coulomb across those resistances together."
         },
         {
           "text": "It drives 1.5 C through the circuit every second",
@@ -1975,7 +1975,7 @@
       "choices": [
         {
           "text": "The load gets the most power at R = r, but then as much power heats the source as reaches the load, so battery circuits use R much larger than r",
-          "feedback": "Right: at R = r the efficiency R/(R + r) is 50 % and the terminals sit at E/2. The Thevenin topic returns to this.",
+          "feedback": "Right: at R = r the efficiency R/(R + r) is 50% and the terminals sit at E/2. The Thevenin topic returns to this.",
           "correct": true
         },
         {
@@ -1988,10 +1988,10 @@
         },
         {
           "text": "The load gets the most power at R = r, and that is also the most efficient way to run a battery",
-          "feedback": "R = r gives the most power to the load, but at 50 % efficiency: the battery turns as much energy into its own heat as it delivers to the load. Efficiency rises with R."
+          "feedback": "R = r gives the most power to the load, but at 50% efficiency: the battery turns as much energy into its own heat as it delivers to the load. Efficiency rises with R."
         }
       ],
-      "explanation": "The load's power is I²R = E²R/(R + r)². It is zero at R = 0 (no voltage) and tends to zero for very large R (no current); in between it peaks at R = r, where the load gets E²/(4r). The efficiency is R/(R + r), only 50 % there. Power systems and batteries run with R ≫ r for efficiency; matching R = r is used where the signal is weak and efficiency doesn't matter, as with antennas and some signal sources.",
+      "explanation": "The load's power is I²R = E²R/(R + r)². It is zero at R = 0 (no voltage) and tends to zero for very large R (no current); in between it peaks at R = r, where the load gets E²/(4r). The efficiency is R/(R + r), only 50% there. Power systems and batteries run with R ≫ r for efficiency; matching R = r is used where the signal is weak and efficiency doesn't matter, as with antennas and some signal sources.",
       "hints": [
         "Check the two extremes, R = 0 and R very large: how much power does the load get in each?"
       ],
@@ -2001,7 +2001,7 @@
     {
       "id": "src_fault_weak_cell",
       "topicId": "sources_emf",
-      "prompt": "A holder with three alkaline cells in series runs a small DC motor (it acts as about {RL} while running). Each cell has an EMF of about {E} and, when fresh, an internal resistance of about {r}. The motor turns sluggishly or not at all. With the motor switched on, a voltmeter (black lead on ground) reads the nodes between the cells, and an ammeter reads the motor current. Healthy readings would be n1 {h0}, n2 {h1}, top {h2} and {h3}. Which fault explains the readings below?",
+      "prompt": "A holder with three alkaline cells in series runs a small DC motor (it acts as about {RL} while running). Each cell has an EMF of about {E} and, when fresh, an internal resistance of about {r}. The motor turns sluggishly or not at all. With the motor switched on, a voltmeter (black lead on ground) reads the nodes between the cells, and an ammeter reads the motor current. Healthy readings would be n1 {h0}, n2 {h1}, and top {h2}, with a motor current of {h3}. Which fault explains the readings below?",
       "variables": [
         {
           "name": "E",
@@ -2086,8 +2086,8 @@
               "ref": "R1",
               "formula": "20*r"
             },
-            "feedback": "A worn cell 1 would make the first step, ground to n1, much smaller than a cell, about {stepw}, while the steps across cells 2 and 3 stayed near {E}; the current would fall to about {Iw}.",
-            "why": "the step from ground to n1 is only about {stepw}, while n1 to n2 and n2 to the top are close to a full cell. The current fell to about {Iw}, so the load is not to blame: cell 1's internal resistance (about {rw} now) turns {dropw} of its EMF into heat inside it."
+            "feedback": "A worn cell 1 would make the first step, ground to n1, much smaller than a cell, about {stepw}, while the steps across cells 2 and 3 would stay near {E}; the current would fall to about {Iw}.",
+            "why": "The step from ground to n1 is only about {stepw}, while n1 to n2 and n2 to the top are close to a full cell. The current fell to about {Iw}, so the load is not to blame: cell 1's internal resistance (about {rw} now) turns {dropw} of its EMF into heat inside it."
           },
           {
             "text": "Cell 2 is worn (its internal resistance has risen about twentyfold)",
@@ -2096,7 +2096,7 @@
               "formula": "20*r"
             },
             "feedback": "A worn cell 2 would leave the step to n1 near {E} but make the step from n1 to n2 much smaller, about {stepw}; the current would fall to about {Iw}.",
-            "why": "ground to n1 and n2 to the top are close to a full cell each, but n1 to n2 is only about {stepw}. With the current down to about {Iw}, cell 2's internal resistance (about {rw} now) turns {dropw} of its EMF into heat inside it."
+            "why": "Ground to n1 and n2 to the top are close to a full cell each, but n1 to n2 is only about {stepw}. With the current down to about {Iw}, cell 2's internal resistance (about {rw} now) turns {dropw} of its EMF into heat inside it."
           },
           {
             "text": "Cell 3 is worn (its internal resistance has risen about twentyfold)",
@@ -2105,7 +2105,7 @@
               "formula": "20*r"
             },
             "feedback": "A worn cell 3 would leave n1 and n2 near their healthy steps but make the last step, n2 to the top, much smaller, about {stepw}; the current would fall to about {Iw}.",
-            "why": "the first two steps are close to a full cell, the last only about {stepw}, and the current fell to about {Iw}: cell 3's internal resistance (about {rw} now) turns {dropw} of its EMF into heat inside it."
+            "why": "The first two steps are close to a full cell, the last only about {stepw}, and the current fell to about {Iw}: cell 3's internal resistance (about {rw} now) turns {dropw} of its EMF into heat inside it."
           },
           {
             "text": "The motor has stalled (with no back-EMF it acts as about a quarter of its running resistance), and the cells are fine",
@@ -2114,7 +2114,7 @@
               "formula": "RL/4"
             },
             "feedback": "A stalled motor would draw much more current, about {Ist}, and every cell's step would fall by the same amount, to about {stepst} each.",
-            "why": "the current rose to about {Ist}, and all three steps fell equally, to about {stepst}: every cell's I·r grew by the same amount, which points at the load, not at one cell. A stalled motor has no back-EMF, so only its winding resistance limits the current."
+            "why": "The current rose to about {Ist}, and all three steps fell equally, to about {stepst}: every cell's I·r grew by the same amount, which points at the load, not at one cell. A stalled motor has no back-EMF, so only its winding resistance limits the current."
           }
         ]
       },
@@ -2263,7 +2263,7 @@
             "left": true
           }
         ],
-        "noBuild": "r1-r3 are the cells' internal resistances, not parts"
+        "noBuild": "r1–r3 are the cells' internal resistances, not parts"
       },
       "review": "verified"
     }

@@ -3,7 +3,7 @@
     {
       "id": "app_opamp_transistor",
       "title": "Op amps with diodes and transistors",
-      "summary": "Combine the parts: op-amp current sources, transistor-boosted outputs, precision rectifiers and limiters.",
+      "summary": "Combine the parts: op-amp current sources, transistor-boosted outputs, precision rectifiers, and limiters.",
       "lenses": [
         "circuit",
         "signals"
@@ -54,18 +54,18 @@
         "Explain why a transistor's V_BE or a diode's drop disappears when the part sits inside the feedback loop (current sink, boosted output, precision rectifier)",
         "Combine stages outside a loop: multiply cascaded gains, find a Zener limiter's clamp level, and find the input that drives an op-amp-fed transistor switch into saturation"
       ],
-      "intuition": "Put the transistor or diode inside the op amp's feedback loop and the loop measures the result, not the part: the op amp moves its output by whatever V_BE or diode drop it takes, so you get the op amp's precision and the transistor's current together.",
+      "intuition": "Put the transistor or diode inside the op amp's feedback loop, and the loop measures the result, not the part: the op amp moves its output by whatever V_BE or diode drop it takes, so you get the op amp's precision and the transistor's current together.",
       "why": "An op amp with negative feedback moves its output until its two inputs match, and what it matches is the point where the feedback is taken. If that point is a transistor's emitter, the op amp puts its output one V_BE higher, whatever V_BE happens to be at this current and temperature, and the drop vanishes from the result. A diode in the loop works the same way: its 0.6–0.7 V drop is divided by the open-loop gain, leaving microvolts. The transistor adds current: the op amp supplies only the base current, 1/(β + 1) of the emitter current. The loop cannot fix what it doesn't measure: the base current missing from the collector, and the op amp's own output swing.",
-      "explanation": "An op amp is precise, but its output supplies only tens of milliamps. A transistor handles far more, but its V_BE and β vary with current, temperature and part. Put the transistor inside the loop and each covers the other's weakness. Current sink: the + input sits at V_ref, the − input reads the emitter, and R_E runs from the emitter to ground. The loop drives the base until V_E = V_ref, so I_E = V_ref/R_E, and I_C ≈ I_E flows through the load in the collector whatever its resistance. The load only moves the collector voltage, V_CC − I·R_L; while the collector stays a few tenths of a volt above the emitter, the current holds. That range of loads is the compliance. Boosted output: take the feedback from the emitter of an emitter follower. The non-inverting gain, 1 + R_f/R_g, sets the emitter voltage, and the op amp supplies only I_E/(β + 1). Precision rectifier: a diode inside the loop rectifies even millivolt signals, because the op amp's output rises one diode drop above the signal. Outside a loop the parts act as in their own topics: an op-amp output drives a transistor switch through a base resistor, two back-to-back Zeners across R_f clamp the output at ±(V_Z + 0.7 V), and cascaded stages multiply their gains.",
+      "explanation": "An op amp is precise, but its output supplies only tens of milliamps. A transistor handles far more, but its V_BE and β vary with current, temperature, and part. Put the transistor inside the loop and each covers the other's weakness. Current sink: the + input sits at V_ref, the − input reads the emitter, and R_E runs from the emitter to ground. The loop drives the base until V_E = V_ref, so I_E = V_ref/R_E, and I_C ≈ I_E flows through the load in the collector whatever its resistance. The load only moves the collector voltage, V_CC − I·R_L; while the collector stays a few tenths of a volt above the emitter, the current holds. That range of loads is the compliance. Boosted output: take the feedback from the emitter of an emitter follower. The non-inverting gain, 1 + R_f/R_g, sets the emitter voltage, and the op amp supplies only I_E/(β + 1). Precision rectifier: a diode inside the loop rectifies even millivolt signals, because the op amp's output rises one diode drop above the signal. Outside a loop the parts act as in their own topics: an op-amp output drives a transistor switch through a base resistor, two back-to-back Zeners across R_f clamp the output at ±(V_Z + 0.7 V), and cascaded stages multiply their gains.",
       "workedExample": {
-        "problem": "An op amp on a single 15 V supply (assume a rail-to-rail output) holds the emitter of an NPN transistor at V_ref = 1.0 V across R_E = 100 Ω. A 1.0 kΩ load connects from 15 V to the collector. Assume β = 100, V_BE = 0.7 V and V_CE(sat) = 0.2 V. Find the load current, the op amp's output voltage and current, the transistor's dissipation and the largest load the sink can drive. Then find what a 20 °C rise does, assuming V_BE falls by about 2 mV/°C.",
+        "problem": "An op amp on a single 15 V supply (assume a rail-to-rail output) holds the emitter of an NPN transistor at V_ref = 1.0 V across R_E = 100 Ω. A 1.0 kΩ load connects from 15 V to the collector. Assume β = 100, V_BE = 0.7 V, and V_CE(sat) = 0.2 V. Find the load current, the op amp's output voltage and current, the transistor's dissipation, and the largest load the sink can drive. Then find what a 20 °C rise does, assuming V_BE falls by about 2 mV/°C.",
         "steps": [
           "Negative feedback holds the emitter at V_ref: V_E = 1.0 V, so I_E = 1.0 V / 100 Ω = 10 mA.",
-          "The base supplies 1/(β + 1) of that: I_B = 10 mA / 101 = 0.099 mA. The load gets I_C = 10 mA − 0.099 mA = 9.90 mA. This 1 % shortfall is the one error the loop can't see: it measures the emitter current, not the collector's.",
+          "The base supplies 1/(β + 1) of that: I_B = 10 mA / 101 = 0.099 mA. The load gets I_C = 10 mA − 0.099 mA = 9.90 mA. This 1% shortfall is the one error the loop can't see: it measures the emitter current, not the collector's.",
           "The op amp's output sits one V_BE above the emitter, 1.0 V + 0.7 V = 1.7 V, and supplies only 0.099 mA, far inside what it can deliver.",
           "Collector: V_C = 15 V − 9.90 mA × 1.0 kΩ = 5.10 V. The transistor has V_CE = 5.10 V − 1.0 V = 4.10 V across it and dissipates 4.10 V × 9.90 mA = 40.6 mW.",
           "Compliance: the collector can fall to V_E + V_CE(sat) = 1.0 V + 0.2 V = 1.2 V before the transistor saturates, so R_L(max) = (15 V − 1.2 V) / 9.90 mA = 1.39 kΩ. A 1.5 kΩ load would saturate it, and the current would fall below 10 mA.",
-          "Warming by 20 °C: V_BE ≈ 0.7 V − 20 × 2 mV = 0.66 V. The op amp's output moves down to 1.66 V; the emitter stays at 1.0 V and the current at 10 mA. With the base held at a fixed 1.7 V and no loop, the emitter would rise to 1.7 V − 0.66 V = 1.04 V and the current to 10.4 mA, 4 % more."
+          "Warming by 20 °C: V_BE ≈ 0.7 V − 20 × 2 mV = 0.66 V. The op amp's output moves down to 1.66 V; the emitter stays at 1.0 V and the current at 10 mA. With the base held at a fixed 1.7 V and no loop, the emitter would rise to 1.7 V − 0.66 V = 1.04 V and the current to 10.4 mA, 4% more."
         ]
       },
       "sources": [
@@ -77,7 +77,7 @@
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Operational Amplifiers\", ch. 3 \"Tutorial\", section 3.16 \"Boosted output\"",
           "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_opamp.pdf",
-          "note": "An emitter-follower booster needs only 1/(β + 1) of the load current from the op amp, feedback must be taken from the load rather than the op amp's output so V_BE drops out, and the boosted non-inverting stage keeps its 1 + R_f/R_g gain."
+          "note": "An emitter-follower booster needs only 1/(β + 1) of the load current from the op amp; feedback must be taken from the load rather than the op amp's output so that V_BE drops out; and the boosted non-inverting stage keeps its 1 + R_f/R_g gain."
         },
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Operational Amplifiers\", ch. 3 \"Tutorial\", section 3.15 \"Precision current circuits\"",
@@ -277,22 +277,22 @@
             {
               "text": "The loop drives the base until the emitter sits at V_ref, so R_E sets the current; the load only moves V_C",
               "correct": true,
-              "feedback": "Right: the op amp measures the emitter voltage and corrects it. V_BE is made up by the op amp's output, and the load just decides how far the collector sits below 15 V."
+              "feedback": "Right: the op amp measures the emitter voltage and corrects it. V_BE is made up by the op amp's output, and the load only decides how far the collector sits below 15 V."
             },
             {
               "text": "V_BE is small next to the 15 V supply, so leaving it out of the formula costs only a small rounding error",
-              "feedback": "The 15 V supply isn't in the formula at all. Compare 0.7 V with V_ref instead: at V_ref = 1 V, losing 0.7 V would cut the current by 70 %. V_BE drops out because the op amp's output rises by V_BE on its own, not because it is small."
+              "feedback": "The 15 V supply isn't in the formula at all. Compare 0.7 V with V_ref instead: at V_ref = 1 V, losing 0.7 V would cut the current by 70%. V_BE drops out because the op amp's output rises by V_BE on its own, not because it is small."
             },
             {
               "text": "The transistor's large β multiplies the op amp's small output current up to exactly V_ref/R_E",
-              "feedback": "β isn't in the answer, so it can't be what sets it. The loop adjusts the base current to whatever puts V_ref on the emitter; a transistor with a different β just needs a slightly different base current. (I_C = I_E·β/(β+1), under 1 % low at β = 100.)"
+              "feedback": "β isn't in the answer, so it can't be what sets it. The loop adjusts the base current to whatever puts V_ref on the emitter; a transistor with a different β only needs a slightly different base current. (I_C = I_E·β/(β+1), under 1% low at β = 100.)"
             },
             {
               "text": "The 15 V supply is fixed, so the load always has the same voltage across it whatever its resistance",
               "feedback": "The load's voltage isn't fixed: it is I × R_load, whatever that comes to. The collector voltage takes up the difference. A bigger load changes V_C, not the current, as long as V_C stays above the emitter."
             }
           ],
-          "explanation": "This is the rule from 'Non-inverting amplifier and follower': with negative feedback the op amp drives its output until its two inputs match. Here the feedback is taken from the emitter, so the transistor sits inside the loop and the op amp absorbs V_BE and β. R_E then carries V_ref/R_E, and the collector carries almost the same current into any load that leaves the transistor out of saturation (its compliance range)."
+          "explanation": "This is the rule from \"Non-inverting amplifier and follower\": with negative feedback, the op amp drives its output until its two inputs match. Here the feedback is taken from the emitter, so the transistor sits inside the loop and the op amp absorbs V_BE and β. R_E then carries V_ref/R_E, and the collector carries almost the same current into any load that leaves the transistor out of saturation (its compliance range)."
         }
       ],
       "review": "verified",
@@ -358,13 +358,13 @@
           "prompt": "The LED's loop subtracts V_CE(sat) ≈ 0.2 V, not the 0.7 V that a transistor's base–emitter junction drops. Why?",
           "choices": [
             {
-              "text": "The LED current flows collector to emitter; V_BE sits in the base circuit, not in the LED's path",
+              "text": "The LED current flows from collector to emitter; V_BE sits in the base circuit, not in the LED's path",
               "correct": true,
               "feedback": "Right: KVL for the LED goes supply, R, LED, collector, emitter, ground. The base–emitter junction is in a different loop, the one the comparator drives."
             },
             {
               "text": "The comparator lifts its output by 0.7 V to make up for V_BE, so V_BE drops out of the LED's loop",
-              "feedback": "That only happens when the transistor is inside a feedback loop, as in the op-amp current source. Here the comparator just drives the base hard with no feedback. V_BE isn't in the LED's path at all, so there is nothing to make up for."
+              "feedback": "That only happens when the transistor is inside a feedback loop, as in the op-amp current source. Here the comparator drives the base hard with no feedback. V_BE isn't in the LED's path at all, so there is nothing to make up for."
             },
             {
               "text": "Once the transistor saturates, its base–emitter junction drops only 0.2 V instead of the usual 0.7 V",
@@ -375,7 +375,7 @@
               "feedback": "R sits in the collector path with the LED, so it carries the LED current, not the base current. The base current comes from the comparator through the base drive and never passes through R."
             }
           ],
-          "explanation": "From 'Transistor switches': a saturated BJT is a switch between collector and emitter with about 0.2 V left across it, while the base still clamps near 0.7 V. Write KVL around the loop the current actually takes. For the LED that is V_CC → R → LED → collector → emitter → ground, so only V_CE(sat) appears."
+          "explanation": "From \"Transistor switches\": a saturated BJT is a switch between collector and emitter with about 0.2 V left across it, while the base still clamps near 0.7 V. Write KVL around the loop the current actually takes. For the LED that is V_CC → R → LED → collector → emitter → ground, so only V_CE(sat) appears."
         }
       ],
       "schematic": {
@@ -492,7 +492,7 @@
         "formula": "Vz+0.7",
         "unit": "V"
       },
-      "explanation": "In either direction one Zener conducts in breakdown ({Vz}) and the other is forward biased (0.7 V). Once the output reaches {Vz} + 0.7 = {answer}, the Zeners conduct and hold it there. The output is limited to ±{answer}.",
+      "explanation": "In either direction, one Zener conducts in breakdown ({Vz}) and the other is forward biased (0.7 V). Once the output reaches {Vz} + 0.7 = {answer}, the Zeners conduct and hold it there. The output is limited to ±{answer}.",
       "hints": [
         "When the output swings positive, one Zener is in breakdown and the other is forward biased.",
         "Limit = V_Z + 0.7 V."
@@ -517,7 +517,7 @@
               "feedback": "Right: one end of the Zener pair is held at 0 V by the loop, so clamping the voltage across the pair clamps the output itself."
             },
             {
-              "text": "Once the Zeners conduct they short the output to ground, which pulls it back down from the rail",
+              "text": "Once the Zeners conduct, they short the output to ground, which pulls it back down from the rail",
               "feedback": "The Zeners connect the output to the − input, not to ground, and the output doesn't fall to 0 V: it stays at V_Z + 0.7 V. The op amp keeps driving throughout; the Zeners only take over the feedback."
             },
             {
@@ -526,10 +526,10 @@
             },
             {
               "text": "The Zeners divide the input signal down together with the input resistor, so less of it reaches the output",
-              "feedback": "The Zeners are across the feedback resistor, not the input resistor. Below V_Z + 0.7 V they carry no current and the gain is exactly −R_f/R_in; above it they limit the output, however large the input."
+              "feedback": "The Zeners are across the feedback resistor, not the input resistor. Below V_Z + 0.7 V, they carry no current and the gain is exactly −R_f/R_in; above it they limit the output, however large the input."
             }
           ],
-          "explanation": "With negative feedback the op amp holds its − input equal to its + input (the rule from 'Ideal op-amp rules'). In an inverting stage that is 0 V, so the feedback path runs from the output to a point held at 0 V, and whatever limits the voltage across the path limits the output. It is the Zener limiter from 'Clippers, limiters and diode logic', moved inside the loop: sharper, and the op amp stays out of saturation."
+          "explanation": "With negative feedback, the op amp holds its − input equal to its + input (the rule from \"Ideal op-amp rules\"). In an inverting stage that is 0 V, so the feedback path runs from the output to a point held at 0 V, and whatever limits the voltage across the path limits the output. It is the Zener limiter from \"Clippers, limiters, and diode logic,\" moved inside the loop: sharper, and the op amp stays out of saturation."
         }
       ],
       "schematic": {
@@ -715,7 +715,7 @@
         },
         {
           "text": "It lets the diode handle more current",
-          "feedback": "The current capability is still set by the diode and op amp."
+          "feedback": "The current capability is still set by the diode and the op amp."
         },
         {
           "text": "It converts AC to DC without ripple",
@@ -876,7 +876,7 @@
             {
               "text": "The first op amp holds its output voltage whatever current the second stage's input resistor draws",
               "correct": true,
-              "feedback": "Right: inside its feedback loop an op amp's output impedance is close to 0 Ω, so stage 2 sees the full G1·V_in and amplifies all of it."
+              "feedback": "Right: inside its feedback loop, an op amp's output impedance is close to 0 Ω, so stage 2 sees the full G1·V_in and amplifies all of it."
             },
             {
               "text": "The second stage's − input is a virtual ground, so its input draws no current from the first stage",
@@ -891,7 +891,7 @@
               "feedback": "The voltage gains multiply whatever the supply: G1 × (−G2). It is their values in dB that add. A shared supply doesn't affect the gain at all."
             }
           ],
-          "explanation": "A stage passes its gain on intact only if its output isn't pulled down by the next stage's input. An op amp inside a feedback loop has an output impedance of well under 1 Ω at low frequencies, so stage 2's input resistor (kilohms) can't pull it down. That's why op-amp stages can be designed one at a time and simply chained, and why a passive divider or RC filter between them would break the rule."
+          "explanation": "A stage passes its gain on intact only if its output isn't pulled down by the next stage's input. An op amp inside a feedback loop has an output impedance of well under 1 Ω at low frequencies, so stage 2's input resistor (kilohms) can't pull it down. That's why op-amp stages can be designed one at a time and chained, and why a passive divider or RC filter between them would break the rule."
         }
       ],
       "schematic": {
@@ -1160,7 +1160,7 @@
           "up": "A bigger resistance never draws more current by itself. Here the load carries the transistor's collector current, which is its emitter current less a small base current, and the emitter current is set where the loop holds V_ref across R_E, which the load doesn't touch."
         }
       },
-      "explanation": "The op amp holds the emitter at {Vref}, so I = {Vref}/{Re} = {after}, the same as before. What changes is the collector voltage: 15 V − I × R_load goes from {Vc} to {Vc2}. The transistor takes up the difference, as long as V_C stays above the emitter (a few tenths of a volt at least). That range of loads is the source's compliance; beyond it the transistor saturates and the current falls.",
+      "explanation": "The op amp holds the emitter at {Vref}, so I = {Vref}/{Re} = {after}, the same as before. What changes is the collector voltage: 15 V − I × R_load goes from {Vc} to {Vc2}. The transistor takes up the difference, as long as V_C stays above the emitter (a few tenths of a volt at least). That range of loads is the source's compliance; beyond it, the transistor saturates and the current falls.",
       "hints": [
         "What does the loop hold constant, and which resistor does that voltage sit across?"
       ],
@@ -1339,7 +1339,7 @@
           "same": "The diode still drops 0.7 V, but it now sits between the op amp's output and the load, inside the loop. The op amp compares the output, taken after the diode, with the input, and drives its own output as high as it takes to make them match, diode drop included."
         }
       },
-      "explanation": "The loop forces the output to follow the input, and any leftover error is the diode's drop divided by the open-loop gain: 0.7 V ÷ 100 000 = 7 µV. So the peak rises from {before} to {after}, practically the full {Vp}. The smaller the input, the more this matters: at 1 V the 0.7 V model loses 70 % of the peak (a real diode at these tens of microamps drops nearer 0.5 V, still half), and below about 0.4 V a plain diode passes only a small fraction.",
+      "explanation": "The loop forces the output to follow the input, and any leftover error is the diode's drop divided by the open-loop gain: 0.7 V ÷ 100 000 = 7 µV. So the peak rises from {before} to {after}, practically the full {Vp}. The smaller the input, the more this matters: at 1 V, the 0.7 V model loses 70% of the peak (a real diode at these tens of microamps drops nearer 0.5 V, still half), and below about 0.4 V a plain diode passes only a small fraction.",
       "hints": [
         "Where does the diode's 0.7 V drop come from now: the input signal, or the op amp's output?"
       ],
@@ -1350,11 +1350,11 @@
             {
               "text": "Very little: at 0.3 V a silicon diode passes only about a microamp, so the load gets tens of millivolts at most",
               "correct": true,
-              "feedback": "Right: 0.3 V is 0.3–0.4 V below where the diode carries a milliamp. The current falls tenfold every 60 mV for an ideal junction (every 100–120 mV for a real rectifier), so it is down three to six decades: a microamp or less, which lifts the 10 kΩ load by a few tens of millivolts at most."
+              "feedback": "Right: 0.3 V is 0.3–0.4 V below where the diode carries a milliamp. The current falls tenfold every 60 mV for an ideal junction (every 100–120 mV for a real rectifier), so it is down roughly three to six decades: a few microamps at most, usually far less, which lifts the 10 kΩ load by a few tens of millivolts at most."
             },
             {
               "text": "About −0.4 V: the diode's 0.7 V is taken off the 0.3 V peak, which leaves a negative output across the load",
-              "feedback": "The 0.7 V is only taken off while the diode conducts. Below that it simply blocks, and the load resistor holds the output at 0 V. A half-wave rectifier can't make its output go negative."
+              "feedback": "The 0.7 V is only taken off while the diode conducts. Below that, it blocks, and the load resistor holds the output at 0 V. A half-wave rectifier can't make its output go negative."
             },
             {
               "text": "About 0.3 V: at such a tiny current the diode drops almost nothing, so the whole peak gets through to the load",
@@ -1362,10 +1362,10 @@
             },
             {
               "text": "About 0.15 V: the diode and the load share the 0.3 V peak equally, like two equal resistors in series",
-              "feedback": "A diode isn't a fixed resistance. Below its knee its resistance is enormous, so it takes almost all of the 0.3 V and the load gets almost none. It only carries a useful current near 0.6–0.7 V."
+              "feedback": "A diode isn't a fixed resistance. Below its knee, its resistance is enormous, so it takes almost all of the 0.3 V and the load gets almost none. It only carries a useful current near 0.6–0.7 V."
             }
           ],
-          "explanation": "From the diode equation in 'Practical diodes: equation, 0.7 V model, temperature': the current grows tenfold per 60 mV, so a silicon diode's 'turn-on' near 0.6–0.7 V is where the current becomes useful, not a sharp edge. A plain diode loses everything below that. The precision rectifier doesn't care: the op amp's output swings up by whatever the diode needs, so, at low frequencies, a 10 mV signal rectifies as cleanly as a 10 V one."
+          "explanation": "From the diode equation in \"Practical diodes: equation, 0.7 V model, temperature\": the current grows tenfold per 60 mV, so a silicon diode's \"turn-on\" near 0.6–0.7 V is where the current becomes useful, not a sharp edge. A plain diode loses everything below that. The precision rectifier doesn't care: the op amp's output swings up by whatever the diode needs, so, at low frequencies, a 10 mV signal rectifies as cleanly as a 10 V one."
         }
       ],
       "schematic": {
@@ -1745,7 +1745,7 @@
     {
       "id": "app_current_source_fault",
       "topicId": "app_opamp_transistor",
-      "prompt": "This current source should push {I} through its {RL} load: the op amp (powered from 0 V and 15 V, rail-to-rail output, not drawn) holds Q1's emitter at V_ref = 1 V across R_E = {Re}. All three 10 MΩ meters are connected at once. Healthy, they would read {h0} at the op-amp output (the base), {h1} at the emitter and {h2} at the collector. What they read now is below. Which fault explains them?",
+      "prompt": "This current source should push {I} through its {RL} load: the op amp (powered from 0 V and 15 V, rail-to-rail output, not drawn) holds Q1's emitter at V_ref = 1 V across R_E = {Re}. All three 10 MΩ meters are connected at once. When the circuit is healthy, they read {h0} at the op-amp output (the base), {h1} at the emitter, and {h2} at the collector. What they read now is below. Which fault explains them?",
       "variables": [
         {
           "name": "Re",
@@ -1789,30 +1789,30 @@
           {
             "text": "Q1 has failed open: none of its three leads conducts",
             "open": "Q1",
-            "feedback": "With Q1 open (base junction included) no current could reach R_E: the emitter would read 0 V, the op amp would drive its output to the top rail trying to raise it, and the collector would sit at 15 V with no current through the load.",
+            "feedback": "With Q1 open (base junction included), no current could reach R_E: the emitter would read 0 V, the op amp would drive its output to the top rail trying to raise it, and the collector would sit at 15 V with no current through the load.",
             "why": "The emitter reads 0 V, so no current flows through R_E. The op amp has driven its output to the rail ({m0}) trying to get 1 V back, which would turn any working transistor hard on, so Q1 isn't responding. The collector reads 15 V: no current in the load either. The break is in Q1 itself."
           },
           {
             "text": "Q1 has failed short, collector to emitter",
             "short": "Q1",
-            "feedback": "With Q1 shorted the load and R_E would form a plain divider across 15 V: the collector and emitter would read the same voltage, above 1 V, and the op amp would pull its output down to 0 V trying to stop the current.",
-            "why": "The collector and emitter read the same, {m1}, so nothing is left across Q1: it's a short. The emitter is above 1 V, so more than {I} is flowing, and the op amp has pulled the base to its bottom rail to stop it. A shorted transistor no longer obeys its base, so the load and R_E now just divide the 15 V."
+            "feedback": "With Q1 shorted, the load and R_E would form a plain divider across 15 V: the collector and emitter would read the same voltage, above 1 V, and the op amp would pull its output down to 0 V trying to stop the current.",
+            "why": "The collector and emitter read the same, {m1}, so nothing is left across Q1: it's a short. The emitter is above 1 V, so more than {I} is flowing, and the op amp has pulled the base to its bottom rail to stop it. A shorted transistor no longer obeys its base, so the load and R_E now divide the 15 V."
           },
           {
             "text": "R_E has failed open",
             "open": "RE",
-            "feedback": "With R_E open the emitter would have nowhere to send current: the loop would still hold it at 1 V (through the meter's tiny current), the base would sit a little lower than usual, and the collector would read 15 V because no current flows through the load.",
+            "feedback": "With R_E open, the emitter would have nowhere to send current: the loop would still hold it at 1 V (through the meter's tiny current), the base would sit a little lower than usual, and the collector would read 15 V because no current flows through the load.",
             "why": "The emitter reads 1 V, just as it should, which is the trap: the loop can hold 1 V there with almost no current. The collector gives it away: {m2} means no current through the load. The base reads only a few tenths of a volt above the emitter, not the usual 0.7 V: Q1 passes only what can leave the emitter without R_E (about 100 nA through a meter clipped on the emitter, far less without one), and a transistor's V_BE at such currents is well below 0.7 V. How far below depends on which meters are connected, which is why this reading wanders from bench to bench. Current can't leave the emitter, so R_E is open."
           },
           {
             "text": "The load has failed open",
             "open": "RLOAD",
-            "feedback": "With the load open the collector would be cut off from 15 V: the emitter would still read 1 V, but the op amp would have to push the whole emitter current in through the base, and the collector would fall to just above the emitter.",
-            "why": "The emitter still reads 1 V, so R_E is still carrying {I}, but the collector reads only {m2}, just above the emitter and far below 15 V. No current is coming in from the supply: the op amp is supplying it all through the base, and with no collector current the transistor is saturated: both junctions are forward biased, so the collector sits a few tens of millivolts above the emitter. The load is open, and its current is zero whatever the emitter says."
+            "feedback": "With the load open, the collector would be cut off from 15 V: the emitter would still read 1 V, but the op amp would have to push the whole emitter current in through the base, and the collector would fall to just above the emitter.",
+            "why": "The emitter still reads 1 V, so R_E is still carrying {I}, but the collector reads only {m2}, just above the emitter and far below 15 V. No current is coming in from the supply: the op amp is supplying it all through the base, and with no collector current, the transistor is saturated, with both junctions forward biased, so the collector sits a few tens of millivolts above the emitter. The load is open, and its current is zero whatever the emitter says."
           }
         ]
       },
-      "explanation": "Read the emitter first: it is the current meter (I = V_E/R_E), and 1 V means R_E is carrying {I}. Then the collector: it shows whether that current is coming through the load (15 V − I × R_load) or not (15 V: nothing flowing; far below: the supply isn't reaching it). The op-amp output shows what the loop is trying to do: at the top rail it is asking for current it can't get; at 0 V it is trying to stop current it can't stop. As with any transistor inside a loop, a meter that reads 'normal' only means the loop is getting its way at that one point.",
+      "explanation": "Read the emitter first: it is the current meter (I = V_E/R_E), and 1 V means R_E is carrying {I}. Then the collector: it shows whether that current is coming through the load (15 V − I × R_load) or not (15 V: nothing flowing; far below: the supply isn't reaching it). The op-amp output shows what the loop is trying to do: at the top rail it is asking for current it can't get; at 0 V it is trying to stop current it can't stop. As with any transistor inside a loop, a meter that reads \"normal\" only means the loop is getting its way at that one point.",
       "hints": [
         "Start at the emitter: is R_E carrying the right current, none, or too much?",
         "Then the collector: is the load current coming from the 15 V supply?"
@@ -2036,7 +2036,7 @@
         "unit": "A",
         "tolerance": 0.01
       },
-      "explanation": "Non-inverting amplifier and follower: the loop makes the emitter, where R_f is tied, sit at V_in × (1 + R_f/R_g) = {Vin} × {G} = {Vout}. The op amp puts its output wherever that takes, about 0.7 V higher ({Vb}), so V_BE is inside the loop and drops out. The load then takes I_L = {Vout}/{RL} = {IL}. Bipolar transistor basics: the emitter current is (β + 1) times the base current, so the op amp supplies only I_B = {IL}/({beta} + 1) = {answer}, well within its 20 mA. Driving the load on its own it would have needed all {IL}.",
+      "explanation": "Non-inverting amplifier and follower: the loop makes the emitter, where R_f is tied, sit at V_in × (1 + R_f/R_g) = {Vin} × {G} = {Vout}. The op amp puts its output wherever that takes, about 0.7 V higher ({Vb}), so V_BE is inside the loop and drops out. The load then takes I_L = {Vout}/{RL} = {IL}. Bipolar transistor basics: the emitter current is (β + 1) times the base current, so the op amp supplies only I_B = {IL}/({beta} + 1) = {answer}, well within its 20 mA. Driving the load on its own, it would have needed all {IL}.",
       "hints": [
         "First find the emitter voltage: the loop treats it as the amplifier's output.",
         "I_L = V_in(1 + R_f/R_g)/R_L, and I_B = I_E/(β + 1)."
@@ -2078,8 +2078,8 @@
               "correct": true
             },
             {
-              "text": "The 0.7 V is so small next to the output voltage that the error it causes in the load can simply be ignored",
-              "feedback": "At 1 V out that would be a 70 % error. It vanishes because feedback is taken after the transistor, not because it is small."
+              "text": "The 0.7 V is so small next to the output voltage that the error it causes in the load can be ignored",
+              "feedback": "At 1 V out that would be a 70% error. It vanishes because feedback is taken after the transistor, not because it is small."
             },
             {
               "text": "The transistor's current gain β cancels out V_BE, so the base–emitter drop never shows up across the load",
@@ -2090,7 +2090,7 @@
               "feedback": "That would be true with the feedback taken from the op-amp output. Here R_f connects to the emitter, so the loop corrects the emitter voltage directly."
             }
           ],
-          "explanation": "The op amp only knows what reaches its inverting input: the emitter voltage divided down by R_f and R_g. It raises its output until that matches V_in; the transistor's V_BE, and its drift of about −2 mV/°C, are just part of what the output has to supply. It's the same method as the precision rectifier: put the imperfect part inside the loop."
+          "explanation": "The op amp only knows what reaches its inverting input: the emitter voltage divided down by R_f and R_g. It raises its output until that matches V_in; the transistor's V_BE, and its drift of about −2 mV/°C, are part of what the output has to supply. It's the same method as the precision rectifier: put the imperfect part inside the loop."
         }
       ],
       "schematic": {
@@ -2356,9 +2356,9 @@
         "formula": "Vo/G",
         "unit": "V"
       },
-      "explanation": "Transistor switches: at the edge of saturation the collector carries the full coil current, I_C = ({Vcc} − 0.2 V)/{Rcoil} = {Ic}, which needs I_B = I_C/β = {Ib}. That current flows through R_B, and the base takes 0.7 V, so the op amp must reach 0.7 V + {Ib} × {Rb} = {Vo}. Non-inverting amplifier and follower: the gain is 1 + R_f/R_g = {G}, so the sensor must reach {Vo}/{G} = {answer}. A real design drives the base about ten times harder than this edge (a forced β of 10, as in Transistor switches), so the switch stays saturated despite β spread and temperature.",
+      "explanation": "Transistor switches: at the edge of saturation the collector carries the full coil current, I_C = ({Vcc} − 0.2 V)/{Rcoil} = {Ic}, which needs I_B = I_C/β = {Ib}. That current flows through R_B, and the base takes 0.7 V, so the op amp must reach 0.7 V + {Ib} × {Rb} = {Vo}. Non-inverting amplifier and follower: the gain is 1 + R_f/R_g = {G}, so the sensor must reach {Vo}/{G} = {answer}. A real design drives the base about ten times harder than this edge (a forced β of 10, as in \"Transistor switches\"), so the switch stays saturated despite β spread and temperature.",
       "hints": [
-        "Work backwards from the coil: what base current saturates the transistor, and what op-amp output voltage pushes it through R_B?",
+        "Work backward from the coil: what base current saturates the transistor, and what op-amp output voltage pushes it through R_B?",
         "V_out = 0.7 V + (I_C/β)·R_B, and V_sensor = V_out/(1 + R_f/R_g)."
       ],
       "misconceptions": [
@@ -2598,7 +2598,7 @@
     {
       "id": "app_sink_output_voltage",
       "topicId": "app_opamp_transistor",
-      "prompt": "In this current sink the op amp (a single-supply op amp on 15 V whose inputs work down to 0 V) has its + input at {Vref}; its − input reads Q1's emitter, and R_E = {Re} runs from the emitter to ground. The load sits between 15 V and the collector, and Q1 stays out of saturation. At this current Q1's V_BE is {Vbe}. What voltage does the op-amp output, Q1's base, sit at?",
+      "prompt": "In this current sink the op amp (a single-supply op amp on 15 V whose inputs work down to 0 V) has its + input at {Vref}; its − input reads Q1's emitter, and R_E = {Re} runs from the emitter to ground. The load sits between 15 V and the collector, and Q1 stays out of saturation. At this current, Q1's V_BE is {Vbe}. What voltage does the op-amp output, Q1's base, sit at?",
       "variables": [
         {
           "name": "Vref",

@@ -3,6 +3,7 @@
     {
       "id": "divider",
       "title": "Voltage divider",
+      "branch": "DC",
       "summary": "Two resistors split a voltage. Change the values and watch the output and currents.",
       "params": [
         {
@@ -169,6 +170,7 @@
     {
       "id": "rc_lowpass",
       "title": "RC low-pass filter",
+      "branch": "Filters",
       "summary": "Step response (charging with τ = RC) and frequency response (−3 dB at 1/(2πRC)) of the same circuit.",
       "params": [
         {
@@ -344,7 +346,8 @@
     },
     {
       "id": "rectifier",
-      "title": "Half-wave rectifier with reservoir capacitor",
+      "title": "Half-wave rectifier with a reservoir capacitor",
+      "branch": "Diodes",
       "summary": "A diode charges the capacitor on each positive peak; the load discharges it in between, leaving ripple.",
       "params": [
         {
@@ -527,7 +530,7 @@
           "set": {
             "C": "470u"
           },
-          "label": "Raise C to 470 µF. What ripple now?",
+          "label": "Raise C to 470 µF. What is the ripple now?",
           "measure": "pp:v(out)",
           "unit": "V",
           "tolerance": 0.3,
@@ -537,7 +540,7 @@
           "set": {
             "RL": "220"
           },
-          "label": "Keep 470 µF but load it harder: R_L = 220 Ω. Ripple?",
+          "label": "Keep 470 µF but load it harder: R_L = 220 Ω. What is the ripple?",
           "measure": "pp:v(out)",
           "unit": "V",
           "tolerance": 0.3,
@@ -548,7 +551,8 @@
     {
       "id": "ce_amp",
       "title": "Common-emitter amplifier",
-      "summary": "Divider bias, a bypassed emitter resistor and coupling capacitors: a small sine in, a larger inverted sine out.",
+      "branch": "Transistors",
+      "summary": "Divider bias, a bypassed emitter resistor, and coupling capacitors: a small sine in, a larger inverted sine out.",
       "params": [
         {
           "name": "Vcc",
@@ -877,7 +881,8 @@
     {
       "id": "opamp_inverting",
       "title": "Inverting amplifier with a real op amp",
-      "summary": "Gain −Rf/Rin until the op amp runs out of gain-bandwidth, slew rate or supply voltage.",
+      "branch": "Op amps",
+      "summary": "Gain −Rf/Rin until the op amp runs out of gain-bandwidth, slew rate, or supply voltage.",
       "params": [
         {
           "name": "Vin",
@@ -1111,6 +1116,7 @@
     {
       "id": "mosfet_flyback",
       "title": "MOSFET switch with inductive load",
+      "branch": "Transistors",
       "summary": "A low-side MOSFET chops current through a coil; when the switch opens, the flyback diode D1 (through the clamp resistor RS) carries the coil current. C_oss is the MOSFET's own drain-to-source capacitance, and DB its body diode.",
       "params": [
         {
@@ -1385,7 +1391,7 @@
           "measure": "max:v(d)",
           "unit": "V",
           "tolerance": 0.03,
-          "explain": "The coil's current (about 0.7 A by the end of each on-time, once the cycles settle) cannot stop instantly: v = L·di/dt. When the MOSFET opens, the drain rises until D1 conducts and the current has a path again, through RL, D1 and RS back to the top of the coil. That holds the drain at V_DD + V_D + I·RS = 12 + 0.79 + 0.07 ≈ 12.9 V. The circulating current then decays with τ = L/(RL + RS) ≈ 1 ms, so about 0.4 A is still flowing when the MOSFET turns on again."
+          "explain": "The coil's current (about 0.7 A by the end of each on-time, once the cycles settle) cannot stop instantly: v = L·di/dt. When the MOSFET opens, the drain rises until D1 conducts and the current has a path again, through RL, D1, and RS back to the top of the coil. That holds the drain at V_DD + V_D + I·RS = 12 + 0.79 + 0.07 ≈ 12.9 V. The circulating current then decays with τ = L/(RL + RS) ≈ 1 ms, so about 0.4 A is still flowing when the MOSFET turns on again."
         },
         {
           "set": {
@@ -1423,6 +1429,7 @@
     {
       "id": "zener_regulator",
       "title": "Zener regulator",
+      "branch": "Diodes",
       "summary": "Sweep the input: while the divider output V_in·R_L/(R_S+R_L) is below V_Z the Zener is off and the output follows it; once it would exceed V_Z, the Zener conducts and the output flattens at about V_Z.",
       "params": [
         {
@@ -1595,7 +1602,7 @@
             "RL": "100",
             "Rs": "100"
           },
-          "label": "Keep RL = 100 Ω and lower the series resistor to 100 Ω. V(out) at 15 V now? (R_S now dissipates about 1 W: size it accordingly.)",
+          "label": "Keep RL = 100 Ω and lower the series resistor to 100 Ω. What is V(out) at 15 V now? (R_S now dissipates about 1 W: size it accordingly.)",
           "measure": "final:v(out)",
           "unit": "V",
           "tolerance": 0.03,
@@ -1610,6 +1617,7 @@
     {
       "id": "schmitt",
       "title": "Schmitt trigger vs plain comparator",
+      "branch": "Op amps",
       "summary": "The same sine, with a 50× faster interfering tone added, drives a plain comparator (it chatters at each crossing) and a Schmitt trigger (it switches once).",
       "params": [
         {
@@ -1918,6 +1926,7 @@
     {
       "id": "h_bridge",
       "title": "H-bridge motor driver",
+      "branch": "Power",
       "summary": "Two half-bridges drive a motor (modeled as L and R). Swapping which diagonal is on reverses the current. Real drivers add a short dead time between turning one transistor off and its partner on; without it both conduct for an instant and short the supply (shoot-through).",
       "params": [
         {
@@ -2230,6 +2239,7 @@
     {
       "id": "buck",
       "title": "Buck converter",
+      "branch": "Power",
       "summary": "A PMOS switch chops the input, a diode freewheels the inductor current, and the LC filter averages it: V_out ≈ D·V_in.",
       "params": [
         {
@@ -2482,6 +2492,7 @@
     {
       "id": "diode_iv",
       "title": "Diode I–V curve",
+      "branch": "Diodes",
       "summary": "Sweep the voltage across a silicon diode and watch the current. On a linear axis it looks like almost nothing, then a sharp rise; in fact it grows tenfold for every 60 mV (at n = 1) everywhere above about 0.1 V. VM is a 0 V source used as an ammeter, a standard SPICE trick.",
       "params": [
         {
@@ -2616,7 +2627,7 @@
           "set": {
             "N": "2"
           },
-          "label": "Keep 0.6 V and set the emission coefficient n = 2. Current at 0.6 V? (Model experiment: a real diode with n = 2 would also have a far larger I_S.)",
+          "label": "Keep 0.6 V and set the emission coefficient n = 2. What current flows at 0.6 V? (Model experiment: a real diode with n = 2 would also have a far larger I_S.)",
           "measure": "final:i(VM)",
           "unit": "A",
           "tolerance": 0.25,
@@ -2627,6 +2638,7 @@
     {
       "id": "mosfet_transfer",
       "title": "MOSFET transfer curve",
+      "branch": "Transistors",
       "summary": "Sweep V_GS with V_DS held high: no current below the threshold, then I_D = K(V_GS − V_t)² in saturation.",
       "params": [
         {
@@ -2771,13 +2783,13 @@
           "measure": "final:i(VM)",
           "unit": "A",
           "tolerance": 0.03,
-          "explain": "(5−1)² = 16 vs (5−2)² = 9: 32 mA."
+          "explain": "(5 − 1)² = 16 versus (5 − 2)² = 9: 32 mA."
         },
         {
           "set": {
             "K": "4m"
           },
-          "label": "Keep V_t = 1 V and double K to 4 mA/V². Drain current at V_GS = 5 V?",
+          "label": "Keep V_t = 1 V and double K to 4 mA/V². What drain current flows at V_GS = 5 V?",
           "measure": "final:i(VM)",
           "unit": "A",
           "tolerance": 0.03,
@@ -2788,6 +2800,7 @@
     {
       "id": "emitter_follower",
       "title": "Emitter follower",
+      "branch": "Transistors",
       "summary": "The emitter follows the base about 0.7 V lower, with a gain just under 1. Its input draws only I_E/(β+1), so a weak source can drive a heavy load.",
       "params": [
         {
@@ -2971,6 +2984,7 @@
     {
       "id": "active_lowpass",
       "title": "Active low-pass filter",
+      "branch": "Filters",
       "summary": "An inverting amplifier with a capacitor across R_f: gain −R_f/R_in at low frequencies, falling 20 dB per decade above f_c = 1/(2π R_f C).",
       "params": [
         {
@@ -3213,7 +3227,7 @@
           "set": {
             "Rf": "4.7k"
           },
-          "label": "Keep C = 22 nF and lower R_f to 4.7 kΩ. Cutoff now? (The gain drops too.)",
+          "label": "Keep C = 22 nF and lower R_f to 4.7 kΩ. What is the cutoff now? (The gain drops too.)",
           "measure": "f3db:v(out)",
           "unit": "Hz",
           "tolerance": 0.05,
@@ -3224,6 +3238,7 @@
     {
       "id": "led_driver",
       "title": "Constant-current LED driver",
+      "branch": "Power",
       "summary": "An op amp drives a MOSFET so the sense resistor always holds V_set: the current through the two LEDs (1 W white power LEDs, about 3.1 V at 100 mA) is V_set/R_s whatever the supply does, until the headroom runs out. VM is a 0 V ammeter. The op amp runs from its own 0–15 V supply.",
       "params": [
         {
@@ -3466,7 +3481,7 @@
           "set": {
             "Rs": "2.49"
           },
-          "label": "Halve R_s to 2.49 Ω (supply 15 V). LED current? (The MOSFET now dissipates about 1.7 W: it needs a heat sink.)",
+          "label": "Halve R_s to 2.49 Ω (supply 15 V). What LED current flows? (The MOSFET now dissipates about 1.7 W: it needs a heat sink.)",
           "measure": "i(VM)",
           "unit": "A",
           "tolerance": 0.03,

@@ -33,10 +33,10 @@
         "Explain why a voltage follower lets a divider drive a load without being pulled down"
       ],
       "intuition": "With negative feedback (output returned to the − input) and the output inside its supply limits, the op amp moves its output until its two inputs sit at the same voltage, and the inputs themselves draw no current either way.",
-      "why": "An op amp amplifies the difference V+ − V− by a huge open-loop gain, typically 100 000 or more at low frequencies. Feed the output back to the − input and any difference corrects itself: if V+ rises above V−, the output rises and lifts V− until the gap almost vanishes. With a gain of 100 000 and 10 V at the output, the gap is 0.1 mV, so we call it zero. The inputs take only a tiny bias current, tens of nanoamps for a classic bipolar part such as the 741 (half a microamp at most) and picoamps for FET-input parts, so it too is treated as zero. If the output reaches its supply limit it cannot move further, the correction stops, and the inputs no longer match.",
+      "why": "An op amp amplifies the difference V+ − V− by a huge open-loop gain, typically 100 000 or more at low frequencies. Feed the output back to the − input and any difference corrects itself: if V+ rises above V−, the output rises and lifts V− until the gap almost vanishes. With a gain of 100 000 and 10 V at the output, the gap is 0.1 mV, small enough to treat as zero. The inputs take only a tiny bias current, tens of nanoamps for a classic bipolar part such as the 741 (half a microamp at most) and picoamps for FET-input parts, so it too is treated as zero. If the output reaches its supply limit it cannot move further, the correction stops, and the inputs no longer match.",
       "explanation": "An op amp has two inputs, + and −, and one output. It amplifies the difference V+ − V− by an enormous factor, so on its own even a fraction of a millivolt drives the output to a supply limit. Used that way it is a comparator. The trick is negative feedback: a path from the output back to the − input. Now the output moves until the two inputs are equal, and settles there. Two rules follow for an ideal op amp. First, with negative feedback, V− = V+. Second, no current flows into either input. The − input is not wired to the + input; the output holds it there through the feedback path. The simplest case is the voltage follower: the output wired straight to the − input, so Vout = V+. Together the rules turn an op-amp circuit into a KCL problem you already know: the current arriving at the − input through one resistor must leave through the feedback resistor, because it cannot enter the pin. V− = V+ fails without negative feedback, or when the output would have to go beyond what the supply allows, so always check the output.",
       "workedExample": {
-        "problem": "An op amp runs from ±12 V supplies. Its + input is fed by a divider from +12 V: 47 kΩ on top, 10 kΩ to ground. An ideal 5.0 V source connects through Rin = 10 kΩ to the − input, and Rf = 22 kΩ runs from the − input to the output. Find V+, V−, the current in Rin and the output voltage.",
+        "problem": "An op amp runs from ±12 V supplies. Its + input is fed by a divider from +12 V: 47 kΩ on top, 10 kΩ to ground. An ideal 5.0 V source connects through Rin = 10 kΩ to the − input, and Rf = 22 kΩ runs from the − input to the output. Find V+, V−, the current in Rin, and the output voltage.",
         "steps": [
           "Rf connects the output back to the − input, so the feedback is negative. V− = V+ holds if the output turns out to lie inside the ±12 V supplies; check that at the end.",
           "No-current rule: the + input draws no current, so the divider is unloaded: V+ = 12 V × 10 kΩ / (47 kΩ + 10 kΩ) = 2.105 V.",
@@ -51,12 +51,12 @@
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 8 \"Operational Amplifiers\", section \"The \"operational\" amplifier\"",
           "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_8.html#xtocid90722",
-          "note": "Open-loop gain is in the hundreds of thousands, so with no feedback a differential input of microvolts drives the output to a limit, which is how a bare op amp works as a comparator; the 741's inputs draw at most about half a microamp, FET-input parts far less."
+          "note": "Open-loop gain is in the hundreds of thousands, so with no feedback a differential input of microvolts drives the output to a limit, which is how a bare op amp works as a comparator. The 741's inputs draw at most about half a microamp, and FET-input parts far less."
         },
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 8 \"Operational Amplifiers\", section \"Negative feedback\"",
           "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_8.html#xtocid90723",
-          "note": "Feeding the output back to the inverting input drives the input difference to practically zero, the follower has a gain of 1 with its output current coming from the supply, and this holds only inside the output swing limits."
+          "note": "Feeding the output back to the inverting input drives the input difference to practically zero; the follower has a gain of 1, with its output current coming from the supply; and this holds only inside the output swing limits."
         },
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Operational Amplifiers\" (last update 23 September 2026), section 5.7.3 \"Input bias current\" (p. 184)",
@@ -139,7 +139,7 @@
     {
       "id": "oa_input_current",
       "topicId": "opamp_ideal",
-      "prompt": "An inverting amplifier (ideal op amp on ±15 V supplies) has its non-inverting input grounded, Rin = {Rin} and Rf = {Rf}. The input is {Vin}. What current flows through Rin?",
+      "prompt": "An inverting amplifier (ideal op amp on ±15 V supplies) has its non-inverting input grounded, Rin = {Rin}, and Rf = {Rf}. The input is {Vin}. What current flows through Rin?",
       "variables": [
         {
           "name": "Vin",
@@ -374,7 +374,7 @@
         "unit": "V",
         "tolerance": 0.02
       },
-      "explanation": "With negative feedback the op amp makes V− = V+. The output is V−, so V_out = V+ = {answer}: a gain of exactly 1, with a very high input resistance.",
+      "explanation": "With negative feedback the op amp makes V− = V+. The output is V−, so Vout = V+ = {answer}: a gain of exactly 1, with a very high input resistance.",
       "hints": [
         "Which input is the output connected to?",
         "Negative feedback forces V− = V+, and here V− is the output."
@@ -690,7 +690,7 @@
     {
       "id": "oa_what_if_rf_current",
       "topicId": "opamp_ideal",
-      "prompt": "An inverting amplifier (non-inverting input grounded, op amp on ±15 V supplies, not drawn) has Rin = {Rin}, Rf = {Rf} and {Vin} at its input. Rf is swapped for {new_Rf}. What happens to the current through Rin?",
+      "prompt": "An inverting amplifier (non-inverting input grounded, op amp on ±15 V supplies, not drawn) has Rin = {Rin}, Rf = {Rf}, and {Vin} at its input. Rf is swapped for {new_Rf}. What happens to the current through Rin?",
       "variables": [
         {
           "name": "Vin",
@@ -732,7 +732,7 @@
           "down": "Rf doesn't sit in the path that sets this current. The − input stays at 0 V, so the current is {Vin}/{Rin} with either Rf; only the output voltage changes."
         }
       },
-      "explanation": "The − input is a virtual ground, so the current through Rin is Vin/Rin = {after}, set by Rin alone. A smaller Rf means the output needs to swing less to carry that same current back through Rf: the gain drops to a tenth, the input current doesn't change.",
+      "explanation": "The − input is a virtual ground, so the current through Rin is Vin/Rin = {after}, set by Rin alone. A smaller Rf means the output needs to swing less to carry that same current back through Rf: the gain drops to a tenth, but the input current doesn't change.",
       "hints": [
         "What voltage sits at the − input, before and after the change?"
       ],
@@ -742,7 +742,7 @@
           "choices": [
             {
               "text": "Feedback holds the − input at 0 V, so Rin's current is set by Vin and Rin alone",
-              "feedback": "Right: Ohm's law across Rin: (Vin − 0 V)/Rin. Rf changes only how far the output has to swing to carry that current.",
+              "feedback": "Right: Ohm's law across Rin gives (Vin − 0 V)/Rin. Rf changes only how far the output has to swing to carry that current.",
               "correct": true
             },
             {
@@ -1195,11 +1195,11 @@
               "feedback": "That is true of a divider driving the load directly. Here RL hangs on the op amp's output, and the + input takes no current, so nothing from RL reaches the divider."
             },
             {
-              "text": "Because RL is much larger than R1 and R2",
+              "text": "RL is much larger than R1 and R2",
               "feedback": "It isn't: RL is no larger than the smallest divider resistor allowed here (10 kΩ). What isolates the divider is the + input drawing no current, not the size of RL."
             },
             {
-              "text": "Because a follower has a gain of 1, so no current flows through it to the load",
+              "text": "A follower has a gain of 1, so no current flows through it to the load",
               "feedback": "The follower does deliver current to the load, {IL} here, drawn from its supplies. A gain of 1 describes the voltage, not the current."
             }
           ],
@@ -1329,6 +1329,313 @@
         ],
         "labels": []
       }
+    },
+    {
+      "id": "oa_fault_biased_inverting",
+      "topicId": "opamp_ideal",
+      "prompt": "This inverting stage runs from ±9 V supplies (two 9 V batteries) and has rail-to-rail inputs and output. The op amp's supply pins are not drawn; the +9 V battery is drawn because R1 = {R1} and R2 = {R2} divide it down to bias the + input. The input, {Vin}, drives the − input through R_in = {Rin}, and R_f = {Rf} feeds back from the output. Healthy, the output would be {h0}. The meter readings are below. Which fault explains them?",
+      "variables": [
+        {
+          "name": "Vin",
+          "unit": "V",
+          "range": {
+            "min": 0.5,
+            "max": 1.5,
+            "step": 0.25
+          }
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            10000,
+            12000,
+            15000
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            4700,
+            5600
+          ]
+        },
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "value": 10000
+        },
+        {
+          "name": "Rf",
+          "unit": "Ω",
+          "values": [
+            10000,
+            12000,
+            15000
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vp",
+          "formula": "9*R2/(R1+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "Iin",
+          "formula": "(9*R2/(R1+R2)-Vin)/Rin",
+          "unit": "A"
+        },
+        {
+          "name": "Vplain",
+          "formula": "-Rf/Rin*Vin",
+          "unit": "V"
+        }
+      ],
+      "fault": {
+        "netlist": "biased inverting stage\nV1 in 0 {Vin:spice}\nV2 vcc 0 9\nR1 vcc p {R1:spice}\nR2 p 0 {R2:spice}\nRIN in inv {Rin:spice}\nRF inv out {Rf:spice}\nX1 p inv out OA\n.model OA OPAMP(VPOS=9 VNEG=-9)\n",
+        "probes": [
+          {
+            "label": "Output voltage",
+            "probe": "v(out)"
+          },
+          {
+            "label": "Voltage at the + input",
+            "probe": "v(p)"
+          },
+          {
+            "label": "Voltage at the − input",
+            "probe": "v(inv)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "R1 is open (a cracked resistor)",
+            "open": "R1",
+            "feedback": "With R1 open, R2 would pull the + input to 0 V. Feedback would still work, so the − input would follow it to 0 V, and the stage would become a plain inverting amplifier: the output would be −(R_f/R_in) × {Vin} = {Vplain}.",
+            "why": "The two inputs still read the same voltage, so feedback is working, but both sit at 0 V instead of {Vp}. The bias at the + input is gone: with R1 open, R2 pulls it to ground. The stage is now a plain inverting amplifier, and its output is −(R_f/R_in) × {Vin}."
+          },
+          {
+            "text": "R2 is open",
+            "open": "R2",
+            "feedback": "With R2 open, nothing would pull the + input down, so R1 would lift it to almost 9 V. To bring the − input up that far through R_in and R_f, the output would have to go far above +9 V, so it would stop at the +9 V rail, and the − input would be left below the + input.",
+            "why": "The + input reads almost the full 9 V: R1 still connects it to the supply, but nothing pulls it down. To raise the − input that high, the output would have to go far beyond +9 V. It stops at the rail, the correction stops with it, and the inputs no longer match. The divider has lost its bottom resistor."
+          },
+          {
+            "text": "R_f is open (a dry joint)",
+            "open": "RF",
+            "feedback": "With R_f open there would be no feedback. No current could flow in R_in, so the − input would sit at the source's {Vin}, below the + input's {Vp}, and the op amp, amplifying that difference open loop, would drive its output to the +9 V rail.",
+            "why": "The output is at the +9 V rail and the inputs differ, so the op amp has lost control. Yet the + input still reads its normal {Vp}, so the divider is fine. The − input reads exactly the source's {Vin}: R_in drops nothing, so no current flows in it, and none can be returning through R_f. The feedback path is broken."
+          },
+          {
+            "text": "R_in is open",
+            "open": "RIN",
+            "feedback": "With R_in open, no current would arrive at the − input, so none would flow in R_f either. With no drop across R_f, the output would sit at the − input's voltage, which feedback holds at the + input's {Vp}: the stage would be a voltage follower.",
+            "why": "The inputs still match at the normal {Vp}, so feedback works, but the output equals them. That means R_f carries no current: by KCL at the − input, no current is arriving through R_in either. The input path is broken, and the stage just follows its + input."
+          }
+        ]
+      },
+      "explanation": "Healthy, the two golden rules give the output. The + input draws no current, so the divider is unloaded: V+ = 9 V × {R2}/({R1} + {R2}) = {Vp}. Feedback holds the − input at the same {Vp}. R_in then carries ({Vp} − {Vin})/{Rin} = {Iin} toward the source, and by KCL the same current flows through R_f from the output, so the output sits R_f × {Iin} above {Vp}: {h0}. To diagnose, compare the inputs first. If they still read the same, feedback is working and rule 1 holds; then their value and the output show which path is broken (0 V: the bias is gone; output equal to the inputs: no current reaches the − input). If they differ, the op amp has lost control and its output sits at a rail; then check the + input. Near 9 V: the divider has lost its bottom resistor. Still at {Vp}, with the − input at exactly the source voltage: the feedback path is broken.",
+      "hints": [
+        "Do the two inputs still read the same voltage? If they do, feedback is still working.",
+        "Inputs equal: compare their value with the divider's {Vp}, and the output with the inputs. Inputs unequal: the output is at a rail, so check whether the + input still reads the divider's {Vp}."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              -1,
+              7
+            ],
+            "rot": 90,
+            "label": "{Vin}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              3,
+              10
+            ],
+            "rot": 90,
+            "label": "9 V",
+            "symbol": "battery"
+          },
+          {
+            "ref": "RIN",
+            "at": [
+              4,
+              5
+            ],
+            "label": "R_in {Rin}"
+          },
+          {
+            "ref": "RF",
+            "at": [
+              11,
+              2
+            ],
+            "label": "R_f {Rf}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              4,
+              8
+            ],
+            "label": "R1 {R1}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              10
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "X1",
+            "at": [
+              12,
+              6
+            ],
+            "label": ""
+          }
+        ],
+        "wires": [
+          [
+            [
+              -1,
+              7
+            ],
+            [
+              -1,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          [
+            [
+              3,
+              10
+            ],
+            [
+              3,
+              8
+            ],
+            [
+              4,
+              8
+            ]
+          ],
+          [
+            [
+              8,
+              5
+            ],
+            [
+              12,
+              5
+            ]
+          ],
+          [
+            [
+              10,
+              5
+            ],
+            [
+              10,
+              2
+            ],
+            [
+              11,
+              2
+            ]
+          ],
+          [
+            [
+              15,
+              2
+            ],
+            [
+              17,
+              2
+            ],
+            [
+              17,
+              6
+            ]
+          ],
+          [
+            [
+              16,
+              6
+            ],
+            [
+              19,
+              6
+            ]
+          ],
+          [
+            [
+              8,
+              8
+            ],
+            [
+              11,
+              8
+            ],
+            [
+              11,
+              7
+            ],
+            [
+              12,
+              7
+            ]
+          ],
+          [
+            [
+              10,
+              8
+            ],
+            [
+              10,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            -1,
+            11
+          ],
+          [
+            3,
+            14
+          ],
+          [
+            10,
+            14
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              19,
+              6
+            ]
+          }
+        ]
+      },
+      "review": "verified"
     }
   ]
 }

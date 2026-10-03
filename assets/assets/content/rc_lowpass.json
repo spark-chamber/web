@@ -60,7 +60,7 @@
         {
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. II (AC), ch. 8 \"Filters\", section \"Low-pass filters\"",
           "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/AC/AC_8.html#xtocid89301",
-          "note": "For one R and one C the cutoff is f = 1/(2πRC), where the capacitive reactance equals R and the output is 70.7% of the input, and that formula holds only with no load on the output."
+          "note": "For one R and one C, the cutoff is f = 1/(2πRC), where the capacitive reactance equals R and the output is 70.7% of the input; that formula holds only with no load on the output."
         },
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Elementary Filter Circuits\", ch. 3 \"Tutorial\", section 3.4 \"Bode plots\"",
@@ -70,7 +70,7 @@
         {
           "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), module \"Elementary Filter Circuits\", ch. 3 \"Tutorial\", section 3.3 \"Reactive filtering\"",
           "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_filters.pdf",
-          "note": "Taking the capacitor as an open at zero frequency and a short at very high frequency shows the series-R, shunt-C network passes slow signals and blocks fast ones."
+          "note": "Taking the capacitor as an open at zero frequency and a short at very high frequency shows that the series-R, shunt-C network passes slow signals and blocks fast ones."
         }
       ]
     }
@@ -579,7 +579,7 @@
         "target": "fc",
         "tolerance": 0.1
       },
-      "explanation": "f_c = 1/(2πRC), so you need RC = 1/(2π × {fc}). One way: pick R = 10 kΩ, then C = 1/(2π × 10 kΩ × {fc}) = {Cex}. Round C to the nearest E12 value, then check f_c again; if it's out, try a neighboring R.",
+      "explanation": "f_c = 1/(2πRC), so you need RC = 1/(2π × {fc}). One way: pick R = 10 kΩ, then C = 1/(2π × 10 kΩ × {fc}) = {Cex}. Round C to the nearest E12 value, then check f_c again; if it's outside the 10% window, try a neighboring R.",
       "hints": [
         "Fix one component first (10 kΩ is a good start), then solve for the other.",
         "C = 1/(2π·R·f_c); round to the nearest E12 value and check."
@@ -768,7 +768,7 @@
           "same": "The corner is where the capacitor stops keeping up with the input through R, f_c = 1/(2πRC). A larger C needs more charge for each volt it follows, and R limits how fast that charge arrives, so the frequency it can keep up with is not the same."
         }
       },
-      "explanation": "Capacitors in parallel add, so the capacitance doubles. f_c = 1/(2πRC) goes as 1/C: twice the capacitance doubles the time constant (τ = RC, from RC time constant) and halves the corner: {before} → {after}.",
+      "explanation": "Capacitors in parallel add, so the capacitance doubles. f_c = 1/(2πRC) goes as 1/C: twice the capacitance doubles the time constant (τ = RC; see RC time constant) and halves the corner: {before} → {after}.",
       "hints": [
         "Is a circuit with a bigger capacitor faster or slower?",
         "f_c = 1/(2πRC): how does it depend on C?"
@@ -1017,7 +1017,7 @@
     {
       "id": "rc_lp_fault_dc",
       "topicId": "rc_lowpass_cutoff",
-      "prompt": "An RC low-pass (R1 = {R1}, C1 = {C1}) feeds a load RL = {RL}. You check it on the bench with a {Vin} DC supply and a multimeter. Healthy, the output should read {h0}. The readings are below. Which fault explains them?",
+      "prompt": "An RC low-pass (R1 = {R1}, C1 = {C1}) feeds a load RL = {RL}. You check it on the bench with a {Vin} DC supply and a multimeter. If the circuit is healthy, the output should read {h0}. The readings are below. Which fault explains them?",
       "variables": [
         {
           "name": "Vin",
@@ -1085,13 +1085,13 @@
             "text": "The load RL is disconnected",
             "open": "RL",
             "feedback": "With the load gone, no DC current could flow (C1 blocks DC), so R1 would read 0 A and the output would rise to the full {Vin}.",
-            "why": "Only RL carried DC current. Without it the capacitor blocks DC, the current is 0 A, R1 drops nothing and the output sits at {Vin}."
+            "why": "Only RL carried DC current. Without it the capacitor blocks DC, the current is 0 A, R1 drops nothing, and the output sits at {Vin}."
           },
           {
             "text": "C1 is leaky (cracked, conducting about 3.3 kΩ)",
             "add": "Rleak out 0 3.3k",
             "feedback": "A leaky C1 adds a resistive path to ground: the output would drop well below normal but not to zero, and the current would rise.",
-            "why": "The leak acts like a resistor in parallel with RL. Less resistance to ground takes a smaller share of Vin, so the output falls part-way, and the total current rises."
+            "why": "The leak acts like a resistor in parallel with RL. Less resistance to ground takes a smaller share of Vin, so the output falls partway, and the total current rises."
           }
         ]
       },
@@ -1255,7 +1255,7 @@
         },
         {
           "formula": "5*tau",
-          "feedback": "5τ is the rule of thumb for 'fully settled' (within 0.7%). This asks for within 1%: e^(−t/τ) = 0.01 gives t = ln(100)·τ ≈ 4.6τ."
+          "feedback": "5τ is the rule of thumb for \"fully settled\" (within 0.7%). This asks for within 1%: e^(−t/τ) = 0.01 gives t = ln(100)·τ ≈ 4.6τ."
         },
         {
           "formula": "1/fc",
