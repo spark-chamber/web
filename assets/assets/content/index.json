@@ -110,6 +110,25 @@
           "tree": "Workshop",
           "area": "workshop"
         }
+      ],
+      "lockedTrees": [
+        {
+          "title": "Digital logic",
+          "buildsOn": "Electronics",
+          "nodes": 5,
+          "note": "Gates, flip-flops and counters, built from the transistor switches of Electronics."
+        },
+        {
+          "title": "Signal processing",
+          "buildsOn": "Circuit analysis",
+          "nodes": 5,
+          "note": "Spectra, sampling and filters, built on the impedance, filters and decibels of Circuit analysis."
+        },
+        {
+          "title": "Particle physics",
+          "nodes": 5,
+          "note": "Electrons, protons and the particles beyond them, and the detectors that track them, such as the spark chamber."
+        }
       ]
     }
   ],
