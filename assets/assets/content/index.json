@@ -143,12 +143,18 @@
         {
           "title": "RF",
           "buildsOn": "Electronics",
+          "alsoBuildsOn": [
+            "Circuit analysis"
+          ],
           "nodes": 4,
           "note": "Radio-frequency circuits: transmission lines, impedance matching, amplifiers and antennas, built on the impedance of Circuit analysis and the transistors of Electronics."
         },
         {
           "title": "Troubleshooting",
           "buildsOn": "Electronics",
+          "alsoBuildsOn": [
+            "Workshop"
+          ],
           "nodes": 3,
           "note": "Finding faults in real circuits with a meter and an oscilloscope, built on the bias points of Electronics and the schematics of the Workshop."
         }
