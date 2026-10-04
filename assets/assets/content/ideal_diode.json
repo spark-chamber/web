@@ -3,6 +3,7 @@
     {
       "id": "ideal_diode",
       "title": "The ideal diode",
+      "mapTitle": "The ideal diode",
       "summary": "Conducts in one direction only: a short circuit when forward biased, an open circuit when reverse biased.",
       "lenses": [
         "circuit"
@@ -1149,7 +1150,9 @@
         ],
         "labels": []
       },
-      "review": "verified"
+      "review": "verified",
+      "formulaSteps": 1,
+      "formulaStepsWhy": "One relation: the divider rule, once the diode is a short."
     },
     {
       "id": "id_design_clamp",

@@ -3,6 +3,7 @@
     {
       "id": "inductors",
       "title": "Inductors: energy in a magnetic field",
+      "mapTitle": "Inductors",
       "summary": "A current through a coil sets up a magnetic field. When the current changes, the changing field induces a voltage across the coil that opposes the change, v = L·di/dt, so an inductor's current cannot change instantly. The inductor stores energy ½LI² in its magnetic field.",
       "lenses": [
         "physics",
@@ -203,7 +204,6 @@
     {
       "id": "ind_ramp_current",
       "topicId": "inductors",
-      "level": "recall",
       "prompt": "A transistor switch connects a {V} supply across a {L} inductor for {t}, starting from zero current, and the current stays below its saturation current. The winding resistance is small enough to ignore over this time. What current flows through the inductor at the end of the {t}?",
       "variables": [
         {
@@ -406,12 +406,13 @@
           }
         ]
       },
-      "review": "verified"
+      "review": "verified",
+      "formulaSteps": 1,
+      "formulaStepsWhy": "One relation: V = L·dI/dt solved for the change in current, ΔI = Vt/L."
     },
     {
       "id": "ind_voltage_didt",
       "topicId": "inductors",
-      "level": "recall",
       "prompt": "A current probe shows the current through a {L} inductor rising in a straight line from {I1} to {I2} in {t}. Ignoring the winding resistance, what voltage is across the inductor during the rise?",
       "variables": [
         {
@@ -454,6 +455,11 @@
           "name": "dI",
           "formula": "I2-I1",
           "unit": "A"
+        },
+        {
+          "name": "estV",
+          "formula": "fig1(fig1(L)*fig1(I2-I1)/fig1(t))",
+          "unit": "V"
         }
       ],
       "answer": {
@@ -462,6 +468,7 @@
         "tolerance": 0.02
       },
       "estimate": true,
+      "estimateHint": "Subtract before rounding: Δi = {I2} − {I1} = {dI}. (Rounding the two currents first can throw the difference far off, because it is often much smaller than either; rounding the factors of a product only nudges it.) Then v = L·Δi/Δt ≈ {L:fig1} H × {dI:fig1} A / ({t:fig1} s) ≈ {estV:fig1} V.",
       "explanation": "The current changes by Δi = {I2} − {I1} = {dI} in {t}, at a steady rate. v = L·di/dt = {L} × {dI} / {t} = {answer}. Only the change matters: the same rate of rise starting from any current would need the same voltage.",
       "hints": [
         "The voltage depends on how fast the current changes, not on how large it is.",
@@ -504,7 +511,9 @@
       ],
       "noDrawing": "a measured current ramp in one inductor; no circuit to analyze",
       "review": "verified",
-      "placement": true
+      "placement": true,
+      "formulaSteps": 1,
+      "formulaStepsWhy": "One relation: V = L·ΔI/Δt, with ΔI read straight off the two currents given."
     },
     {
       "id": "ind_parallel",

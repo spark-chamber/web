@@ -3,6 +3,7 @@
     {
       "id": "voltage_energy",
       "title": "Voltage and energy",
+      "mapTitle": "Voltage and energy",
       "summary": "A voltage is the energy each coulomb of charge gains or gives up between two points: one volt is one joule per coulomb, and a voltage is always measured between two nodes.",
       "lenses": [
         "physics",
@@ -84,6 +85,7 @@
     {
       "id": "ve_energy_charge",
       "topicId": "voltage_energy",
+      "level": "recall",
       "prompt": "A lamp runs from a {V} battery (treat it as ideal: it holds {V} across the lamp). Over a few minutes, {Q} of charge passes through the lamp. How much energy does the battery deliver to the lamp?",
       "variables": [
         {
@@ -217,6 +219,68 @@
       },
       "review": "verified",
       "placement": true
+    },
+    {
+      "id": "ve_same_mah_energy",
+      "topicId": "voltage_energy",
+      "level": "reason",
+      "prompt": "A 1.2 V NiMH cell and a 3.7 V lithium-ion cell are both rated {cap}h. Which one stores more energy?",
+      "variables": [
+        {
+          "name": "cap",
+          "unit": "A",
+          "values": [
+            1.2,
+            1.5,
+            2,
+            2.5,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Q",
+          "formula": "cap*3600",
+          "unit": "C"
+        },
+        {
+          "name": "Eni",
+          "formula": "cap*3600*1.2",
+          "unit": "J"
+        },
+        {
+          "name": "Eli",
+          "formula": "cap*3600*3.7",
+          "unit": "J"
+        }
+      ],
+      "choices": [
+        {
+          "text": "The lithium-ion cell: both move the same charge, but each coulomb gives up more energy",
+          "correct": true,
+          "feedback": "Right: energy = charge × voltage, so the same {Q} gives about {Eli} from the lithium-ion cell and {Eni} from the NiMH cell."
+        },
+        {
+          "text": "Neither: they have the same rating, so they store the same energy",
+          "feedback": "An Ah or mAh rating measures charge, not energy. Each coulomb the 3.7 V cell moves gives up 3.7 J in the load; each one from the 1.2 V cell gives up 1.2 J."
+        },
+        {
+          "text": "The NiMH cell: a lower voltage drains it more slowly",
+          "feedback": "The rating already counts the charge each cell can deliver, the same {Q} for both. At the lower voltage each of those coulombs gives up less energy, so the NiMH cell stores less."
+        },
+        {
+          "text": "You can't tell without knowing the load current",
+          "feedback": "The load sets how fast the energy is used, not how much is stored. With the same charge, the higher-voltage cell stores more energy."
+        }
+      ],
+      "explanation": "A rating of {cap}h is a charge: {Q} (1 Ah = 3600 C). A volt is a joule per coulomb, so each coulomb gives up the cell's voltage in joules, and the stored energy is about W = Q·V: {Q} × 3.7 V ≈ {Eli} for the lithium-ion cell and {Q} × 1.2 V ≈ {Eni} for the NiMH cell. This is why battery energy is often printed as ampere-hours × volts, in units called watt-hours (1 Wh = 3600 J; the watt, a joule per second, comes with power): the number that compares fairly between chemistries.",
+      "hints": [
+        "Does an mAh rating count charge or energy?",
+        "A volt is a joule per coulomb: W = Q·V, with the same Q for both cells."
+      ],
+      "noDrawing": "about two batteries' ratings; no circuit to analyze",
+      "review": "draft"
     },
     {
       "id": "ve_charge_from_energy",
@@ -1765,12 +1829,12 @@
             "why": "n1 and n2 read normally; the reversed cell 3 takes the top {Vc} below n2 instead of above it, so the lamp gets one cell's voltage."
           },
           {
-            "text": "Cell 3 is nearly flat",
+            "text": "Cell 3 is nearly dead",
             "value": {
               "ref": "V3",
               "formula": "0.6*Vc"
             },
-            "feedback": "A nearly flat cell 3 would leave n1 and n2 normal and still raise the top above n2, just by less than a full cell.",
+            "feedback": "A nearly dead cell 3 would leave n1 and n2 normal and still raise the top above n2, just by less than a full cell.",
             "why": "n1 and n2 read normally; the step from n2 to the top is smaller than {Vc}, so cell 3 is giving each coulomb less energy than it should. (Measured with the lamp connected, so a worn cell's internal resistance shows up as a smaller step.)"
           }
         ]

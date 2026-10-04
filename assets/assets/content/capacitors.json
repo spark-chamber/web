@@ -3,6 +3,7 @@
     {
       "id": "capacitors",
       "title": "Capacitors: separated charge, stored energy",
+      "mapTitle": "Capacitors",
       "summary": "A capacitor is two conductors separated by an insulator. A voltage across it moves charge Q = CV off one plate and onto the other; the part stays neutral overall and stores energy ½CV² in the electric field across the insulator.",
       "lenses": [
         "physics",
@@ -419,7 +420,6 @@
     {
       "id": "cap_softstart_time",
       "topicId": "capacitors",
-      "level": "recall",
       "prompt": "A power-supply controller raises its output slowly at switch-on (a soft start). Its soft-start pin drives a constant {I} into an external capacitor C_SS = {C}, which starts at 0 V, and the ramp ends when the pin reaches {V}. How long does the soft start last?",
       "variables": [
         {
@@ -575,13 +575,15 @@
           }
         ]
       },
-      "review": "verified"
+      "review": "verified",
+      "formulaSteps": 1,
+      "formulaStepsWhy": "One relation: the charging current I = C·dV/dt solved for the time, t = CV/I."
     },
     {
       "id": "cap_series_pair",
       "topicId": "capacitors",
       "level": "recall",
-      "prompt": "Two film capacitors, C1 = {C1} and C2 = {C2}, both start uncharged and are connected in series across a 12 V supply. What is the capacitance of the pair, between its two outer leads?",
+      "prompt": "Find the total capacitance of C1 and C2, measured between their outer leads.",
       "variables": [
         {
           "name": "C1",
@@ -624,7 +626,7 @@
         "unit": "F",
         "tolerance": 0.02
       },
-      "explanation": "In series the same charge moves onto both capacitors: what leaves C1's inner plate lands on C2's inner plate. Their voltages add: V = Q/C1 + Q/C2, so 1/C = 1/C1 + 1/C2 and C = C1·C2/(C1 + C2) = {C1} × {C2} / ({C1} + {C2}) = {answer}, less than either. For two equal parallel-plate capacitors this is the same as doubling the spacing d. Across 12 V, each holds Q = {Qs}: {V1} across C1 and {V2} across C2.",
+      "explanation": "In series the same charge moves onto both capacitors: what leaves C1's inner plate lands on C2's inner plate. Their voltages add: V = Q/C1 + Q/C2, so 1/C = 1/C1 + 1/C2 and C = C1·C2/(C1 + C2) = {C1} × {C2} / ({C1} + {C2}) = {answer}, less than either. For two equal parallel-plate capacitors this is the same as doubling the spacing d. Starting uncharged, across 12 V each holds Q = {Qs}: {V1} across C1 and {V2} across C2.",
       "hints": [
         "In series, which is the same for both capacitors: the voltage or the charge?",
         "Same charge, voltages add: 1/C = 1/C1 + 1/C2."
@@ -641,7 +643,7 @@
       ],
       "followUps": [
         {
-          "prompt": "Which capacitor has the larger share of the 12 V across it?",
+          "prompt": "Both started uncharged. Which capacitor has the larger share of the supply voltage?",
           "choices": [
             {
               "text": "The one with the smaller capacitance: both hold the same charge, and V = Q/C",
@@ -737,7 +739,7 @@
         ],
         "labels": []
       },
-      "review": "verified",
+      "review": "checked",
       "placement": true
     },
     {
@@ -949,7 +951,7 @@
     {
       "id": "cap_what_if_spacing",
       "topicId": "capacitors",
-      "prompt": "Two flat metal plates, each {A} cm², face each other {d} mm apart in air, forming a capacitor. The gap is widened to {new_d} mm; the plates and their overlap are unchanged. What happens to the capacitance?",
+      "prompt": "An air-gap capacitor has two flat plates of {A} cm² each, {d} mm apart. The gap is widened to {new_d} mm without changing the overlap. What happens to the capacitance?",
       "variables": [
         {
           "name": "A",
@@ -990,7 +992,7 @@
       ],
       "followUps": [
         {
-          "prompt": "Suppose the plates are connected to a battery throughout, while the gap is widened. What happens to the charge on each plate?",
+          "prompt": "The plates are now kept connected to a battery while the gap is widened. What happens to the charge on each plate?",
           "choices": [
             {
               "text": "It halves: the voltage is held fixed, so Q = CV falls with C, and the extra charge flows back through the battery",
@@ -1014,7 +1016,7 @@
         }
       ],
       "noDrawing": "about a capacitor's geometry; no circuit to analyze",
-      "review": "verified"
+      "review": "checked"
     },
     {
       "id": "cap_what_if_v_capacitance",
@@ -1832,6 +1834,246 @@
         ]
       },
       "review": "verified"
+    },
+    {
+      "id": "cap_trouble_holdup",
+      "topicId": "capacitors",
+      "level": "design",
+      "prompt": "During a {t} dropout the rail should droop about {dVe}, but the scope shows it ramping down {dVm}. Find C1's actual capacitance.",
+      "variables": [
+        {
+          "name": "I",
+          "unit": "A",
+          "values": [
+            0.01,
+            0.02,
+            0.03
+          ]
+        },
+        {
+          "name": "t",
+          "unit": "s",
+          "value": 0.002
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            0.00022,
+            0.00033,
+            0.00047
+          ]
+        },
+        {
+          "name": "f",
+          "unit": "",
+          "values": [
+            0.3,
+            0.4,
+            0.5
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Q",
+          "formula": "I*t",
+          "unit": "C"
+        },
+        {
+          "name": "dVe",
+          "formula": "I*t/C",
+          "unit": "V"
+        },
+        {
+          "name": "dVm",
+          "formula": "I*t/(C*f)",
+          "unit": "V"
+        },
+        {
+          "name": "pct",
+          "formula": "f*100",
+          "unit": "%"
+        },
+        {
+          "name": "Ilk",
+          "formula": "I*(1/f-1)",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "I*t/dVm",
+        "unit": "F",
+        "tolerance": 0.02
+      },
+      "explanation": "During the dropout the board takes Q = I·t = {I} × {t} = {Q} from C1, and a capacitor that gives up Q falls by ΔV = Q/C. The rail fell {dVm}, so C = Q/ΔV = {Q} / {dVm} = {answer}, about {pct} of the marked {C} (which would have given {dVe}). Aluminum electrolytics lose capacitance as their electrolyte dries out with age and heat. Read the ramp, not any step at its start: an aged electrolytic's equivalent series resistance (ESR) also rises, and it shows as an instant step of I × ESR the moment C1 takes over the board's current.",
+      "hints": [
+        "How much charge does the board take from C1 during the dropout?",
+        "Q = I·t, then C = Q/ΔV with the droop the scope shows."
+      ],
+      "misconceptions": [
+        {
+          "formula": "C*dVm/dVe",
+          "feedback": "That makes C1 larger than marked, yet it droops more. A larger droop for the same charge means fewer coulombs per volt: C = Q/ΔV = {Q} / {dVm}."
+        },
+        {
+          "formula": "I*t",
+          "feedback": "That is the charge the board takes, in coulombs. Divide it by the droop it caused: C = Q/ΔV."
+        },
+        {
+          "formula": "I*t/3.3",
+          "feedback": "You divided by the whole 3.3 V. The charge {Q} lowered the rail by only {dVm}: C = Q/ΔV."
+        },
+        {
+          "formula": "C",
+          "feedback": "That is C1's marking, which predicts {dVe}. The scope shows {dVm}: the same {Q} costs more volts, so C1 now holds fewer coulombs per volt: C = Q/ΔV = {Q} / {dVm}."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "The board draws the same current as before. Why does the rail now fall further?",
+          "choices": [
+            {
+              "text": "C1 has lost capacitance: the same charge, I·t, lowers it further, since ΔV = Q/C",
+              "correct": true,
+              "feedback": "Right: the board takes {Q} either way; with fewer coulombs per volt, giving it up costs more volts."
+            },
+            {
+              "text": "C1 now leaks a current comparable to the board's, which adds to the drain",
+              "feedback": "To steepen the ramp this much, C1 would have to leak {Ilk}, as much as the board draws or more. An aluminum electrolytic leaks microamps; one leaking milliamps is breaking down and runs hot. The slope is I/C, and C is what changed."
+            },
+            {
+              "text": "C1 now charges to a lower voltage, so the dropout starts lower",
+              "feedback": "C1 sits across the rail, so it charges to the rail's 3.3 V whatever its capacitance. The droop is measured from there; its size is Q/C."
+            },
+            {
+              "text": "The board takes more charge from a smaller capacitor",
+              "feedback": "The board draws a steady {I} whatever supplies it, so it takes Q = I·t = {Q} during the dropout either way. The same charge from a smaller C means a larger ΔV."
+            }
+          ],
+          "explanation": "With a constant load the rail ramps down at I/C volts per second. The current is unchanged, so a steeper ramp means a smaller C."
+        }
+      ],
+      "schematic": {
+        "netlist": "hold-up capacitor, as marked\nV1 in 0 3.3\nRS1 in rail 1e9\nC1 rail 0 {C:spice}\nI1 rail 0 {I:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "3.3 V\nsupply"
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "connector\n(interrupted)",
+            "symbol": "switch"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C1, electrolytic\nmarked {C}"
+          },
+          {
+            "ref": "I1",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "board\n{I}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              8,
+              6
+            ],
+            [
+              16,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "rail",
+            "at": [
+              12,
+              0
+            ]
+          }
+        ]
+      }
     }
   ]
 }

@@ -128,6 +128,29 @@
           "title": "Particle physics",
           "nodes": 5,
           "note": "Electrons, protons and the particles beyond them, and the detectors that track them, such as the spark chamber."
+        },
+        {
+          "title": "Electromagnetism",
+          "nodes": 4,
+          "note": "Fields, induction and electromagnetic waves, built on the charge, current, capacitors and inductors of the core."
+        },
+        {
+          "title": "Mathematics",
+          "buildsOn": "Circuit analysis",
+          "nodes": 4,
+          "note": "Complex numbers, differential equations and the Laplace and Fourier transforms behind the impedance and time constants of Circuit analysis."
+        },
+        {
+          "title": "RF",
+          "buildsOn": "Electronics",
+          "nodes": 4,
+          "note": "Radio-frequency circuits: transmission lines, impedance matching, amplifiers and antennas, built on the impedance of Circuit analysis and the transistors of Electronics."
+        },
+        {
+          "title": "Troubleshooting",
+          "buildsOn": "Electronics",
+          "nodes": 3,
+          "note": "Finding faults in real circuits with a meter and an oscilloscope, built on the bias points of Electronics and the schematics of the Workshop."
         }
       ]
     }

@@ -3,6 +3,7 @@
     {
       "id": "opamp_inverting",
       "title": "Inverting amplifier",
+      "mapTitle": "Inverting amplifier",
       "summary": "Gain −Rf/Rin: the output is an amplified, upside-down copy of the input, and the source sees Rin.",
       "lenses": [
         "circuit",
@@ -1072,7 +1073,9 @@
           }
         ]
       },
-      "review": "verified"
+      "review": "verified",
+      "formulaSteps": 1,
+      "formulaStepsWhy": "One relation: the inverting amplifier's gain, −R_f/R_in, used backward."
     },
     {
       "id": "inv_virtual_ground_concept",

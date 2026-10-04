@@ -3,6 +3,7 @@
     {
       "id": "bjt_bias",
       "title": "Biasing a bipolar transistor",
+      "mapTitle": "BJT biasing",
       "summary": "Set a steady operating point: a base resistor is simple but depends on β; divider bias with an emitter resistor doesn't.",
       "lenses": [
         "circuit"
@@ -381,7 +382,9 @@
           }
         ]
       },
-      "review": "verified"
+      "review": "verified",
+      "formulaSteps": 1,
+      "formulaStepsWhy": "One relation: the collector loop, V_CE = V_CC − I_C·R_C."
     },
     {
       "id": "bias_divider_ic",

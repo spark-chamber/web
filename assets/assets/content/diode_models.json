@@ -3,6 +3,7 @@
     {
       "id": "diode_models",
       "title": "Practical diodes: equation, 0.7 V model, temperature",
+      "mapTitle": "Practical diodes",
       "summary": "Real diodes follow the exponential Shockley equation; for quick work use a 0.7 V drop that falls about 2 mV per °C.",
       "lenses": [
         "circuit",
@@ -279,7 +280,9 @@
       ],
       "noDrawing": "the Shockley equation for one diode, no circuit",
       "review": "verified",
-      "placement": true
+      "placement": true,
+      "formulaSteps": 1,
+      "formulaStepsWhy": "One relation: the Shockley equation, I = I_S(e^(V/V_T) − 1)."
     },
     {
       "id": "dm_shockley_voltage",
@@ -326,7 +329,9 @@
         }
       ],
       "noDrawing": "the Shockley equation for one diode, no circuit",
-      "review": "verified"
+      "review": "verified",
+      "formulaSteps": 1,
+      "formulaStepsWhy": "One relation: the Shockley equation solved for V, V = V_T·ln(I/I_S + 1)."
     },
     {
       "id": "dm_decade_shift",

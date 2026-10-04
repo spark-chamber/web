@@ -3,6 +3,7 @@
     {
       "id": "thevenin",
       "title": "Thevenin and Norton equivalents",
+      "mapTitle": "Thevenin and Norton",
       "summary": "Any linear two-terminal circuit looks like one voltage source with one series resistor (or a current source with a parallel resistor).",
       "lenses": [
         "circuit"
@@ -228,7 +229,9 @@
           }
         ]
       },
-      "review": "verified"
+      "review": "verified",
+      "formulaSteps": 1,
+      "formulaStepsWhy": "One relation: the divider rule, V_in·R2/(R1 + R2)."
     },
     {
       "id": "th_rth_divider",

@@ -971,7 +971,9 @@
       },
       "noDrawing": "the exercise is reading the value suffixes in the netlist text; a drawing would label the values in ohms for the student",
       "review": "verified",
-      "placement": true
+      "placement": true,
+      "formulaSteps": 1,
+      "formulaStepsWhy": "One relation: the divider rule, V_in·R2/(R1 + R2); the suffixes are the point."
     },
     {
       "id": "spice_fault_netlist_typo",

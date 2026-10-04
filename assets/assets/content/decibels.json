@@ -3,6 +3,7 @@
     {
       "id": "decibels",
       "title": "Decibels for voltage and power",
+      "mapTitle": "Decibels",
       "summary": "Convert between ratios and dB: 20·log₁₀ for voltage, 10·log₁₀ for power, and why they agree.",
       "lenses": [
         "math",

@@ -3,6 +3,7 @@
     {
       "id": "pn_junction",
       "title": "Semiconductors and the PN junction",
+      "mapTitle": "PN junction",
       "summary": "Doping makes n-type and p-type silicon; where they meet, a depletion region forms and sets how a diode behaves.",
       "lenses": [
         "physics"

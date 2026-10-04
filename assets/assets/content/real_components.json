@@ -3,6 +3,7 @@
     {
       "id": "real_components",
       "title": "Real components: values, tolerances, and ratings",
+      "mapTitle": "Real components",
       "summary": "Real resistors and capacitors come in standard values (the E-series), lie within a tolerance of their marked value, change a little with temperature, and have power and voltage limits. Reading their markings and datasheets tells you what a part guarantees; worst-case analysis tells you whether the circuit still works at the edges.",
       "lenses": [
         "circuit",
@@ -412,6 +413,7 @@
         "unit": "F"
       },
       "estimate": true,
+      "estimateHint": "Decoding is exact, so nothing to round: {code} means {mant} followed by {m} zeros of picofarads (1 pF = 10⁻¹² F), which is {pf}.",
       "explanation": "Capacitor codes count in picofarads: two digits, then the number of zeros. {code} is {mant} followed by {m} zeros, in pF: {answer}. The common decoupling capacitor marked 104 is 10 × 10⁴ pF = 100 000 pF = 100 nF. The values come from the E6 and E12 series, as for resistors.",
       "hints": [
         "The code's base unit is the picofarad.",
@@ -829,12 +831,14 @@
         "labels": []
       },
       "review": "verified",
-      "placement": true
+      "placement": true,
+      "formulaSteps": 1,
+      "formulaStepsWhy": "One relation: Ohm's law at the resistor's low tolerance limit."
     },
     {
       "id": "real_worst_divider",
       "topicId": "real_components",
-      "prompt": "A divider makes a reference from {Vin}: R1 = {R1} on top, R2 = {R2} on the bottom, both ±{t} parts. With nothing loading the output, what is the highest output voltage the tolerances allow?",
+      "prompt": "Find the highest V_out the resistor tolerances allow. Assume the output is unloaded.",
       "variables": [
         {
           "name": "Vin",
@@ -886,10 +890,10 @@
         "unit": "V",
         "tolerance": 0.01
       },
-      "explanation": "The output is V_in × R2/(R1 + R2), which depends on the ratio of the two parts. It is highest when R2 is at the top of its band and R1 at the bottom: R2 = {R2hi}, R1 = {R1lo}. V_out = {Vin} × {R2hi} / ({R1lo} + {R2hi}) = {answer}, against {Vnom} nominal. With R2 the smaller part, the output moves by more than 5%: both errors push the ratio the same way. This is the divider from Foundations, with each part at the edge of its band.",
+      "explanation": "The output is V_in × R2/(R1 + R2), which depends on the ratio of the two parts. It is highest when R2 is at the top of its band and R1 at the bottom: R2 = {R2hi}, R1 = {R1lo}. V_out = {Vin} × {R2hi} / ({R1lo} + {R2hi}) = {answer}, against {Vnom} nominal. With R2 the smaller part, the output moves by more than 5%: both errors push the ratio the same way. The same current flows through both parts, so V_out = I·R2 with I = V_in/(R1 + R2); Foundations takes this circuit further as the voltage divider.",
       "hints": [
         "Which way must each resistor move to push the output up? Moving both the same way changes nothing.",
-        "R2 at +{t}, R1 at −{t}, then the divider formula."
+        "R2 at +{t}, R1 at −{t}. The same current flows through both, I = {Vin} / (R1 + R2), and V_out = I × R2."
       ],
       "misconceptions": [
         {
@@ -948,7 +952,7 @@
               2,
               0
             ],
-            "label": "R1\n{R1}"
+            "label": "R1\n{R1} ±{t}"
           },
           {
             "ref": "R2",
@@ -957,7 +961,7 @@
               2
             ],
             "rot": 90,
-            "label": "R2\n{R2}"
+            "label": "R2\n{R2} ±{t}"
           }
         ],
         "wires": [
@@ -1016,7 +1020,7 @@
           }
         ]
       },
-      "review": "verified"
+      "review": "checked"
     },
     {
       "id": "real_nearest_e12",
@@ -1141,6 +1145,21 @@
           "name": "dT",
           "formula": "T-25",
           "unit": "°C"
+        },
+        {
+          "name": "ppm",
+          "formula": "a*(T-25)",
+          "unit": ""
+        },
+        {
+          "name": "fr",
+          "formula": "a*1e-6*(T-25)",
+          "unit": ""
+        },
+        {
+          "name": "estR",
+          "formula": "fig1(fig1(R)*fig1(fr))",
+          "unit": "Ω"
         }
       ],
       "answer": {
@@ -1148,6 +1167,7 @@
         "unit": "Ω"
       },
       "estimate": true,
+      "estimateHint": "Subtract first: ΔT = {T} − 25 °C = {dT}. Then α·ΔT = {a} × {dT} = {ppm} ppm, or about {fr:fig1} as a fraction (1 ppm is 10⁻⁶). So ΔR = R·α·ΔT ≈ ({R:fig1} Ω) × ({fr:fig1}) ≈ {estR:fig1} Ω.",
       "explanation": "ppm means parts per million: 1 ppm is 10⁻⁶ of the value, so ±{a} allows a change of up to that many millionths of the value for every degree. The rise is {T} − 25 °C = {dT}, so ΔR = R × α × ΔT = {R} × {a} × {dT} = {answer}. The datasheet gives a limit in both directions, so the value may rise or fall by up to that much, and it returns when the part cools. In a metal the hotter lattice scatters the electrons more often, so its resistivity rises; film resistors are made from alloys chosen to keep this small.",
       "hints": [
         "ppm/°C is a fraction of the value per degree. What is the temperature change?",

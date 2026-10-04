@@ -3,6 +3,7 @@
     {
       "id": "charge_current",
       "title": "Charge and current",
+      "mapTitle": "Charge and current",
       "summary": "Charge comes in whole electrons; current is the number of coulombs passing a point each second, and in a single loop it is the same everywhere.",
       "lenses": [
         "physics",
@@ -229,7 +230,7 @@
     {
       "id": "cc_battery_charge",
       "topicId": "charge_current",
-      "prompt": "A battery is rated {cap}h. How much charge can it move through a circuit before it goes flat? Take the rating at face value.",
+      "prompt": "A battery is rated {cap}h. How much charge can it move through a circuit before it dies? Take the rating at face value.",
       "variables": [
         {
           "name": "cap",
@@ -243,12 +244,30 @@
           ]
         }
       ],
+      "derived": [
+        {
+          "name": "estQ",
+          "formula": "fig1(fig1(cap)*4000)",
+          "unit": "C"
+        },
+        {
+          "name": "tslow",
+          "formula": "cap/0.1",
+          "unit": "h"
+        },
+        {
+          "name": "tfast",
+          "formula": "cap/1",
+          "unit": "h"
+        }
+      ],
       "answer": {
         "formula": "cap*3600",
         "unit": "C",
         "tolerance": 0.02
       },
       "estimate": true,
+      "estimateHint": "1 Ah is 1 A for an hour, and an hour is 3600 s ≈ 4 × 10³ s. So {cap}h is {cap} for an hour: Q ≈ {cap:fig1} A × 4 × 10³ s ≈ {estQ:fig1} C.",
       "explanation": "An mAh or Ah rating is a current multiplied by a time, which is a charge. One hour is 3600 s and an ampere-second is a coulomb, so Q = {cap} × 3600 s = {answer}.",
       "hints": [
         "A current multiplied by a time is a charge. What is an hour in seconds?",
@@ -266,37 +285,38 @@
       ],
       "followUps": [
         {
-          "prompt": "A 1.2 V NiMH cell and a 3.7 V lithium-ion cell are both rated 2000 mAh. Which one stores more energy?",
+          "prompt": "Two identical batteries, each rated {cap}h, start fully charged. One runs a load drawing 0.1 A, the other a load drawing 1 A. Taking the rating at face value, how much charge passes through each load before its battery dies?",
           "choices": [
             {
-              "text": "The lithium-ion cell: both move the same charge, but each coulomb gives up more energy",
+              "text": "The same charge through each load; the 1 A load just gets through it ten times sooner",
               "correct": true,
-              "feedback": "Right: energy = charge × voltage, so the same 7200 C gives about 3.7 V × 7200 C ≈ 27 kJ from the lithium-ion cell and 1.2 V × 7200 C ≈ 8.6 kJ from the NiMH cell."
+              "feedback": "Right: the rating is a fixed charge. The load's current is only the rate at which that charge is drawn, so it sets how long the battery lasts, not how many coulombs pass."
             },
             {
-              "text": "Neither: they have the same mAh rating, so they store the same energy",
-              "feedback": "mAh measures charge, not energy. Each coulomb a 3.7 V cell moves gives up more energy in the load than one from a 1.2 V cell."
+              "text": "Ten times more through the 1 A load, because it draws charge ten times faster",
+              "feedback": "It draws charge ten times faster, but for a tenth of the time: {tfast} instead of {tslow}. Current × time comes to the same {answer} either way."
             },
             {
-              "text": "The NiMH cell: a lower voltage drains it more slowly",
-              "feedback": "The rating already counts the charge each cell can deliver; at the lower voltage each of those coulombs gives up less energy."
+              "text": "Ten times more through the 0.1 A load, because it runs ten times longer",
+              "feedback": "It runs ten times longer, {tslow} instead of {tfast}, but at a tenth of the current. Current × time comes to the same {answer} either way."
             },
             {
-              "text": "You can't tell without knowing the load current",
-              "feedback": "The load affects how fast the energy is used, not how much is stored. With the same charge, the higher-voltage cell stores more energy."
+              "text": "None through either load: every coulomb that leaves the battery comes back to it",
+              "feedback": "The charge does come back to the battery, but it passes through the load on the way: a coulomb counter in series with either load would count {answer} in total. Charge returning is why no charge is used up, not why none flows."
             }
           ],
-          "explanation": "An mAh rating counts charge. The energy each coulomb gives up is set by the cell's voltage (one volt is one joule per coulomb, the next topic), so the stored energy is roughly rating × voltage."
+          "explanation": "An mAh or Ah rating is a fixed amount of charge, {answer} here. Current is the rate at which a load draws it, so run time = charge ÷ current: {tslow} at 0.1 A and {tfast} at 1 A. Either way the same coulombs pass through the load. Real cells deliver somewhat less at high currents, which the face-value rating ignores."
         }
       ],
       "noDrawing": "about a battery's rating; no circuit to analyze",
-      "review": "verified",
+      "review": "draft",
       "placement": true
     },
     {
       "id": "cc_drift_time",
       "topicId": "charge_current",
-      "prompt": "A 12 V DC cable feeding an LED light strip has copper conductors of {Amm} mm² cross-section and carries a steady {I}. Copper has about 8.5 × 10²⁸ free electrons per cubic meter. On average, how long does one electron take to drift {L} along the cable?",
+      "level": "design",
+      "prompt": "A 12 V DC cable feeding an LED light strip has copper conductors of {Amm} mm² cross-section and carries a steady {I}. Copper has about 8.5 × 10²⁸ free electrons per cubic meter. On average, how long does one electron take to drift {L} along the cable? Give the time in hours.",
       "variables": [
         {
           "name": "I",
@@ -333,34 +353,59 @@
           "unit": "m/s"
         },
         {
-          "name": "hours",
-          "formula": "L/v/3600",
-          "unit": "h"
+          "name": "tsec",
+          "formula": "L/v",
+          "unit": "s"
         },
         {
           "name": "tprop",
           "formula": "L/2e8",
           "unit": "s"
+        },
+        {
+          "name": "Am2",
+          "formula": "fig1(Amm)*1e-6",
+          "unit": ""
+        },
+        {
+          "name": "vE",
+          "formula": "fig1(fig1(I)/(9e28*Am2*2e-19))",
+          "unit": "m/s"
+        },
+        {
+          "name": "tE",
+          "formula": "fig1(fig1(L)/vE)",
+          "unit": "s"
+        },
+        {
+          "name": "tH",
+          "formula": "fig1(tE/4000)",
+          "unit": "h"
         }
       ],
       "answer": {
-        "formula": "L/v",
-        "unit": "s",
+        "formula": "L/v/3600",
+        "unit": "h",
         "tolerance": 0.03
       },
       "estimate": true,
-      "explanation": "First the drift speed: v = I/(nAe) = {I} / (8.5 × 10²⁸ m⁻³ × {Amm} × 10⁻⁶ m² × 1.602 × 10⁻¹⁹ C) = {v}. Then the time: t = L/v = {L} / {v} = {answer}, about {hours}. The drift is slow; the current is large only because so many electrons drift together.",
+      "estimateHint": "Drift speed first, v = I/(nAe), with every number to one figure and A in m² (1 mm² is 10⁻⁶ m²): A = {Amm} mm², or {Am2:fig1} m² to one figure; n ≈ 9 × 10²⁸ m⁻³ and e ≈ 2 × 10⁻¹⁹ C. So v ≈ {I:fig1} A / ({Am2:fig1} m² × 9 × 10²⁸ m⁻³ × 2 × 10⁻¹⁹ C) ≈ {vE:fig1} m/s, and t = L/v ≈ {L:fig1} m / ({vE:fig1} m/s) ≈ {tE:fig1} s. An hour is 3600 s ≈ 4 × 10³ s, so t ≈ {tE:fig1} s / (4 × 10³ s/h) ≈ {tH:fig1} h.",
+      "explanation": "First the drift speed: v = I/(nAe) = {I} / (8.5 × 10²⁸ m⁻³ × {Amm} × 10⁻⁶ m² × 1.602 × 10⁻¹⁹ C) = {v}. Then the time: t = L/v = {L} / {v} = {tsec}, and with 3600 s in an hour that is {answer}. The drift is slow; the current is large only because so many electrons drift together.",
       "hints": [
         "Find the drift speed first: the current equals the charge in the free electrons crossing a section per second, I = nAve.",
-        "v = I/(nAe), with A in square meters (1 mm² = 10⁻⁶ m²); then t = L/v."
+        "v = I/(nAe), with A in square meters (1 mm² = 10⁻⁶ m²); then t = L/v, and an hour is 3600 s."
       ],
       "misconceptions": [
         {
-          "formula": "L*8.5e28*Amm*1.602e-19/I",
+          "formula": "L/v",
+          "feedback": "That is the time in seconds, {tsec}. The question asks for hours: an hour is 3600 s, so divide by 3600."
+        },
+        {
+          "formula": "L*8.5e28*Amm*1.602e-19/I/3600",
           "feedback": "The area must be in square meters: 1 mm² = 10⁻⁶ m². Leaving it in mm² makes the drift a million times too slow."
         },
         {
-          "formula": "L*8.5e28*Amm*1e-6/I",
+          "formula": "L*8.5e28*Amm*1e-6/I/3600",
           "feedback": "You left out the electron's charge. n·A·v counts electrons per second; multiply by e to get coulombs per second, which is the current."
         },
         {
@@ -368,12 +413,12 @@
           "feedback": "That's the drift speed v = I/(nAe), in meters per second. The question asks for the time to cover {L}: t = L/v."
         },
         {
-          "formula": "v*1e6",
-          "feedback": "That's the drift speed, {v}, typed as a number in micrometers per second; it isn't a time. Convert it to m/s and divide the length by it: t = L/v."
-        },
-        {
           "formula": "I/(8.5e28*Amm*1.602e-19)",
           "feedback": "Two slips here. That's the drift speed v = I/(nAe), not a time, and its area is still in mm², so it comes out a million times too small. Convert the area to m² first (1 mm² = 10⁻⁶ m²), which gives v in m/s, then divide the length by it: t = L/v."
+        },
+        {
+          "formula": "L/v/60",
+          "feedback": "Dividing by 60 turns seconds into minutes. An hour is 3600 s, so divide the {tsec} by 3600."
         }
       ],
       "followUps": [
@@ -655,7 +700,7 @@
       "id": "cc_electron_direction",
       "topicId": "charge_current",
       "level": "recall",
-      "prompt": "In this loop, conventional current flows out of the {V} battery's + terminal, through R1 and the lamp, and back into the − terminal. In the copper wire between the + terminal and R1, which way do the electrons drift?",
+      "prompt": "Schematics mark the direction of a current as conventional current: the way a positive charge would move (a convention fixed before the electron was discovered). In this loop, conventional current flows out of the {V} battery's + terminal, through R1 and the lamp, and back into the − terminal. In the copper wire between the + terminal and R1, which way do the electrons drift?",
       "variables": [
         {
           "name": "V",
@@ -697,7 +742,7 @@
       ],
       "explanation": "Conventional current dates from before the electron was discovered: charge flow was defined as going from + to −. In metals the carriers turned out to be negative electrons, drifting from − through the circuit to +. Positive charge moving one way and negative charge moving the other way are the same current, so the convention never changes a calculated value.",
       "hints": [
-        "Conventional current is the direction a positive charge would move.",
+        "The convention follows a positive charge. What is the sign of an electron's charge?",
         "Electrons are negative. Which way must a negative charge move to make the same current?"
       ],
       "followUps": [
@@ -805,7 +850,7 @@
         ],
         "labels": []
       },
-      "review": "verified"
+      "review": "draft"
     },
     {
       "id": "cc_metals_insulators",
@@ -847,34 +892,34 @@
     {
       "id": "cc_battery_flat",
       "topicId": "charge_current",
-      "prompt": "A flashlight's battery goes flat after a few hours. A student says it has run out of electrons. What has actually been used up?",
+      "prompt": "An alkaline AA cell dies after 6 hours in a flashlight. What has been used up?",
       "variables": [],
       "choices": [
         {
-          "text": "The chemical reactants that supply its energy; the charge itself just circulates around the loop",
+          "text": "Its chemical reactants, because their reaction supplied the lamp's energy",
           "correct": true,
-          "feedback": "Right: the battery is an energy source, not a store of charge. Its reactions keep a voltage across its terminals, which drives charge around the circuit until the reactants are exhausted."
+          "feedback": "Right: the cell is a source of energy, not a store of charge; the charge only circulates around the loop. At the − electrode zinc reacts and releases electrons into the wire; at the + electrode manganese dioxide takes electrons back from it. As the zinc and manganese dioxide are used up, the cell's voltage under load sags until it can no longer drive the lamp."
         },
         {
-          "text": "The electrons: the battery held a fixed store and has pushed them all out into the circuit",
-          "feedback": "Every electron that leaves the − terminal is matched by one arriving at the + terminal, so the battery never runs short of charge. A battery that had pushed out a store of electrons would be strongly charged, and it isn't."
+          "text": "Its electrons, because it pushed its store of them out into the circuit",
+          "feedback": "Every electron that leaves the − terminal is matched by one arriving at the + terminal, so the cell never runs short of charge. A cell that had pushed out a store of electrons would be strongly charged, and it isn't."
         },
         {
-          "text": "The current: the bulb used some of it up, so less returned each time around",
-          "feedback": "The current is the same everywhere in the loop, including both sides of the bulb. The bulb converts energy, not charge."
+          "text": "The current, because the lamp used some of it up on each pass",
+          "feedback": "The current is the same everywhere in the loop, on both sides of the lamp. The lamp converts energy, not charge."
         },
         {
-          "text": "The wire's free electrons: they have all passed through the bulb and can't be used again",
-          "feedback": "The wire's free electrons are never used up; they drift around the loop and stay in the circuit. The energy the bulb turns into light and heat comes from the battery's chemistry, through the field in the circuit."
+          "text": "The wire's free electrons, because they all passed through the lamp",
+          "feedback": "The wire's free electrons are never used up; they drift around the loop and stay in the circuit. The energy the lamp turns into light and heat comes from the cell's chemistry, through the field in the circuit."
         }
       ],
-      "explanation": "Charge is conserved, so the battery can't run out of it. Its chemical reactions do work on the charge passing through it, and the potential energy each coulomb gives up in the bulb becomes light and heat. When the reactants are used up, the battery can no longer keep up its voltage. The mAh rating counts how much charge it can drive around the circuit before that happens.",
+      "explanation": "Charge is conserved, so the cell can't run out of it. Its chemical reaction does work on the charge passing through it, and the energy each coulomb gives up in the lamp becomes light and heat. As the zinc and manganese dioxide react, the cell's voltage under load sags; at a flashlight's current it dies while some of them are still unreacted. Its mAh rating counts how much charge it can drive around the circuit before that, at a stated current: drawn harder, it delivers less.",
       "hints": [
         "Does any charge leave the circuit while the flashlight is on?",
         "Compare the charge leaving the − terminal with the charge arriving at the + terminal."
       ],
       "noDrawing": "about what a battery does, not a particular circuit",
-      "review": "verified"
+      "review": "checked"
     },
     {
       "id": "cc_fault_meters",

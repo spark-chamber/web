@@ -13,7 +13,8 @@
       ],
       "seeAlso": [
         "charge",
-        "ion"
+        "ion",
+        "conventional_current"
       ],
       "group": "charge and fields",
       "drills": [
@@ -674,7 +675,7 @@
         },
         {
           "title": "A battery's mAh is charge it moves, not charge it holds.",
-          "text": "A 2000 mAh cell can drive 7200 C around a circuit before it is flat, for example 200 mA for 10 h. That charge comes from the wires and parts and returns to them; the cell's chemistry supplies the energy, 3.7 V × 7200 C ≈ 27 kJ for a lithium-ion cell."
+          "text": "A 2000 mAh cell can drive 7200 C around a circuit before it is dead, for example 200 mA for 10 h. That charge comes from the wires and parts and returns to them; the cell's chemistry supplies the energy, 3.7 V × 7200 C ≈ 27 kJ for a lithium-ion cell."
         },
         {
           "title": "Charge is not used up in a load.",
@@ -733,7 +734,8 @@
       ],
       "seeAlso": [
         "charge",
-        "drift_velocity"
+        "drift_velocity",
+        "conventional_current"
       ],
       "group": "circuit quantities",
       "drills": [
@@ -988,6 +990,241 @@
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 1 \"Basic Concepts of Electricity\", section \"Conventional versus electron flow\"",
           "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_1.html#xtocid87076",
           "note": "Checked that conventional flow is drawn as positive charge moving from + to − while electrons in a metal move the other way, and that either gives the same analysis."
+        }
+      ]
+    },
+    {
+      "id": "conventional_current",
+      "term": "conventional current",
+      "symbol": "I→",
+      "aliases": [
+        "conventional flow"
+      ],
+      "definition": "The direction in which currents are drawn and calculated: the way a positive charge would move, which in a simple loop with one source is out of the source's + terminal, through the circuit, and back into its − terminal. In a metal wire the free electrons drift the opposite way, and the current is the same.",
+      "taughtIn": [
+        "charge_current"
+      ],
+      "seeAlso": [
+        "current",
+        "electron"
+      ],
+      "group": "charge and fields",
+      "drills": [
+        {
+          "id": "conventional_current_arrow",
+          "kind": "which",
+          "prompt": "A current arrow on a schematic is labeled with a positive value. Which way does that say the charge moves?",
+          "choices": [
+            {
+              "text": "The way a positive charge would move",
+              "correct": true
+            },
+            {
+              "text": "The way the free electrons in the wires drift",
+              "feedback": "Electrons are negative, and they drift against the arrow. The arrow follows a positive charge, a convention fixed before the electron was discovered."
+            },
+            {
+              "text": "The way the free electrons drift on some drawings and positive charge on others, depending on the drawing's style",
+              "feedback": "Schematics, datasheets, and simulators all use one convention: a positive current along an arrow means positive charge would move that way."
+            },
+            {
+              "text": "The way energy travels, from the source to the load",
+              "feedback": "Energy flows from source to load in the fields around both wires, while the current arrow goes out along one wire and back along the other."
+            }
+          ]
+        },
+        {
+          "id": "conventional_current_electrons",
+          "kind": "spot",
+          "prompt": "In a single loop of copper wire, 2 mA of conventional current flows clockwise. Which statement is true?",
+          "choices": [
+            {
+              "text": "The electrons drift counterclockwise, about 1.25 × 10¹⁶ of them past each point every second.",
+              "correct": true
+            },
+            {
+              "text": "The electrons drift clockwise, about 1.25 × 10¹⁶ of them past each point every second.",
+              "feedback": "Conventional current is the direction a positive charge would move. Electrons are negative, so to make the same current they drift the other way."
+            },
+            {
+              "text": "Positive charges drift clockwise and electrons counterclockwise, 1 mA each.",
+              "feedback": "In a metal the positive ions are fixed in the lattice; only the free electrons move. They alone carry the whole 2 mA, drifting counterclockwise."
+            },
+            {
+              "text": "The electrons drift counterclockwise, so the real current is −2 mA and every result has to be recalculated.",
+              "feedback": "Negative charge moving counterclockwise is the same current as positive charge moving clockwise: the sign of the charge and its direction flip together. Every voltage, current, and power is unchanged."
+            }
+          ]
+        },
+        {
+          "id": "conventional_current_inside_cell",
+          "kind": "spot",
+          "prompt": "A battery drives a current around a single loop. Which statement about the conventional current is true?",
+          "choices": [
+            {
+              "text": "Outside the battery it flows from + to −; inside the battery it flows from − to +.",
+              "correct": true
+            },
+            {
+              "text": "It flows from + to − both outside and inside the battery.",
+              "feedback": "A loop has one direction all the way around. If the current leaves the + terminal and returns into the − terminal, it must go from − to + through the battery to close the loop; the battery's chemistry does work on the charge there."
+            },
+            {
+              "text": "It flows only in the wires and the load; none flows through the battery.",
+              "feedback": "The same current passes every point of a single loop, the battery included. Inside the cell, ions carry it through the electrolyte."
+            },
+            {
+              "text": "It flows from − to + outside the battery, the way the electrons drift in the wires.",
+              "feedback": "That is the electrons' direction. Conventional current is the direction a positive charge would move: out of the + terminal and around to the −."
+            }
+          ]
+        }
+      ],
+      "unit": "ampere (A), like any current: the convention fixes only the direction",
+      "physics": [
+        "A current counts the charge crossing a section each second, and two opposite motions give the same count: +1 C moving to the right and −1 C moving to the left both move +1 C of charge to the right. So the size of a current doesn't depend on which carriers move, but its direction needs a convention. Circuit work uses the direction a positive charge would move. In a loop with one source, that is out of the source's + terminal, through the circuit, and back into its − terminal, then on through the source from − to +.",
+        "The convention was settled before the electron was discovered. In a metal the carriers turned out to be negative free electrons, so they drift against the conventional current. In an electrolyte, positive ions move with it and negative ions against it; in a semiconductor, holes move with it and electrons against it. Conventional current adds all of these into one number with one direction.",
+        "Formulas, simulators, and device symbols all use it. A diode's triangle and a transistor's emitter arrow point the way conventional current flows through them. SPICE measures a voltage source's current from its + terminal through the source to its − terminal, so a battery delivering current to a load reports a negative current."
+      ],
+      "typical": [
+        {
+          "what": "1 A of conventional current in a copper wire",
+          "value": "6.24 × 10¹⁸ electrons per second drifting the other way"
+        },
+        {
+          "what": "drift speed against the arrow, 1 A in 1 mm² copper",
+          "value": "about 0.07 mm/s"
+        },
+        {
+          "what": "diode symbol",
+          "value": "triangle points anode to cathode, with the conventional current"
+        },
+        {
+          "what": "SPICE I(V1), a 9 V battery driving 1 kΩ",
+          "value": "−9 mA"
+        }
+      ],
+      "figures": [
+        {
+          "kind": "schematic",
+          "title": "One loop, one direction",
+          "caption": "A1 reads about 8.3 mA. Conventional current leaves the + terminal, passes R1, then D1 in the direction its triangle points, and returns to the − terminal. The electrons in the wires drift the other way at the same rate in coulombs per second",
+          "netlist": "conventional current\nV1 a 0 9\nR1 a b 1k\nD1 b 0 DS\n.model DS D\n",
+          "parts": [
+            {
+              "ref": "V1",
+              "at": [
+                0,
+                2
+              ],
+              "rot": 90,
+              "label": "9 V",
+              "symbol": "battery"
+            },
+            {
+              "ref": "R1",
+              "at": [
+                2,
+                0
+              ],
+              "label": "R1\n1 kΩ"
+            },
+            {
+              "ref": "D1",
+              "at": [
+                8,
+                2
+              ],
+              "rot": 90,
+              "label": "D1"
+            }
+          ],
+          "wires": [
+            [
+              [
+                0,
+                2
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                2,
+                0
+              ]
+            ],
+            [
+              [
+                6,
+                0
+              ],
+              [
+                8,
+                0
+              ],
+              [
+                8,
+                2
+              ]
+            ],
+            [
+              [
+                8,
+                6
+              ],
+              [
+                0,
+                6
+              ]
+            ]
+          ],
+          "grounds": [
+            [
+              4,
+              6
+            ]
+          ],
+          "meters": [
+            {
+              "text": "A1",
+              "at": [
+                7,
+                0
+              ],
+              "kind": "ammeter"
+            }
+          ]
+        }
+      ],
+      "confusions": [
+        {
+          "title": "Conventional current is not a wrong current.",
+          "text": "1 mA of conventional current clockwise and 6.24 × 10¹⁵ electrons per second drifting counterclockwise are the same current. Every voltage, current, and power comes out the same; only the arrow's direction is a choice."
+        },
+        {
+          "title": "The arrow does not show what moves in a wire.",
+          "text": "In a copper wire carrying 1 A, no positive charge travels at all: the copper ions stay in the lattice, and the free electrons drift against the arrow, at about 0.07 mm/s in a 1 mm² conductor."
+        },
+        {
+          "title": "A negative source current in SPICE is not a fault.",
+          "text": "SPICE measures a source's current from its + terminal through the source to its − terminal. A 9 V battery driving 1 kΩ pushes 9 mA of conventional current out of its + terminal, so the simulator reports I(V1) = −9 mA."
+        },
+        {
+          "title": "Current doesn't always leave the + terminal.",
+          "text": "A battery delivering energy pushes conventional current out of its + terminal, but a battery being charged takes conventional current into its + terminal: a 5 V charger driving 0.5 A into a 3.7 V cell sends that 0.5 A into the cell's + terminal and out of its −."
+        }
+      ],
+      "uses": "Reading current arrows on schematics and datasheets, the arrows in device symbols (diodes, LEDs, transistors), the sign of every current a simulator reports, and writing Kirchhoff's current law with one consistent sign at every node.",
+      "usedIn": [
+        "ideal_diode",
+        "circuit_modeling"
+      ],
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 1 \"Basic Concepts of Electricity\", section \"Conventional versus electron flow\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_1.html#xtocid87076",
+          "note": "Checked that conventional flow labels charge motion as going from + to − while electrons actually move the other way, that the convention dates from Franklin's choice of signs before the electron was known, that either notation gives the same circuit analysis (Ohm's and Kirchhoff's laws hold in both), and that the arrows in polarized device symbols such as the diode point in the conventional direction."
         }
       ]
     },

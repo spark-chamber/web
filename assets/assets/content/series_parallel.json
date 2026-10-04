@@ -3,6 +3,7 @@
     {
       "id": "series_parallel",
       "title": "Series and parallel resistance",
+      "mapTitle": "Series and parallel",
       "summary": "Resistances in series add; in parallel, the total is smaller than the smallest one.",
       "lenses": [
         "circuit",
@@ -169,6 +170,7 @@
     {
       "id": "sp_parallel_two",
       "topicId": "series_parallel",
+      "level": "recall",
       "prompt": "Resistors of {R1} and {R2} are connected in parallel. What is the equivalent resistance?",
       "variables": [
         {

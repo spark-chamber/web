@@ -3,6 +3,7 @@
     {
       "id": "dividers",
       "title": "Voltage and current dividers",
+      "mapTitle": "Dividers",
       "summary": "Two resistors split a voltage in proportion to their values; parallel branches split a current in inverse proportion.",
       "lenses": [
         "circuit"
@@ -489,6 +490,18 @@
           ]
         }
       ],
+      "derived": [
+        {
+          "name": "sh",
+          "formula": "R2/(R1+R2)",
+          "unit": ""
+        },
+        {
+          "name": "estI",
+          "formula": "fig1(sh)*I",
+          "unit": "A"
+        }
+      ],
       "answer": {
         "formula": "I*R2/(R1+R2)",
         "unit": "A"
@@ -509,6 +522,7 @@
         "probe": "i(R1)"
       },
       "estimate": true,
+      "estimateHint": "R1's share of the current is R2/(R1 + R2), the other resistor over the sum, so the smaller resistor takes the larger share. Work the share out as one number, then round it: {R2} / ({R1} + {R2}) ≈ {sh:fig1}. So I1 ≈ {sh:fig1} × {I} ≈ {estI}.",
       "followUps": [
         {
           "prompt": "Why does R1's share of the current have the other resistor, R2, on top?",

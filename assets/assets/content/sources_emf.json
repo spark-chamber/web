@@ -3,6 +3,7 @@
     {
       "id": "sources_emf",
       "title": "Sources: EMF and internal resistance",
+      "mapTitle": "Sources and EMF",
       "summary": "A cell's chemistry does a fixed amount of work on each coulomb that passes through it: its EMF, E. The cell's own resistance r turns part of that into heat, a part that grows with the current, so the terminal voltage V = E − I·r falls under load.",
       "lenses": [
         "physics",
@@ -1766,7 +1767,7 @@
     {
       "id": "src_constant_current_myth",
       "topicId": "sources_emf",
-      "prompt": "A 9 V battery (EMF 9.4 V, internal resistance 1.5 Ω) runs a small motor that draws 0.3 A. A student says: \"This battery puts out 0.3 A, so a 10 Ω, 10 W resistor across it would take 0.3 A too.\" What current would the 10 Ω resistor really take?",
+      "prompt": "This 9 V battery ran a small motor at 0.3 A. Find the current with the resistor shown in place of the motor.",
       "variables": [],
       "choices": [
         {
@@ -1784,7 +1785,7 @@
         },
         {
           "text": "About 0.15 A: a resistor is harder for the battery to drive than a motor",
-          "feedback": "The battery responds only to resistance. The motor acts as about 9.4 V / 0.3 A − 1.5 Ω ≈ 30 Ω, so a 10 Ω resistor draws more current, not less."
+          "feedback": "The battery only responds to how much current the load takes at its terminal voltage. The motor took 0.3 A, so it acted as about 9.4 V / 0.3 A − 1.5 Ω ≈ 30 Ω; a 10 Ω resistor takes more current, not less."
         }
       ],
       "explanation": "A battery fixes, roughly, a voltage: its EMF, less the drop I·r. The current depends on what is connected: I = E/(R + r). The motor acts as about 30 Ω and draws 0.3 A; 10 Ω draws 9.4 V / 11.5 Ω = 0.82 A, and the terminals fall to 9.4 V − 0.82 A × 1.5 Ω = 8.2 V.",
@@ -1820,7 +1821,7 @@
               2
             ],
             "rot": 90,
-            "label": "10 Ω"
+            "label": "10 Ω\n10 W"
           }
         ],
         "wires": [
@@ -1871,7 +1872,7 @@
         ],
         "noBuild": "r is the cells' internal resistance, not a part"
       },
-      "review": "verified"
+      "review": "checked"
     },
     {
       "id": "src_load_test",
@@ -1907,33 +1908,33 @@
     {
       "id": "src_r_matters",
       "topicId": "sources_emf",
-      "prompt": "A 3 V lithium coin cell has an internal resistance of 20 Ω (coin cells of this size are typically around 10 to 30 Ω fresh, more as they discharge). It powers a sensor whose radio draws 15 mA bursts. A student says internal resistance only matters for big loads such as motors, so the bursts won't affect the supply voltage. What happens during a burst?",
+      "prompt": "A 3 V lithium coin cell with about 20 Ω of internal resistance powers a sensor whose radio draws 15 mA bursts. What happens to the cell's terminal voltage during a burst?",
       "variables": [],
       "choices": [
         {
-          "text": "The terminals fall by about 15 mA × 20 Ω = 0.3 V: what matters is r compared with the load's resistance, about 200 Ω here, not how big the current looks",
-          "feedback": "Right: 3 V − 0.3 V = 2.7 V during each burst, and more as the cell ages and r grows.",
-          "correct": true
+          "text": "It falls by about 0.3 V, to about 2.7 V, for the length of each burst",
+          "correct": true,
+          "feedback": "Right: the drop inside the cell is I·r = 15 mA × 20 Ω = 0.3 V. What matters is r compared with the load, about 200 Ω here, not how large the current looks. As the cell discharges and r grows, the dip deepens."
         },
         {
-          "text": "Nothing noticeable: 15 mA is far too small a current for internal resistance to matter",
+          "text": "It stays at 3 V: 15 mA is too small a current for internal resistance to matter",
           "feedback": "The drop is I·r. A 15 mA burst through 20 Ω is 0.3 V, 10% of the cell's voltage; a lithium-ion cell's milliohms would make that negligible, but a coin cell's ohms do not."
         },
         {
-          "text": "Nothing: a lithium cell's voltage stays flat until it is nearly empty",
+          "text": "It stays at 3 V: a lithium cell's voltage is flat until the cell is nearly empty",
           "feedback": "A flat discharge curve means the EMF changes little as charge is used. Under load the terminals still fall by I·r: 0.3 V here."
         },
         {
-          "text": "The voltage falls to zero: a coin cell can't supply a burst at all",
+          "text": "It falls to about 0 V: a coin cell can't supply a burst at all",
           "feedback": "It can, at a reduced voltage: 3 V − 15 mA × 20 Ω = 2.7 V. It would only fall to zero with a short, at 3 V / 20 Ω = 150 mA."
         }
       ],
-      "explanation": "The drop inside a source is I·r, so what matters is r compared with the load: a 15 mA load on 3 V is about 200 Ω, and 20 Ω is a tenth of that. A motor on a car battery draws hundreds of amps through milliohms; a radio on a coin cell draws milliamps through tens of ohms. Both sag. Designs that run from coin cells often put a capacitor across the cell to supply the bursts.",
+      "explanation": "The drop inside a source is I·r, so what matters is r compared with the load: a 15 mA load on 3 V is about 200 Ω, and 20 Ω is a tenth of that. Coin cells of this size are typically around 10 to 30 Ω fresh, more as they discharge. A motor on a car battery draws hundreds of amps through milliohms; a radio on a coin cell draws milliamps through tens of ohms. Both sag. Designs that run from coin cells often put a capacitor across the cell to supply the bursts.",
       "hints": [
         "Work out the drop I·r. Then compare it with 3 V."
       ],
       "noDrawing": "a coin cell feeding bursts; the point is the size of I·r, not a circuit to solve",
-      "review": "verified"
+      "review": "checked"
     },
     {
       "id": "src_emf_meaning",

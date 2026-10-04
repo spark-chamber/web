@@ -3,6 +3,7 @@
     {
       "id": "bjt_amplifiers",
       "title": "Common-emitter amplifiers and emitter followers",
+      "mapTitle": "CE amp and follower",
       "summary": "A common-emitter stage gives voltage gain −R_C/(r_e + R_E); an emitter follower gives gain ≈ 1 with high input and low output resistance.",
       "lenses": [
         "circuit",

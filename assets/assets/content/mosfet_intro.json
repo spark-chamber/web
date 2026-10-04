@@ -3,6 +3,7 @@
     {
       "id": "mosfet_intro",
       "title": "MOSFET basics",
+      "mapTitle": "MOSFET basics",
       "summary": "The gate voltage, not a gate current, controls the drain current; above threshold a MOSFET follows a square law in saturation.",
       "lenses": [
         "circuit",

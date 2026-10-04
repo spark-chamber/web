@@ -3,6 +3,7 @@
     {
       "id": "opamp_summing_difference",
       "title": "Summing and difference amplifiers",
+      "mapTitle": "Summing and difference",
       "summary": "Add several inputs with an inverting summer; subtract two with a difference amplifier that rejects what they have in common.",
       "lenses": [
         "circuit",

@@ -3,6 +3,7 @@
     {
       "id": "app_power_supply",
       "title": "Building a DC power supply",
+      "mapTitle": "DC power supply",
       "summary": "Transformer, bridge, reservoir capacitor, and a Zener or regulator: follow the voltage through each stage.",
       "lenses": [
         "circuit"
@@ -2902,7 +2903,9 @@
           }
         ]
       },
-      "review": "verified"
+      "review": "verified",
+      "formulaSteps": 1,
+      "formulaStepsWhy": "One relation: the full-wave ripple ΔV = I/(2fC)."
     }
   ]
 }

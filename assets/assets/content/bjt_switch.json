@@ -3,6 +3,7 @@
     {
       "id": "bjt_switch",
       "title": "Transistor switches",
+      "mapTitle": "Transistor switches",
       "summary": "Drive the base hard enough to saturate the transistor so it acts like a closed switch with only about 0.2 V across it.",
       "lenses": [
         "circuit"

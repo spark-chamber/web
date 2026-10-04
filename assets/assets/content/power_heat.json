@@ -3,6 +3,7 @@
     {
       "id": "power_heat",
       "title": "Power and heat",
+      "mapTitle": "Power and heat",
       "summary": "Power is the rate of energy transfer, P = V·I. A resistor turns all of it into heat (P = I²R = V²/R), and its power rating is the most heat it can lose to its surroundings without running too hot.",
       "lenses": [
         "physics",
@@ -443,6 +444,11 @@
           "name": "Wh",
           "formula": "Vc*cap",
           "unit": "Wh"
+        },
+        {
+          "name": "estE",
+          "formula": "fig1(fig1(Vc)*fig1(cap)*4000)",
+          "unit": "J"
         }
       ],
       "answer": {
@@ -450,6 +456,7 @@
         "unit": "J"
       },
       "estimate": true,
+      "estimateHint": "Energy is voltage times charge, and 1 Ah is 3600 C ≈ 4 × 10³ C. So E ≈ {Vc:fig1} V × {cap:fig1} Ah × 4 × 10³ C/Ah ≈ {estE:fig1} J.",
       "explanation": "The rating {cap} is a charge: one ampere for one hour is 3600 C, so the cell moves {cap} × 3600 C/Ah of charge. Every coulomb that passes through the load gives up as many joules as the cell has volts (1 V = 1 J/C), so W = {cap} × 3600 C/Ah × {Vc} = {answer}. In watt-hours: {Vc} × {cap} = {Wh}, and 1 Wh = 3600 J. Watt-hours, not amp-hours, are what compare cells of different voltages.",
       "hints": [
         "An amp-hour rating is a charge. How many coulombs is it?",
@@ -506,13 +513,18 @@
           "name": "EJ",
           "formula": "E*3600",
           "unit": "J"
+        },
+        {
+          "name": "th",
+          "formula": "t/60",
+          "unit": "h"
         }
       ],
       "answer": {
         "formula": "E*60/t",
         "unit": "W"
       },
-      "explanation": "Power is energy per time, P = W/t, in joules per second. Energy: {E} × 3600 J/Wh = {EJ}. Time: {t} × 60 s/min. P = {EJ} / ({t} × 60 s/min) = {answer}. The shortcut is the same thing: 1 Wh in 1 h is 1 W, so P = (watt-hours) / (hours) = {E} / ({t} / 60 min/h).",
+      "explanation": "Power is energy per time, P = W/t, in joules per second. Energy: {E} × 3600 J/Wh = {EJ}. Time: {t} × 60 s/min. P = {EJ} / ({t} × 60 s/min) = {answer}. The shortcut: watt-hours divided by hours give watts directly, {E} / {th} = {answer}.",
       "hints": [
         "A watt is a joule per second. Put the energy in joules and the time in seconds.",
         "P = W/t, with 1 Wh = 3600 J and 1 min = 60 s."
@@ -1136,7 +1148,7 @@
     {
       "id": "ph_what_if_r_fixed_v",
       "topicId": "power_heat",
-      "prompt": "A {R} resistor sits directly across a {V} supply. A second {R} resistor is added in series with it, and the supply stays at {V}. What happens to the total power the resistors turn into heat?",
+      "prompt": "A second resistor equal to R1 is added in the wire from R1 to the supply's − terminal. The supply voltage stays the same. What happens to the total power the two resistors dissipate?",
       "variables": [
         {
           "name": "V",
@@ -1219,7 +1231,7 @@
               2
             ],
             "rot": 90,
-            "label": "{R}"
+            "label": "R1\n{R}"
           }
         ],
         "wires": [
@@ -1260,7 +1272,7 @@
         ],
         "labels": []
       },
-      "review": "verified"
+      "review": "checked"
     },
     {
       "id": "ph_what_if_r_fixed_i",

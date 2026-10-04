@@ -3,6 +3,7 @@
     {
       "id": "ohms_law",
       "title": "Resistance and Ohm's law",
+      "mapTitle": "Ohm's law",
       "summary": "Resistance is the voltage across a part divided by the current through it. For a wire it is set by the material, the length, and the cross-section (R = ρL/A); in an ohmic part such as a resistor it is the same at every voltage, so the current is proportional to the voltage.",
       "lenses": [
         "physics",
@@ -103,7 +104,8 @@
     {
       "id": "ohm_current",
       "topicId": "ohms_law",
-      "prompt": "A {V} battery is connected across R1 = {R}. Treat the battery as ideal: it holds {V} across R1. What current flows through R1?",
+      "level": "recall",
+      "prompt": "Find the current through R1. Assume an ideal battery.",
       "variables": [
         {
           "name": "V",
@@ -141,6 +143,11 @@
           "name": "Wc",
           "formula": "V",
           "unit": "J"
+        },
+        {
+          "name": "estI",
+          "formula": "fig1(fig1(V)/fig1(R))",
+          "unit": "A"
         }
       ],
       "answer": {
@@ -149,6 +156,7 @@
         "tolerance": 0.02
       },
       "estimate": true,
+      "estimateHint": "From the drawing, each value to one figure: I = V/R ≈ {V:fig1} V / ({R:fig1} Ω) ≈ {estI:fig1} A.",
       "explanation": "Ohm's law: I = V/R = {V} / {R} = {answer}. A volt per ohm is an ampere, so volts divided by kilohms give milliamps directly.",
       "hints": [
         "Resistance is volts per ampere. Rearrange it for the current.",
@@ -166,7 +174,7 @@
       ],
       "followUps": [
         {
-          "prompt": "A second ammeter is put in the wire between R1 and the battery's − terminal, so it measures the current after it has passed through R1. What does it read?",
+          "prompt": "An ammeter is inserted in the wire from R1 back to the battery's − terminal. What does it read?",
           "choices": [
             {
               "text": "{I}, the same as the current into R1",
@@ -189,7 +197,7 @@
           "explanation": "In a single loop the current is the same at every point (charge and current). R1 sets how large that current is, I = V/R, and the energy each coulomb gives up crossing it, {Wc}, appears as heat in R1."
         },
         {
-          "prompt": "The battery is swapped for one of {V2}, twice the voltage (R1 is rated well above the new power). What is R1's resistance now?",
+          "prompt": "The battery is replaced with one of twice the voltage, {V2}. R1 stays within its ratings. What is R1's resistance now?",
           "choices": [
             {
               "text": "Still {R}: a resistor is ohmic, so the current doubles along with the voltage and V/I stays the same",
@@ -273,7 +281,7 @@
         ],
         "labels": []
       },
-      "review": "verified",
+      "review": "checked",
       "placement": true
     },
     {
@@ -513,6 +521,16 @@
           "name": "Amm",
           "formula": "pi/4*(0.127*92^((36-awg)/39))^2",
           "unit": ""
+        },
+        {
+          "name": "Am2",
+          "formula": "fig1(Amm)*1e-6",
+          "unit": ""
+        },
+        {
+          "name": "estR",
+          "formula": "fig1(2e-8*fig1(L)/Am2)",
+          "unit": "Ω"
         }
       ],
       "answer": {
@@ -521,6 +539,7 @@
         "tolerance": 0.02
       },
       "estimate": true,
+      "estimateHint": "R = ρL/A with A in m²: {Amm} mm² ≈ {Am2:fig1} m² (1 mm² is 10⁻⁶ m²), and ρ ≈ 2 × 10⁻⁸ Ω·m. So R ≈ 2 × 10⁻⁸ Ω·m × {L:fig1} m / ({Am2:fig1} m²) ≈ {estR:fig1} Ω.",
       "explanation": "R = ρL/A with the area in square meters: {Amm} mm² = {Amm} × 10⁻⁶ m². R = 1.72 × 10⁻⁸ Ω·m × {L} / ({Amm} × 10⁻⁶ m²) = {answer}. Units: Ω·m × m / m² = Ω. That is small next to most circuit resistances, but not next to a low-resistance load or a heavy current (a cable feeding a 12 V load, for example).",
       "hints": [
         "R = ρL/A. Every quantity must be in SI units first.",
@@ -1740,7 +1759,7 @@
     {
       "id": "ohm_fault_voltage_drop",
       "topicId": "ohms_law",
-      "prompt": "A 12 V battery runs a solenoid valve through a two-conductor cable. The valve's coil is {RL} (a copper winding, so at DC it is simply a resistance), and each conductor of the cable is about 0.2 Ω. The valve no longer opens reliably. With the circuit switched on, you take voltmeter readings with the black lead on the battery's − terminal throughout. When the circuit is healthy, the valve's + terminal reads {h0} and its − terminal {h1}. Using Ohm's law on each piece of the loop, which fault explains the readings below?",
+      "prompt": "The valve no longer opens reliably. Which fault explains these readings?",
       "variables": [
         {
           "name": "RL",
@@ -1799,14 +1818,14 @@
           {
             "text": "The valve's coil is open (a broken winding)",
             "open": "RL1",
-            "feedback": "An open coil would stop the current. With no current, neither conductor would drop anything, so the + terminal would read the full 12 V and the − terminal 0 V: the whole 12 V would appear across the break inside the coil.",
-            "why": "The + terminal reads the full 12 V and the − terminal 0 V. No current flows, so neither conductor drops anything (V = I × 0.2 Ω = 0), and all 12 V appears across the valve. A good coil with 12 V across it would conduct, so the break is inside the coil."
+            "feedback": "An open coil would stop the current. With no current, neither conductor would drop anything, so the + terminal would read the full 12 V and the − terminal 0 V: the whole 12 V would be across the break inside the coil.",
+            "why": "The + terminal reads the full 12 V and the − terminal 0 V. No current flows, so neither conductor drops anything (V = I × 0.2 Ω = 0), and all 12 V is across the valve. A good coil with 12 V across it would conduct, so the break is inside the coil."
           },
           {
             "text": "The return conductor is broken",
             "open": "RW2",
-            "feedback": "A broken return would stop the current. With no current through the coil, the coil would drop nothing, so both valve terminals would read the full 12 V, and the 12 V would appear across the break in the return.",
-            "why": "Both valve terminals read 12 V. No current flows, so the coil drops nothing and its − terminal sits at the same potential as its + terminal. The full 12 V appears across the gap, and the gap is in the return conductor."
+            "feedback": "A broken return would stop the current. With no current through the coil, the coil would drop nothing, so both valve terminals would read the full 12 V, and the 12 V would be across the break in the return.",
+            "why": "Both valve terminals read 12 V. No current flows, so the coil drops nothing and its − terminal sits at the same potential as its + terminal. The full 12 V is across the gap, and the gap is in the return conductor."
           },
           {
             "text": "The + conductor is broken",
@@ -1816,17 +1835,17 @@
           }
         ]
       },
-      "explanation": "Apply V = IR to each piece of the loop. When healthy, the current is 12 V / ({RL} + 0.4 Ω) = {I}, so each good conductor drops only {I} × 0.2 Ω = {Vc}: the + terminal reads about {h0} and the − terminal about {h1}. Several volts across a piece of wire mean resistance where there should be almost none: the volts appear where the resistance is. When the loop is broken, no current flows, so every intact piece drops nothing (V = IR = 0) and the full 12 V appears across the break; finding where the 12 V sits finds the break. This is voltage-drop testing: it finds a bad connection with the circuit working and carrying its real current, which an ohmmeter on the disconnected circuit can miss.",
+      "explanation": "Apply V = IR to each piece of the loop. When healthy, the current is 12 V / ({RL} + 0.4 Ω) = {I}, so each good conductor drops only {I} × 0.2 Ω = {Vc}: the + terminal reads about {h0} and the − terminal about {h1}. Several volts across a piece of wire mean resistance where there should be almost none: the volts appear where the resistance is. When the loop is broken, no current flows, so every intact piece drops nothing (V = IR = 0) and the full 12 V is across the break; finding where the 12 V sits finds the break. This is voltage-drop testing: it finds a bad connection with the circuit working and carrying its real current, which an ohmmeter on the disconnected circuit can miss.",
       "hints": [
         "In a healthy circuit, how many volts should a 0.2 Ω conductor drop at this current?",
-        "With no current, an intact part drops nothing (V = IR = 0), so the full 12 V appears across the break."
+        "With no current, an intact part drops nothing (V = IR = 0), so the full 12 V is across the break."
       ],
       "followUps": [
         {
-          "prompt": "Suppose the return conductor breaks. The valve's − terminal is wired to the battery's − terminal through it, yet it then reads the full 12 V. Why?",
+          "prompt": "The return conductor breaks. Why does the valve's − terminal then read the full 12 V, not 0 V?",
           "choices": [
             {
-              "text": "No current flows, so the coil drops nothing (V = IR = 0): its − terminal sits at the potential of its + terminal, and the 12 V appears across the break",
+              "text": "No current flows, so the coil drops nothing (V = IR = 0): its − terminal sits at the potential of its + terminal, and the 12 V is across the break",
               "correct": true,
               "feedback": "Right: a resistance carrying no current has no voltage across it, so the coil simply passes the + terminal's potential through to its − terminal."
             },
@@ -1843,7 +1862,7 @@
               "feedback": "The battery still holds 12 V between its terminals, and the meter's black lead is on its − terminal. What changed is that no current flows through the coil, so the coil no longer drops anything."
             }
           ],
-          "explanation": "A voltage across a resistance needs a current through it: V = IR. With the loop broken anywhere, every intact part carries zero current and drops zero volts, so the potential of each battery terminal reaches right up to its side of the break. The whole 12 V therefore appears across the break itself, which is why a voltmeter across an open switch or a burned-through fuse reads the full supply."
+          "explanation": "A voltage across a resistance needs a current through it: V = IR. With the loop broken anywhere, every intact part carries zero current and drops zero volts, so the potential of each battery terminal reaches right up to its side of the break. The whole 12 V is therefore across the break itself, which is why a voltmeter across an open switch or a burned-through fuse reads the full supply."
         }
       ],
       "schematic": {
@@ -1968,7 +1987,376 @@
           }
         ]
       },
-      "review": "verified"
+      "review": "checked"
+    },
+    {
+      "id": "ohm_design_shunt",
+      "topicId": "ohms_law",
+      "level": "design",
+      "prompt": "Choose the largest E24 value for the sense resistor R1 that keeps the voltage across it at or below 100 mV at full load.",
+      "variables": [
+        {
+          "name": "I",
+          "unit": "A",
+          "values": [
+            0.75,
+            1.2,
+            1.5,
+            2,
+            2.5,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rmax",
+          "formula": "0.1/I",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rm",
+          "formula": "11.9/I",
+          "unit": "Ω"
+        },
+        {
+          "name": "V1o",
+          "formula": "I*1",
+          "unit": "V"
+        },
+        {
+          "name": "P1o",
+          "formula": "I^2*1",
+          "unit": "W"
+        },
+        {
+          "name": "Pmax",
+          "formula": "0.1*I",
+          "unit": "W"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "R",
+            "label": "R1 (sense)",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 0.01,
+            "max": 10
+          }
+        ],
+        "result": "I*R",
+        "resultLabel": "Voltage across R1 at full load",
+        "resultUnit": "V",
+        "target": "0.1",
+        "tolerance": 0.09,
+        "mode": "atMost"
+      },
+      "explanation": "The full-load current, {I}, flows through R1, so the voltage across it is V = I·R. At most 100 mV means R ≤ 100 mV / {I} = {Rmax}. Take the E24 value at or just below that and check I × R: the next E24 value up would put more than 100 mV across R1. Within that limit, larger is better: a bigger signal stands further above the reading circuit's offset and noise. R1 also takes at most 100 mV × {I} = {Pmax} of heat, so choose its power rating above that. The circuit that reads R1 amplifies its small voltage; every millivolt across R1 is taken from the motor's 12 V and turned into heat, which is why a sense resistor is kept to a small fraction of the supply. At start-up a motor draws several times its full-load current for a moment (standing still, only its winding resistance limits the current), so R1 must survive that surge, and the circuit reading it sees several times 100 mV.",
+      "hints": [
+        "The voltage across R1 is the motor current times R1. Which R would give exactly 100 mV? The E24 values per decade: 1.0, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4, 2.7, 3.0, 3.3, 3.6, 3.9, 4.3, 4.7, 5.1, 5.6, 6.2, 6.8, 7.5, 8.2, 9.1.",
+        "R ≤ 100 mV / {I}; then take the E24 value at or just below it."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why not use 1 Ω for R1 and get a much larger signal?",
+          "choices": [
+            {
+              "text": "With {I} through it, 1 Ω would drop {V1o} of the motor's 12 V and turn {P1o} into heat",
+              "correct": true,
+              "feedback": "Right: R1 carries the whole motor current, so V = I·R comes out of the motor's supply. With 1 Ω the motor would run slower on less voltage, and R1 would need a large rating to carry the heat."
+            },
+            {
+              "text": "It would raise the motor current above {I}, since R1 adds to the load",
+              "feedback": "R1 sits in the motor's only path, so it adds resistance to that path; it can't raise the current. A part across the supply adds a second path and more current; a part in the path takes voltage."
+            },
+            {
+              "text": "Nothing stops it: R1 carries the same {I} whatever its value, so the motor is unaffected",
+              "feedback": "The current is the same through R1 and the motor, but the 12 V is shared: whatever R1 drops, I·R, the motor no longer gets. With 1 Ω that is about {V1o}, far more than a 100 mV budget."
+            },
+            {
+              "text": "A resistor of 1 Ω or more can't carry {I}",
+              "feedback": "A resistor's value doesn't limit the current it can carry; the heat does. 1 Ω at {I} turns about {P1o} into heat, so it would need a part rated for that, but it could carry the current."
+            }
+          ],
+          "explanation": "A sense resistor sits in the current's only path, so everything across it is lost to the load and turned into heat. Designers choose the smallest voltage the reading circuit can measure accurately, often 50 to 100 mV at full scale, and amplify it."
+        }
+      ],
+      "schematic": {
+        "netlist": "motor current sense\nV1 a 0 12\nRM1 a b {Rm:spice}\nR1 b 0 {Rmax:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "RM1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "motor\n{I} full load",
+            "symbol": "motor"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              6
+            ],
+            "rot": 90,
+            "label": "R1\nsense"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              10
+            ],
+            [
+              8,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            10
+          ]
+        ],
+        "labels": []
+      }
+    },
+    {
+      "id": "ohm_trouble_wrong_part",
+      "topicId": "ohms_law",
+      "level": "design",
+      "prompt": "Expected {Ve} at out, but a meter from out to ground reads {Vm}. R1 measures its marked value with one lead lifted. Find the actual value of R2.",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            4700,
+            10000
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            1500,
+            2200,
+            3300
+          ]
+        },
+        {
+          "name": "k",
+          "unit": "",
+          "values": [
+            0.1,
+            10
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Ve",
+          "formula": "12*R2/(R1+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "Vm",
+          "formula": "12*R2*k/(R1+R2*k)",
+          "unit": "V"
+        },
+        {
+          "name": "VR1",
+          "formula": "12-12*R2*k/(R1+R2*k)",
+          "unit": "V"
+        },
+        {
+          "name": "I",
+          "formula": "12/(R1+R2*k)",
+          "unit": "A"
+        },
+        {
+          "name": "Im",
+          "formula": "Vm/1e7",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "Vm*R1/(12-Vm)",
+        "unit": "Ω",
+        "tolerance": 0.02
+      },
+      "explanation": "R1 is good, so it gives the current: it has 12 V − {Vm} = {VR1} across it, so I = {VR1} / {R1} = {I}. The same current flows through R2 (one path; charge doesn't pile up between them), with {Vm} across it: R2 = {Vm} / {I} = {answer}. It should be {R2}: exactly a factor of ten off, the mark of a wrong part being installed (a chip resistor from the wrong reel, or a banded one with its multiplier misread: red, orange and brown look alike), not of a resistor that drifted.",
+      "hints": [
+        "R1 is good. What do R1's value and the voltage across it tell you?",
+        "I = (12 V − V_out)/R1, and the same current flows through R2: R2 = V_out / I."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vm*R1/12",
+          "feedback": "You took the current as 12 V / R1, as if R1 had the whole supply across it. R1 has only 12 V − {Vm} = {VR1} across it, so I = {VR1} / {R1} = {I}.",
+          "when": "Vm-0.3"
+        },
+        {
+          "formula": "R2*Vm/Ve",
+          "feedback": "The reading isn't proportional to R2: a different R2 also changes the current through both resistors. Find the current from R1 first, then R2 = V_out / I."
+        },
+        {
+          "formula": "R1*(12-Vm)/Vm",
+          "feedback": "That ratio is upside down: it is R1 × V_R1 / V_out. R2 has V_out across it, so R2 = R1 × V_out / V_R1."
+        },
+        {
+          "formula": "R2",
+          "feedback": "That is R2's intended value, which would put {Ve} at out. The meter reads {Vm}: find the current from R1, then R2 = V_out / I."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Could you find R2 from the reading at out alone, without R1's value?",
+          "choices": [
+            {
+              "text": "No: the reading fixes only the ratio of R2 to R1, so R1's value is needed to turn it into ohms",
+              "correct": true,
+              "feedback": "Right: {Vm} at out says R2 has {Vm} of the 12 V and R1 the other {VR1}, so R2/R1 = {Vm} / {VR1}. Any pair with that ratio reads the same; R1 sets the scale."
+            },
+            {
+              "text": "Yes: R2 = V_out / I, with the current I = 12 V / R2",
+              "feedback": "That uses R2 to find R2. The current is set by both resistors, I = 12 V / (R1 + R2), so without R1 there are two unknowns and one reading."
+            },
+            {
+              "text": "Yes: a resistor's value follows from the voltage across it alone",
+              "feedback": "The voltage across a resistor is I·R: the same voltage fits a large R with a small current or a small R with a large one. You need the current, and R1 provides it."
+            },
+            {
+              "text": "No: you would also need the current the meter draws",
+              "feedback": "A multimeter on its volts range has about 10 MΩ across its leads, so it draws {Vm} / 10 MΩ = {Im}, far too little to matter against these resistors. What's missing without R1 is the current through R2."
+            }
+          ],
+          "explanation": "A voltage reading at the joint of two resistors fixes their ratio, not their values. One known resistance turns the ratio into ohms. To confirm, lift one lead of R2 and measure it."
+        }
+      ],
+      "schematic": {
+        "netlist": "R1 and R2 as marked\nV1 in 0 12\nR1 in out {R1:spice}\nR2 out 0 {R2:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\nshould be {R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      }
     }
   ]
 }

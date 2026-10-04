@@ -3,6 +3,7 @@
     {
       "id": "opamp_slew_rate",
       "title": "Slew-rate limiting",
+      "mapTitle": "Slew-rate limiting",
       "summary": "An op-amp output can only change so many volts per microsecond; big, fast sine waves turn into triangles.",
       "lenses": [
         "circuit",
@@ -91,6 +92,18 @@
           }
         }
       ],
+      "derived": [
+        {
+          "name": "SRs",
+          "formula": "SR*1e6",
+          "unit": "V/s"
+        },
+        {
+          "name": "estF",
+          "formula": "fig1(fig1(SRs)/(6*Vp))",
+          "unit": "Hz"
+        }
+      ],
       "answer": {
         "formula": "SR*1e6/(2*pi*Vp)",
         "unit": "Hz"
@@ -107,6 +120,7 @@
         }
       ],
       "estimate": true,
+      "estimateHint": "Convert first: 1 V/µs is 10⁶ V/s, so {SR} V/µs ≈ {SRs:fig1} V/s. A sine of peak Vp changes fastest as it crosses zero, at 2πf·Vp; at the highest undistorted frequency that rate equals the slew rate, so f = SR/(2πVp), with 2π ≈ 6. So f ≈ {SRs:fig1} V/s / (6 × {Vp}) ≈ {estF:fig1} Hz.",
       "followUps": [
         {
           "prompt": "Why does this frequency limit depend on the amplitude, when the gain-bandwidth limit doesn't?",

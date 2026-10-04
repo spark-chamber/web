@@ -3,6 +3,7 @@
     {
       "id": "opamp_comparator",
       "title": "Comparators and Schmitt triggers",
+      "mapTitle": "Comparators",
       "summary": "Without negative feedback the output slams to a rail depending on which input is higher; positive feedback adds hysteresis.",
       "lenses": [
         "circuit",
@@ -2166,7 +2167,9 @@
             ]
           }
         ]
-      }
+      },
+      "formulaSteps": 1,
+      "formulaStepsWhy": "One relation: the hysteresis width, 2·V_sat·R1/R2."
     },
     {
       "id": "cmp_design_battery_monitor",
@@ -2265,7 +2268,7 @@
             },
             {
               "text": "Swapping the divider and the reference between the two inputs would stop it",
-              "feedback": "That only inverts the flag, so it would go low instead of high on a flat pack. There is still one threshold, and the sag still crosses it."
+              "feedback": "That only inverts the flag, so it would go low instead of high when the pack falls below the trip voltage. There is still one threshold, and the sag still crosses it."
             }
           ],
           "explanation": "A plain comparator has one switching point, so any input that wanders across it, here the pack sagging under the motor's current and recovering, flips the output each time. Positive feedback (a Schmitt trigger) moves the threshold when the output switches: once the flag is high, the pack must rise past a higher threshold to clear it. Make the gap wider than the expected sag and the flag switches once."

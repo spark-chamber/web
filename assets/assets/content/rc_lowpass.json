@@ -3,6 +3,7 @@
     {
       "id": "rc_lowpass_cutoff",
       "title": "RC low-pass cutoff frequency",
+      "mapTitle": "RC low-pass cutoff",
       "summary": "An RC low-pass passes slow signals and attenuates fast ones; at f_c = 1/(2πRC) the output is down 3 dB.",
       "lenses": [
         "circuit",
@@ -110,6 +111,16 @@
           "name": "omega",
           "formula": "1/(R*C)",
           "unit": "rad/s"
+        },
+        {
+          "name": "RCe",
+          "formula": "fig1(fig1(R)*fig1(C))",
+          "unit": "s"
+        },
+        {
+          "name": "estF",
+          "formula": "fig1(1/(6*RCe))",
+          "unit": "Hz"
         }
       ],
       "answer": {
@@ -215,6 +226,7 @@
         ]
       },
       "estimate": true,
+      "estimateHint": "2π ≈ 6, and RC ≈ ({R:fig1} Ω) × ({C:fig1} F) ≈ {RCe:fig1} s, so f = 1/(2πRC) ≈ 1 / (6 × {RCe:fig1} s) ≈ {estF:fig1} Hz.",
       "followUps": [
         {
           "prompt": "At f_c the resistor and the capacitor have voltage swings of equal amplitude. Why is each 0.707 of the input, not half?",

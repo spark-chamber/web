@@ -3,6 +3,7 @@
     {
       "id": "diode_clippers_logic",
       "title": "Clippers, limiters, and diode logic",
+      "mapTitle": "Clippers and logic",
       "summary": "Diodes to a reference voltage cut off the tops of waveforms; diodes plus a resistor make simple OR and AND gates.",
       "lenses": [
         "circuit",

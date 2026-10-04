@@ -3,6 +3,7 @@
     {
       "id": "diode_rectifiers",
       "title": "Rectifiers and ripple",
+      "mapTitle": "Rectifiers and ripple",
       "summary": "Diodes turn AC into pulsing DC; a reservoir capacitor smooths it, leaving a ripple that depends on load current, frequency, and capacitance.",
       "lenses": [
         "circuit",
@@ -830,7 +831,9 @@
           }
         ]
       },
-      "review": "verified"
+      "review": "verified",
+      "formulaSteps": 1,
+      "formulaStepsWhy": "One relation: the full-wave ripple ΔV = I/(2fC)."
     },
     {
       "id": "rect_ripple_frequency",

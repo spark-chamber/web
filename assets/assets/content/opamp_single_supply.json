@@ -3,6 +3,7 @@
     {
       "id": "opamp_single_supply",
       "title": "Single-supply op-amp circuits",
+      "mapTitle": "Single-supply op amps",
       "summary": "With one supply, bias signals at mid-rail and AC-couple them in and out so they can swing both ways.",
       "lenses": [
         "circuit",

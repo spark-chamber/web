@@ -3,6 +3,7 @@
     {
       "id": "opamp_noninverting",
       "title": "Non-inverting amplifier and follower",
+      "mapTitle": "Non-inverting amp",
       "summary": "Gain 1 + Rf/Rg with a very high input resistance; with Rf = 0 it becomes a unity-gain buffer.",
       "lenses": [
         "circuit",

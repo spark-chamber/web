@@ -3,6 +3,7 @@
     {
       "id": "rc_time_constant",
       "title": "RC time constant",
+      "mapTitle": "RC time constant",
       "summary": "How fast a capacitor charges through a resistor: τ = RC, 63% after one τ, nearly full after 5τ.",
       "lenses": [
         "circuit",

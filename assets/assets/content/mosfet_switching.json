@@ -3,6 +3,7 @@
     {
       "id": "mosfet_switching",
       "title": "MOSFET switches and losses",
+      "mapTitle": "MOSFET switches",
       "summary": "A fully on MOSFET is a small resistance R_DS(on); losses come from I²R while on and from the time spent switching.",
       "lenses": [
         "circuit",

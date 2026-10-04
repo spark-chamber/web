@@ -459,6 +459,26 @@
           "name": "G",
           "formula": "1+Rf/Rg",
           "unit": ""
+        },
+        {
+          "name": "Vae",
+          "formula": "fig1(12*R2/R1)",
+          "unit": "V"
+        },
+        {
+          "name": "rat",
+          "formula": "Rf/Rg",
+          "unit": ""
+        },
+        {
+          "name": "Ge",
+          "formula": "1+fig1(Rf/Rg)",
+          "unit": ""
+        },
+        {
+          "name": "estV",
+          "formula": "fig1(Vae*Ge)",
+          "unit": "V"
         }
       ],
       "answer": {
@@ -466,6 +486,7 @@
         "unit": "V"
       },
       "estimate": true,
+      "estimateHint": "R2 is far smaller than R1, so R1 + R2 ≈ R1 and V_a ≈ 12 V × R2/R1 = 12 V × {R2} / {R1} ≈ {Vae:fig1} V. Stage 2 multiplies by 1 + Rf/Rg = 1 + {Rf} / {Rg} ≈ 1 + {rat:fig1} ≈ {Ge}. So V_b ≈ {Vae:fig1} V × {Ge} ≈ {estV:fig1} V.",
       "explanation": "Stage 1 is a divider from 12 V: V_a = 12 V × {R2}/({R1} + {R2}) = {Va}. Stage 2 is a non-inverting amplifier with gain 1 + {Rf}/{Rg} = {G}, so V_b = {Va} × {G} = {answer}. Each stage multiplies what the one before hands it; X1's + input takes no current, so stage 2 doesn't disturb stage 1.",
       "hints": [
         "Work stage by stage: first the voltage at node a, then what X1 does to it.",
@@ -1416,6 +1437,16 @@
           "name": "Va",
           "formula": "Vcc*R2/(R1+R2)",
           "unit": "V"
+        },
+        {
+          "name": "sh",
+          "formula": "R2/(R1+R2)",
+          "unit": ""
+        },
+        {
+          "name": "estV",
+          "formula": "fig1(fig1(sh)*Vcc)",
+          "unit": "V"
         }
       ],
       "answer": {
@@ -1423,6 +1454,7 @@
         "unit": "V"
       },
       "estimate": true,
+      "estimateHint": "Stages 2 and 3 pass DC unchanged, so the load gets node a's voltage. A divider gives a fraction of Vcc, never more. Work the fraction out as one number, then round it: R2/(R1 + R2) = {R2} / ({R1} + {R2}) ≈ {sh:fig1}. So V ≈ {sh:fig1} × {Vcc} ≈ {estV:fig1} V.",
       "explanation": "Stage 1: V_a = {Vcc} × {R2}/({R1} + {R2}) = {Va}. Stage 2 at DC: C1 is open and X1's + input takes no current, so R3 carries nothing and f = a. Stage 3: a follower has gain 1, and its output supplies the load's current from its own supply. So the load gets {answer}.",
       "hints": [
         "At DC, how much current flows through R3?",

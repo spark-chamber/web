@@ -3,6 +3,7 @@
     {
       "id": "si_prefixes",
       "title": "SI prefixes and engineering notation",
+      "mapTitle": "SI prefixes",
       "summary": "Read and use k, M, m, µ, n, and p, so that values like 4.7 kΩ and 10 µF go straight into formulas.",
       "lenses": [
         "math"

@@ -3,6 +3,7 @@
     {
       "id": "diode_practical",
       "title": "LEDs, Zener regulators, and flyback diodes",
+      "mapTitle": "LEDs, Zeners, flyback",
       "summary": "Set LED current with a resistor, hold a voltage steady with a Zener, and protect switches from inductive kickback.",
       "lenses": [
         "circuit",
@@ -228,7 +229,9 @@
         "The same current {I} flows through both, so R = {VR}/{I} = {answer}."
       ],
       "review": "verified",
-      "placement": true
+      "placement": true,
+      "formulaSteps": 1,
+      "formulaStepsWhy": "One relation: the loop equation for the resistor, R = (V_S − V_F)/I."
     },
     {
       "id": "zener_current",
@@ -706,7 +709,9 @@
           }
         ]
       },
-      "review": "verified"
+      "review": "verified",
+      "formulaSteps": 1,
+      "formulaStepsWhy": "One relation: V = L·ΔI/Δt."
     },
     {
       "id": "flyback_how",

@@ -1701,7 +1701,9 @@
           }
         ]
       },
-      "review": "verified"
+      "review": "verified",
+      "formulaSteps": 1,
+      "formulaStepsWhy": "One relation: the inverting amplifier's gain, V_out = −V_in·R_f/R_in."
     }
   ]
 }
