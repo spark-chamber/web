@@ -115,7 +115,7 @@
       "tier": 3,
       "title": "The LED's forward-voltage spread",
       "modifiers": [
-        "A red LED specified at 1.8 to 2.2 V (spread to be cited): the current must stay in 8 to 12 mA at every corner. No 5 % E12 value does it; a 1 % E96 part does."
+        "Forward voltage anywhere from 1.8 to 2.2 V, on tier 2's 4.75 to 5.25 V supply. The current must stay in 8 to 12 mA at every corner. No 5 % E12 value does it; a 1 % E96 part does."
       ],
       "parts": [
         {

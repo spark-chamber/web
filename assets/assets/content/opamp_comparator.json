@@ -4,6 +4,7 @@
       "id": "opamp_comparator",
       "title": "Comparators and Schmitt triggers",
       "mapTitle": "Comparators",
+      "glyph": "dip8",
       "summary": "Without negative feedback the output slams to a rail depending on which input is higher; positive feedback adds hysteresis.",
       "lenses": [
         "circuit",

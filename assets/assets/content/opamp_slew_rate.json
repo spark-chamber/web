@@ -4,6 +4,7 @@
       "id": "opamp_slew_rate",
       "title": "Slew-rate limiting",
       "mapTitle": "Slew-rate limiting",
+      "glyph": "scopeSlew",
       "summary": "An op-amp output can only change so many volts per microsecond; big, fast sine waves turn into triangles.",
       "lenses": [
         "circuit",

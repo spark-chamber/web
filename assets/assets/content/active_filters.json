@@ -4,6 +4,7 @@
       "id": "active_filters",
       "title": "First-order active filters",
       "mapTitle": "Active filters",
+      "glyph": "scopeBode",
       "summary": "Put a capacitor in an op amp's feedback or input path to get a filter with gain and a low output impedance.",
       "lenses": [
         "circuit",

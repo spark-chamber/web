@@ -4,6 +4,7 @@
       "id": "bjt_class_a",
       "title": "Class A amplifier with a resistive load",
       "mapTitle": "Class A amplifier",
+      "glyph": "to220",
       "summary": "A transistor biased halfway conducts all the time: simple and linear, but at best 25% efficient with a resistive collector load.",
       "lenses": [
         "circuit",

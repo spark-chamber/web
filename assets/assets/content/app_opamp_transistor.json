@@ -4,6 +4,7 @@
       "id": "app_opamp_transistor",
       "title": "Op amps with diodes and transistors",
       "mapTitle": "Op amps + transistors",
+      "glyph": "to220",
       "summary": "Combine the parts: op-amp current sources, transistor-boosted outputs, precision rectifiers, and limiters.",
       "lenses": [
         "circuit",

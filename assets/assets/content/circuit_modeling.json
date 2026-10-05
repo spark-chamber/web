@@ -3,6 +3,7 @@
     {
       "id": "circuit_modeling",
       "title": "Circuit modeling with SPICE (LTspice)",
+      "glyph": "netlist",
       "summary": "Read and write netlists, choose .op, .dc, .ac, or .tran, and avoid the classic SPICE mistake of reading 1M as mega (it means milli).",
       "lenses": [
         "circuit"

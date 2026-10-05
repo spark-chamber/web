@@ -4,6 +4,7 @@
       "id": "diode_models",
       "title": "Practical diodes: equation, 0.7 V model, temperature",
       "mapTitle": "Practical diodes",
+      "glyph": "diodeGlass",
       "summary": "Real diodes follow the exponential Shockley equation; for quick work use a 0.7 V drop that falls about 2 mV per °C.",
       "lenses": [
         "circuit",

@@ -3,6 +3,7 @@
     {
       "id": "schem_part_purpose",
       "title": "What is each part for?",
+      "glyph": "schematic",
       "summary": "Give the reason for every part in a circuit: coupling and bypass capacitors, emitter and base resistors, flyback and protection diodes, gate resistors, and pull-downs.",
       "lenses": [
         "circuit",

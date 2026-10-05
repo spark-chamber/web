@@ -4,6 +4,7 @@
       "id": "rc_lowpass_cutoff",
       "title": "RC low-pass cutoff frequency",
       "mapTitle": "RC low-pass cutoff",
+      "glyph": "scopeBode",
       "summary": "An RC low-pass passes slow signals and attenuates fast ones; at f_c = 1/(2πRC) the output is down 3 dB.",
       "lenses": [
         "circuit",

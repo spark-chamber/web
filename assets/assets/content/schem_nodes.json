@@ -3,6 +3,7 @@
     {
       "id": "schem_nodes",
       "title": "Reading a schematic: nodes, symbols, and ground",
+      "glyph": "schematic",
       "summary": "A schematic is a map of connections, not of positions: find the nodes first, then ask which parts sit between them.",
       "lenses": [
         "circuit"

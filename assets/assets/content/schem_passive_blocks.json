@@ -3,6 +3,7 @@
     {
       "id": "schem_passive_blocks",
       "title": "Spotting passive building blocks",
+      "glyph": "schematic",
       "summary": "Recognize dividers, RC filters, RC timers, pull-ups, and decoupling capacitors at a glance, and say what each does to a signal.",
       "lenses": [
         "circuit",

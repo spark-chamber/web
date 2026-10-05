@@ -4,6 +4,7 @@
       "id": "app_led_driver",
       "title": "Constant-current LED driver",
       "mapTitle": "LED driver",
+      "glyph": "led",
       "summary": "An op amp, a MOSFET, and a sense resistor hold the LED current steady whatever the supply or the LEDs do, as long as there is enough headroom.",
       "lenses": [
         "circuit",

@@ -4,6 +4,7 @@
       "id": "ohms_law",
       "title": "Resistance and Ohm's law",
       "mapTitle": "Ohm's law",
+      "glyph": "resistor",
       "summary": "Resistance is the voltage across a part divided by the current through it. For a wire it is set by the material, the length, and the cross-section (R = ρL/A); in an ohmic part such as a resistor it is the same at every voltage, so the current is proportional to the voltage.",
       "lenses": [
         "physics",

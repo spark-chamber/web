@@ -4,6 +4,7 @@
       "id": "pn_junction",
       "title": "Semiconductors and the PN junction",
       "mapTitle": "PN junction",
+      "glyph": "diodeGlass",
       "summary": "Doping makes n-type and p-type silicon; where they meet, a depletion region forms and sets how a diode behaves.",
       "lenses": [
         "physics"
@@ -168,7 +169,7 @@
         "formula": "1239.84/lam",
         "unit": "V"
       },
-      "explanation": "Each photon carries E = hc/λ. An electron crossing the junction must supply that energy, so V ≈ E/q = hc/(qλ) = 1239.84 / {lam} = {answer}. Blue LEDs need more voltage than red ones for exactly this reason. This is the minimum. At its rated current, a real LED drops more; a 450 nm blue LED is typically about 3 V, against 2.76 V here.",
+      "explanation": "Each photon carries E = hc/λ. An electron crossing the junction must supply that energy, so V ≈ E/q = hc/(qλ) = 1239.84 V·nm / {lam} nm = {answer}. Blue LEDs need more voltage than red ones for exactly this reason. This is the minimum. At its rated current, a real LED drops more: a 450 nm blue LED is typically about 3 V, where this estimate gives 2.76 V.",
       "hints": [
         "Photon energy E = hc/λ; the voltage is that energy per unit charge.",
         "So V ≈ (hc/q)/λ, with λ in nm to match the V·nm of hc/q."
@@ -176,7 +177,7 @@
       "misconceptions": [
         {
           "formula": "lam/1239.84",
-          "feedback": "A shorter wavelength means more energy, so the voltage goes as 1/λ: V ≈ 1240 / λ(nm)."
+          "feedback": "A shorter wavelength means more energy, so the voltage goes as 1/λ: V ≈ 1240 V·nm / λ."
         }
       ],
       "followUps": [

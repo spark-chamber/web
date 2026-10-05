@@ -4,6 +4,7 @@
       "id": "opamp_inverting",
       "title": "Inverting amplifier",
       "mapTitle": "Inverting amplifier",
+      "glyph": "dip8",
       "summary": "Gain −Rf/Rin: the output is an amplified, upside-down copy of the input, and the source sees Rin.",
       "lenses": [
         "circuit",

@@ -4,6 +4,7 @@
       "id": "kirchhoff",
       "title": "Kirchhoff's current and voltage laws",
       "mapTitle": "Kirchhoff's laws",
+      "glyph": "node",
       "summary": "Current into a node equals current out (charge is conserved); voltages around any loop sum to zero (energy is conserved).",
       "lenses": [
         "circuit",

@@ -4,6 +4,7 @@
       "id": "thevenin",
       "title": "Thevenin and Norton equivalents",
       "mapTitle": "Thevenin and Norton",
+      "glyph": "thevenin",
       "summary": "Any linear two-terminal circuit looks like one voltage source with one series resistor (or a current source with a parallel resistor).",
       "lenses": [
         "circuit"

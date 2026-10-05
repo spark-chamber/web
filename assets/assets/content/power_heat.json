@@ -4,6 +4,7 @@
       "id": "power_heat",
       "title": "Power and heat",
       "mapTitle": "Power and heat",
+      "glyph": "powerResistor",
       "summary": "Power is the rate of energy transfer, P = V·I. A resistor turns all of it into heat (P = I²R = V²/R), and its power rating is the most heat it can lose to its surroundings without running too hot.",
       "lenses": [
         "physics",

@@ -4,6 +4,7 @@
       "id": "h_bridge",
       "title": "H-bridge motor drivers",
       "mapTitle": "H-bridge motor drivers",
+      "glyph": "motor",
       "summary": "Four switches let a motor run either way: turn on diagonal pairs, and never both switches on one side (shoot-through).",
       "lenses": [
         "circuit"

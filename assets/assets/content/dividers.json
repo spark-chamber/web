@@ -4,6 +4,7 @@
       "id": "dividers",
       "title": "Voltage and current dividers",
       "mapTitle": "Dividers",
+      "glyph": "trimpot",
       "summary": "Two resistors split a voltage in proportion to their values; parallel branches split a current in inverse proportion.",
       "lenses": [
         "circuit"

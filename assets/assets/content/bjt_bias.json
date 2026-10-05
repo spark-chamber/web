@@ -4,6 +4,7 @@
       "id": "bjt_bias",
       "title": "Biasing a bipolar transistor",
       "mapTitle": "BJT biasing",
+      "glyph": "to92",
       "summary": "Set a steady operating point: a base resistor is simple but depends on β; divider bias with an emitter resistor doesn't.",
       "lenses": [
         "circuit"

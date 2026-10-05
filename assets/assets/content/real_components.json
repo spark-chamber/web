@@ -4,6 +4,7 @@
       "id": "real_components",
       "title": "Real components: values, tolerances, and ratings",
       "mapTitle": "Real components",
+      "glyph": "smd",
       "summary": "Real resistors and capacitors come in standard values (the E-series), lie within a tolerance of their marked value, change a little with temperature, and have power and voltage limits. Reading their markings and datasheets tells you what a part guarantees; worst-case analysis tells you whether the circuit still works at the edges.",
       "lenses": [
         "circuit",

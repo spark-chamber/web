@@ -4,6 +4,7 @@
       "id": "voltage_energy",
       "title": "Voltage and energy",
       "mapTitle": "Voltage and energy",
+      "glyph": "cell",
       "summary": "A voltage is the energy each coulomb of charge gains or gives up between two points: one volt is one joule per coulomb, and a voltage is always measured between two nodes.",
       "lenses": [
         "physics",

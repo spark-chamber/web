@@ -4,6 +4,7 @@
       "id": "switching_supplies",
       "title": "Switching power supplies (buck and boost)",
       "mapTitle": "Buck and boost",
+      "glyph": "scopePwm",
       "summary": "Chop the input with a fast switch and filter it with an inductor: the duty cycle sets the output, and almost no power is wasted.",
       "lenses": [
         "circuit",

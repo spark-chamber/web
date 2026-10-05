@@ -4,6 +4,7 @@
       "id": "charge_current",
       "title": "Charge and current",
       "mapTitle": "Charge and current",
+      "glyph": "wire",
       "summary": "Charge comes in whole electrons; current is the number of coulombs passing a point each second, and in a single loop it is the same everywhere.",
       "lenses": [
         "physics",

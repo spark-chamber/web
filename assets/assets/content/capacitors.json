@@ -4,6 +4,7 @@
       "id": "capacitors",
       "title": "Capacitors: separated charge, stored energy",
       "mapTitle": "Capacitors",
+      "glyph": "electrolytic",
       "summary": "A capacitor is two conductors separated by an insulator. A voltage across it moves charge Q = CV off one plate and onto the other; the part stays neutral overall and stores energy ½CV² in the electric field across the insulator.",
       "lenses": [
         "physics",

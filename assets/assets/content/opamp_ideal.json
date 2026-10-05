@@ -4,6 +4,7 @@
       "id": "opamp_ideal",
       "title": "Ideal op-amp rules",
       "mapTitle": "Ideal op-amp rules",
+      "glyph": "dip8",
       "summary": "With negative feedback, an ideal op amp draws no input current and drives its output until both inputs sit at the same voltage.",
       "lenses": [
         "circuit"

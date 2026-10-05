@@ -4,6 +4,7 @@
       "id": "inductors",
       "title": "Inductors: energy in a magnetic field",
       "mapTitle": "Inductors",
+      "glyph": "toroid",
       "summary": "A current through a coil sets up a magnetic field. When the current changes, the changing field induces a voltage across the coil that opposes the change, v = L·di/dt, so an inductor's current cannot change instantly. The inductor stores energy ½LI² in its magnetic field.",
       "lenses": [
         "physics",

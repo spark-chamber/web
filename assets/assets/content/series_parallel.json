@@ -4,6 +4,7 @@
       "id": "series_parallel",
       "title": "Series and parallel resistance",
       "mapTitle": "Series and parallel",
+      "glyph": "resistorPair",
       "summary": "Resistances in series add; in parallel, the total is smaller than the smallest one.",
       "lenses": [
         "circuit",

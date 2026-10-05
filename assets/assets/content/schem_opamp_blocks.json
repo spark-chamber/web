@@ -3,6 +3,7 @@
     {
       "id": "schem_opamp_blocks",
       "title": "Spotting op-amp building blocks",
+      "glyph": "schematic",
       "summary": "Tell inverting, non-inverting, follower, summing, difference, comparator, and integrator circuits apart from how the feedback is wired.",
       "lenses": [
         "circuit",

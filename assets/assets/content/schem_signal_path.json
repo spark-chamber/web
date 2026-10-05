@@ -3,6 +3,7 @@
     {
       "id": "schem_signal_path",
       "title": "Following the signal through a circuit",
+      "glyph": "schematic",
       "summary": "Read a multi-stage circuit from input to output: say what each stage does, estimate the voltage at each node, and reason about what a fault or change would do.",
       "lenses": [
         "circuit",

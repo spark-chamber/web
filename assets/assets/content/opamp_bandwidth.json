@@ -4,6 +4,7 @@
       "id": "opamp_bandwidth",
       "title": "Op-amp bandwidth and offset",
       "mapTitle": "Bandwidth and offset",
+      "glyph": "scopeBode",
       "summary": "Gain × bandwidth is roughly constant for a real op amp, and small input offsets get multiplied by the noise gain.",
       "lenses": [
         "circuit",

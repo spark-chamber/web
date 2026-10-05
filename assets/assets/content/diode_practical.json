@@ -4,6 +4,7 @@
       "id": "diode_practical",
       "title": "LEDs, Zener regulators, and flyback diodes",
       "mapTitle": "LEDs, Zeners, flyback",
+      "glyph": "led",
       "summary": "Set LED current with a resistor, hold a voltage steady with a Zener, and protect switches from inductive kickback.",
       "lenses": [
         "circuit",

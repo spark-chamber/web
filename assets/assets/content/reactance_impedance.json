@@ -4,6 +4,7 @@
       "id": "reactance_impedance",
       "title": "Reactance and impedance",
       "mapTitle": "Reactance & impedance",
+      "glyph": "scopeSine",
       "summary": "Capacitors and inductors resist AC by an amount that depends on frequency; combine that with resistance as phasors, not plain numbers.",
       "lenses": [
         "circuit",

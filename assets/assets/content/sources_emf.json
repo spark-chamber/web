@@ -4,6 +4,7 @@
       "id": "sources_emf",
       "title": "Sources: EMF and internal resistance",
       "mapTitle": "Sources and EMF",
+      "glyph": "battery9v",
       "summary": "A cell's chemistry does a fixed amount of work on each coulomb that passes through it: its EMF, E. The cell's own resistance r turns part of that into heat, a part that grows with the current, so the terminal voltage V = E − I·r falls under load.",
       "lenses": [
         "physics",

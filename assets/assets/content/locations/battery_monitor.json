@@ -131,7 +131,7 @@
       "tier": 2,
       "title": "Worst-case corners",
       "modifiers": [
-        "The pin stays at or below 3.3 V at 9.6 V with both resistors at their ±5 % corners, and still reaches 2.7 V with the resistors at the opposite corners."
+        "The pin stays at or below 3.3 V at 9.6 V with the top resistor 5 % low and the bottom one 5 % high, and still reaches 2.7 V with them the other way around."
       ]
     }
   ]

@@ -4,6 +4,7 @@
       "id": "bjt_intro",
       "title": "Bipolar transistor basics",
       "mapTitle": "BJT basics",
+      "glyph": "to92",
       "summary": "A small base current controls a collector current β times larger, as long as the transistor stays in its active region.",
       "lenses": [
         "circuit",
