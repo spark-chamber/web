@@ -1,0 +1,2534 @@
+{
+  "topics": [
+    {
+      "id": "rlc_step",
+      "title": "Second-order circuits: ringing and damping",
+      "mapTitle": "Ringing and damping",
+      "glyph": "schematic",
+      "summary": "An inductor and a capacitor in one loop pass energy back and forth: after a step the voltage can overshoot and ring near f₀ = 1/(2π√(LC)), and the damping ratio ζ, the loop resistance against 2√(L/C), says how much.",
+      "lenses": [
+        "circuit",
+        "physics",
+        "signals",
+        "math"
+      ],
+      "prerequisites": [
+        "first_order_switching",
+        "reactance_impedance"
+      ],
+      "prerequisiteNotes": {
+        "first_order_switching": "A capacitor's voltage and an inductor's current carry over through a switch event, and the final value comes from the capacitor open and the inductor shorted; here both are in the same loop.",
+        "reactance_impedance": "At f₀ the two reactances are equal, X_L = X_C = √(L/C). The damping ratio compares the loop's resistance with that reactance."
+      },
+      "lensNotes": {
+        "circuit": "Any capacitor fed through an inductance is a series RLC: a supply cable into ceramic capacitors, a scope probe on a long ground lead, a switch node and the stray inductance of its loop. Every resistance in the loop damps it: the winding, the source's internal resistance, the capacitor's ESR and any resistor added on purpose.",
+        "physics": "The energy moves between the capacitor's electric field, ½Cv², and the inductor's magnetic field, ½Li². At a peak of v_C the current is zero and the energy is all in the capacitor. The resistance turns part of it into heat on every pass.",
+        "signals": "On a scope an underdamped step response is a decaying sine about the final value. Its frequency is f_d = f₀√(1 − ζ²), its first peak gives the overshoot, and its envelope, e^(−αt) with α = R/2L, gives the settling time.",
+        "math": "KVL around the loop gives LC·v″ + RC·v′ + v = V. Trying e^(st) gives s² + 2ζω₀·s + ω₀² = 0, so s = −ζω₀ ± ω₀√(ζ² − 1): two real roots for ζ > 1, a double root at ζ = 1, and a complex pair −α ± jω_d for ζ < 1."
+      },
+      "formulas": [
+        {
+          "label": "Natural frequency",
+          "tex": "\\omega_0 = \\frac{1}{\\sqrt{LC}},\\quad f_0 = \\frac{1}{2\\pi\\sqrt{LC}}"
+        },
+        {
+          "label": "Damping ratio",
+          "tex": "\\zeta = \\frac{R}{2}\\sqrt{\\frac{C}{L}} = \\frac{R}{2\\sqrt{L/C}},\\quad Q = \\frac{1}{2\\zeta}\\quad (R\\text{: all the series resistance})"
+        },
+        {
+          "label": "Overshoot of a step (ζ < 1)",
+          "tex": "\\frac{v_\\text{peak} - V}{V} = e^{-\\pi\\zeta/\\sqrt{1-\\zeta^2}},\\quad t_p = \\frac{\\pi}{\\omega_d}"
+        },
+        {
+          "label": "Ringing frequency",
+          "tex": "\\omega_d = \\omega_0\\sqrt{1-\\zeta^2},\\quad f_d = f_0\\sqrt{1-\\zeta^2}"
+        },
+        {
+          "label": "Envelope and settling (2%)",
+          "tex": "e^{-\\alpha t},\\ \\ \\alpha = \\frac{R}{2L} = \\zeta\\omega_0,\\quad t_{2\\%} \\lesssim \\frac{4}{\\alpha} = \\frac{8L}{R}"
+        },
+        {
+          "label": "Critical damping",
+          "tex": "R_\\text{crit} = 2\\sqrt{L/C}\\quad (\\zeta = 1)"
+        }
+      ],
+      "goals": [
+        "Find f₀ and the damping ratio ζ of a series RLC circuit, counting every resistance in the loop: winding, source, ESR and added resistors",
+        "Tell from ζ whether a step response overshoots and rings, is critically damped or rises slowly, and predict its peak, ringing frequency and settling time",
+        "Explain overshoot and ringing as energy moving between the inductor and the capacitor, with part of it turned into heat in the resistance on every pass",
+        "Choose a damping resistor for an overshoot limit, and estimate a stray inductance from ringing seen on a scope"
+      ],
+      "intuition": "After a step, energy swings between the capacitor and the inductor at about f₀ = 1/(2π√(LC)), and the loop's resistance, compared with 2√(L/C), decides whether that shows as overshoot and ringing or as a smooth rise.",
+      "why": "Neither the inductor's current nor the capacitor's voltage can jump, so after a step the current builds up while the inductor has voltage across it, and charges the capacitor. As v_C nears the final value the current is at its largest, and an inductor's current can fall only as fast as the voltage across it allows: di/dt = v_L/L. That reverse voltage exists only once v_C is above the final value (less the resistor's drop), so v_C overshoots. At the first peak of v_C the current is zero and the energy is in the capacitor; then the current reverses and the exchange repeats. With no resistance it would go on at ω₀ = 1/√(LC), the frequency at which X_L = X_C = √(L/C). Each pass of current through the resistance turns part of the energy into heat, so the swings decay with the envelope e^(−αt), α = R/2L. The damping ratio ζ = R/(2√(L/C)) compares the loop's resistance with the reactance at f₀: below 1 the response overshoots and rings; at 1 (R = 2√(L/C)) it reaches the final value fastest without overshoot; above 1 it rises without overshoot, more slowly.",
+      "explanation": "A series RLC circuit stores energy in two places: the capacitor's electric field and the inductor's magnetic field. After a step the current builds up in L and charges C. When v_C reaches the final value, L still carries current, and that current can't stop at once, so v_C goes past the final value. At the peak the current is zero and the energy is in C; then it flows back, and the voltage swings below the final value. The swing repeats near f₀ = 1/(2π√(LC)). The resistance in the loop turns part of the energy into heat on every pass. The damping ratio, ζ = (R/2)·√(C/L), says how much: below 1 the voltage overshoots and rings, by e^(−πζ/√(1−ζ²)) of the step on the first peak, at f_d = f₀√(1 − ζ²); at ζ = 1, R = 2√(L/C), it rises fastest without overshoot; above 1 it rises slowly. The ringing dies away as e^(−Rt/2L), so it settles within 2% in about 8L/R. R means all the series resistance: the inductor's winding, the source's internal resistance and the capacitor's ESR count too.",
+      "workedExample": {
+        "problem": "A 5 V step drives R1 = 47 Ω, L1 = 10 mH and C1 = 100 nF in series; treat L1 as ideal. Find f₀, ζ, the peak of v_C and when it happens, the ringing frequency, the time to settle within 2%, and the resistance that would make the response critically damped.",
+        "steps": [
+          "f₀ = 1/(2π√(10 mH × 100 nF)) = 1/(2π × 31.6 µs) = 5.03 kHz, or ω₀ = 1/31.6 µs = 31 600 rad/s.",
+          "√(L/C) = √(10 mH / 100 nF) = √(100 000) Ω = 316 Ω, the reactance of L1 and of C1 at f₀. ζ = 47 Ω / (2 × 316 Ω) = 0.0743: underdamped.",
+          "Overshoot: e^(−π × 0.0743 / √(1 − 0.0743²)) = e^(−0.234) = 0.791 of the step. The peak is 5 V × 1.791 = 8.96 V.",
+          "Ringing frequency: f_d = 5.03 kHz × √(1 − 0.0743²) = 5.03 kHz × 0.997 = 5.02 kHz, within 0.3% of f₀. The peak comes half a ringing period after the step: t_p = π/ω_d = 1/(2 × 5.02 kHz) = 99.6 µs.",
+          "Envelope: α = R/2L = 47 Ω / 20 mH = 2350 s⁻¹. e^(−αt) falls to 2% at t = ln 50 / α ≈ 4/α = 8L/R = 8 × 10 mH / 47 Ω = 1.70 ms, about 8.5 cycles of ringing.",
+          "Critical damping: R = 2√(L/C) = 2 × 316 Ω = 632 Ω in all. A 620 Ω resistor plus a coil with 12 Ω of winding resistance would be very close."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. II (AC), ch. 6 \"Resonance\", section \"An electric pendulum\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/AC/AC_6.html#xtocid89120",
+          "note": "A capacitor and inductor connected together swap energy between the capacitor's voltage and the inductor's current, the oscillation rate depends only on L and C, and stray resistance makes the amplitude decay."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. II (AC), ch. 6 \"Resonance\", section \"Simple series resonance\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/AC/AC_6.html#xtocid89122",
+          "note": "Resonance in a series LC loop is where the two reactances are equal, and a resistance in the loop is what remains of the impedance there."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, ModEL: Resonance (mod_resonance), ch. 3 \"Tutorial\", sections \"Parasitic inductance and capacitance\" and \"Quality factor (Q)\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_resonance.pdf",
+          "note": "Unwanted ringing at the edges of pulses comes from stray L and C and is damped by enough resistance; f = 1/(2π√(LC)); for a series loop Q is the reactance at resonance divided by R, and lower Q makes oscillations die faster."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "rlc_f0",
+      "topicId": "rlc_step",
+      "level": "recall",
+      "prompt": "Find f₀, the frequency at which L1 and C1 would ring with no resistance in the loop.",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            2
+          ]
+        },
+        {
+          "name": "L",
+          "unit": "H",
+          "series": "E12",
+          "decades": [
+            -3,
+            -3
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -9,
+            -8
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "w0",
+          "formula": "1/sqrt(L*C)",
+          "unit": "rad/s"
+        },
+        {
+          "name": "Z0",
+          "formula": "sqrt(L/C)",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "1/(2*pi*sqrt(L*C))",
+        "unit": "Hz",
+        "tolerance": 0.02
+      },
+      "explanation": "f₀ = 1/(2π√(LC)) = 1/(2π√({L} × {C})) = {answer}, or ω₀ = 1/√(LC) = {w0}. R1 is not in it: the resistance sets how fast the swings die away, or whether they happen at all, not how fast the energy would swing between L1 and C1. At f₀ the two reactances are equal: X_L = X_C = √(L/C) = {Z0}.",
+      "hints": [
+        "The energy swings between L1 and C1 at the frequency where their reactances are equal.",
+        "2πfL = 1/(2πfC), so f₀ = 1/(2π√(LC))."
+      ],
+      "misconceptions": [
+        {
+          "formula": "1/sqrt(L*C)",
+          "feedback": "That is ω₀ in rad/s. In hertz, divide by 2π: f₀ = 1/(2π√(LC))."
+        },
+        {
+          "formula": "1/(2*pi*L*C)",
+          "feedback": "L·C has units of s², so its square root is the time: f₀ = 1/(2π√(LC))."
+        },
+        {
+          "formula": "1/(2*pi*R*C)",
+          "feedback": "That is the RC filter's cutoff, which leaves out L1. The ringing is energy swinging between L1 and C1: f₀ = 1/(2π√(LC)).",
+          "when": "abs(sqrt(L*C)/(R*C)-1)-0.03"
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "At f₀, how do the reactances of L1 and C1 compare?",
+          "choices": [
+            {
+              "text": "They are equal: X_L = X_C = √(L/C) = {Z0}",
+              "feedback": "Right: setting 2πfL = 1/(2πfC) is how f₀ is found.",
+              "correct": true
+            },
+            {
+              "text": "X_L is zero and X_C is infinite, as in a settled circuit",
+              "feedback": "That is DC, f = 0. At f₀, X_L = 2πf₀L and X_C = 1/(2πf₀C) are both √(L/C) = {Z0}."
+            },
+            {
+              "text": "Each equals R1, so the loop has three equal parts",
+              "feedback": "R1 does not enter f₀ at all. The reactances equal each other, √(L/C) = {Z0}, whatever R1 is."
+            },
+            {
+              "text": "X_L is twice X_C, which is where the 2π in f₀ comes from",
+              "feedback": "The 2π converts ω₀ in rad/s to hertz. At f₀ the reactances are equal: both √(L/C) = {Z0}."
+            }
+          ],
+          "explanation": "At f₀ the inductor's and the capacitor's reactances are equal and opposite, so in a loop with little resistance energy moves between them at that rate. √(L/C) is the size of that reactance; the damping ratio compares the loop's resistance with it."
+        }
+      ],
+      "schematic": {
+        "netlist": "series RLC\nV1 in 0 PULSE(0 5 0 1n 1n 1 2)\nR1 in a {R:spice}\nL1 a out {L:spice}\nC1 out 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n5 V step"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              0
+            ],
+            "label": "L1\n{L}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              14,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            7,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              14,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "rlc_crit_r",
+      "topicId": "rlc_step",
+      "level": "recall",
+      "prompt": "Find the value of R1 that makes the step response at out critically damped. Treat L1 as ideal.",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "H",
+          "series": "E12",
+          "decades": [
+            -3,
+            -3
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -9,
+            -8
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Z0",
+          "formula": "sqrt(L/C)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rc",
+          "formula": "2*sqrt(L/C)",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "2*sqrt(L/C)",
+        "unit": "Ω",
+        "tolerance": 0.02
+      },
+      "explanation": "Critical damping is ζ = 1. ζ = (R/2)·√(C/L), so R = 2√(L/C) = 2 × √({L} / {C}) = 2 × {Z0} = {answer}. With L1 ideal, R1 is all the resistance in the loop. With less, the voltage at out overshoots 5 V and rings; with more, it rises without overshoot, but more slowly. √(L/C) = {Z0} is the reactance of L1 and of C1 at f₀, so the rule compares the loop's resistance with it.",
+      "hints": [
+        "Critical damping is ζ = 1. How does ζ depend on R, L and C?",
+        "ζ = (R/2)·√(C/L). Set it to 1 and solve for R."
+      ],
+      "misconceptions": [
+        {
+          "formula": "sqrt(L/C)",
+          "feedback": "That is √(L/C), the reactance of L1 and C1 at f₀. With R1 equal to it ζ = 0.5, and the voltage still overshoots by about 16%. Critical damping needs R = 2√(L/C)."
+        },
+        {
+          "formula": "sqrt(L/C)/2",
+          "feedback": "That solves ζ = 1 the wrong way round. ζ = R/(2√(L/C)), so R = 2√(L/C); half of √(L/C) would leave ζ = 0.25 and strong ringing."
+        },
+        {
+          "formula": "2*sqrt(C/L)",
+          "feedback": "That is upside down: √(C/L) is in siemens, not ohms. ζ = (R/2)·√(C/L) = 1 gives R = 2√(L/C)."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "With R1 below this value, the voltage at out goes past 5 V. Why?",
+          "choices": [
+            {
+              "text": "R1 takes too little of L1's energy as heat, so L1 still carries current at 5 V and keeps charging C1",
+              "correct": true,
+              "feedback": "Right: L1's current can't stop at once. Below 2√(L/C) the resistance hasn't brought it to zero by the time out reaches 5 V."
+            },
+            {
+              "text": "A smaller R1 makes R1·C1 shorter, and a fast RC charge overshoots its final value",
+              "feedback": "An RC charge never overshoots, however short R1·C1 is: it approaches the final value from below. The overshoot needs L1, whose current can't stop at once."
+            },
+            {
+              "text": "Below this value R1 and L1 resonate with each other, and the resonance adds to the step",
+              "feedback": "A resistor stores no energy and can't resonate. The swing is energy moving between L1 and C1; R1 only takes some of it as heat on each pass."
+            },
+            {
+              "text": "With less resistance R1 drops less of the step, so out gets more than the supply's 5 V",
+              "feedback": "Once settled, R1 carries no current and out sits at exactly 5 V. The extra is temporary and comes from L1's stored energy, not from a smaller drop across R1."
+            }
+          ],
+          "explanation": "When out reaches 5 V the current in L1 is not zero, and an inductor's current can't stop at once, so it keeps charging C1. At or above R = 2√(L/C) the resistance takes enough energy out on the way up that the current dies away as out arrives; below it, out overshoots and rings."
+        }
+      ],
+      "schematic": {
+        "netlist": "series RLC, critically damped\nV1 in 0 PULSE(0 5 0 1n 1n 1 2)\nR1 in a {Rc:spice}\nL1 a out {L:spice}\nC1 out 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n5 V step"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              0
+            ],
+            "label": "L1\n{L}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              14,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            7,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              14,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "rlc_zeta",
+      "topicId": "rlc_step",
+      "level": "reason",
+      "prompt": "Find the damping ratio ζ of the step response at out. R_w is L1's winding resistance.",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            1,
+            2
+          ]
+        },
+        {
+          "name": "Rw",
+          "unit": "Ω",
+          "values": [
+            6.8,
+            10,
+            15
+          ]
+        },
+        {
+          "name": "L",
+          "unit": "H",
+          "series": "E12",
+          "decades": [
+            -3,
+            -3
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -8,
+            -8
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rt",
+          "formula": "R1+Rw",
+          "unit": "Ω"
+        },
+        {
+          "name": "Z0",
+          "formula": "sqrt(L/C)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Z02",
+          "formula": "2*sqrt(L/C)",
+          "unit": "Ω"
+        },
+        {
+          "name": "R1c",
+          "formula": "2*sqrt(L/C)-Rw",
+          "unit": "Ω"
+        },
+        {
+          "name": "Z0h",
+          "formula": "sqrt(L/C)-Rw",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rinv",
+          "formula": "2*sqrt(C/L)",
+          "unit": "S"
+        }
+      ],
+      "answer": {
+        "formula": "(R1+Rw)/2*sqrt(C/L)",
+        "unit": "",
+        "unitless": true,
+        "tolerance": 0.02
+      },
+      "explanation": "All the resistance in the loop damps it: R = R1 + R_w = {R1} + {Rw} = {Rt}. √(L/C) = √({L} / {C}) = {Z0}. ζ = R/(2√(L/C)) = {Rt} / (2 × {Z0}) = {answer}. Below 1 the step response overshoots and rings; above 1 it rises without overshoot.",
+      "hints": [
+        "Which resistances does the loop current pass through?",
+        "ζ = (R/2)·√(C/L), with R = R1 + R_w."
+      ],
+      "misconceptions": [
+        {
+          "formula": "R1/2*sqrt(C/L)",
+          "feedback": "That leaves out R_w. The loop current flows through the winding too, and its resistance damps the ringing like any other: R = R1 + R_w.",
+          "when": "Rw/(R1+Rw)-0.03"
+        },
+        {
+          "formula": "(R1+Rw)/2*sqrt(L/C)",
+          "feedback": "That is upside down, and it has units of Ω². ζ = R/(2√(L/C)) compares R with √(L/C), the reactance at f₀."
+        },
+        {
+          "formula": "(R1+Rw)*sqrt(C/L)",
+          "feedback": "That is 2ζ. Critical damping, ζ = 1, comes at R = 2√(L/C), so ζ = R/(2√(L/C))."
+        },
+        {
+          "formula": "1/((R1+Rw)*sqrt(C/L))",
+          "feedback": "That is Q = 1/(2ζ), which grows as damping falls. ζ = (R/2)·√(C/L).",
+          "when": "abs(1/((R1+Rw)*sqrt(C/L))/((R1+Rw)/2*sqrt(C/L))-1)-0.03"
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Which value of R1 would make the response critically damped?",
+          "choices": [
+            {
+              "text": "{R1c}: 2√(L/C) less the {Rw} already in the winding",
+              "feedback": "Right: ζ = 1 needs R = 2√(L/C) = {Z02} in the whole loop, and R_w supplies {Rw} of it.",
+              "correct": true
+            },
+            {
+              "text": "{Rinv}: 2√(C/L), the same form as ζ",
+              "feedback": "That is upside down: √(C/L) is in siemens, not ohms. Critical damping needs R = 2√(L/C) = {Z02} in the whole loop."
+            },
+            {
+              "text": "{Z0h}: √(L/C) less the {Rw} in the winding",
+              "feedback": "That gives ζ = 0.5, which still overshoots about 16%. Critical damping needs R = 2√(L/C) in the loop."
+            },
+            {
+              "text": "0 Ω: with no resistor, nothing opposes the current, so v_C rises without overshoot",
+              "feedback": "With less resistance the energy is lost more slowly, so the ringing is worse: ζ falls toward 0. Critical damping needs R = 2√(L/C)."
+            }
+          ],
+          "explanation": "ζ = 1 when the total series resistance is 2√(L/C) = {Z02}. The winding already provides {Rw}, so R1 = {R1c}. Every resistance in the loop counts the same way: winding, source and capacitor ESR."
+        }
+      ],
+      "schematic": {
+        "netlist": "series RLC with winding resistance\nV1 in 0 PULSE(0 5 0 1n 1n 1 2)\nR1 in a {R1:spice}\nL1 a b {L:spice}\nRw b out {Rw:spice}\nC1 out 0 {C:spice}\n",
+        "noBuild": "R_w is the coil's winding resistance, drawn as a separate part",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n5 V step"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              0
+            ],
+            "label": "L1\n{L}"
+          },
+          {
+            "ref": "Rw",
+            "at": [
+              14,
+              0
+            ],
+            "label": "R_w\n{Rw}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              20,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              14,
+              0
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              20,
+              0
+            ],
+            [
+              20,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              20,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              20,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "rlc_regime",
+      "topicId": "rlc_step",
+      "level": "reason",
+      "prompt": "Which describes the voltage at out after V1 steps? Treat L1 as ideal.",
+      "variables": [],
+      "choices": [
+        {
+          "text": "Underdamped: ζ = 0.52, so it overshoots to about 5.7 V and rings before settling at 5 V",
+          "feedback": "Right: ζ = R/(2√(L/C)) = 330 Ω / 632 Ω = 0.52, below 1.",
+          "correct": true
+        },
+        {
+          "text": "Overdamped: R1 = 330 Ω is above √(L/C) = 316 Ω, so it rises to 5 V without overshoot",
+          "feedback": "The boundary is 2√(L/C) = 632 Ω, not √(L/C). With 330 Ω in the loop ζ = 0.52: the response overshoots by 15%."
+        },
+        {
+          "text": "Critically damped: R1 is within 5% of √(L/C) = 316 Ω, the fastest rise without overshoot",
+          "feedback": "Critical damping needs R = 2√(L/C) = 632 Ω, nearly twice R1. At 330 Ω, ζ = 0.52 and the voltage overshoots."
+        },
+        {
+          "text": "First-order: it rises as 5 V·(1 − e^(−t/τ)), τ = R1·C1 = 33 µs, with no overshoot",
+          "feedback": "That ignores L1, whose current can't change instantly. With L1 in the loop the circuit stores energy in two places and is second order; ζ = 0.52 means it overshoots."
+        }
+      ],
+      "explanation": "√(L/C) = √(10 mH / 100 nF) = 316 Ω, so critical damping needs 2√(L/C) = 632 Ω. With R1 = 330 Ω, ζ = 330 / 632 = 0.52. The first peak is e^(−πζ/√(1−ζ²)) = e^(−1.92) = 0.146 of the step above the final value: 5 V × 1.146 = 5.73 V. Then it rings at f₀√(1 − ζ²) = 5.03 kHz × 0.853 = 4.29 kHz, decaying as e^(−Rt/2L).",
+      "schematic": {
+        "netlist": "series RLC\nV1 in 0 PULSE(0 5 0 1n 1n 1 2)\nR1 in a 330\nL1 a out 10m\nC1 out 0 100n\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n0 → 5 V\nat t = 0"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n330 Ω"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              0
+            ],
+            "label": "L1\n10 mH"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n100 nF"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              14,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            7,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              14,
+              0
+            ]
+          }
+        ]
+      },
+      "bridge": [
+        "circuit",
+        "math"
+      ],
+      "review": "checked"
+    },
+    {
+      "id": "rlc_why_overshoot",
+      "topicId": "rlc_step",
+      "level": "reason",
+      "prompt": "After V1 steps to 5 V, the voltage at out rises past 5 V to about 9.5 V. Why does it go past 5 V? Treat L1 as ideal.",
+      "variables": [],
+      "choices": [
+        {
+          "text": "Near 5 V, L1 carries its largest current, which can't stop at once and keeps charging C1",
+          "feedback": "Right: the current can fall only at di/dt = v_L/L, so it is still flowing into C1 as v_C passes 5 V, and stops only at the peak.",
+          "correct": true
+        },
+        {
+          "text": "At 5 V the current is zero, but L1 then releases the voltage it has stored into C1",
+          "feedback": "An inductor stores energy as current, not as voltage. At 5 V the current in L1 is close to its largest, and it keeps flowing into C1."
+        },
+        {
+          "text": "V1 itself overshoots as it switches on, and C1's voltage follows it above 5 V",
+          "feedback": "V1 is an ideal step to 5 V and stays there. The overshoot comes from the current L1 still carries when v_C reaches 5 V."
+        },
+        {
+          "text": "R1's voltage adds to V1's while the current flows, pushing C1's voltage above 5 V",
+          "feedback": "R1's voltage opposes the current, so it takes away from V1's 5 V. Without R1 the peak would be higher still: 10 V."
+        }
+      ],
+      "explanation": "KVL: v_L = 5 V − v_C − i·R1. While v_L is positive the current grows; it peaks where v_L = 0, just below v_C = 5 V. From there the current in L1 can only fall at di/dt = v_L/L, so it keeps charging C1 and v_C rises until the current reaches zero, at the peak. There all the energy is in C1. ζ = 22 Ω / (2 × 316 Ω) = 0.035, so little is lost on the way: the peak is 5 V × (1 + e^(−πζ/√(1−ζ²))) = 5 V × 1.896 = 9.48 V. Then the current reverses and the voltage swings back below 5 V.",
+      "followUps": [
+        {
+          "prompt": "At the first peak of the voltage at out, what is the current in L1?",
+          "choices": [
+            {
+              "text": "Zero: C1's voltage stops rising when no current flows into it",
+              "feedback": "Right: i = C·dv/dt, so the current is zero where v_C peaks, and the energy is all in C1.",
+              "correct": true
+            },
+            {
+              "text": "Its largest: C1 is most charged, so the current is largest",
+              "feedback": "The current into C1 is C·dv/dt, which is zero where v_C stops rising. The current was largest near 5 V, a quarter cycle earlier."
+            },
+            {
+              "text": "5 V / 22 Ω = 227 mA, as for R1 alone across the supply",
+              "feedback": "That would need all 5 V across R1. At the peak v_C is above 5 V and the current is C·dv/dt = 0."
+            },
+            {
+              "text": "Its largest in reverse: C1 discharges at once",
+              "feedback": "The current reverses only after the peak. At the peak itself it is passing through zero."
+            }
+          ],
+          "explanation": "i = C·dv/dt: at the top of v_C the slope is zero, so is the current. L1 holds no energy then (½Li² = 0) and C1 holds it all, less what R1 has turned into heat. The current then reverses and the energy moves back into L1."
+        }
+      ],
+      "schematic": {
+        "netlist": "series RLC\nV1 in 0 PULSE(0 5 0 1n 1n 1 2)\nR1 in a 22\nL1 a out 10m\nC1 out 0 100n\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n0 → 5 V\nat t = 0"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n22 Ω"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              0
+            ],
+            "label": "L1\n10 mH"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n100 nF"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              14,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            7,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              14,
+              0
+            ]
+          }
+        ]
+      },
+      "bridge": [
+        "circuit",
+        "physics"
+      ],
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "rlc_hotplug_peak",
+      "topicId": "rlc_step",
+      "level": "reason",
+      "prompt": "A cable from a live supply is plugged into a board at t = 0. L_c and R_c model the cable, with C1's ESR in R_c. Find the peak voltage across C1, the board's ceramic input capacitor. Treat the supply as ideal.",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            5,
+            12
+          ]
+        },
+        {
+          "name": "L",
+          "unit": "H",
+          "values": [
+            4.7e-07,
+            1e-06,
+            2.2e-06
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            4.7e-06,
+            1e-05,
+            2.2e-05
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            0.05,
+            0.1,
+            0.15
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Z0",
+          "formula": "sqrt(L/C)",
+          "unit": "Ω"
+        },
+        {
+          "name": "z",
+          "formula": "(R)/2*sqrt(C/L)",
+          "unit": ""
+        },
+        {
+          "name": "os",
+          "formula": "exp(-pi*(R)/2*sqrt(C/L)/sqrt(1-((R)/2*sqrt(C/L))^2))",
+          "unit": ""
+        },
+        {
+          "name": "Vos",
+          "formula": "V*exp(-pi*(R)/2*sqrt(C/L)/sqrt(1-((R)/2*sqrt(C/L))^2))",
+          "unit": "V"
+        },
+        {
+          "name": "V2",
+          "formula": "2*V",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "V*(1+exp(-pi*(R)/2*sqrt(C/L)/sqrt(1-((R)/2*sqrt(C/L))^2)))",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "The cable and C1 form a series RLC driven by a {V} step. √(L/C) = √({L} / {C}) = {Z0}, so ζ = R/(2√(L/C)) = {R} / (2 × {Z0}) = {z}: underdamped. The first peak overshoots by e^(−πζ/√(1−ζ²)) = {os} of the step, {Vos}: v_peak = {V} + {Vos} = {answer}. With no resistance at all it would reach 2 × {V} = {V2}. That is why plugging a supply into a board with only ceramic capacitors at its input can exceed their rating, or the rating of the chip behind them.",
+      "hints": [
+        "The cable's inductance and C1 form a series RLC. Is it underdamped?",
+        "ζ = (R/2)·√(C/L); v_peak = V·(1 + e^(−πζ/√(1−ζ²)))."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V",
+          "feedback": "That is where C1 settles, as in an RC circuit. With L_c in the loop the current is still flowing when C1 reaches {V}, so it overshoots."
+        },
+        {
+          "formula": "2*V",
+          "feedback": "That is the lossless limit, ζ = 0. R_c turns part of the energy into heat before the first peak: ζ = {z}."
+        },
+        {
+          "formula": "V*exp(-pi*(R)/2*sqrt(C/L)/sqrt(1-((R)/2*sqrt(C/L))^2))",
+          "feedback": "That is the overshoot alone, the amount above the final value. Add it to {V}."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does a ceramic C1 ring harder at plug-in than an aluminum electrolytic of the same capacitance would?",
+          "choices": [
+            {
+              "text": "A ceramic's ESR is a few milliohms; an electrolytic's, tenths of an ohm to a few ohms, adds to R_c and raises ζ",
+              "feedback": "Right: the electrolytic's ESR is resistance in the loop, and it damps the ringing.",
+              "correct": true
+            },
+            {
+              "text": "A ceramic stores more energy at the same voltage and capacitance, so it swings harder past the supply",
+              "feedback": "At the same C and voltage both store ½CV². The difference is the loss in the loop: the ESR."
+            },
+            {
+              "text": "A ceramic has more internal inductance, which adds to the cable's L_c and lengthens the ringing",
+              "feedback": "A ceramic's own inductance is lower than an electrolytic's, and it is small next to the cable's. The difference is the ESR."
+            },
+            {
+              "text": "A ceramic keeps its full capacitance at high voltage, so it charges further past the supply voltage",
+              "feedback": "The opposite: a class II ceramic loses capacitance at high DC voltage. The ringing difference comes from the ESR."
+            }
+          ],
+          "explanation": "ζ = (R/2)·√(C/L) with R all the series resistance. An electrolytic's ESR, tenths of an ohm for a large one and a few ohms for one this small, is usually enough to damp a cable's ringing outright; that is why a bulk electrolytic is often fitted beside ceramic input capacitors."
+        }
+      ],
+      "schematic": {
+        "netlist": "hot plug\nV1 in 0 PULSE(0 {V:spice} 0 10n 10n 1 2)\nRc in a {R:spice}\nLc a out {L:spice}\nC1 out 0 {C:spice}\n",
+        "noBuild": "L_c and R_c model the cable and the capacitor's ESR, drawn as parts",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n{V}\nat t = 0"
+          },
+          {
+            "ref": "Rc",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R_c\n{R}"
+          },
+          {
+            "ref": "Lc",
+            "at": [
+              8,
+              0
+            ],
+            "label": "L_c\n{L}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              14,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            7,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              14,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "rlc_ring_freq",
+      "topicId": "rlc_step",
+      "level": "reason",
+      "prompt": "Find the frequency of the ringing a scope shows at out after V1 steps. Treat L1 as ideal.",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "H",
+          "values": [
+            0.001,
+            0.0022,
+            0.0047,
+            0.01
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            180,
+            220,
+            270
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "C",
+          "formula": "L/100000",
+          "unit": "F"
+        },
+        {
+          "name": "Z0",
+          "formula": "sqrt(L/(L/100000))",
+          "unit": "Ω"
+        },
+        {
+          "name": "z",
+          "formula": "R/2*sqrt((L/100000)/L)",
+          "unit": ""
+        },
+        {
+          "name": "f0",
+          "formula": "1/(2*pi*sqrt(L*L/100000))",
+          "unit": "Hz"
+        },
+        {
+          "name": "k",
+          "formula": "sqrt(1-(R/2*sqrt((L/100000)/L))^2)",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "1/(2*pi*sqrt(L*L/100000))*sqrt(1-(R/2*sqrt((L/100000)/L))^2)",
+        "unit": "Hz",
+        "tolerance": 0.02
+      },
+      "explanation": "f₀ = 1/(2π√({L} × {C})) = {f0}. √(L/C) = {Z0}, so ζ = {R} / (2 × {Z0}) = {z}. Damping slows the swing: f_d = f₀√(1 − ζ²) = {f0} × {k} = {answer}. A scope shows f_d: one over the time between successive peaks, not f₀; the two are within 2% only for ζ below about 0.2. On the scope, the time from the first peak to the first trough is half a period.",
+      "hints": [
+        "Find f₀ and ζ first. Does damping change the frequency of the ringing?",
+        "f_d = f₀√(1 − ζ²), with ζ = (R/2)·√(C/L)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "1/(2*pi*sqrt(L*L/100000))",
+          "feedback": "That is f₀, the frequency with no resistance. With ζ = {z} the ringing is slower: f_d = f₀√(1 − ζ²)."
+        },
+        {
+          "formula": "1/sqrt(L*L/100000)*sqrt(1-(R/2*sqrt((L/100000)/L))^2)",
+          "feedback": "That is ω_d in rad/s. A scope's frequency is in hertz: divide by 2π."
+        },
+        {
+          "formula": "1/(2*pi*sqrt(L*L/100000))/sqrt(1-(R/2*sqrt((L/100000)/L))^2)",
+          "feedback": "Damping lowers the ringing frequency, not raises it: f_d = f₀√(1 − ζ²)."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why is the ringing slower than f₀?",
+          "choices": [
+            {
+              "text": "R1's drop subtracts from the voltage driving the current, so each swing of current builds more slowly",
+              "feedback": "Right, as a one-line account: R1's drop subtracts from the voltage driving the current as it builds. The exact result is ω_d = √(ω₀² − α²) from the characteristic equation, so the shift is second order in ζ: under 2% below ζ = 0.2.",
+              "correct": true
+            },
+            {
+              "text": "R1 stores part of the energy and hands it back late, which delays each swing",
+              "feedback": "A resistor stores no energy; it turns it into heat. The slower swing comes from its voltage opposing the current."
+            },
+            {
+              "text": "R1 adds to L1's reactance, as if L1 were larger",
+              "feedback": "Resistance and reactance don't add as plain numbers, and R1 does not act as more inductance. Its voltage opposes the current, which slows each swing."
+            },
+            {
+              "text": "It isn't: the scope shows f₀, and f_d only appears in the math",
+              "feedback": "f_d is what the scope measures between peaks. With ζ = {z} it is clearly below f₀ = {f0}."
+            }
+          ],
+          "explanation": "With ζ = {z}, √(1 − ζ²) = {k}: the ringing is about {k} of f₀. For light damping, ζ below 0.2, the difference is under 2%, and a scope reading gives f₀ directly."
+        }
+      ],
+      "schematic": {
+        "netlist": "series RLC\nV1 in 0 PULSE(0 5 0 1n 1n 1 2)\nR1 in a {R:spice}\nL1 a out {L:spice}\nC1 out 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n5 V step"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              0
+            ],
+            "label": "L1\n{L}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              14,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            7,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              14,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "rlc_settle",
+      "topicId": "rlc_step",
+      "prompt": "V1 steps. Estimate from the envelope of the ringing how long out takes to settle within 2% of its final value. R_S is the generator's internal resistance and R_w is L1's winding resistance.",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "H",
+          "values": [
+            0.01,
+            0.022,
+            0.047
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            1e-08,
+            2.2e-08
+          ]
+        },
+        {
+          "name": "Rw",
+          "unit": "Ω",
+          "values": [
+            10,
+            22,
+            33
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rt",
+          "formula": "50+Rw",
+          "unit": "Ω"
+        },
+        {
+          "name": "te",
+          "formula": "2*L/(50+Rw)",
+          "unit": "s"
+        },
+        {
+          "name": "z",
+          "formula": "(50+Rw)/2*sqrt(C/L)",
+          "unit": ""
+        },
+        {
+          "name": "f0",
+          "formula": "1/(2*pi*sqrt(L*C))",
+          "unit": "Hz"
+        },
+        {
+          "name": "ncyc",
+          "formula": "8*L/(50+Rw)/(2*pi*sqrt(L*C))",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "8*L/(50+Rw)",
+        "unit": "s",
+        "tolerance": 0.05
+      },
+      "explanation": "The loop resistance is R_S + R_w = 50 Ω + {Rw} = {Rt}, so ζ = {z}: the step rings. The ringing decays inside the envelope e^(−αt), with α = R/2L, so 1/α = 2L/R = 2 × {L} / {Rt} = {te}. The envelope is at 2% when e^(−αt) = 0.02: t = ln 50 / α ≈ 4/α = 4 × {te} = {answer}, about {ncyc} cycles at f₀ = {f0}. The exact 2% time comes at or a little before this, since the ringing is inside its envelope most of the time. C1 doesn't appear: it changes how many cycles fit in that time, not how fast the envelope falls.",
+      "hints": [
+        "The ringing decays as e^(−αt). What is α for a series RLC, and which resistances count?",
+        "α = R/2L with R = R_S + R_w; e^(−αt) = 0.02 at t ≈ 4/α = 8L/R."
+      ],
+      "misconceptions": [
+        {
+          "formula": "8*L/Rw",
+          "feedback": "That leaves out the generator's 50 Ω. Its internal resistance is in the loop and damps the ringing too: R = R_S + R_w."
+        },
+        {
+          "formula": "8*L/50",
+          "feedback": "That leaves out R_w. The winding resistance is in the loop and damps the ringing too: R = R_S + R_w."
+        },
+        {
+          "formula": "4*L/(50+Rw)",
+          "feedback": "That uses α = R/L. The envelope of a series RLC falls as e^(−Rt/2L), half that rate: t ≈ 4/α = 8L/R."
+        },
+        {
+          "formula": "5*L/(50+Rw)",
+          "feedback": "That is 5τ for an RL circuit, τ = L/R. The ringing envelope decays at α = R/2L, twice as slowly: t ≈ 4/α = 8L/R."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does the settling time not depend on C1?",
+          "choices": [
+            {
+              "text": "R dissipates ½I²R while the ringing holds ½LI²: the fraction lost per second is R/L, whatever C1 is",
+              "feedback": "Right: C1 changes the frequency and so how many cycles fit, not the fraction of energy lost per second.",
+              "correct": true
+            },
+            {
+              "text": "A larger C1 holds more energy, ½CV², at the same swing, so the same R takes longer to burn it off",
+              "feedback": "It holds more, and the same swing then drives a larger current, I = V·√(C/L), so R loses more too, ½I²R: loss and stored energy grow together, and the fraction lost per second stays R/L."
+            },
+            {
+              "text": "The envelope decays as e^(−t/RC), as in an RC circuit, so a larger C1 rings longer",
+              "feedback": "There is no RC time constant in a lightly damped series RLC. The envelope is e^(−Rt/2L), set by R and L alone; C1 sets only the frequency."
+            },
+            {
+              "text": "C1 sets f₀ = 1/(2π√(LC)), and faster ringing loses its energy in fewer seconds",
+              "feedback": "C1 does set f₀, but the loss per second is ½I²R against ½LI² stored, whatever the frequency. Faster ringing fits more cycles into the same envelope; it does not shorten it."
+            }
+          ],
+          "explanation": "For light damping the energy swinging between L1 and C1 equals ½L·I² at each current peak, and R dissipates I²R/2 on average. The energy falls at the rate R/L, the amplitude at half that, α = R/2L, whatever C1 is."
+        }
+      ],
+      "schematic": {
+        "netlist": "generator into LC\nV1 in 0 PULSE(0 5 0 10n 10n 1 2)\nRs in a 50\nL1 a b {L:spice}\nRw b out {Rw:spice}\nC1 out 0 {C:spice}\n",
+        "noBuild": "R_S and R_w are the generator's internal resistance and the coil's winding resistance, drawn as parts",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n0 → 5 V\nat t = 0"
+          },
+          {
+            "ref": "Rs",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R_S\n50 Ω"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              0
+            ],
+            "label": "L1\n{L}"
+          },
+          {
+            "ref": "Rw",
+            "at": [
+              14,
+              0
+            ],
+            "label": "R_w\n{Rw}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              20,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              14,
+              0
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              20,
+              0
+            ],
+            [
+              20,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              20,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              20,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "rlc_what_if_r",
+      "topicId": "rlc_step",
+      "prompt": "A second {R} resistor is added in series with R1. What happens to the overshoot at out, the amount the voltage rises above 5 V after the step? Treat L1 as ideal.",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            47,
+            68,
+            100
+          ]
+        },
+        {
+          "name": "L",
+          "unit": "H",
+          "values": [
+            0.01,
+            0.022
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            1e-08,
+            2.2e-08
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "z1",
+          "formula": "(R)/2*sqrt(C/L)",
+          "unit": ""
+        },
+        {
+          "name": "z2",
+          "formula": "(2*R)/2*sqrt(C/L)",
+          "unit": ""
+        },
+        {
+          "name": "k2",
+          "formula": "sqrt(1-((2*R)/2*sqrt(C/L))^2)",
+          "unit": ""
+        },
+        {
+          "name": "f0h",
+          "formula": "1/(4*pi*sqrt(L*C))",
+          "unit": "Hz"
+        },
+        {
+          "name": "tau2",
+          "formula": "L/(2*R)",
+          "unit": "s"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the overshoot",
+        "formula": "5*exp(-pi*(R)/2*sqrt(C/L)/sqrt(1-((R)/2*sqrt(C/L))^2))",
+        "unit": "V",
+        "change": {
+          "R": "2*R"
+        },
+        "askFactor": false,
+        "feedback": {
+          "up": "More resistance turns more of the energy into heat on the way up, so less is left in L1 when v_C reaches 5 V to carry it further. The overshoot falls.",
+          "same": "The overshoot depends on ζ = (R/2)·√(C/L), which doubles. More of the energy is turned into heat before the peak, so the overshoot falls."
+        }
+      },
+      "explanation": "ζ doubles from {z1} to {z2}. The overshoot is 5 V × e^(−πζ/√(1−ζ²)): {before} → {after}. More resistance turns more of the energy swinging between L1 and C1 into heat on each pass, so less is left to carry v_C past 5 V.",
+      "followUps": [
+        {
+          "prompt": "What happens to the frequency of the ringing?",
+          "choices": [
+            {
+              "text": "It barely changes: f₀√(1 − ζ²) with ζ = {z2} is still within 2% of f₀",
+              "feedback": "Right: while ζ is small, √(1 − ζ²) stays close to 1, and f₀ doesn't depend on R.",
+              "correct": true
+            },
+            {
+              "text": "It halves, to about {f0h}: twice the resistance slows the ringing in proportion",
+              "feedback": "R isn't in f₀ = 1/(2π√(LC)). It lowers the ringing frequency only through √(1 − ζ²) = {k2}."
+            },
+            {
+              "text": "It rises: more resistance makes the circuit faster, as τ = L/R, now {tau2}, does",
+              "feedback": "τ = L/R belongs to a circuit with no capacitor. Here R sets the decay, and lowers the ringing frequency slightly: × {k2}."
+            },
+            {
+              "text": "The ringing stops: ζ = {z2} is past the overdamped boundary",
+              "feedback": "The boundary is ζ = 1. ζ = {z2} is far below it, so the response still overshoots and rings."
+            }
+          ],
+          "explanation": "f_d = f₀√(1 − ζ²): with ζ = {z2}, the ringing runs at {k2} of f₀, under 2% below it. Resistance changes how fast the ringing dies away, e^(−Rt/2L), far more than how fast it swings."
+        }
+      ],
+      "schematic": {
+        "netlist": "series RLC\nV1 in 0 PULSE(0 5 0 1n 1n 1 2)\nR1 in a {R:spice}\nL1 a out {L:spice}\nC1 out 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n5 V step"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              0
+            ],
+            "label": "L1\n{L}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              14,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            7,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              14,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "rlc_what_if_coss",
+      "topicId": "rlc_step",
+      "prompt": "A switch node rings after each edge: L_s and R_s are the stray inductance and resistance of the switching loop, and C_oss is the off transistor's output capacitance; treat it as fixed. A transistor with twice the output capacitance is fitted. What happens to the frequency of the ringing?",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "H",
+          "values": [
+            4.7e-09,
+            1e-08,
+            1.5e-08
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            1e-10,
+            2.2e-10,
+            4.7e-10
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            0.2,
+            0.5
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "z1",
+          "formula": "(R)/2*sqrt(C/L)",
+          "unit": ""
+        },
+        {
+          "name": "z2",
+          "formula": "(R)/2*sqrt(2*C/L)",
+          "unit": ""
+        },
+        {
+          "name": "z3",
+          "formula": "(R)/2*sqrt(C/2/L)",
+          "unit": ""
+        },
+        {
+          "name": "z4",
+          "formula": "2*(R)/2*sqrt(C/L)",
+          "unit": ""
+        }
+      ],
+      "whatIf": {
+        "quantity": "the ringing frequency",
+        "formula": "sqrt(1/(L*C)-(R/(2*L))^2)/(2*pi)",
+        "unit": "Hz",
+        "change": {
+          "C": "2*C"
+        },
+        "askFactor": true,
+        "factorHint": "C sits under a square root: f₀ = 1/(2π√(LC)), and with ζ this small the ringing runs at f₀.",
+        "feedback": {
+          "up": "A larger C_oss needs twice the charge for the same voltage swing, while the current through L_s grows less than in proportion, so each swing takes longer.",
+          "same": "The ringing is energy swinging between L_s and C_oss, at f₀ = 1/(2π√(LC)). A larger C_oss takes longer to swing."
+        }
+      },
+      "explanation": "The ringing runs at f₀√(1 − ζ²) ≈ f₀ = 1/(2π√(L_s·C_oss)), since ζ is only {z1}. Doubling C_oss divides f₀ by √2: {before} → {after}. A larger part means slower ringing, with only a little less overshoot: ζ rises by √2 to {z2}, still far below 1.",
+      "followUps": [
+        {
+          "prompt": "What happens to the damping ratio ζ of the ringing?",
+          "choices": [
+            {
+              "text": "It rises by √2, from {z1} to {z2}: ζ = (R_s/2)·√(C/L), so the ringing dies out in fewer cycles",
+              "feedback": "Right: √(L/C) falls, so the same R_s is a larger share of it.",
+              "correct": true
+            },
+            {
+              "text": "It falls by √2, from {z1} to {z3}, like the frequency: the ringing lasts more cycles",
+              "feedback": "ζ = (R_s/2)·√(C/L) has C on top: doubling C_oss multiplies ζ by √2."
+            },
+            {
+              "text": "It stays at {z1}: only R_s sets the damping, and R_s hasn't changed",
+              "feedback": "ζ compares R_s with √(L/C). √(L/C) falls by √2 when C_oss doubles, so ζ rises by √2."
+            },
+            {
+              "text": "It doubles, from {z1} to {z4}, in proportion to the capacitance",
+              "feedback": "C sits under a square root in ζ = (R_s/2)·√(C/L): it rises by √2, not 2."
+            }
+          ],
+          "explanation": "ζ = R_s/(2√(L/C)). Doubling C_oss lowers √(L/C) by √2, so ζ rises by √2, from {z1} to {z2}. The envelope e^(−R_s·t/2L) is unchanged in time; with slower ringing, fewer cycles fit in it."
+        }
+      ],
+      "schematic": {
+        "netlist": "switch node\nV1 in 0 PULSE(0 12 0 10p 10p 1 2)\nLs in a {L:spice}\nRs a sw {R:spice}\nCoss sw 0 {C:spice}\n",
+        "noBuild": "L_s, R_s and C_oss are strays of the board and the transistor, drawn as parts",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n0 → 12 V\nedge"
+          },
+          {
+            "ref": "Ls",
+            "at": [
+              2,
+              0
+            ],
+            "label": "L_s\n{L}"
+          },
+          {
+            "ref": "Rs",
+            "at": [
+              8,
+              0
+            ],
+            "label": "R_s\n{R}"
+          },
+          {
+            "ref": "Coss",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "C_oss\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              14,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            7,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "sw",
+            "at": [
+              14,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "rlc_design_damping_r",
+      "topicId": "rlc_step",
+      "level": "design",
+      "prompt": "A sensor's 5 V rail is filtered by L1 and C1 from a USB port. Choose the smallest E24 R1 that keeps C1 at or below 5.25 V, the top of the USB range, when the cable is plugged in. Treat the port as an ideal 5 V step; the sensor's few milliamperes don't damp the ringing, so leave them out.",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "H",
+          "values": [
+            1e-05,
+            4.7e-05,
+            0.0001
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            2.2e-06,
+            4.7e-06,
+            1e-05
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Z0",
+          "formula": "sqrt(L/C)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rt",
+          "formula": "2*0.6901*sqrt(L/C)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rmin",
+          "formula": "2*0.6901*sqrt(L/C)-0.15",
+          "unit": "Ω"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "R",
+            "label": "R1",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 0.1,
+            "max": 1000
+          }
+        ],
+        "result": "5*exp(-pi*min((R+0.15)/2*sqrt(C/L),0.99999)/sqrt(1-(min((R+0.15)/2*sqrt(C/L),0.99999))^2))",
+        "resultLabel": "overshoot at C1 above 5 V",
+        "resultUnit": "V",
+        "target": "0.25",
+        "tolerance": 0.49,
+        "mode": "atMost"
+      },
+      "explanation": "5.25 V allows an overshoot of 0.25 V, 5% of the step. e^(−πζ/√(1−ζ²)) = 0.05 gives πζ/√(1−ζ²) = ln 20 = 3.00, so ζ ≥ 0.690. √(L/C) = √({L} / {C}) = {Z0}, so the loop needs R ≥ 2 × 0.690 × {Z0} = {Rt}. L1's winding supplies 0.15 Ω of it: R1 ≥ {Rmin}. Take the E24 value at or just above it; the next value down overshoots past 5.25 V. This is the ideal-value minimum: in a real design a class II ceramic loses capacitance under DC bias and L1 has a ±20% tolerance, both of which lower ζ, so add margin or check the worst case. Larger values damp more, but R1 carries the sensor's supply current all the time. In practice a bulk electrolytic across C1 often damps the ringing through its ESR, which carries no DC.",
+      "hints": [
+        "Which damping ratio gives a 5% overshoot? Then which loop resistance gives that ζ?",
+        "e^(−πζ/√(1−ζ²)) = 0.05 → ζ = 0.69; R1 + R_w ≥ 2 × 0.69 × √(L/C). Round up to E24."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why choose the smallest R1 that meets the limit, rather than one that makes the filter critically damped?",
+          "choices": [
+            {
+              "text": "R1 carries the sensor's supply current all the time, so every extra ohm drops more of the 5 V and wastes power",
+              "feedback": "Right: the limit is met; more resistance only costs voltage and heat.",
+              "correct": true
+            },
+            {
+              "text": "A larger R1 would make C1 ring harder, since more resistance in the loop holds more energy",
+              "feedback": "More resistance damps the ringing more: ζ rises with R, and a resistor holds no energy; it turns it into heat. The cost of a larger R1 is the DC drop across it."
+            },
+            {
+              "text": "Critical damping overshoots more than ζ = 0.69, so a larger R1 would push C1 past 5.25 V",
+              "feedback": "Critical damping, ζ = 1, doesn't overshoot at all. It just needs more resistance, which drops more of the 5 V."
+            },
+            {
+              "text": "A larger R1 would raise C1's final voltage above 5 V, outside the range the sensor accepts",
+              "feedback": "C1 settles at 5 V less the drop across R1, so a larger R1 lowers it. That drop is the reason to keep R1 small."
+            }
+          ],
+          "explanation": "A series damping resistor works, but it sits in the supply path: at 5 mA, 10 Ω drops 50 mV and wastes 0.25 mW; at 100 mA it would drop 1 V. So it is sized for the overshoot limit and no larger."
+        }
+      ],
+      "schematic": {
+        "netlist": "USB LC filter\nV1 in 0 PULSE(0 5 0 1u 1u 1 2)\nR1 in a {Rmin:spice}\nL1 a b {L:spice}\nRw b out 0.15\nC1 out 0 {C:spice}\n",
+        "noBuild": "R_w is the coil's winding resistance, drawn as a separate part",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "USB 5 V\nat t = 0"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1 = ?"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              0
+            ],
+            "label": "L1\n{L}"
+          },
+          {
+            "ref": "Rw",
+            "at": [
+              14,
+              0
+            ],
+            "label": "R_w\n0.15 Ω"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              20,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              14,
+              0
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              20,
+              0
+            ],
+            [
+              20,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              20,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              20,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "rlc_trouble_probe_lead",
+      "topicId": "rlc_step",
+      "level": "design",
+      "prompt": "A 10× probe on its long ground lead shows ringing at {f} after each edge of a logic output. The drawing models the probe as C_p and the lead as L_g. Estimate L_g.",
+      "variables": [
+        {
+          "name": "Lg",
+          "unit": "H",
+          "values": [
+            1e-07,
+            1.5e-07,
+            2.2e-07
+          ]
+        },
+        {
+          "name": "Cp",
+          "unit": "F",
+          "values": [
+            1e-11,
+            1.2e-11,
+            1.5e-11
+          ]
+        },
+        {
+          "name": "Rs",
+          "unit": "Ω",
+          "values": [
+            22,
+            33
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "f",
+          "formula": "sqrt(1/(Lg*Cp)-(Rs/(2*Lg))^2)/(2*pi)",
+          "unit": "Hz"
+        },
+        {
+          "name": "z",
+          "formula": "(Rs)/2*sqrt(Cp/Lg)",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "1/((2*pi*f)^2*Cp)",
+        "unit": "H",
+        "tolerance": 0.02
+      },
+      "explanation": "The logic output, the probe's input capacitance and the ground lead form a series RLC, and the ringing runs at about f₀ = 1/(2π√(L_g·C_p)). Solve for L: L_g = 1/((2πf)²·C_p) = 1/((2π × {f})² × {Cp}) = {answer}. The ringing decays over several cycles, so damping is light (ζ = {z}) and f_d is within about 2% of f₀; the true lead inductance is a few percent lower, which doesn't matter for an estimate. The ringing is in the measurement, not the circuit: with the probe's short ground spring the loop inductance falls several times, and the ringing moves up in frequency and shrinks.",
+      "hints": [
+        "Which L and C set this ringing? Treat its frequency as f₀.",
+        "f₀ = 1/(2π√(LC)), so L = 1/((2πf)²·C)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "1/(f^2*Cp)",
+          "feedback": "That uses f where ω = 2πf belongs: L = 1/(ω²C) = 1/((2πf)²·C)."
+        },
+        {
+          "formula": "1/(2*pi*f*Cp)",
+          "feedback": "That is C_p's reactance at {f}, in ohms. At f₀ the reactances are equal, 2πfL = 1/(2πfC), so L = 1/((2πf)²·C)."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "How can the scope show whether the ringing is in the circuit or in the probe?",
+          "choices": [
+            {
+              "text": "Replace the ground lead with the probe's short ground spring: ringing from the lead moves up in frequency and shrinks",
+              "feedback": "Right: change only the measurement. If the ringing changes, it came from the probe's loop.",
+              "correct": true
+            },
+            {
+              "text": "Turn on the scope's 20 MHz bandwidth limit: if the ringing goes, it was the probe",
+              "feedback": "A bandwidth limit hides any ringing above 20 MHz, from the probe or from the circuit, so it can't tell them apart."
+            },
+            {
+              "text": "Measure the node with a multimeter: a steady reading means there is no ringing",
+              "feedback": "A multimeter averages over far longer than a cycle at {f}. It can't see this ringing at all."
+            },
+            {
+              "text": "Switch the probe to 1×: ringing that stays is in the circuit",
+              "feedback": "A 1× probe has more input capacitance and much less bandwidth, so it changes the ringing and hides it at the same time."
+            }
+          ],
+          "explanation": "The test is to change the measurement and nothing else. A 15 cm ground lead has roughly 100 to 200 nH; a ground spring a few nanohenries. With the spring, f₀ rises several times, often past the scope's bandwidth, and the ringing it caused is gone."
+        }
+      ],
+      "schematic": {
+        "netlist": "probe ground lead\nV1 in 0 PULSE(0 3.3 0 10p 10p 1 2)\nRs in a {Rs:spice}\nLg a tip {Lg:spice}\nCp tip 0 {Cp:spice}\n",
+        "noBuild": "L_g and C_p model the probe's ground lead and input capacitance, drawn as parts",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n0 → 3.3 V\nedge"
+          },
+          {
+            "ref": "Rs",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R_s\n{Rs}\n(output)"
+          },
+          {
+            "ref": "Lg",
+            "at": [
+              8,
+              0
+            ],
+            "label": "L_g = ?"
+          },
+          {
+            "ref": "Cp",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "C_p\n{Cp}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              14,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            7,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "tip",
+            "at": [
+              14,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    }
+  ]
+}

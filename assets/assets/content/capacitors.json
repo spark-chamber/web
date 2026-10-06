@@ -332,6 +332,97 @@
       "placement": true
     },
     {
+      "id": "cap_parallel_plate",
+      "topicId": "capacitors",
+      "level": "recall",
+      "prompt": "Find the capacitance between two flat metal plates, {A} cm² each, facing each other {d} mm apart in air (εr ≈ 1). Use ε0 = 8.854 × 10⁻¹² F/m, and ignore the field at the plates' edges.",
+      "variables": [
+        {
+          "name": "A",
+          "unit": "",
+          "values": [
+            100,
+            225,
+            400
+          ]
+        },
+        {
+          "name": "d",
+          "unit": "",
+          "values": [
+            0.5,
+            1,
+            2
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "side",
+          "formula": "sqrt(A)",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "8.854e-12*A*1e-4/(d*1e-3)",
+        "unit": "F",
+        "tolerance": 0.02
+      },
+      "explanation": "C = ε0·εr·A/d, in SI units: A in square meters and d in meters. A centimeter is 10⁻² m, so a square centimeter is (10⁻² m)² = 10⁻⁴ m²: {A} cm² = {A} × 10⁻⁴ m². And {d} mm = {d} × 10⁻³ m. Then C = 8.854 × 10⁻¹² F/m × 1 × {A} × 10⁻⁴ m² / ({d} × 10⁻³ m) = {answer}. Units: (F/m) × m² / m = F. The field that spills past the edges adds a few percent to the real value (about 1% for the largest plates at 0.5 mm, about 7% for 100 cm² plates 2 mm apart); the formula is exact only for plates much wider than their gap. Plates of {A} cm² (a {side} cm square), {d} mm apart, give only picofarads. A microfarad part closes that gap of several thousand with a dielectric thousands of times thinner than this air gap (micrometers of film or oxide), an εr far above 1 (into the thousands for some ceramics), or far more facing area (rolled film, etched foil), and real parts use more than one of these.",
+      "explanationSteps": [
+        {
+          "math": "C = \\frac{\\varepsilon_0\\,\\varepsilon_r\\,A}{d}"
+        },
+        {
+          "text": "In SI units: A in square meters and d in meters. A centimeter is 10⁻² m, so a square centimeter is"
+        },
+        {
+          "math": "(10^{-2}\\ \\mathrm{m})^{2}",
+          "result": "10^{-4}\\ \\mathrm{m^{2}}"
+        },
+        {
+          "math": "[[A]]\\ \\mathrm{cm^{2}} = [[A]]\\times 10^{-4}\\ \\mathrm{m^{2}}"
+        },
+        {
+          "math": "[[d]]\\ \\mathrm{mm} = [[d]]\\times 10^{-3}\\ \\mathrm{m}"
+        },
+        {
+          "math": "C = \\frac{8.854\\times 10^{-12}\\ \\mathrm{F/m}\\times 1\\times [[A]]\\times 10^{-4}\\ \\mathrm{m^{2}}}{[[d]]\\times 10^{-3}\\ \\mathrm{m}}",
+          "result": "[[answer]]"
+        },
+        {
+          "math": "\\text{Units: }\\ \\frac{(\\mathrm{F/m})\\times \\mathrm{m^{2}}}{\\mathrm{m}} = \\mathrm{F}"
+        },
+        {
+          "text": "The field that spills past the edges adds a few percent to the real value (about 1% for the largest plates at 0.5 mm, about 7% for 100 cm² plates 2 mm apart); the formula is exact only for plates much wider than their gap. Plates of {A} cm² (a {side} cm square), {d} mm apart, give only picofarads. A microfarad part closes that gap of several thousand with a dielectric thousands of times thinner than this air gap (micrometers of film or oxide), an εr far above 1 (into the thousands for some ceramics), or far more facing area (rolled film, etched foil), and real parts use more than one of these."
+        }
+      ],
+      "hints": [
+        "C = ε0·εr·A/d. Put A in square meters and d in meters first.",
+        "1 cm² = (10⁻² m)² = 10⁻⁴ m², and 1 mm = 10⁻³ m."
+      ],
+      "misconceptions": [
+        {
+          "formula": "8.854e-12*A*1e-2/(d*1e-3)",
+          "feedback": "You converted the area as if it were a length: 1 cm = 10⁻² m, but 1 cm² is 10⁻² m × 10⁻² m = 10⁻⁴ m². Multiplying by 10⁻² leaves the area, and the capacitance, 100 times too large."
+        },
+        {
+          "formula": "8.854e-12*A*1e-4/d",
+          "feedback": "The spacing must be in meters: {d} mm = {d} × 10⁻³ m. Left as {d}, it reads as {d} meters, a gap 1000 times wider, so the capacitance comes out 1000 times too small."
+        },
+        {
+          "formula": "8.854e-12*A/d",
+          "feedback": "You used the area in cm² and the spacing in mm. ε0 is in farads per meter, so A must be in m² and d in m; the two slips don't cancel, and the result is 10 times too large."
+        },
+        {
+          "formula": "A*1e-4/(d*1e-3)",
+          "feedback": "You left out ε0. A/d alone is a length in meters, not a capacitance: ε0 = 8.854 × 10⁻¹² F/m turns it into farads, and it is why the result is so small."
+        }
+      ],
+      "noDrawing": "two bare plates in air, values in the prompt; a plate drawing may come later",
+      "review": "verified"
+    },
+    {
       "id": "cap_film_area",
       "topicId": "capacitors",
       "level": "reason",
@@ -947,7 +1038,11 @@
           }
         ]
       },
-      "review": "verified"
+      "review": "verified",
+      "ladder": [
+        "cap_charge_q",
+        "cap_softstart_time"
+      ]
     },
     {
       "id": "cap_what_if_spacing",
@@ -2074,7 +2169,11 @@
             ]
           }
         ]
-      }
+      },
+      "ladder": [
+        "cap_charge_q",
+        "cap_softstart_time"
+      ]
     }
   ]
 }

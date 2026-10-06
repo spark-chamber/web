@@ -21,7 +21,7 @@
       },
       "lensNotes": {
         "physics": "Inside a cell, reactions at the two electrodes move charge against the electric field between them, doing work on it; the work per coulomb is the EMF, set by the chemistry (about 1.5 V for alkaline, 3.6 to 3.7 V nominal for lithium-ion, about 2.0 V per lead-acid cell). The current must also cross the electrolyte, where ions drift and collide, and the electrodes and contacts: that is the internal resistance. A generator's EMF comes from its windings moving through a magnetic field, with the mechanical drive supplying the energy, and its r is mostly the windings' copper. As a cell discharges or gets cold, its reactions slow and its electrolyte conducts less well, so r rises.",
-        "circuit": "Model a cell as an ideal source E in series with r. Typical ranges (not datasheet values): a fresh alkaline AA around 0.1 to 0.3 Ω at room temperature, a 9 V alkaline battery 1 to 2 Ω, a lithium-ion 18650 cell a few tens of milliohms, a car battery a few milliohms. A worn or cold cell can be many times higher. Test a battery under load: an open-circuit reading shows E, not r. A bench supply's regulation holds its set voltage within millivolts up to its current limit, then holds the current instead.",
+        "circuit": "Model a cell as an ideal source E in series with r. Typical ranges (not datasheet values): a fresh alkaline AA around 0.1 to 0.3 Ω at room temperature, a 9 V alkaline battery 1 to 2 Ω, a lithium-ion 18650 cell a few tens of milliohms, a car battery a few milliohms. A worn or cold cell can be many times higher. Test a battery under load: an open-circuit reading shows E, not r. A bench supply's control circuit holds its set voltage within millivolts up to its current limit, then holds the current instead.",
         "math": "V = E − I·r is a straight line on a plot of terminal voltage against current: it starts at E (no current) and falls with slope −r, reaching zero at the short-circuit current E/r. Two readings give the line: r = ΔV/ΔI. The load's power E²R/(R + r)² is largest at R = r, where the efficiency R/(R + r) is only 50%."
       },
       "formulas": [
@@ -52,6 +52,14 @@
         {
           "label": "Cells in series",
           "tex": "E = E_1 + E_2 + \\dots,\\quad r = r_1 + r_2 + \\dots"
+        },
+        {
+          "label": "Bench supply below its current limit",
+          "tex": "V = V_\\text{set}\\quad \\text{while}\\ \\frac{V_\\text{set}}{R} \\le I_\\text{lim}"
+        },
+        {
+          "label": "Bench supply past its current limit (constant current)",
+          "tex": "I = I_\\text{lim},\\quad V = I_\\text{lim}\\,R"
         }
       ],
       "goals": [
@@ -62,7 +70,7 @@
       ],
       "intuition": "A battery is a fixed EMF with a small resistance of its own in series: the more current it delivers, the more of the chemistry's work per coulomb becomes heat inside it, so its terminal voltage falls in a straight line with current, and a short draws E/r.",
       "why": "In a cell, chemical reactions at the two electrodes move charge against the electric field between them: the chemistry does work on every coulomb that passes through the cell, a fixed amount set by the reactions. That work per coulomb is the electromotive force (EMF), E, in volts. On the way through, the current also crosses the electrolyte between the electrodes, where ions drift and collide, and the electrodes and their contacts. These have resistance, the internal resistance r, so of the work E done on each coulomb, I·r is turned into heat inside the cell, and only E − I·r appears between the terminals. With no current there is no internal drop, which is why a voltmeter on an unloaded cell reads E whatever r is. As a cell discharges, and when it is cold, its reactions slow and its electrolyte conducts less well: r rises, and the terminal voltage falls further under the same load. A short across the terminals leaves r as the only resistance in the loop, so the current is E/r and all the power, E²/r, heats the cell.",
-      "explanation": "A cell's chemistry does work on the charge passing through it. The work per coulomb is its electromotive force (EMF), E: about 1.5 V for an alkaline cell, 3.6 to 3.7 V nominal for lithium-ion. The chemistry sets it, not the size.\n\nThe current also crosses the cell's electrolyte and electrodes, which have resistance: the internal resistance r. So a real cell acts as an ideal source E in series with r. With a load R the current is I = E/(R + r), and the terminal voltage, what the load and a voltmeter see, is V = E − I·r. With nothing connected, I = 0 and a meter reads E, so an open-circuit reading can't show r. To measure r, read the open-circuit voltage, then the voltage with a known load, and divide the difference by the load current.\n\nA short leaves only r to limit the current: I = E/r, with all the power heating the cell. A lithium-ion cell's r is tens of milliohms, so that is a hundred amperes or more. Never short a cell.\n\nCells in series add their EMFs and their internal resistances. In parallel, use only matched cells at the same charge. A bench supply holds its set voltage up to its current limit.",
+      "explanation": "A cell's chemistry does work on the charge passing through it. The work per coulomb is its electromotive force (EMF), E: about 1.5 V for an alkaline cell, 3.6 to 3.7 V nominal for lithium-ion. The chemistry sets it, not the size.\n\nThe current also crosses the cell's electrolyte and electrodes, whose resistance is the internal resistance r: a real cell acts as an ideal source E in series with r. With a load R the current is I = E/(R + r), and the terminal voltage, what the load sees, is V = E − I·r. With nothing connected, I = 0 and a meter reads E, so an open-circuit reading can't show r. A loaded reading does: r is the drop below E divided by the load current.\n\nA short leaves only r in the loop: I = E/r, and all the power heats the cell. For a lithium-ion cell, whose r is a few tens of milliohms, that is a hundred amperes or more. Never short a cell.\n\nCells in series add their EMFs and their internal resistances. In parallel, use only matched cells at the same charge.\n\nA bench supply is an adjustable power supply with two settings, a voltage and a current limit. It holds its set voltage up to that limit. Past the limit it holds the current instead, and the voltage falls to that current times R: constant-current mode.",
       "workedExample": {
         "problem": "A 9 V alkaline battery reads 9.40 V on a multimeter with nothing connected. With a 100 Ω, 2 W resistor across it, it reads 9.22 V. Find its internal resistance, then the terminal voltage and the power lost inside the battery when it drives a 22 Ω load.",
         "steps": [
@@ -1206,7 +1214,7 @@
     {
       "id": "src_bench_limit",
       "topicId": "sources_emf",
-      "prompt": "A bench supply is set to {Vset} with its current limit at {Ilim}. A {RL} resistor (rated 2 W) is connected across its output. What voltage does the supply put across the resistor?",
+      "prompt": "A bench supply set to {Vset}, with a {Ilim} current limit, drives a {RL} resistor (rated 2 W). Find the voltage across the resistor.",
       "variables": [
         {
           "name": "Vset",
@@ -1241,19 +1249,29 @@
           "unit": "A"
         },
         {
-          "name": "PL",
+          "name": "IwantA",
+          "formula": "Vset/RL",
+          "unit": ""
+        },
+        {
+          "name": "IlimA",
+          "formula": "Ilim",
+          "unit": ""
+        },
+        {
+          "name": "PLW",
           "formula": "Ilim^2*RL",
-          "unit": "W"
+          "unit": ""
         }
       ],
       "answer": {
         "formula": "min(Vset, Ilim*RL)",
         "unit": "V"
       },
-      "explanation": "At the set voltage the resistor would draw {Vset} / {RL} = {Iwant}, more than the {Ilim} limit. So the supply leaves constant-voltage mode and holds the current at the limit (constant-current mode); the voltage is whatever that current gives across the load: V = {Ilim} × {RL} = {answer}. The resistor dissipates {PL}. Below the limit the supply would hold {Vset} within millivolts: an almost ideal voltage source.",
+      "explanation": "First check the limit: the current the resistor would draw at the set voltage, I = V/R = {Vset} / {RL} = {IwantA} A. That is more than the {Ilim} limit ({IlimA} A). So the supply holds the current at the limit (constant-current mode), and the voltage falls to whatever that current gives across the resistor: V = I·R = {IlimA} A × {RL} = {answer}. The resistor's power stays within its 2 W rating: P = I²R = ({IlimA} A)² × {RL} = {PLW} W. Below the limit the supply would hold {Vset} within millivolts, an almost ideal voltage source.",
       "hints": [
-        "First check: what current would {RL} draw at {Vset}? Is that within the limit?",
-        "Over the limit, the supply holds the current at {Ilim}; V = I·R."
+        "First check: what current would {RL} draw at {Vset}? Is that within the {Ilim} limit?",
+        "Past the limit, the supply holds the current at {Ilim} ({IlimA} A), and V = I·R."
       ],
       "misconceptions": [
         {
@@ -1262,7 +1280,7 @@
         },
         {
           "formula": "0",
-          "feedback": "A current limit doesn't switch the output off the way a fuse or a trip would: the supply keeps delivering {Ilim}, at whatever voltage that takes across the load."
+          "feedback": "A current limit doesn't switch the output off the way a fuse or a circuit breaker would: the supply keeps delivering {Ilim}, at whatever voltage that takes across the load."
         }
       ],
       "followUps": [
@@ -1270,28 +1288,54 @@
           "prompt": "Below its current limit, why does a bench supply hold its set voltage while a battery's terminal voltage falls with load?",
           "choices": [
             {
-              "text": "Its regulator compares its output with the setting continuously and corrects within microseconds, so its output acts as if its internal resistance were only milliohms, up to the limit",
-              "feedback": "Right: feedback makes the supply an almost ideal voltage source, until the current limit takes over.",
+              "text": "A control circuit keeps correcting the output to match the setting, so it acts as if its internal resistance were milliohms (thousandths of an ohm)",
+              "feedback": "Right: the control circuit makes up for the internal drop as the load changes, so below the limit the supply behaves as an almost ideal voltage source.",
               "correct": true
             },
             {
-              "text": "Its internal resistance is zero, because it runs from the wall outlet rather than chemistry",
-              "feedback": "A supply's transformer, wiring, and transistors have resistance. It holds its voltage because its regulator measures the output and corrects for the drop, not because nothing inside it has resistance."
+              "text": "Its internal resistance is zero, because it runs from the wall outlet rather than from chemistry, so no current through it can cause an internal drop",
+              "feedback": "The parts inside a supply (its transformer, wiring and transistors) all have resistance, and the output current flows through them. It holds its voltage because a control circuit measures the output and makes up for that drop, not because nothing inside has resistance."
             },
             {
-              "text": "It doesn't: its voltage falls with load just as much as a battery's, but the display hides it",
-              "feedback": "A good bench supply really does hold its output within millivolts from no load to its limit; a meter on the terminals confirms it. Its regulator corrects for the internal drop."
+              "text": "It doesn't: its output falls with load just as much as a battery's does, and the display shows the setting rather than what is really at its output terminals",
+              "feedback": "A good bench supply really does hold its output within millivolts from no load up to its limit; a meter on its terminals confirms it. A control circuit inside makes up for the internal drop."
             },
             {
-              "text": "It supplies a fixed current, so the load can't change its voltage",
-              "feedback": "Below the limit the supply holds the voltage, and the current is whatever the load draws, V/R. It holds the current only once the limit is reached."
+              "text": "It holds its current fixed at the limit setting at all times, so unlike a battery there is no growing I·r drop for a heavier load to cause",
+              "feedback": "Below the limit the supply holds the voltage, and the current is whatever the load draws, V/R. A fixed current would give a different voltage, I·R, for every load. The supply holds the current only once the limit is reached."
             }
           ],
-          "explanation": "A regulated supply compares its output with the setting continuously and corrects within microseconds, so the output barely moves as the load changes: an almost ideal voltage source. At the current limit the same circuit switches to holding the current, which is what protects a circuit under test from a short."
+          "explanation": "Inside the supply, a control circuit compares the output with the setting and corrects it continuously, so the output barely moves as the load changes: an almost ideal voltage source. At the current limit the same circuit holds the current instead, which protects a circuit under test from a short."
         }
       ],
       "noDrawing": "a bench supply in current limit; the drawing's ideal source can't show the limit, and drawing it as a current source would give the answer away",
-      "review": "verified"
+      "review": "verified",
+      "explanationSteps": [
+        {
+          "text": "First check the limit: the current the resistor would draw at the set voltage."
+        },
+        {
+          "math": "I = \\frac{V_\\text{set}}{R} = \\frac{[[Vset]]}{[[RL]]}",
+          "result": "[[IwantA]]\\ \\mathrm{A}"
+        },
+        {
+          "text": "That is more than the {Ilim} limit ({IlimA} A). So the supply holds the current at the limit (constant-current mode), and the voltage falls to whatever that current gives across the resistor:"
+        },
+        {
+          "math": "V = I_\\text{lim}\\,R = [[IlimA]]\\ \\mathrm{A} \\times [[RL]]",
+          "result": "[[answer]]"
+        },
+        {
+          "text": "The resistor's power stays within its 2 W rating:"
+        },
+        {
+          "math": "P = I_\\text{lim}^2\\,R = ([[IlimA]]\\ \\mathrm{A})^2 \\times [[RL]]",
+          "result": "[[PLW]]\\ \\mathrm{W}"
+        },
+        {
+          "text": "Below the limit the supply would hold {Vset} within millivolts, an almost ideal voltage source."
+        }
+      ]
     },
     {
       "id": "src_what_if_load_current",

@@ -4,6 +4,161 @@
   "region": "indicators",
   "title": "Battery monitor for a 3.3 V ADC",
   "brief": "A 3.3 V microcontroller reads a 9 V battery, from 6.0 V (empty) to 9.6 V (fresh), on an ADC pin. Divide the battery down so the pin never passes 3.3 V and still reaches at least 2.7 V with a fresh battery, so the reading uses most of the ADC's range. The divider runs all the time, so it may draw no more than 50 µA. Label the divider's output ADC (net label, N) and put at least 100 nF from it to ground: the divider's output resistance is far above what an ADC's sampling capacitor can charge through in one sample time, so the capacitor holds the pin while the ADC samples. The checker sets the battery to 6.0, 9.0 and 9.6 V for its lines.",
+  "card": {
+    "goal": "Divide a 9 V battery down to a 3.3 V microcontroller's ADC pin.",
+    "predict": "Set V1 to 9.6 V (fresh battery), predict the ADC pin voltage, then run.",
+    "objectives": {
+      "pin_fresh": "ADC pin, battery 9.6 V",
+      "pin_nominal": "ADC pin, battery 9.0 V",
+      "pin_empty": "ADC pin, battery 6.0 V",
+      "divider_current": "Divider current, 9.6 V",
+      "adc_capacitor": "C, ADC to ground"
+    },
+    "tiers": {
+      "2": [
+        {
+          "label": "Resistors",
+          "value": "E12, ±5 %, at their corners"
+        },
+        {
+          "label": "ADC pin, battery 9.6 V, every corner",
+          "value": "2.7–3.3 V"
+        },
+        {
+          "label": "Divider current, 9.6 V, nominal",
+          "value": "≤ 50 µA"
+        },
+        {
+          "label": "C, ADC to ground",
+          "value": "100 nF – 1 µF"
+        }
+      ]
+    },
+    "parts": {
+      "V1": {
+        "label": "9 V battery"
+      },
+      "resistor": {
+        "label": "Resistor, E12",
+        "detail": "E12 values, ±5 %, ¼ W, 10 Ω to 10 MΩ"
+      },
+      "capacitor": {
+        "label": "Capacitor, E6",
+        "detail": "E6 values, ±10 %, 1 nF to 10 µF"
+      }
+    },
+    "details": [
+      "Name the divider's output net ADC.",
+      "The divider runs all the time, hence its 50 µA limit.",
+      "The divider's output resistance is far above what the ADC's sampling capacitor can charge through in one sample time; the capacitor holds the pin while the ADC samples.",
+      "The checker runs the battery at 6.0, 9.0 and 9.6 V."
+    ]
+  },
+  "silhouette": {
+    "netlist": "battery monitor\nV1 1 0 9\nR1 1 adc 220k\nR2 adc 0 100k\nC1 adc 0 100n\n",
+    "parts": [
+      {
+        "ref": "V1",
+        "at": [
+          0,
+          2
+        ],
+        "rot": 90
+      },
+      {
+        "ref": "R1",
+        "at": [
+          2,
+          0
+        ]
+      },
+      {
+        "ref": "R2",
+        "at": [
+          8,
+          2
+        ],
+        "rot": 90
+      },
+      {
+        "ref": "C1",
+        "at": [
+          12,
+          2
+        ],
+        "rot": 90
+      }
+    ],
+    "wires": [
+      [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      [
+        [
+          6,
+          0
+        ],
+        [
+          8,
+          0
+        ],
+        [
+          8,
+          2
+        ]
+      ],
+      [
+        [
+          8,
+          0
+        ],
+        [
+          12,
+          0
+        ],
+        [
+          12,
+          2
+        ]
+      ],
+      [
+        [
+          0,
+          6
+        ],
+        [
+          12,
+          6
+        ]
+      ]
+    ],
+    "grounds": [
+      [
+        0,
+        6
+      ]
+    ],
+    "labels": [
+      {
+        "text": "ADC",
+        "at": [
+          10,
+          0
+        ]
+      }
+    ]
+  },
   "topics": [
     "dividers",
     "real_components"

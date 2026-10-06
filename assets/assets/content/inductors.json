@@ -1680,31 +1680,63 @@
     {
       "id": "ind_switch_off_spike",
       "topicId": "inductors",
-      "prompt": "A transistor switches a 12 V relay coil (inductance 100 mH, winding resistance 240 Ω, so 50 mA flows) on its low side, with no diode across the coil. The transistor turns off in about 1 µs. What happens at the transistor's collector?",
+      "prompt": "Q1, an electronic switch (here a transistor), has been on, holding X near 0 V, long enough for the coil's current to settle. It then turns off in about 1 µs. Nothing is connected across the coil. What happens to the voltage at X, the node between the coil and Q1?",
       "variables": [],
       "choices": [
         {
-          "text": "It rises far above 12 V: stopping 50 mA in 1 µs would need L·di/dt = 100 mH × 50 mA / 1 µs = 5000 V, so the voltage climbs until the transistor's collector junction breaks down, at tens of volts",
-          "feedback": "Right: the coil's current cannot stop instantly, and to force it down so fast the coil's voltage reverses and adds to the supply at the collector.",
+          "text": "It rises far above 12 V until Q1 is forced to conduct: the coil's current keeps flowing into X",
+          "feedback": "Right: the coil's current, 12 V / 240 Ω = 50 mA, cannot stop instantly. Forcing it down so fast reverses the coil's voltage, which stacks on the supply's 12 V: X goes to 12 V plus the coil's voltage. A real transistor can block only a few tens of volts (its rating); above that it breaks down and conducts, and the current dies away through it over about a hundred microseconds.",
           "correct": true
         },
         {
-          "text": "It rises to 12 V and stops there, because the supply is only 12 V",
-          "feedback": "Without a coil it would. But the coil carries 50 mA that cannot stop instantly; to make it fall in 1 µs the coil induces about 100 mH × 50 mA / 1 µs = 5000 V, added to the 12 V."
+          "text": "It rises to 12 V and stops there: once Q1 is off, no current flows, so the coil has no voltage across it",
+          "feedback": "That is what a resistor in the coil's place would do: no current, no drop, X at 12 V. But the coil's 50 mA cannot stop the instant Q1 turns off, so the coil's voltage reverses and drives X above 12 V."
         },
         {
-          "text": "It drops to 0 V, because the transistor is off and no current flows",
-          "feedback": "An off transistor lets its collector rise, not fall. The coil's 50 mA keeps flowing into the collector for a moment, and with nowhere to go, the voltage there climbs."
+          "text": "It stays near 0 V: with Q1 off, nothing drives X any more, so X settles at ground",
+          "feedback": "Q1 was what held X at ground; with it off, nothing does. X is still joined to the 12 V through the coil, and the coil's current keeps flowing into X with nowhere to go, so X rises."
         },
         {
-          "text": "It goes negative, about −5000 V, as the field collapses",
-          "feedback": "The sign is wrong: the coil acts as a source that keeps its current flowing toward the collector, so the collector goes positive, far above 12 V. Nor does it reach 5000 V: that is only what stopping the current in 1 µs would take, and the transistor breaks down at tens of volts first."
+          "text": "It swings to about −5000 V: as its magnetic field collapses, the coil drives X far below ground",
+          "feedback": "The sign is wrong. The falling current makes the coil act as a source that keeps pushing its current into X, so X goes positive, above 12 V. Nor does it reach 5000 V: that is what stopping 50 mA in 1 µs would take, and Q1 breaks down at tens of volts long before."
         }
       ],
-      "explanation": "The coil's field holds ½LI² = ½ × 0.1 H × (0.05 A)² = 125 µJ, and its current cannot stop instantly. When the transistor turns off, the current through the coil starts to fall, and the coil's voltage reverses (Lenz's law) so that it drives the current onward into the collector: the collector goes far above 12 V. A real transistor breaks down long before 5000 V, and most of the 125 µJ ends up as heat in it at every switch-off. The usual fix is a flyback diode across the coil, which gives the current a path so it can decay slowly (see the topic \"LEDs, Zener regulators, and flyback diodes,\" later in the course). The same spike appears across any gap that interrupts a coil's current, so never break the current of a coil, motor, or relay by hand: the voltage rises until something conducts, either an arc across the gap or your body if you are touching the terminals.",
+      "explanation": "Before Q1 turns off, the winding resistance alone sets the current (Q1 on drops almost nothing): I = 12 V / 240 Ω = 0.05 A = 50 mA. In base units, 100 mH is 0.1 H (m, milli, is a thousandth) and 1 µs is 10⁻⁶ s (µ, micro, is a millionth). Stopping the current in 1 µs would take v = L·Δi/Δt = 0.1 H × 0.05 A / 10⁻⁶ s = 5000 V. The coil's voltage reverses (Lenz's law) to keep its current flowing into X, and stacks on the supply's 12 V: X climbs far above 12 V, until Q1 breaks down and conducts, at tens of volts, long before 5000 V. At that voltage the current cannot fall fast: it dies away through Q1 over roughly a hundred microseconds, not 1 µs. The coil's field held W = ½LI² = ½ × 0.1 H × (0.05 A)² = 1.25 × 10⁻⁴ J = 125 µJ. That energy, plus what the supply adds while the current dies away, ends up as heat, mostly in Q1 and the rest in the winding, at every switch-off. The usual fix, a diode across the coil that gives the current a path to die away slowly through, comes in the topic \"LEDs, Zener regulators, and flyback diodes,\" later in the course. Any gap that breaks a coil's current gets the same spike. Never break the current of a coil, motor, or relay by hand: the voltage rises until something conducts, an arc across the gap or your body if you are touching the terminals.",
+      "explanationSteps": [
+        {
+          "text": "Before Q1 turns off, the winding resistance alone sets the current (Q1 on drops almost nothing):"
+        },
+        {
+          "math": "I = \\frac{12\\ \\mathrm{V}}{240\\ \\Omega} = 0.05\\ \\mathrm{A}",
+          "result": "50\\ \\mathrm{mA}"
+        },
+        {
+          "text": "In base units, 100 mH is 0.1 H (m, milli, is a thousandth) and 1 µs is 10⁻⁶ s (µ, micro, is a millionth). Stopping the current in 1 µs would take:"
+        },
+        {
+          "math": "v = L\\,\\frac{\\Delta i}{\\Delta t} = 0.1\\ \\mathrm{H} \\times \\frac{0.05\\ \\mathrm{A}}{10^{-6}\\ \\mathrm{s}}",
+          "result": "5000\\ \\mathrm{V}"
+        },
+        {
+          "text": "The coil's voltage reverses (Lenz's law) to keep its current flowing into X, and stacks on the supply's 12 V: X climbs far above 12 V, until Q1 breaks down and conducts, at tens of volts, long before 5000 V. At that voltage the current cannot fall fast: it dies away through Q1 over roughly a hundred microseconds, not 1 µs."
+        },
+        {
+          "text": "The coil's field held:"
+        },
+        {
+          "math": "W = \\tfrac{1}{2}\\,L\\,I^2 = \\tfrac{1}{2} \\times 0.1\\ \\mathrm{H} \\times (0.05\\ \\mathrm{A})^2 = 1.25\\times 10^{-4}\\ \\mathrm{J}",
+          "result": "125\\ \\mathrm{\\text{µ}J}"
+        },
+        {
+          "text": "That energy, plus what the supply adds while the current dies away, ends up as heat, mostly in Q1 and the rest in the winding, at every switch-off. The usual fix, a diode across the coil that gives the current a path to die away slowly through, comes in the topic \"LEDs, Zener regulators, and flyback diodes,\" later in the course."
+        },
+        {
+          "text": "Any gap that breaks a coil's current gets the same spike. Never break the current of a coil, motor, or relay by hand: the voltage rises until something conducts, an arc across the gap or your body if you are touching the terminals."
+        }
+      ],
       "hints": [
-        "Can the current through the coil drop from 50 mA to zero instantly?",
-        "v = L·di/dt, with di = 50 mA and dt = 1 µs. Which way does the coil's voltage point when its current falls?"
+        "Can the coil's current drop from its steady value to zero instantly?",
+        "Find the steady current from the supply and the winding resistance, then use v = L·di/dt over the 1 µs (m is milli, 10⁻³; µ is micro, 10⁻⁶). That figure is what stopping the current so fast would take; a real switch gives way long before it. A falling current makes the coil act as a source that pushes its current on in the same direction: which way does that drive X?"
       ],
       "schematic": {
         "netlist": "Relay driver\nV1 vcc 0 12\nL1 vcc c 100m\nQ1 c b 0 QN\n.model QN NPN\n",
@@ -1734,7 +1766,7 @@
               8,
               6
             ],
-            "label": "Q1"
+            "label": "Q1\nswitch"
           }
         ],
         "wires": [
@@ -1775,7 +1807,7 @@
         ],
         "labels": [
           {
-            "text": "drive",
+            "text": "on/off",
             "at": [
               6,
               6
@@ -1783,7 +1815,7 @@
             "left": true
           },
           {
-            "text": "collector",
+            "text": "X",
             "at": [
               10,
               4

@@ -4,6 +4,153 @@
   "region": "indicators",
   "title": "USB status LED",
   "brief": "A red LED shows that a board has USB power. Run it from the 5 V supply through one resistor so it carries 8 to 12 mA (the red LED drops about 1.9 V near 10 mA, as in First light), with the resistor at no more than half its ¼ W rating. Pick the resistor from the E12 series, predict the current and the resistor's power, build it, run it and measure both.",
+  "card": {
+    "goal": "Show that the board has USB power.",
+    "predict": "Predict the LED current and R power before you run it.",
+    "objectives": {
+      "led_current": "LED current",
+      "resistor_power": "R power, of ¼ W",
+      "resistor_voltage": "V across R"
+    },
+    "tiers": {
+      "2": [
+        {
+          "label": "Supply",
+          "value": "4.75–5.25 V"
+        },
+        {
+          "label": "Resistor",
+          "value": "E12, ±5 %, ¼ W"
+        },
+        {
+          "label": "LED",
+          "value": "DRED, about 1.9 V"
+        },
+        {
+          "label": "LED current, every corner",
+          "value": "8–12 mA"
+        },
+        {
+          "label": "R power, of ¼ W",
+          "value": "≤ 50 %"
+        }
+      ],
+      "3": [
+        {
+          "label": "Supply",
+          "value": "4.75–5.25 V"
+        },
+        {
+          "label": "Resistor",
+          "value": "E96, ±1 %, ¼ W"
+        },
+        {
+          "label": "LED Vf",
+          "value": "1.8–2.2 V"
+        },
+        {
+          "label": "LED current, every corner",
+          "value": "8–12 mA"
+        },
+        {
+          "label": "R power, of ¼ W",
+          "value": "≤ 50 %"
+        }
+      ]
+    },
+    "parts": {
+      "V1": {
+        "label": "USB 5 V",
+        "detail": "Ideal 5 V source at tier I"
+      },
+      "resistor": {
+        "label": "Resistor, E12",
+        "detail": "E12 values, ±5 %, ¼ W (250 mW), 10 Ω to 1 MΩ"
+      },
+      "led": {
+        "label": "Red LED",
+        "detail": "Bench model DRED: about 1.9 V near 10 mA, as in First light. Tier III: 1.8–2.2 V."
+      }
+    },
+    "details": [
+      "One resistor in series with the LED, from the 5 V supply."
+    ]
+  },
+  "silhouette": {
+    "netlist": "usb status led\nV1 1 0 5\nR1 1 2 330\nD1 2 0 DRED\n",
+    "parts": [
+      {
+        "ref": "V1",
+        "at": [
+          0,
+          2
+        ],
+        "rot": 90
+      },
+      {
+        "ref": "R1",
+        "at": [
+          2,
+          0
+        ]
+      },
+      {
+        "ref": "D1",
+        "at": [
+          8,
+          2
+        ],
+        "rot": 90,
+        "symbol": "led"
+      }
+    ],
+    "wires": [
+      [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      [
+        [
+          6,
+          0
+        ],
+        [
+          8,
+          0
+        ],
+        [
+          8,
+          2
+        ]
+      ],
+      [
+        [
+          8,
+          6
+        ],
+        [
+          0,
+          6
+        ]
+      ]
+    ],
+    "grounds": [
+      [
+        0,
+        6
+      ]
+    ]
+  },
   "topics": [
     "ohms_law",
     "power_heat"

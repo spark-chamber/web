@@ -1,0 +1,2954 @@
+{
+  "topics": [
+    {
+      "id": "dependent_sources",
+      "title": "Dependent sources and amplifier models",
+      "mapTitle": "Dependent sources",
+      "glyph": "to92",
+      "summary": "A dependent source's voltage or current is set by a voltage or current elsewhere in the circuit. It models what a transistor or an amplifier does, and with R_in and R_out it gives the loaded voltage gain of a signal chain.",
+      "lenses": [
+        "circuit",
+        "signals"
+      ],
+      "prerequisites": [
+        "nodal_analysis",
+        "thevenin"
+      ],
+      "lensNotes": {
+        "circuit": "Draw a dependent source as a diamond: + and − inside for a voltage output, an arrow for a current output, and a label that names its control (A·v_in, g_m·v_gs, β·i_b). Mark the control on the drawing. SPICE writes the four kinds as E (VCVS), G (VCCS), H (CCVS) and F (CCCS); a current control needs a 0 V source in the controlling branch to sense the current.",
+        "signals": "Voltage gain is v_o/v_s, the output over the input that caused it: a pure number, negative for an inverting stage. A_vo is an amplifier's gain with nothing connected to its output. In a chain, every stage loses some of it to two dividers: the source's R_s with R_in at the input, R_out with the next R_in (or the load) at the output. Stage gains multiply, each worked out with the next stage as its load."
+      },
+      "formulas": [
+        {
+          "label": "The four kinds (VCVS, VCCS, CCVS, CCCS)",
+          "tex": "v = A\\,v_x,\\quad i = g_m v_x,\\quad v = R_m i_x,\\quad i = \\beta\\, i_x"
+        },
+        {
+          "label": "Voltage gain",
+          "tex": "A_v = \\frac{v_o}{v_s}"
+        },
+        {
+          "label": "Loaded gain of an amplifier model",
+          "tex": "A_v = \\frac{R_{in}}{R_s + R_{in}}\\,A_{vo}\\,\\frac{R_L}{R_{out} + R_L}"
+        },
+        {
+          "label": "Thevenin resistance with a dependent source",
+          "tex": "R_{th} = \\frac{v_{test}}{i_{test}} = \\frac{V_{oc}}{I_{sc}}"
+        }
+      ],
+      "prerequisiteNotes": {
+        "nodal_analysis": "A dependent source enters G·v = i once its control is written in node voltages. It is the case the nodal topic flagged: its current at one node depends on another node's voltage, so G stops being symmetric.",
+        "thevenin": "Each end of an amplifier chain is a Thevenin source driving a load: the sensor into R_in, and A_vo·v_in behind R_out into the next input. With a dependent source inside, R_th comes from a test source or from V_oc/I_sc."
+      },
+      "goals": [
+        "Name the four dependent sources (VCVS, VCCS, CCVS, CCCS) and the real parts they model: an op amp's open-loop gain, a MOSFET's g_m·v_gs, a bipolar transistor's β·i_b",
+        "Solve a circuit with a dependent source by nodal analysis, writing its control in node voltages",
+        "Find the Thevenin resistance of a circuit with a dependent source, with a test source or V_oc/I_sc, keeping the dependent source in",
+        "Find the loaded voltage gain of a source, amplifier and load from R_s, R_in, A_vo, R_out and R_L, and choose parts that keep the loading loss small"
+      ],
+      "intuition": "A dependent source turns a voltage or current measured in one place into a scaled voltage or current in another; an amplifier is that source with a resistance at each end, and each end loses some signal to a divider.",
+      "why": "Inside a transistor or an amplifier, a small quantity at the input controls a much larger flow from the supply. A MOSFET's insulated gate draws no current, yet its gate-source voltage sets the drain current: a voltage-controlled current source, g_m·v_gs. A bipolar transistor's collector current is about β times its base current: a current-controlled current source. An op amp's output is about 10⁵ times the voltage between its inputs: a voltage-controlled voltage source. Near an operating point each relation is a straight line, so the model is linear and the linear methods still work, with two cautions. A dependent source's value follows the circuit's own voltages and currents, so it is never set to zero when sources are zeroed for superposition or R_th: only independent sources, the inputs, are. And in G·v = i its current at one node depends on another node's voltage, so it adds an entry to one row only, and G is no longer symmetric (in SPICE's modified nodal analysis, an E or H source also adds a row with a zero on its diagonal). The energy comes from the supply, which the model leaves out: that is how the output can deliver more power than the input takes.",
+      "explanation": "An independent source holds its voltage or current whatever the circuit does. A dependent (controlled) source takes its value from a voltage or current elsewhere in the circuit: a VCVS gives A·v_x, a VCCS g_m·v_x, a CCVS R_m·i_x and a CCCS β·i_x. It is drawn as a diamond whose label names the control, and the control is marked on the drawing. These are models, not parts you buy: they describe what an op amp, a MOSFET or a bipolar transistor does to small signals. Voltage gain is the output over the input that caused it, A_v = v_o/v_s, a pure number. A voltage-amplifier model is R_in at the input, A_vo·v_in at the output with R_out in series; A_vo is the gain with the output open. Between a source with R_s and a load R_L it loses signal twice: R_s and R_in divide v_s, and R_out and R_L divide A_vo·v_in. So A_v = R_in/(R_s + R_in) · A_vo · R_L/(R_out + R_L): a good voltage amplifier has R_in far above R_s and R_out far below R_L. In nodal analysis, write the control in node voltages. To find R_th, zero only the independent sources and apply a test source, or use V_oc/I_sc.",
+      "workedExample": {
+        "problem": "A sensor with a Thevenin equivalent of 20 mV behind R_s = 10 kΩ drives an amplifier with R_in = 100 kΩ, A_vo = 50 and R_out = 200 Ω. The amplifier drives a stage whose input is R_L = 2.2 kΩ. Find v_o and the loaded gain v_o/v_s.",
+        "steps": [
+          "Input divider: v_in = 20 mV × 100 kΩ/(10 kΩ + 100 kΩ) = 18.18 mV. R_in draws 20 mV/110 kΩ = 0.18 µA, which drops 1.82 mV across R_s.",
+          "The dependent source: A_vo·v_in = 50 × 18.18 mV = 909.1 mV, the output with nothing connected.",
+          "Output divider: v_o = 909.1 mV × 2.2 kΩ/(200 Ω + 2.2 kΩ) = 833.3 mV.",
+          "Loaded gain: A_v = 833.3 mV/20 mV = 41.7, against A_vo = 50. The input end keeps 0.909 of the signal and the output end 0.917: 0.909 × 50 × 0.917 = 41.7.",
+          "The simulator's .op on the same model, with an E source for A_vo·v_in, gives V(out) = 833.3 mV."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 1 \"Amplifiers and Active Devices\", section \"Amplifier gain\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_1.html#xtocid90093",
+          "note": "Checked that gain is the unitless output/input ratio, symbolized A, that cascaded stages multiply, and that gain can differ for AC and DC signals."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 4 \"Bipolar Junction Transistors\", section \"Active mode operation\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_4.html#xtocid90363",
+          "note": "Checked that collector current is beta times base current, that a current source set by base current is the model favored for network analysis, and that the source does not represent the external supply that provides the energy."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, ModEL, SPICE Modeling of Amplifier Circuits (mod_spice_amp.pdf, last update 1 October 2026), ch. 3 \"SPICE Component Descriptions\", section 3.8 \"Linear dependent sources\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_spice_amp.pdf",
+          "note": "Checked the four SPICE dependent-source types (E, G, H, F), that current-controlled types sense the current through a named voltage source, and that the gain is the output-to-input ratio in the matching units."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "dep_loaded_gain",
+      "topicId": "dependent_sources",
+      "prompt": "Find the loaded gain v_o/v_s. R_s is the sensor's output resistance; R_L is the input resistance of the next stage.",
+      "variables": [
+        {
+          "name": "Rs",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "values": [
+            10000,
+            22000,
+            47000,
+            100000
+          ]
+        },
+        {
+          "name": "Avo",
+          "unit": "",
+          "values": [
+            20,
+            50,
+            100
+          ]
+        },
+        {
+          "name": "Rout",
+          "unit": "Ω",
+          "values": [
+            100,
+            220,
+            470,
+            1000
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "kin",
+          "formula": "Rin/(Rs+Rin)",
+          "unit": ""
+        },
+        {
+          "name": "kout",
+          "formula": "RL/(Rout+RL)",
+          "unit": ""
+        },
+        {
+          "name": "Aopen",
+          "formula": "Avo*Rin/(Rs+Rin)",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "Rin/(Rs+Rin)*Avo*RL/(Rout+RL)",
+        "unit": "",
+        "unitless": true,
+        "tolerance": 0.02
+      },
+      "explanation": "Voltage gain is the output over the input that caused it: A_v = v_o/v_s, a pure number. Follow the signal through two dividers with the dependent source between them. Input: the current v_s/(R_s + R_in) flows through R_s, so R_in keeps R_in/(R_s + R_in) = {Rin}/({Rs} + {Rin}) = {kin} of v_s. That is v_in, and the source copies it: A_vo·v_in = {Avo} × {kin} = {Aopen} times v_s, the output with nothing connected. Output: R_out and R_L divide that, and R_L keeps R_L/(R_out + R_L) = {kout}. A_v = {kin} × {Avo} × {kout} = {answer}. Each end is a Thevenin source driving a load: the sensor (v_s behind R_s) into R_in, and the amplifier (A_vo·v_in behind R_out) into R_L.",
+      "hints": [
+        "Follow the signal: what fraction of v_s reaches R_in, and what fraction of A_vo·v_in reaches R_L?",
+        "A_v = R_in/(R_s + R_in) · A_vo · R_L/(R_out + R_L)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Avo",
+          "feedback": "That is A_vo, the gain with an ideal source and nothing connected. R_s and R_in divide v_s before the amplifier sees it, and R_out and R_L divide its output."
+        },
+        {
+          "formula": "Avo*RL/(Rout+RL)",
+          "when": "abs(Avo*RL/(Rout+RL)-(Rin/(Rs+Rin)*Avo*RL/(Rout+RL)))-0.02*(Rin/(Rs+Rin)*Avo*RL/(Rout+RL))",
+          "feedback": "That keeps the output divider and leaves out the input one. v_in is not v_s: R_in's current flows through R_s, so v_in = v_s·R_in/(R_s + R_in)."
+        },
+        {
+          "formula": "Rin/(Rs+Rin)*Avo",
+          "when": "abs(Rin/(Rs+Rin)*Avo-(Rin/(Rs+Rin)*Avo*RL/(Rout+RL)))-0.02*(Rin/(Rs+Rin)*Avo*RL/(Rout+RL))",
+          "feedback": "That keeps the input divider and leaves out R_out. The load current flows through R_out, so only R_L/(R_out + R_L) of A_vo·v_in reaches R_L."
+        },
+        {
+          "formula": "Rs/(Rs+Rin)*Avo*RL/(Rout+RL)",
+          "feedback": "R_s/(R_s + R_in) is the share of v_s lost across R_s. The source copies v_in, the share across R_in: R_in/(R_s + R_in)."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "R_in draws only a small current. Why does it still set how much of v_s reaches the amplifier?",
+          "choices": [
+            {
+              "text": "Its current flows through R_s, and v_in is v_s minus that drop",
+              "correct": true,
+              "feedback": "Right: R_s and R_in form a divider, and the dependent source copies only what R_in keeps."
+            },
+            {
+              "text": "A larger R_in multiplies A_vo, so R_in sets the gain itself",
+              "feedback": "R_in only sets v_in. Once R_in is far above R_s, v_in ≈ v_s, and a still larger R_in changes almost nothing."
+            },
+            {
+              "text": "It doesn't: the source A_vo·v_in sets v_o, whatever R_in is",
+              "feedback": "A_vo·v_in copies v_in, the voltage across R_in, and R_s and R_in divide v_s to make it."
+            },
+            {
+              "text": "R_in is in series with R_out, so its current also loads the output",
+              "feedback": "Nothing joins the input port to the output port except the source's control, which draws no current. R_in only divides v_s with R_s."
+            }
+          ],
+          "explanation": "The input current v_s/(R_s + R_in) drops part of v_s across R_s. What is left across R_in is v_in, and the dependent source copies only v_in. A voltage amplifier wants R_in much larger than the R_s of whatever drives it, and R_out much smaller than the R_L it drives."
+        }
+      ],
+      "simCheck": {
+        "netlist": "Sensor, amplifier model and load stage, v_s = 1 V\nVS sig 0 1\nRS sig in {Rs:spice}\nRIN in 0 {Rin:spice}\nE1 x 0 in 0 {Avo:spice}\nROUT x out {Rout:spice}\nRL out 0 {RL:spice}\n",
+        "probe": "v(out)",
+        "tolerance": 0.001
+      },
+      "review": "draft",
+      "placement": true,
+      "schematic": {
+        "netlist": "Sensor, amplifier model and load stage\nVS sig 0 1\nRS sig in {Rs:spice}\nRIN in 0 {Rin:spice}\nE1 x 0 in 0 {Avo:spice}\nROUT x out {Rout:spice}\nRL out 0 {RL:spice}\n",
+        "noBuild": "an amplifier model: R_in, A_vo·v_in and R_out stand for the amplifier",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "v_s"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R_s {Rs}"
+          },
+          {
+            "ref": "RIN",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R_in\n{Rin}"
+          },
+          {
+            "ref": "E1",
+            "at": [
+              11,
+              0
+            ],
+            "rot": 90,
+            "label": "A_vo·v_in\nA_vo = {Avo}"
+          },
+          {
+            "ref": "ROUT",
+            "at": [
+              11,
+              0
+            ],
+            "label": "R_out {Rout}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              18,
+              0
+            ],
+            "rot": 90,
+            "label": "R_L\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              15,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              18,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            8.5,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "v_o",
+            "at": [
+              16.5,
+              0
+            ]
+          }
+        ],
+        "voltages": [
+          {
+            "text": "v_in",
+            "across": "RIN"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dep_ccvs_voltage",
+      "topicId": "dependent_sources",
+      "level": "recall",
+      "prompt": "Find the voltage across the diamond. The current source stands for a photodiode's current.",
+      "variables": [
+        {
+          "name": "Is",
+          "unit": "A",
+          "values": [
+            1e-06,
+            2e-06,
+            5e-06,
+            1e-05
+          ]
+        },
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "values": [
+            50,
+            100
+          ]
+        },
+        {
+          "name": "Rm",
+          "unit": "Ω",
+          "values": [
+            100000,
+            220000,
+            470000,
+            1000000
+          ]
+        },
+        {
+          "name": "Rout",
+          "unit": "Ω",
+          "values": [
+            50,
+            100
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            10000,
+            22000
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "Rm*Is",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "All of i_s flows through the sense and R_in: nothing else is connected to that loop, so i_in = {Is}. The diamond is a current-controlled voltage source: its voltage is R_m·i_in = {Rm} × {Is} = {answer}, whatever R_in is. Its factor R_m is in ohms (volts per amp), so it is called a transresistance. This is how a photodiode amplifier is modeled: the light sets a current, and the amplifier turns it into a voltage.",
+      "hints": [
+        "How much of i_s flows through the sense? The diamond's label says what it does with that current."
+      ],
+      "followUps": [
+        {
+          "prompt": "R_in is doubled. What happens to the diamond's voltage?",
+          "choices": [
+            {
+              "text": "Unchanged: the current source fixes i_in, so R_m·i_in is the same",
+              "correct": true,
+              "feedback": "Right: i_s, the sense and R_in form one loop, and the current source sets the current in it."
+            },
+            {
+              "text": "Halves: less current reaches the sense through the larger R_in",
+              "feedback": "A current source's current doesn't split or shrink: nothing else is on that loop, so all of i_s flows through the sense whatever R_in is. Only the voltage across the source rises."
+            },
+            {
+              "text": "Doubles: twice the voltage now sits across R_in",
+              "feedback": "The voltage across R_in does double, but the diamond follows i_in, not that voltage: R_m·i_in is unchanged."
+            },
+            {
+              "text": "Rises a little, as R_in now takes a larger share",
+              "feedback": "There is no divider here: one loop carries one current, i_s, and the diamond's voltage is R_m times that current."
+            }
+          ],
+          "explanation": "A current-controlled source reads the current in its sense branch. Fed from a current source, that current is fixed, so R_in sets only the voltage the source must develop, {Is} × R_in, not the output."
+        }
+      ],
+      "misconceptions": [
+        {
+          "formula": "Rin*Is",
+          "feedback": "That is the voltage across R_in. The diamond follows the current i_in, not the voltage across R_in: its voltage is R_m·i_in."
+        },
+        {
+          "formula": "Is/Rm",
+          "feedback": "R_m is volts per amp, so the voltage is R_m times the current: R_m·i_in, not i_in/R_m."
+        }
+      ],
+      "simCheck": {
+        "netlist": "Transresistance amplifier model\nI1 0 a {Is:spice}\nVIN a b 0\nRIN b 0 {Rin:spice}\nH1 x 0 VIN {Rm:spice}\nROUT x out {Rout:spice}\nRL out 0 {RL:spice}\n",
+        "probe": "v(x)",
+        "tolerance": 0.001
+      },
+      "review": "draft",
+      "schematic": {
+        "netlist": "Transresistance amplifier model\nI1 0 a {Is:spice}\nVIN a b 0\nRIN b 0 {Rin:spice}\nH1 x 0 VIN {Rm:spice}\nROUT x out {Rout:spice}\nRL out 0 {RL:spice}\n",
+        "noBuild": "a transresistance amplifier model: R_in, R_m·i_in and R_out stand for the amplifier",
+        "parts": [
+          {
+            "ref": "I1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 270,
+            "label": "i_s\n{Is}"
+          },
+          {
+            "ref": "VIN",
+            "at": [
+              2,
+              0
+            ],
+            "label": "i_in",
+            "symbol": "sense"
+          },
+          {
+            "ref": "RIN",
+            "at": [
+              7,
+              0
+            ],
+            "rot": 90,
+            "label": "R_in\n{Rin}"
+          },
+          {
+            "ref": "H1",
+            "at": [
+              12,
+              0
+            ],
+            "rot": 90,
+            "label": "R_m·i_in\nR_m = {Rm}"
+          },
+          {
+            "ref": "ROUT",
+            "at": [
+              12,
+              0
+            ],
+            "label": "R_out {Rout}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              20,
+              0
+            ],
+            "rot": 90,
+            "label": "R_L\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              7,
+              0
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              20,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              20,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            9,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "v_o",
+            "at": [
+              18,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "dep_vccs_gain",
+      "topicId": "dependent_sources",
+      "level": "recall",
+      "prompt": "Find the voltage gain v_o/v_in.",
+      "variables": [
+        {
+          "name": "gm",
+          "unit": "S",
+          "values": [
+            0.002,
+            0.005,
+            0.01,
+            0.02
+          ]
+        },
+        {
+          "name": "RD",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Id",
+          "formula": "gm*0.01",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "-gm*RD",
+        "unit": "",
+        "unitless": true,
+        "tolerance": 0.02
+      },
+      "explanation": "v_in sits directly between g and s, so v_gs = v_in. The diamond is a voltage-controlled current source: it takes g_m·v_gs out of node d, down to ground, and that current can only come up through R_D. So v_o = −g_m·v_in·R_D, and A_v = v_o/v_in = −g_m·R_D = −{gm} × {RD} = {answer}. Siemens times ohms is a pure number (mS × kΩ = 1). The minus sign is the inversion: a rise at g pulls more current up through R_D and lowers d. For 10 mV at g the diamond carries {Id}. This is the small-signal model of a common-source stage: R_D's other end goes to the supply, which is at ground for the signal.",
+      "hints": [
+        "How much current does the diamond take out of d for a given v_in, and which part must supply it?",
+        "v_o = −g_m·v_gs·R_D, with v_gs = v_in."
+      ],
+      "misconceptions": [
+        {
+          "formula": "gm*RD",
+          "feedback": "The size is right, the sign isn't. The diamond's arrow takes its current out of d, down to ground, so it flows up through R_D and pulls v_o below ground: the gain is −g_m·R_D."
+        },
+        {
+          "formula": "-gm/RD",
+          "feedback": "The diamond's current makes a voltage across R_D by Ohm's law, V = I·R: multiply g_m·v_in by R_D. g_m/R_D isn't a voltage ratio at all."
+        },
+        {
+          "formula": "-1/(gm*RD)",
+          "feedback": "That is the inverse. A larger g_m gives more current per volt at g, and a larger R_D more voltage per milliamp, so the gain is −g_m·R_D, larger with both."
+        },
+        {
+          "formula": "-gm*RD*1000",
+          "feedback": "A prefix slipped. Siemens times ohms is a pure number, and so is millisiemens times kilohms: 10⁻³ × 10³ = 1."
+        },
+        {
+          "formula": "-gm*RD/1000",
+          "feedback": "A prefix slipped. Siemens times ohms is a pure number, and so is millisiemens times kilohms: 10⁻³ × 10³ = 1."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "v_in delivers no power: no current flows into g. Where does the signal power in R_D come from?",
+          "choices": [
+            {
+              "text": "The DC supply that feeds R_D, which the small-signal model leaves out",
+              "correct": true,
+              "feedback": "Right: the diamond stands for a transistor steering current from the supply. The model shows only the signal; the supply pays for it."
+            },
+            {
+              "text": "v_in, through the gate's capacitance, which stores and releases it",
+              "feedback": "This model has no gate capacitance, and no current flows into g, so v_in delivers v·i = 0. The power has to come from somewhere the model doesn't draw: the supply."
+            },
+            {
+              "text": "The diamond itself: a dependent source makes energy from its control",
+              "feedback": "Energy is conserved in a model as in a circuit. The diamond stands for a transistor, which only controls a flow of current from the supply; it makes no energy of its own."
+            },
+            {
+              "text": "R_D, which returns energy it stored while the signal was rising",
+              "feedback": "A resistor stores nothing: it turns all the power it takes into heat, at every instant. R_D only receives power."
+            }
+          ],
+          "explanation": "A dependent source can deliver power with none going into its control, because it stands for a device fed by a supply. In the full circuit, R_D runs to the supply rail; the small-signal model sets the rail to ground and shows only the changes, so the supply's power is out of sight. That is how an amplifier's output power can exceed its input power."
+        }
+      ],
+      "schematic": {
+        "netlist": "Common-source stage small-signal model\nVIN g 0 1\nG1 d 0 g 0 {gm:spice}\nRD d 0 {RD:spice}\n",
+        "noBuild": "a small-signal model: g_m·v_gs stands for the transistor",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "v_in"
+          },
+          {
+            "ref": "G1",
+            "at": [
+              8,
+              0
+            ],
+            "rot": 90,
+            "label": "g_m·v_gs\ng_m = {gm}"
+          },
+          {
+            "ref": "RD",
+            "at": [
+              14,
+              0
+            ],
+            "rot": 90,
+            "label": "R_D\n{RD}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              5,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              14,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              14,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "g",
+            "at": [
+              5,
+              0
+            ],
+            "left": true
+          },
+          {
+            "text": "d",
+            "at": [
+              8,
+              0
+            ]
+          },
+          {
+            "text": "v_o",
+            "at": [
+              11.5,
+              0
+            ]
+          },
+          {
+            "text": "s",
+            "at": [
+              7,
+              4
+            ]
+          }
+        ],
+        "voltages": [
+          {
+            "text": "v_gs",
+            "plus": [
+              5,
+              0
+            ],
+            "minus": [
+              5,
+              4
+            ]
+          }
+        ]
+      },
+      "simCheck": {
+        "netlist": "Common-source stage small-signal model, v_in = 1 V\nVIN g 0 1\nG1 d 0 g 0 {gm:spice}\nRD d 0 {RD:spice}\n",
+        "probe": "v(d)",
+        "tolerance": 0.001
+      },
+      "review": "draft"
+    },
+    {
+      "id": "dep_cccs_gain",
+      "topicId": "dependent_sources",
+      "prompt": "Find the gain v_o/v_s of this transistor-stage model.",
+      "variables": [
+        {
+          "name": "Rsig",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "rpi",
+          "unit": "Ω",
+          "values": [
+            1500,
+            2200,
+            2700,
+            3300
+          ]
+        },
+        {
+          "name": "beta",
+          "unit": "",
+          "values": [
+            100,
+            150,
+            200
+          ]
+        },
+        {
+          "name": "RC",
+          "unit": "Ω",
+          "values": [
+            2200,
+            3300,
+            4700
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            4700,
+            10000,
+            22000
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "ib",
+          "formula": "0.001/(Rsig+rpi)",
+          "unit": "A"
+        },
+        {
+          "name": "Rp",
+          "formula": "RC||RL",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "-beta*(RC||RL)/(Rsig+rpi)",
+        "unit": "",
+        "unitless": true,
+        "tolerance": 0.02
+      },
+      "explanation": "i_b flows through R_sig and r_π in series: i_b = v_s/(R_sig + r_π), {ib} for each millivolt of v_s. The diamond takes β·i_b out of the output node, down to ground, and that current comes up through R_C ∥ R_L = {Rp}: v_o = −β·i_b·(R_C ∥ R_L). So A_v = −{beta} × {Rp}/({Rsig} + {rpi}) = {answer}. The minus sign is the inversion: more i_b pulls v_o lower. This is the small-signal model of a common-emitter stage (Bipolar transistors): r_π is the base-emitter resistance, and R_C, which goes to the supply, is at ground for the signal.",
+      "hints": [
+        "First i_b: which resistances does v_s drive it through?",
+        "i_b = v_s/(R_sig + r_π); v_o = −β·i_b·(R_C ∥ R_L)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "beta*(RC||RL)/(Rsig+rpi)",
+          "feedback": "The size is right, the sign isn't. The diamond's current flows from the output node down to ground, so a positive i_b pulls v_o below ground."
+        },
+        {
+          "formula": "-beta*RC/(Rsig+rpi)",
+          "feedback": "That leaves out R_L. The diamond's current comes through R_C and R_L in parallel: v_o = −β·i_b·(R_C ∥ R_L)."
+        },
+        {
+          "formula": "-beta*(RC||RL)/rpi",
+          "feedback": "That leaves out R_sig. i_b flows through R_sig and r_π in series: i_b = v_s/(R_sig + r_π)."
+        },
+        {
+          "formula": "-beta",
+          "feedback": "β is the current ratio, i_c/i_b. The voltage gain also needs how much i_b the source drives and how much voltage β·i_b makes in R_C ∥ R_L."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does the gain carry a minus sign?",
+          "choices": [
+            {
+              "text": "The diamond takes β·i_b out of the output node, so more i_b pulls v_o lower",
+              "correct": true,
+              "feedback": "Right: KCL at the output node. The current the diamond takes must come up through R_C ∥ R_L, so v_o sits below ground."
+            },
+            {
+              "text": "Current-controlled sources always invert; voltage-controlled ones don't",
+              "feedback": "The sign comes from the direction of the source's current at the load, not from the kind of control: g_m·v_gs drawn the same way inverts too."
+            },
+            {
+              "text": "i_b flows backward through r_π, so the control itself is negative",
+              "feedback": "i_b flows from R_sig into r_π, the way v_s pushes it: positive for a positive v_s."
+            },
+            {
+              "text": "It is only a sign convention; v_o really rises when v_s rises",
+              "feedback": "v_o really falls when v_s rises: on a scope the output is the input, larger and upside down."
+            }
+          ],
+          "explanation": "With i_b positive, the diamond draws β·i_b from the output node to ground. KCL: the same current flows from ground up through R_C ∥ R_L into the node, and current flows from higher to lower voltage, so v_o is below ground: v_o = −β·i_b·(R_C ∥ R_L)."
+        }
+      ],
+      "simCheck": {
+        "netlist": "Common-emitter stage small-signal model\nVS sig 0 1\nRSIG sig b {Rsig:spice}\nVIB b b1 0\nRPI b1 0 {rpi:spice}\nF1 c 0 VIB {beta:spice}\nRC c 0 {RC:spice}\nRL c 0 {RL:spice}\n",
+        "probe": "v(c)",
+        "tolerance": 0.001
+      },
+      "review": "draft",
+      "schematic": {
+        "netlist": "Common-emitter stage small-signal model\nVS sig 0 1\nRSIG sig b {Rsig:spice}\nVIB b b1 0\nRPI b1 0 {rpi:spice}\nF1 c 0 VIB {beta:spice}\nRC c 0 {RC:spice}\nRL c 0 {RL:spice}\n",
+        "noBuild": "a small-signal model: r_π and β·i_b stand for the transistor",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "v_s"
+          },
+          {
+            "ref": "RSIG",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R_sig {Rsig}"
+          },
+          {
+            "ref": "VIB",
+            "at": [
+              6,
+              0
+            ],
+            "label": "i_b",
+            "symbol": "sense"
+          },
+          {
+            "ref": "RPI",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "r_π\n{rpi}"
+          },
+          {
+            "ref": "F1",
+            "at": [
+              15,
+              0
+            ],
+            "rot": 90,
+            "label": "β·i_b\nβ = {beta}"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              20,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C\n{RC}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              25,
+              0
+            ],
+            "rot": 90,
+            "label": "R_L\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              15,
+              0
+            ],
+            [
+              25,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              25,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            12,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "v_o",
+            "at": [
+              17.5,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              10,
+              0
+            ]
+          },
+          {
+            "text": "c",
+            "at": [
+              15,
+              0
+            ]
+          },
+          {
+            "text": "e",
+            "at": [
+              13,
+              4
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "dep_nodal_feedback",
+      "topicId": "dependent_sources",
+      "prompt": "Write G·v = i for nodes g and d, with the diamond's current in node voltages. Find the gain v_o/v_s.",
+      "variables": [
+        {
+          "name": "gm",
+          "unit": "S",
+          "values": [
+            0.005,
+            0.01,
+            0.02
+          ]
+        },
+        {
+          "name": "Rsig",
+          "unit": "Ω",
+          "values": [
+            1000,
+            2200,
+            4700
+          ]
+        },
+        {
+          "name": "RF",
+          "unit": "Ω",
+          "values": [
+            22000,
+            47000,
+            100000
+          ]
+        },
+        {
+          "name": "RD",
+          "unit": "Ω",
+          "values": [
+            1000,
+            2200,
+            4700
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Ga",
+          "formula": "1/Rsig+1/RF",
+          "unit": "S"
+        },
+        {
+          "name": "Gb",
+          "formula": "1/RF+1/RD",
+          "unit": "S"
+        },
+        {
+          "name": "GF",
+          "formula": "1/RF",
+          "unit": "S"
+        },
+        {
+          "name": "Gdg",
+          "formula": "gm-1/RF",
+          "unit": "S"
+        },
+        {
+          "name": "det",
+          "formula": "(1/Rsig+1/RF)*(1/RF+1/RD)+(gm-1/RF)/RF",
+          "unit": ""
+        },
+        {
+          "name": "detm",
+          "formula": "1e6*((1/Rsig+1/RF)*(1/RF+1/RD)+(gm-1/RF)/RF)",
+          "unit": ""
+        },
+        {
+          "name": "ol",
+          "formula": "-gm*(RD||RF)",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "-Gdg/(Rsig*det)",
+        "unit": "",
+        "unitless": true,
+        "tolerance": 0.02
+      },
+      "explanation": "The source terminal is ground, so v_gs = V_g, and the diamond's current g_m·V_g leaves d. Row g: (1/R_sig + 1/R_F)·V_g − V_d/R_F = v_s/R_sig. Row d: −V_g/R_F + g_m·V_g + (1/R_F + 1/R_D)·V_d = 0. So G = [[{Ga}, −{GF}], [{Gdg}, {Gb}]]: G_dg = g_m − 1/R_F, but G_gd = −1/R_F. The determinant is {Ga} × {Gb} + {GF} × {Gdg} = {detm} mS². Cramer's rule with i = (v_s/R_sig, 0): V_d = −G_dg·(v_s/R_sig)/det, so A_v = −{Gdg}/({Rsig} × {detm} mS²) = {answer}. If v_gs were all of v_s and R_F only loaded the drain, the gain would be about −g_m·(R_D ∥ R_F) = {ol}. R_F feeds part of the inverted output back to g, which shrinks v_gs: the gain falls, and it depends less on g_m.",
+      "hints": [
+        "v_gs is the voltage at g, since the source terminal is ground. Which row does the diamond's current enter, and which node voltage multiplies g_m?",
+        "Row g: (1/R_sig + 1/R_F)·V_g − V_d/R_F = v_s/R_sig. Row d: (g_m − 1/R_F)·V_g + (1/R_F + 1/R_D)·V_d = 0."
+      ],
+      "misconceptions": [
+        {
+          "formula": "-gm*(RD||RF)",
+          "when": "abs(Gdg/(Rsig*det)-gm*(RD||RF))-0.03*Gdg/(Rsig*det)",
+          "feedback": "That is −g_m·(R_D ∥ R_F), as if v_gs were all of v_s. R_sig and R_F divide between v_s and an inverted v_o, so V_g is smaller than v_s: solve both rows together."
+        },
+        {
+          "formula": "GF/(Rsig*(Ga*Gb-GF*GF))",
+          "feedback": "That is the network with the diamond left out: a small positive output through R_F. The diamond's current g_m·V_g leaves d, so row d gains +g_m in column g."
+        },
+        {
+          "formula": "GF/(Rsig*(Ga*(Gb+gm)-GF*GF))",
+          "feedback": "That puts g_m on the diagonal, as if the diamond were a conductance at d. Its current is set by V_g, not V_d, so g_m goes in row d, column g."
+        },
+        {
+          "formula": "Gdg/(Rsig*det)",
+          "feedback": "The size is right, the sign isn't. As V_g rises, the diamond pulls more current out of d, so v_o falls."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Which entry of G does the diamond change?",
+          "choices": [
+            {
+              "text": "G_dg (row d, column g): +g_m, since its current at d follows V_g",
+              "correct": true,
+              "feedback": "Right: the term g_m·V_g sits in d's KCL row and multiplies V_g."
+            },
+            {
+              "text": "G_dd (row d, column d): +g_m, like a conductance from d to ground",
+              "feedback": "A conductance at d carries a current set by V_d. The diamond's current is set by V_g, so g_m multiplies V_g: column g."
+            },
+            {
+              "text": "G_gd and G_dg alike: −g_m in both, so that G stays symmetric",
+              "feedback": "Only row d carries the diamond's current; row g never sees it. That is why G is not symmetric here."
+            },
+            {
+              "text": "None: like an independent source, it goes into i on the right side",
+              "feedback": "Its current isn't known in advance: it depends on V_g, an unknown. A term with an unknown stays on the left, in G."
+            }
+          ],
+          "explanation": "A dependent source adds a term to the row of the node its current enters or leaves, in the column of the node voltage that controls it. Here G_dg = g_m − 1/R_F while G_gd = −1/R_F, so G is no longer symmetric. SPICE solves the unsymmetric G the same way, by elimination."
+        }
+      ],
+      "simCheck": {
+        "netlist": "Shunt-feedback stage small-signal model\nVS sig 0 1\nRSIG sig g {Rsig:spice}\nRF g d {RF:spice}\nG1 d 0 g 0 {gm:spice}\nRD d 0 {RD:spice}\n",
+        "probe": "v(d)",
+        "tolerance": 0.001
+      },
+      "review": "draft",
+      "placement": true,
+      "schematic": {
+        "netlist": "Shunt-feedback stage small-signal model\nVS sig 0 1\nRSIG sig g {Rsig:spice}\nRF g d {RF:spice}\nG1 d 0 g 0 {gm:spice}\nRD d 0 {RD:spice}\n",
+        "noBuild": "a small-signal model: g_m·v_gs stands for the transistor",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "v_s"
+          },
+          {
+            "ref": "RSIG",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R_sig {Rsig}"
+          },
+          {
+            "ref": "RF",
+            "at": [
+              8,
+              0
+            ],
+            "label": "R_F {RF}"
+          },
+          {
+            "ref": "G1",
+            "at": [
+              12,
+              0
+            ],
+            "rot": 90,
+            "label": "g_m·v_gs\ng_m = {gm}"
+          },
+          {
+            "ref": "RD",
+            "at": [
+              19,
+              0
+            ],
+            "rot": 90,
+            "label": "R_D\n{RD}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              19,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              19,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            3,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "g",
+            "at": [
+              6,
+              0
+            ]
+          },
+          {
+            "text": "d",
+            "at": [
+              12,
+              0
+            ]
+          },
+          {
+            "text": "v_o",
+            "at": [
+              17.5,
+              0
+            ]
+          },
+          {
+            "text": "s",
+            "at": [
+              10,
+              4
+            ]
+          }
+        ],
+        "voltages": [
+          {
+            "text": "v_gs",
+            "plus": [
+              7,
+              0
+            ],
+            "minus": [
+              7,
+              4
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "dep_rth_follower",
+      "topicId": "dependent_sources",
+      "prompt": "Find the Thevenin resistance seen at v_o. Assume v_in is an ideal source.",
+      "variables": [
+        {
+          "name": "gm",
+          "unit": "S",
+          "values": [
+            0.002,
+            0.005,
+            0.01
+          ]
+        },
+        {
+          "name": "RS",
+          "unit": "Ω",
+          "values": [
+            470,
+            680,
+            1000,
+            1500,
+            2200
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "rm",
+          "formula": "1/gm",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rth",
+          "formula": "1/(1/RS+gm)",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "1/(1/RS+gm)",
+        "unit": "Ω",
+        "tolerance": 0.02
+      },
+      "explanation": "Zero v_in, so the gate sits at ground, but keep the diamond: it is not an input. Push a test current i_t into v_o. With the gate at 0 V, v_gs = −v_o, so the diamond's current into v_o is g_m·v_gs = −g_m·v_o: it takes g_m·v_o out of the node. KCL at v_o: i_t = v_o/R_S + g_m·v_o, so R_th = v_o/i_t = 1/(1/R_S + g_m) = R_S ∥ 1/g_m = {RS} ∥ {rm} = {answer}. V_oc/I_sc agrees: open, v_o = v_in·g_m·R_S/(1 + g_m·R_S); shorted, v_gs = v_in and I_sc = g_m·v_in; the ratio is R_S/(1 + g_m·R_S). This is a source follower (MOSFETs): its output resistance R_S ∥ 1/g_m is never more than 1/g_m, however large R_S is.",
+      "hints": [
+        "Zero v_in only. Apply a test current at v_o: what is v_gs then, and what does the diamond do?",
+        "v_gs = −v_o, so the diamond takes g_m·v_o out of the node. KCL: i_t = v_o/R_S + g_m·v_o."
+      ],
+      "misconceptions": [
+        {
+          "formula": "RS",
+          "feedback": "That is R_S alone, the answer with the diamond zeroed. Its current follows v_gs, and a test voltage at v_o changes v_gs, so it stays: it takes g_m·v_o out of the node, in parallel with R_S."
+        },
+        {
+          "formula": "RS+1/gm",
+          "feedback": "R_S and 1/g_m are in parallel, not in series: both take current from v_o to ground, v_o/R_S through R_S and g_m·v_o through the diamond."
+        },
+        {
+          "formula": "1/gm",
+          "when": "abs(1/gm-1/(1/RS+gm))-0.03/(1/RS+gm)",
+          "feedback": "That is 1/g_m alone. R_S also takes current from v_o, in parallel: R_th = R_S ∥ 1/g_m."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why must the diamond stay in the circuit when you find R_th?",
+          "choices": [
+            {
+              "text": "Its current follows v_gs, and a test source at v_o changes v_gs",
+              "correct": true,
+              "feedback": "Right: it is part of how the circuit answers the test source, not an input from outside."
+            },
+            {
+              "text": "It is a current source, and only voltage sources are zeroed",
+              "feedback": "Independent current sources are zeroed too: they open. What keeps the diamond is that its value depends on the circuit's own voltages."
+            },
+            {
+              "text": "Zeroing it would leave the gate floating",
+              "feedback": "The zeroed v_in ties the gate to ground either way. The diamond stays because its current follows v_gs, which the test voltage moves."
+            },
+            {
+              "text": "It doesn't need to: R_th is the same with it zeroed",
+              "feedback": "Zeroed, R_th would be R_S = {RS}; kept, it is {Rth}. The difference is the diamond's g_m·v_o."
+            }
+          ],
+          "explanation": "Only independent sources are zeroed: they are inputs, set from outside. A dependent source is part of how the circuit responds. Here a test voltage at v_o makes v_gs = −v_o, and the diamond answers with g_m·v_o out of the node, which is why R_th falls from R_S to R_S ∥ 1/g_m."
+        }
+      ],
+      "simCheck": {
+        "netlist": "Source follower, v_in zeroed, 1 A test current into v_o\nVIN g 0 0\nG1 0 s g s {gm:spice}\nRS s 0 {RS:spice}\nIT 0 s 1\n",
+        "probe": "v(s)",
+        "tolerance": 0.001
+      },
+      "review": "draft",
+      "placement": true,
+      "schematic": {
+        "netlist": "Source follower small-signal model\nVIN g 0 1\nG1 0 s g s {gm:spice}\nRS s 0 {RS:spice}\n",
+        "noBuild": "a small-signal model: g_m·v_gs stands for the transistor",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "v_in"
+          },
+          {
+            "ref": "G1",
+            "at": [
+              8,
+              4
+            ],
+            "rot": 270,
+            "label": "g_m·v_gs\ng_m = {gm}"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              14,
+              0
+            ],
+            "rot": 90,
+            "label": "R_S\n{RS}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              14,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              14,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "g",
+            "at": [
+              3,
+              0
+            ],
+            "left": true
+          },
+          {
+            "text": "v_o",
+            "at": [
+              11.5,
+              0
+            ]
+          },
+          {
+            "text": "s",
+            "at": [
+              8,
+              0
+            ]
+          },
+          {
+            "text": "d",
+            "at": [
+              8,
+              4
+            ]
+          }
+        ],
+        "voltages": [
+          {
+            "text": "v_gs",
+            "plus": [
+              3,
+              0
+            ],
+            "minus": [
+              8,
+              0
+            ],
+            "at": [
+              5.5,
+              -1.5
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "dep_which_part",
+      "topicId": "dependent_sources",
+      "prompt": "Which real part does this model stand for?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "A MOSFET: its gate draws no current, and v_gs sets the drain current",
+          "correct": true,
+          "feedback": "Right: no current enters the input, and a voltage, v_1, sets the output current: a VCCS."
+        },
+        {
+          "text": "A bipolar transistor: its base current sets the collector current",
+          "feedback": "That model is current-controlled: r_π across the input carries i_b, and the diamond gives β·i_b. Here no current enters the input at all, and the label follows a voltage, v_1."
+        },
+        {
+          "text": "An op amp: the voltage between its inputs sets its output voltage",
+          "feedback": "An op amp's output is a voltage: a diamond with + and − inside, behind a small R_out. This diamond has an arrow, so its output is a current, g_m·v_1, whatever the voltage across R_L."
+        },
+        {
+          "text": "A current source of fixed value, set by g_m alone",
+          "feedback": "The label is g_m·v_1: the current follows v_1 and is zero when v_1 is. A fixed source is drawn as a circle, with no control."
+        }
+      ],
+      "explanation": "Read the model's two ends. The input has no path for current, so it takes nothing from the source and v_1 = v_s whatever R_sig is. The output is a current (the arrow) set by a voltage (v_1): a voltage-controlled current source, VCCS. That is a MOSFET for small signals: its insulated gate draws no current, and each volt of v_gs changes the drain current by g_m (MOSFETs). A bipolar transistor is modeled with r_π at its input and β·i_b, a CCCS; an op amp with R_in, A·v_in (a VCVS) and R_out.",
+      "followUps": [
+        {
+          "prompt": "R_sig is raised tenfold. What happens to v_1?",
+          "choices": [
+            {
+              "text": "It stays at v_s: no current flows in R_sig, so R_sig drops nothing",
+              "correct": true,
+              "feedback": "Right: the input draws no current, so V = I·R across R_sig is 0 V at any R_sig."
+            },
+            {
+              "text": "It falls tenfold, in proportion to the larger R_sig",
+              "feedback": "R_sig carries no current, so its value doesn't matter: it drops 0 V."
+            },
+            {
+              "text": "It falls a little, as at the input of any amplifier",
+              "feedback": "A divider needs a path to ground at the input, and this model has none: its input resistance is infinite."
+            },
+            {
+              "text": "It rises, since a larger resistor takes more of the voltage",
+              "feedback": "A resistor takes a share only when current flows through it. Here none does."
+            }
+          ],
+          "explanation": "With no current into the input, the whole of v_s reaches it: the model's input resistance is infinite. A MOSFET's gate leaks picoamps at DC, so a source resistance of even megohms loses almost nothing there."
+        }
+      ],
+      "review": "draft",
+      "schematic": {
+        "netlist": "Small-signal model\nVS sig 0 SIN(0 10m 1k)\nRSIG sig in 10k\nG1 out 0 in 0 5m\nRL out 0 4.7k\n",
+        "noBuild": "a small-signal model: g_m·v_1 stands for a part",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "v_s"
+          },
+          {
+            "ref": "RSIG",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R_sig 10 kΩ"
+          },
+          {
+            "ref": "G1",
+            "at": [
+              12,
+              0
+            ],
+            "rot": 90,
+            "label": "g_m·v_1\ng_m = 5 mS"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              19,
+              0
+            ],
+            "rot": 90,
+            "label": "R_L\n4.7 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              19,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              19,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            3,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "v_o",
+            "at": [
+              17.5,
+              0
+            ]
+          }
+        ],
+        "voltages": [
+          {
+            "text": "v_1",
+            "plus": [
+              7,
+              0
+            ],
+            "minus": [
+              7,
+              4
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "dep_what_if_load_parallel",
+      "topicId": "dependent_sources",
+      "prompt": "Connect a second, identical stage in parallel with R_L. What happens to v_o?",
+      "variables": [
+        {
+          "name": "Vs",
+          "unit": "V",
+          "values": [
+            0.01,
+            0.02,
+            0.05
+          ]
+        },
+        {
+          "name": "Rs",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "values": [
+            47000,
+            100000
+          ]
+        },
+        {
+          "name": "Avo",
+          "unit": "",
+          "values": [
+            20,
+            50
+          ]
+        },
+        {
+          "name": "Rout",
+          "unit": "Ω",
+          "values": [
+            100,
+            220,
+            470
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "v_o",
+        "formula": "Vs*Rin/(Rs+Rin)*Avo*RL/(Rout+RL)",
+        "unit": "V",
+        "change": {
+          "RL": "RL/2"
+        },
+        "feedback": {
+          "up": "Two inputs in parallel make the load R_L/2, so it draws more current through R_out, which drops more of A_vo·v_in. A smaller R_L can only lower R_L/(R_out + R_L), the share that reaches the load.",
+          "same": "The diamond holds A_vo·v_in, but R_out sits between it and the load. The halved load draws more current through R_out, which drops more, so v_o = A_vo·v_in·R_L/(R_out + R_L) falls."
+        }
+      },
+      "explanation": "The new load is R_L ∥ R_L = R_L/2. The input side doesn't change: v_in = v_s·R_in/(R_s + R_in), and A_vo·v_in with it. The output divider does: R_L/(R_out + R_L) becomes (R_L/2)/(R_out + R_L/2), so v_o goes {before} → {after}, and both stages see the lower value. A smaller R_out, such as a buffer's, would make the drop smaller.",
+      "hints": [
+        "Which divider does the load belong to, and what does halving R_L do to it?"
+      ],
+      "followUps": [
+        {
+          "prompt": "Why doesn't v_in change when the load does?",
+          "choices": [
+            {
+              "text": "Nothing in the model lets the output act back on the input",
+              "correct": true,
+              "feedback": "Right: the diamond reads v_in without drawing current, and no element joins the output loop to the input loop."
+            },
+            {
+              "text": "R_in is far larger than R_L, so the load can't reach it",
+              "feedback": "Sizes don't matter here: no element joins the two sides, so even a short at the output would leave v_in unchanged."
+            },
+            {
+              "text": "It does change a little, through the shared ground",
+              "feedback": "Ground is one node at 0 V; a current returning through it doesn't change any voltage in the model. Only the diamond's control links the two sides, and it draws no current."
+            },
+            {
+              "text": "A_vo is large, so v_in barely needs to move",
+              "feedback": "Large gain doesn't isolate the input. The model is one-way whatever A_vo is: the output has no path back."
+            }
+          ],
+          "explanation": "The dependent source reads v_in and drives its own terminals; nothing returns from the output loop to the input loop, so the R_s–R_in divider is the same for any load. A model like this is called unilateral. Real amplifiers are close to it at low frequencies; feedback from the output to the input breaks it."
+        }
+      ],
+      "review": "draft",
+      "schematic": {
+        "netlist": "Sensor, amplifier model and load stage\nVS sig 0 {Vs:spice}\nRS sig in {Rs:spice}\nRIN in 0 {Rin:spice}\nE1 x 0 in 0 {Avo:spice}\nROUT x out {Rout:spice}\nRL out 0 {RL:spice}\n",
+        "noBuild": "an amplifier model: R_in, A_vo·v_in and R_out stand for the amplifier",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "v_s\n{Vs}"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R_s {Rs}"
+          },
+          {
+            "ref": "RIN",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R_in\n{Rin}"
+          },
+          {
+            "ref": "E1",
+            "at": [
+              11,
+              0
+            ],
+            "rot": 90,
+            "label": "A_vo·v_in\nA_vo = {Avo}"
+          },
+          {
+            "ref": "ROUT",
+            "at": [
+              11,
+              0
+            ],
+            "label": "R_out {Rout}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              18,
+              0
+            ],
+            "rot": 90,
+            "label": "R_L\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              15,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              18,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            8.5,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "v_o",
+            "at": [
+              16.5,
+              0
+            ]
+          }
+        ],
+        "voltages": [
+          {
+            "text": "v_in",
+            "across": "RIN"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dep_what_if_cccs_load",
+      "topicId": "dependent_sources",
+      "prompt": "Swap R_L for {new_RL}, ten times smaller. What happens to the current through the diamond?",
+      "variables": [
+        {
+          "name": "Rsig",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "rpi",
+          "unit": "Ω",
+          "values": [
+            1500,
+            2200,
+            2700,
+            3300
+          ]
+        },
+        {
+          "name": "beta",
+          "unit": "",
+          "values": [
+            100,
+            150,
+            200
+          ]
+        },
+        {
+          "name": "RC",
+          "unit": "Ω",
+          "values": [
+            2200,
+            3300,
+            4700
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            10000,
+            22000,
+            47000
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rp1",
+          "formula": "RC||RL",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rp2",
+          "formula": "RC||(RL/10)",
+          "unit": "Ω"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the current through the diamond",
+        "formula": "beta*0.01/(Rsig+rpi)",
+        "unit": "A",
+        "change": {
+          "RL": "RL/10"
+        },
+        "feedback": {
+          "up": "The smaller load takes more of the current at the output node, but that current is still β·i_b, and i_b is set by v_s, R_sig and r_π alone. R_L takes a larger share; R_C takes less.",
+          "down": "Nothing on the input side changed, so i_b is the same, and the diamond's current is β·i_b. A current source holds its current whatever voltage ends up across it; v_o falls instead."
+        }
+      },
+      "explanation": "The diamond's current is β·i_b = {beta} × 10 mV/({Rsig} + {rpi}) = {before}, before and after: R_L appears nowhere in it. What changes is the voltage that current makes, v_o = −β·i_b·(R_C ∥ R_L), and how it splits: more of it now comes through R_L, less through R_C. A dependent current source holds its current whatever voltage is across it, as a dependent voltage source holds its voltage whatever current it carries.",
+      "hints": [
+        "What sets i_b? Does R_L appear anywhere in it?"
+      ],
+      "followUps": [
+        {
+          "prompt": "What happens to v_o?",
+          "choices": [
+            {
+              "text": "Its size falls: the same β·i_b flows in R_C ∥ R_L, now smaller",
+              "correct": true,
+              "feedback": "Right: v_o = −β·i_b·(R_C ∥ R_L), and only R_C ∥ R_L changed."
+            },
+            {
+              "text": "It stays the same, since the diamond's current didn't change",
+              "feedback": "The current is the same, but v_o is that current times R_C ∥ R_L, which fell."
+            },
+            {
+              "text": "Its size rises, since the smaller load draws more current",
+              "feedback": "The total current at the output node is fixed at β·i_b. A smaller R_L only takes a larger share of it, at a lower voltage."
+            },
+            {
+              "text": "Its size falls tenfold, in proportion to R_L",
+              "feedback": "v_o follows R_C ∥ R_L, not R_L alone. R_C is still there in parallel, so the fall is less than tenfold."
+            }
+          ],
+          "explanation": "v_o = −β·i_b·(R_C ∥ R_L). With the same β·i_b, its size falls with R_C ∥ R_L, from {Rp1} to {Rp2}."
+        }
+      ],
+      "review": "draft",
+      "schematic": {
+        "netlist": "Common-emitter stage small-signal model\nVS sig 0 10m\nRSIG sig b {Rsig:spice}\nVIB b b1 0\nRPI b1 0 {rpi:spice}\nF1 c 0 VIB {beta:spice}\nRC c 0 {RC:spice}\nRL c 0 {RL:spice}\n",
+        "noBuild": "a small-signal model: r_π and β·i_b stand for the transistor",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "v_s\n10 mV"
+          },
+          {
+            "ref": "RSIG",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R_sig {Rsig}"
+          },
+          {
+            "ref": "VIB",
+            "at": [
+              6,
+              0
+            ],
+            "label": "i_b",
+            "symbol": "sense"
+          },
+          {
+            "ref": "RPI",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "r_π\n{rpi}"
+          },
+          {
+            "ref": "F1",
+            "at": [
+              15,
+              0
+            ],
+            "rot": 90,
+            "label": "β·i_b\nβ = {beta}"
+          },
+          {
+            "ref": "RC",
+            "at": [
+              20,
+              0
+            ],
+            "rot": 90,
+            "label": "R_C\n{RC}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              25,
+              0
+            ],
+            "rot": 90,
+            "label": "R_L\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              15,
+              0
+            ],
+            [
+              25,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              25,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            12,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "v_o",
+            "at": [
+              17.5,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              10,
+              0
+            ]
+          },
+          {
+            "text": "c",
+            "at": [
+              15,
+              0
+            ]
+          },
+          {
+            "text": "e",
+            "at": [
+              13,
+              4
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "dep_design_min_load",
+      "topicId": "dependent_sources",
+      "prompt": "Choose the smallest R_L (E12) that keeps v_o within 5% of its value with no load.",
+      "variables": [
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "values": [
+            10000,
+            47000,
+            100000
+          ]
+        },
+        {
+          "name": "Avo",
+          "unit": "",
+          "values": [
+            10,
+            20,
+            50
+          ]
+        },
+        {
+          "name": "Rout",
+          "unit": "Ω",
+          "values": [
+            47,
+            68,
+            100,
+            150,
+            220,
+            330,
+            470,
+            680,
+            1000
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "RLmin",
+          "formula": "19*Rout",
+          "unit": "Ω"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "RL",
+            "label": "R_L",
+            "unit": "Ω",
+            "series": "E12",
+            "min": 100,
+            "max": 1000000
+          }
+        ],
+        "result": "100*Rout/(Rout+RL)",
+        "resultLabel": "the share of A_vo·v_in lost across R_out",
+        "resultUnit": "%",
+        "target": "5",
+        "tolerance": 0.15,
+        "mode": "atMost"
+      },
+      "explanation": "With no load, no current flows in R_out and v_o = A_vo·v_in. Loaded, v_o = A_vo·v_in·R_L/(R_out + R_L), so the share lost is R_out/(R_out + R_L). For at most 5%: R_out/(R_out + R_L) ≤ 0.05, so R_L ≥ 19·R_out = {RLmin}. The answer is the smallest E12 value at or above that; anything smaller loses more than 5%, and a larger one works but isn't the smallest. R_in and A_vo don't enter: seen from the load, the amplifier is a Thevenin source, A_vo·v_in behind R_out.",
+      "hints": [
+        "What share of A_vo·v_in reaches R_L, and what share is lost across R_out?",
+        "Lost share = R_out/(R_out + R_L) ≤ 5% means R_L ≥ 19·R_out: take the smallest E12 value at or above that. If yours loses well under 5%, the next E12 value down may still qualify."
+      ],
+      "review": "draft",
+      "schematic": {
+        "netlist": "Amplifier model and load\nVIN in 0 1\nRIN in 0 {Rin:spice}\nE1 x 0 in 0 {Avo:spice}\nROUT x out {Rout:spice}\nRL out 0 {RL:spice}\n",
+        "noBuild": "an amplifier model: R_in, A_vo·v_in and R_out stand for the amplifier",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "v_in"
+          },
+          {
+            "ref": "RIN",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R_in\n{Rin}"
+          },
+          {
+            "ref": "E1",
+            "at": [
+              11,
+              0
+            ],
+            "rot": 90,
+            "label": "A_vo·v_in\nA_vo = {Avo}"
+          },
+          {
+            "ref": "ROUT",
+            "at": [
+              11,
+              0
+            ],
+            "label": "R_out {Rout}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              18,
+              0
+            ],
+            "rot": 90,
+            "label": "R_L\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              0
+            ]
+          ],
+          [
+            [
+              15,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              18,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            8.5,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "v_o",
+            "at": [
+              16.5,
+              0
+            ]
+          }
+        ],
+        "voltages": [
+          {
+            "text": "v_in",
+            "across": "RIN"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dep_design_pick_amp",
+      "topicId": "dependent_sources",
+      "level": "design",
+      "prompt": "Which amplifiers keep the loaded gain v_o/v_s within 10% of their A_vo? X: R_in = 47 kΩ, A_vo = 20, R_out = 10 Ω. Y: R_in = 1 MΩ, A_vo = 20, R_out = 100 Ω.",
+      "variables": [],
+      "choices": [
+        {
+          "text": "Y only",
+          "correct": true,
+          "feedback": "Right: Y keeps 1 MΩ/1.01 MΩ = 0.990 at its input and 2.2 kΩ/2.3 kΩ = 0.957 at its output, 0.947 of A_vo (5.3% lost). X keeps 47/57 = 0.825 at its input: 17.9% lost overall."
+        },
+        {
+          "text": "X only",
+          "feedback": "X's 10 Ω output loses almost nothing to the 2.2 kΩ load (0.995), but its 47 kΩ input against the sensor's 10 kΩ keeps only 47/57 = 0.825 of v_s: 17.9% lost overall. Y keeps 0.947."
+        },
+        {
+          "text": "Both",
+          "feedback": "X fails at its input: 47 kΩ against 10 kΩ keeps only 0.825 of v_s, and its tiny R_out can't win that back. Overall X keeps 0.821 of A_vo."
+        },
+        {
+          "text": "Neither",
+          "feedback": "Y keeps 0.990 at its input and 0.957 at its output: 0.947 of A_vo, a 5.3% loss, inside 10%."
+        }
+      ],
+      "explanation": "Check both ends of each amplifier. X: input 47 kΩ/(10 kΩ + 47 kΩ) = 0.825, output 2.2 kΩ/(10 Ω + 2.2 kΩ) = 0.995; A_v = 0.825 × 20 × 0.995 = 16.4, 82.1% of A_vo. Y: input 1 MΩ/1.01 MΩ = 0.990, output 2.2 kΩ/2.3 kΩ = 0.957; A_v = 0.990 × 20 × 0.957 = 18.9, 94.7% of A_vo. The rule of thumb: R_in at least ten times the source's R_s, R_out at most a tenth of the load. X has an excellent output and a poor input, and the worse end decides.",
+      "review": "draft",
+      "schematic": {
+        "netlist": "Sensor, amplifier and load\nVS sig 0 1\nRS sig in 10k\nRIN in 0 1Meg\nE1 x 0 in 0 20\nROUT x out 100\nRL out 0 2.2k\n",
+        "noBuild": "an amplifier model: R_in, A_vo·v_in and R_out stand for the amplifier",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "v_s"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R_s 10 kΩ"
+          },
+          {
+            "ref": "RIN",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R_in"
+          },
+          {
+            "ref": "E1",
+            "at": [
+              11,
+              0
+            ],
+            "rot": 90,
+            "label": "A_vo·v_in"
+          },
+          {
+            "ref": "ROUT",
+            "at": [
+              11,
+              0
+            ],
+            "label": "R_out"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              18,
+              0
+            ],
+            "rot": 90,
+            "label": "R_L\n2.2 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              15,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              18,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            8.5,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "v_o",
+            "at": [
+              16.5,
+              0
+            ]
+          }
+        ],
+        "voltages": [
+          {
+            "text": "v_in",
+            "across": "RIN"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dep_fault_cascade",
+      "topicId": "dependent_sources",
+      "prompt": "The chain's output reads low. Which fault explains the readings?",
+      "variables": [
+        {
+          "name": "Rs",
+          "unit": "Ω",
+          "values": [
+            1000,
+            2200,
+            4700
+          ]
+        },
+        {
+          "name": "Rin1",
+          "unit": "Ω",
+          "values": [
+            47000,
+            100000
+          ]
+        },
+        {
+          "name": "A1",
+          "unit": "",
+          "values": [
+            2,
+            3
+          ]
+        },
+        {
+          "name": "Rout1",
+          "unit": "Ω",
+          "values": [
+            470,
+            1000
+          ]
+        },
+        {
+          "name": "Rin2",
+          "unit": "Ω",
+          "values": [
+            10000,
+            22000
+          ]
+        },
+        {
+          "name": "A2",
+          "unit": "",
+          "values": [
+            2,
+            3
+          ]
+        },
+        {
+          "name": "Rout2",
+          "unit": "Ω",
+          "values": [
+            100,
+            220
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            2200,
+            4700
+          ]
+        }
+      ],
+      "fault": {
+        "netlist": "Two-stage amplifier chain\nVS sig 0 1\nRS sig in1 {Rs:spice}\nRIN1 in1 0 {Rin1:spice}\nE1 x1 0 in1 0 {A1:spice}\nROUT1 x1 in2 {Rout1:spice}\nRIN2 in2 0 {Rin2:spice}\nE2 x2 0 in2 0 {A2:spice}\nROUT2 x2 out {Rout2:spice}\nRL out 0 {RL:spice}\n",
+        "probes": [
+          {
+            "label": "v_1, stage 1's input",
+            "probe": "v(in1)"
+          },
+          {
+            "label": "v_2, stage 2's input",
+            "probe": "v(in2)"
+          },
+          {
+            "label": "v_o, at the load",
+            "probe": "v(out)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "Stage 1's input resistance is ten times too low",
+            "value": {
+              "ref": "RIN1",
+              "formula": "Rin1/10"
+            },
+            "feedback": "A low R_in1 would pull v_1 down against R_s, and v_2 and v_o would fall in the same proportion as v_1.",
+            "why": "v_1 has fallen: R_s and R_in1 now divide v_s more. The later dividers are unchanged, so v_2 and v_o fall in the same proportion."
+          },
+          {
+            "text": "Stage 2's input resistance is ten times too low",
+            "value": {
+              "ref": "RIN2",
+              "formula": "Rin2/10"
+            },
+            "feedback": "A low R_in2 would leave v_1 normal and pull v_2 down: R_out1 and R_in2 would divide A_1·v_1 more. v_o would fall in proportion to v_2.",
+            "why": "v_1 is normal but v_2 is low: the loss is where stage 1's R_out1 drives stage 2's input, R_in2."
+          },
+          {
+            "text": "The load's input resistance R_L is ten times too low",
+            "value": {
+              "ref": "RL",
+              "formula": "RL/10"
+            },
+            "feedback": "A low R_L would leave v_1 and v_2 normal and pull only v_o down: R_out2 and R_L would divide A_2·v_2 more.",
+            "why": "v_1 and v_2 are normal and only v_o is low: the loss is at the last divider, R_out2 into R_L."
+          },
+          {
+            "text": "The link from stage 1 to stage 2 is broken (R_out1 open)",
+            "open": "ROUT1",
+            "feedback": "A broken link would leave v_1 normal and put v_2 and v_o at 0 V: R_in2 would hold stage 2's input at ground.",
+            "why": "v_2 and v_o read 0 V while v_1 is normal: nothing reaches stage 2, and R_in2 holds its input at ground."
+          }
+        ]
+      },
+      "explanation": "Each stage is a divider at its input and a dependent source behind R_out. Walk the readings from the source: the first reading that falls short of its healthy value shows where the signal is lost. Every reading after it falls in the same proportion, because the later dividers are unchanged. A low v_1 means stage 1's input is loading R_s; v_1 normal but v_2 low means stage 2's input is loading R_out1; only v_o low means the load is loading R_out2.",
+      "hints": [
+        "Compare each reading with its healthy value, from the source onward. Where does the shortfall start?",
+        "A loading fault lowers the first reading after it and everything downstream in proportion; the readings before it stay normal."
+      ],
+      "review": "draft",
+      "schematic": {
+        "netlist": "Two-stage amplifier chain\nVS sig 0 1\nRS sig in1 {Rs:spice}\nRIN1 in1 0 {Rin1:spice}\nE1 x1 0 in1 0 {A1:spice}\nROUT1 x1 in2 {Rout1:spice}\nRIN2 in2 0 {Rin2:spice}\nE2 x2 0 in2 0 {A2:spice}\nROUT2 x2 out {Rout2:spice}\nRL out 0 {RL:spice}\n",
+        "noBuild": "amplifier models: R_in, A·v and R_out stand for each stage",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "v_s\n1 V"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R_s {Rs}"
+          },
+          {
+            "ref": "RIN1",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R_in1\n{Rin1}"
+          },
+          {
+            "ref": "E1",
+            "at": [
+              11,
+              0
+            ],
+            "rot": 90,
+            "label": "A_1·v_1\nA_1 = {A1}"
+          },
+          {
+            "ref": "ROUT1",
+            "at": [
+              11,
+              0
+            ],
+            "label": "R_out1 {Rout1}"
+          },
+          {
+            "ref": "RIN2",
+            "at": [
+              17,
+              0
+            ],
+            "rot": 90,
+            "label": "R_in2\n{Rin2}"
+          },
+          {
+            "ref": "E2",
+            "at": [
+              22,
+              0
+            ],
+            "rot": 90,
+            "label": "A_2·v_2\nA_2 = {A2}"
+          },
+          {
+            "ref": "ROUT2",
+            "at": [
+              22,
+              0
+            ],
+            "label": "R_out2 {Rout2}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              29,
+              0
+            ],
+            "rot": 90,
+            "label": "R_L\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              15,
+              0
+            ],
+            [
+              17,
+              0
+            ]
+          ],
+          [
+            [
+              26,
+              0
+            ],
+            [
+              29,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              29,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            8.5,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "v_o",
+            "at": [
+              27.5,
+              0
+            ]
+          }
+        ],
+        "voltages": [
+          {
+            "text": "v_1",
+            "across": "RIN1"
+          },
+          {
+            "text": "v_2",
+            "across": "RIN2"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dep_trouble_rin",
+      "topicId": "dependent_sources",
+      "level": "design",
+      "prompt": "Find the amplifier's actual R_in. The chain was designed for a gain of {Ae}, but v_o/v_s measures {Am}; R_s, R_out and R_L measure as marked, and A_vo is as specified.",
+      "variables": [
+        {
+          "name": "Rs",
+          "unit": "Ω",
+          "values": [
+            4700,
+            10000,
+            22000
+          ]
+        },
+        {
+          "name": "Rin",
+          "unit": "Ω",
+          "values": [
+            470000,
+            1000000
+          ]
+        },
+        {
+          "name": "Avo",
+          "unit": "",
+          "values": [
+            20,
+            50
+          ]
+        },
+        {
+          "name": "Rout",
+          "unit": "Ω",
+          "values": [
+            100,
+            220
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            10000,
+            22000
+          ]
+        },
+        {
+          "name": "Rina",
+          "unit": "Ω",
+          "values": [
+            2200,
+            3300,
+            4700,
+            6800,
+            10000
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "kout",
+          "formula": "RL/(Rout+RL)",
+          "unit": ""
+        },
+        {
+          "name": "Ae",
+          "formula": "Rin/(Rs+Rin)*Avo*RL/(Rout+RL)",
+          "unit": ""
+        },
+        {
+          "name": "Am",
+          "formula": "Rina/(Rs+Rina)*Avo*RL/(Rout+RL)",
+          "unit": ""
+        },
+        {
+          "name": "Aout",
+          "formula": "Avo*RL/(Rout+RL)",
+          "unit": ""
+        },
+        {
+          "name": "k",
+          "formula": "Rina/(Rs+Rina)",
+          "unit": ""
+        }
+      ],
+      "answer": {
+        "formula": "Rs*k/(1-k)",
+        "unit": "Ω",
+        "tolerance": 0.03
+      },
+      "explanation": "Work the chain backward from the gain. The output end is as marked: A_vo·R_L/(R_out + R_L) = {Avo} × {kout} = {Aout}. So the input end keeps k = {Am}/{Aout} = {k} of v_s. That fraction is R_in/(R_s + R_in), so R_in = R_s·k/(1 − k) = {Rs} × {k}/(1 − {k}) = {answer}. It should be {Rin}: with R_in no longer far above the sensor's {Rs}, the input divider keeps only {k} of v_s. A wrong part fitted where the amplifier's input resistance is set, or a damaged input, would do this.",
+      "hints": [
+        "The output divider and A_vo are as marked. What share of v_s must reach R_in to give the measured gain?",
+        "k = A_v/(A_vo·R_L/(R_out + R_L)); then R_in/(R_s + R_in) = k gives R_in = R_s·k/(1 − k)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Rs",
+          "when": "abs(Rs-Rina)-0.03*Rina",
+          "feedback": "R_in = R_s holds only when exactly half of v_s reaches R_in. Find the fraction from the readings first: k = A_v/(A_vo·R_L/(R_out + R_L)), then R_in = R_s·k/(1 − k)."
+        },
+        {
+          "formula": "Rs*(Am/Avo)/(1-Am/Avo)",
+          "when": "abs(Rs*(Am/Avo)/(1-Am/Avo)-Rina)-0.03*Rina",
+          "feedback": "That takes the whole drop from A_vo as input loss. R_out and R_L also divide the output: divide A_v by A_vo·R_L/(R_out + R_L), not by A_vo alone."
+        },
+        {
+          "formula": "Rin*Am/Ae",
+          "feedback": "The gain isn't proportional to R_in: it follows R_in/(R_s + R_in), which is close to 1 for the specified R_in. Solve that fraction for R_in."
+        }
+      ],
+      "review": "draft",
+      "schematic": {
+        "netlist": "Sensor, amplifier model and load stage\nVS sig 0 1\nRS sig in {Rs:spice}\nRIN in 0 {Rin:spice}\nE1 x 0 in 0 {Avo:spice}\nROUT x out {Rout:spice}\nRL out 0 {RL:spice}\n",
+        "noBuild": "an amplifier model: R_in, A_vo·v_in and R_out stand for the amplifier",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "v_s"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R_s {Rs}"
+          },
+          {
+            "ref": "RIN",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R_in\nshould be {Rin}"
+          },
+          {
+            "ref": "E1",
+            "at": [
+              14,
+              0
+            ],
+            "rot": 90,
+            "label": "A_vo·v_in\nA_vo = {Avo}"
+          },
+          {
+            "ref": "ROUT",
+            "at": [
+              14,
+              0
+            ],
+            "label": "R_out {Rout}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              21,
+              0
+            ],
+            "rot": 90,
+            "label": "R_L\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              21,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              21,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            10.0,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "v_o",
+            "at": [
+              19.5,
+              0
+            ]
+          }
+        ],
+        "voltages": [
+          {
+            "text": "v_in",
+            "across": "RIN"
+          }
+        ]
+      }
+    }
+  ]
+}

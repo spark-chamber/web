@@ -1,0 +1,2891 @@
+{
+  "topics": [
+    {
+      "id": "mesh_analysis",
+      "title": "Mesh-current analysis",
+      "mapTitle": "Mesh-current analysis",
+      "glyph": "resistorPair",
+      "summary": "Give each window of a drawing a current and write KVL around it, as R·i = v: R and v come straight off the drawing. A shared resistor carries the difference of two mesh currents.",
+      "lenses": [
+        "circuit",
+        "math"
+      ],
+      "prerequisites": [
+        "kirchhoff",
+        "nodal_analysis"
+      ],
+      "lensNotes": {
+        "circuit": "Mesh analysis suits circuits drawn without crossings that have fewer windows than unknown nodes. Count before choosing: meshes = branches − nodes + 1, against one equation per unknown node for nodal. SPICE uses nodal analysis for every circuit.",
+        "math": "R·i = v is the mirror image of G·v = i: resistances instead of conductances, loop voltages instead of node currents. With every mesh current clockwise, R is symmetric, its diagonal holds each mesh's total resistance and its off-diagonal entries are minus the shared resistances."
+      },
+      "formulas": [
+        {
+          "label": "Mesh equations",
+          "tex": "R\\,\\mathbf{i} = \\mathbf{v}"
+        },
+        {
+          "label": "Diagonal entry",
+          "tex": "R_{kk} = \\sum R\\ \\ (\\text{every resistor around mesh } k)"
+        },
+        {
+          "label": "Off-diagonal entry (both clockwise)",
+          "tex": "R_{jk} = -R_{\\text{shared}}"
+        },
+        {
+          "label": "Shared branch current",
+          "tex": "I_{R} = I_j - I_k"
+        },
+        {
+          "label": "Number of meshes",
+          "tex": "m = b - n + 1"
+        }
+      ],
+      "prerequisiteNotes": {
+        "kirchhoff": "Each mesh equation is KVL around one window of the drawing, with Ohm's law for each resistor's drop.",
+        "nodal_analysis": "R·i = v is built and solved the same way as G·v = i, and choosing between the two methods means counting the equations each needs."
+      },
+      "goals": [
+        "Write the resistance matrix R and the source voltages v for a planar circuit by inspection, with every mesh current clockwise",
+        "Find the current in a shared branch as the difference of two mesh currents, and read a negative mesh current as a direction",
+        "Use a current source to fix a mesh current, and solve three meshes with the calculator's Matrix mode",
+        "Choose between mesh and nodal analysis by counting equations"
+      ],
+      "intuition": "Each window of the drawing carries its own circulating current; a resistor between two windows carries the difference, and R·i = v is KVL around every window at once.",
+      "why": "Mesh currents are a bookkeeping choice that satisfies KCL automatically: each mesh current enters and leaves every node it passes through, so only KVL is left to write. Around each mesh, the drops (R times the net current in each resistor) equal the source voltages. A resistor shared by meshes j and k carries I_j − I_k when both run clockwise, so it appears with +R on each diagonal and −R off the diagonal, in both rows: R is symmetric for resistors and independent sources, for the same reason G is. A current source in a branch that belongs to one mesh only fixes that mesh's current, which removes an equation. Mesh currents exist only for circuits that can be drawn without crossings; nodal analysis works for any circuit, which is why simulators use it.",
+      "explanation": "Kirchhoff's voltage law around a loop is where mesh analysis starts. Give each window of the drawing (a mesh) a current, all clockwise. A resistor on the outside of the drawing carries one mesh current; a resistor between two meshes carries the difference. Write KVL around each mesh: the drops equal the sources. Collected, the equations are R·i = v. Read R off the drawing. On the diagonal: every resistance around that mesh. Off the diagonal: minus the resistance two meshes share, or 0. The right side, v, is the sum of source voltages around each mesh, positive where the clockwise path goes up through a source from − to +. Solve as for G·v = i: two meshes by hand, three or more in the calculator's Matrix mode (Mesh). A negative result means that mesh current runs counterclockwise; its size is right. A current source on an outer branch fixes its mesh current, leaving one equation fewer. Before choosing a method, count: mesh needs one equation per window, nodal one per unknown node.",
+      "workedExample": {
+        "problem": "A 12 V supply V1 and R1 = 1 kΩ form the left side of a circuit, and a 5 V supply V2 and R2 = 2 kΩ the right side, both supplies with + at the top. R3 = 2 kΩ, in the middle, is shared by the two meshes. Find both mesh currents, clockwise, and the current through R3.",
+        "steps": [
+          "Mesh 1 (V1, R1, R3), clockwise: up through V1 is a rise of 12 V. KVL: 12 V = 1 kΩ·I_1 + 2 kΩ·(I_1 − I_2).",
+          "Mesh 2 (R3, R2, V2), clockwise: down through V2 from + to − is a drop of 5 V. KVL: 0 = 2 kΩ·I_2 + 5 V + 2 kΩ·(I_2 − I_1).",
+          "As R·i = v: R = [[3 kΩ, −2 kΩ], [−2 kΩ, 4 kΩ]], v = (12 V, −5 V). Determinant: 3 kΩ × 4 kΩ − 2 kΩ × 2 kΩ = 8 kΩ².",
+          "Cramer's rule: I_1 = (12 V × 4 kΩ − 2 kΩ × 5 V)/8 kΩ² = 38/8 mA = 4.75 mA; I_2 = (3 kΩ × (−5 V) + 2 kΩ × 12 V)/8 kΩ² = 9/8 mA = 1.125 mA.",
+          "R3 carries I_1 − I_2 = 4.75 mA − 1.125 mA = 3.625 mA down. I_2 is positive, so 1.125 mA flows from the middle node through R2 into V2's + terminal: V2 absorbs energy (a battery in its place would be charging).",
+          "Check KVL around mesh 1: 1 kΩ × 4.75 mA + 2 kΩ × 3.625 mA = 4.75 V + 7.25 V = 12 V.",
+          "Check with nodal analysis: V_a = 3.625 mA × 2 kΩ = 7.25 V, and (12 V − 7.25 V)/1 kΩ = 4.75 mA = I_1."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 10 \"DC Network Analysis\", section \"Mesh current method\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_10.html#xtocid87882",
+          "note": "Mesh currents are circulating loop currents solved with KVL and Ohm's law only; a resistor shared by two meshes carries the sum or difference of the two currents; a negative answer means the assumed direction was backwards; and the method needs fewer equations than the branch current method, shown on an unbalanced Wheatstone bridge with three mesh currents."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 10 \"DC Network Analysis\", section \"Mesh current by inspection\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_10.html#xtocid87884",
+          "note": "Writing the mesh equations by inspection: each diagonal term is the total resistance around that loop, every other term is minus the resistance shared by a pair of loops, the right side is the source voltages, and the resulting matrix is symmetric; it also notes that engineering texts run mesh currents clockwise."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 8 \"DC Metering Circuits\", section \"Bridge circuits\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_8.html#xtocid87709",
+          "note": "A Wheatstone bridge is balanced, with the null detector reading zero, when the ratios of its two arm pairs are equal, independent of the supply voltage."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "mesh_two_loop",
+      "topicId": "mesh_analysis",
+      "prompt": "Find the mesh current I_1. Take I_1 (the mesh with V1) and I_2 (the mesh with V2) both clockwise. Assume ideal supplies.",
+      "variables": [
+        {
+          "name": "V1",
+          "unit": "V",
+          "values": [
+            9,
+            12
+          ]
+        },
+        {
+          "name": "V2",
+          "unit": "V",
+          "value": 5
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "R11",
+          "formula": "R1+R3",
+          "unit": "Ω"
+        },
+        {
+          "name": "R22",
+          "formula": "R2+R3",
+          "unit": "Ω"
+        },
+        {
+          "name": "det",
+          "formula": "R1*R2+R1*R3+R2*R3",
+          "unit": ""
+        },
+        {
+          "name": "I1",
+          "formula": "(V1*(R2+R3)-R3*V2)/det",
+          "unit": "A"
+        },
+        {
+          "name": "I2",
+          "formula": "(R3*V1-(R1+R3)*V2)/det",
+          "unit": "A"
+        },
+        {
+          "name": "I3",
+          "formula": "(V1*R2+V2*R1)/det",
+          "unit": "A"
+        },
+        {
+          "name": "Va",
+          "formula": "(V1/R1+V2/R2)/(1/R1+1/R2+1/R3)",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "(V1*(R2+R3)-R3*V2)/(R1*R2+R1*R3+R2*R3)",
+        "unit": "A",
+        "tolerance": 0.02
+      },
+      "explanation": "KVL around each mesh, both clockwise. Mesh 1: V1 = R1·I_1 + R3·(I_1 − I_2). Mesh 2 runs down through V2 from + to −, a drop: 0 = R2·I_2 + V2 + R3·(I_2 − I_1). As R·i = v: R_11 = R1 + R3 = {R11}, R_22 = R2 + R3 = {R22}, R_12 = R_21 = −R3 = −{R3}, and v = ({V1}, −{V2}). Cramer's rule: I_1 = (V1·(R2 + R3) − R3·V2)/(R1·R2 + R1·R3 + R2·R3) = {answer}, and I_2 = {I2}.",
+      "hints": [
+        "Write KVL around each mesh. R3 is in both, and carries I_1 − I_2 (down) in mesh 1's equation.",
+        "R·i = v: R = [[R1 + R3, −R3], [−R3, R2 + R3]], v = (V1, −V2). Solve the 2 × 2."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V1/(R1+R3)",
+          "when": "abs(V1/(R1+R3)-I1)-0.03*I1",
+          "feedback": "That ignores mesh 2. R3 is shared, so I_2 also flows in it and changes its drop: solve both mesh equations together."
+        },
+        {
+          "formula": "(V1*(R2+R3)+R3*V2)/(R1*R2+R1*R3+R2*R3)",
+          "feedback": "A sign slipped on V2. Clockwise, mesh 2 runs down through V2 from + to −, a drop, so its right side is −V2."
+        },
+        {
+          "formula": "(V1*R2+V2*R1)/(R1*R2+R1*R3+R2*R3)",
+          "when": "abs(I2)-0.03*I1",
+          "feedback": "That is the current down through R3, I_1 − I_2. I_1 is the current in R1."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Swap V2 for a 9 V supply. Which parts of R·i = v change?",
+          "choices": [
+            {
+              "text": "Only v_2, which goes from −5 V to −9 V",
+              "correct": true,
+              "feedback": "Right: R holds only resistances. A source's voltage enters through the right side of each mesh it lies in, and V2 lies in mesh 2 only."
+            },
+            {
+              "text": "R_22 and v_2, the two terms V2 brings into row 2",
+              "feedback": "R_22 = R2 + R3 is resistance only. The supply's voltage moves only v_2, the right side of mesh 2's equation."
+            },
+            {
+              "text": "Only v_1, since I_1 is the current that changes",
+              "feedback": "I_1 changes because v_2 did, through the coupling −R3. V2 isn't in mesh 1, so v_1 stays {V1}."
+            },
+            {
+              "text": "Every entry of R and v, since both mesh currents move",
+              "feedback": "Both currents move, but R is the resistors, which haven't changed, and only one source voltage has: v_2."
+            }
+          ],
+          "explanation": "As with G·v = i, the parts and the sources land in different places: resistances in R, source voltages in v. Changing a supply changes only v, and the same R serves every set of supply voltages."
+        }
+      ],
+      "schematic": {
+        "netlist": "two meshes\nV1 p 0 {V1:spice}\nR1 p a {R1:spice}\nR3 a 0 {R3:spice}\nR2 a q {R2:spice}\nV2 q 0 {V2:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n{V1}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              14,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              20,
+              2
+            ],
+            "rot": 90,
+            "label": "V2\n{V2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              14,
+              0
+            ]
+          ],
+          [
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              20,
+              0
+            ],
+            [
+              20,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              20,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              12,
+              0
+            ]
+          }
+        ]
+      },
+      "simCheck": {
+        "netlist": "two meshes\nV1 p 0 {V1:spice}\nR1 p a {R1:spice}\nR3 a 0 {R3:spice}\nR2 a q {R2:spice}\nV2 q 0 {V2:spice}\n",
+        "probe": "i(R1)",
+        "tolerance": 0.001
+      },
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "mesh_shared_branch",
+      "topicId": "mesh_analysis",
+      "prompt": "Find the current down through R3. Assume ideal supplies.",
+      "variables": [
+        {
+          "name": "V1",
+          "unit": "V",
+          "values": [
+            9,
+            12
+          ]
+        },
+        {
+          "name": "V2",
+          "unit": "V",
+          "value": 5
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "R11",
+          "formula": "R1+R3",
+          "unit": "Ω"
+        },
+        {
+          "name": "R22",
+          "formula": "R2+R3",
+          "unit": "Ω"
+        },
+        {
+          "name": "det",
+          "formula": "R1*R2+R1*R3+R2*R3",
+          "unit": ""
+        },
+        {
+          "name": "I1",
+          "formula": "(V1*(R2+R3)-R3*V2)/det",
+          "unit": "A"
+        },
+        {
+          "name": "I2",
+          "formula": "(R3*V1-(R1+R3)*V2)/det",
+          "unit": "A"
+        },
+        {
+          "name": "I3",
+          "formula": "(V1*R2+V2*R1)/det",
+          "unit": "A"
+        },
+        {
+          "name": "Va",
+          "formula": "(V1/R1+V2/R2)/(1/R1+1/R2+1/R3)",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "(V1*R2+V2*R1)/(R1*R2+R1*R3+R2*R3)",
+        "unit": "A",
+        "tolerance": 0.02
+      },
+      "explanation": "Take both mesh currents clockwise. Solving R·i = v gives I_1 = {I1} and I_2 = {I2}. Clockwise, I_1 runs down through R3 and I_2 runs up, so R3 carries I_1 − I_2 = (V1·R2 + V2·R1)/(R1·R2 + R1·R3 + R2·R3) = {answer} down. KVL check: R3's drop, {answer} × {R3}, is V_a = {Va}.",
+      "hints": [
+        "Two clockwise mesh currents. Which way does each run through R3?",
+        "I_1 runs down through R3, I_2 runs up: R3 carries I_1 − I_2."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(V1*(R2+R3)-R3*V2+R3*V1-(R1+R3)*V2)/(R1*R2+R1*R3+R2*R3)",
+          "when": "abs(I2)-0.03*I3",
+          "feedback": "That is I_1 + I_2. Clockwise, I_1 runs down through R3 and I_2 runs up, so R3 carries their difference, I_1 − I_2."
+        },
+        {
+          "formula": "(V1*(R2+R3)-R3*V2)/(R1*R2+R1*R3+R2*R3)",
+          "when": "abs(I2)-0.03*I3",
+          "feedback": "That is I_1 alone, the current in R1. R3 also carries I_2, the other way: I_1 − I_2."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Check it with node-voltage analysis. How many node equations does this circuit need?",
+          "choices": [
+            {
+              "text": "One: KCL at node a, since the other nodes sit on the supplies",
+              "correct": true,
+              "feedback": "Right: V_a = (V1/R1 + V2/R2)/(1/R1 + 1/R2 + 1/R3) = {Va}, and V_a/R3 gives the same current. Here nodal needs fewer equations than mesh."
+            },
+            {
+              "text": "Two, one per mesh, the same as mesh analysis",
+              "feedback": "The counts differ by method. Nodal needs one equation per unknown node; only a is unknown here, since the supplies fix the others."
+            },
+            {
+              "text": "Three: one for each resistor in the circuit",
+              "feedback": "Equations go with unknowns, not parts. The only unknown node voltage is V_a: one KCL row."
+            },
+            {
+              "text": "Four: one per node, with ground counted as well",
+              "feedback": "Ground is the reference and the supply nodes are known. That leaves one unknown, V_a, and one equation."
+            }
+          ],
+          "explanation": "Count before choosing: mesh analysis needs one equation per mesh (branches − nodes + 1), nodal one per unknown node. This circuit has two meshes but only one unknown node, so nodal is shorter."
+        }
+      ],
+      "schematic": {
+        "netlist": "two meshes\nV1 p 0 {V1:spice}\nR1 p a {R1:spice}\nR3 a 0 {R3:spice}\nR2 a q {R2:spice}\nV2 q 0 {V2:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n{V1}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              14,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              20,
+              2
+            ],
+            "rot": 90,
+            "label": "V2\n{V2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              14,
+              0
+            ]
+          ],
+          [
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              20,
+              0
+            ],
+            [
+              20,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              20,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              12,
+              0
+            ]
+          }
+        ]
+      },
+      "simCheck": {
+        "netlist": "two meshes\nV1 p 0 {V1:spice}\nR1 p a {R1:spice}\nR3 a 0 {R3:spice}\nR2 a q {R2:spice}\nV2 q 0 {V2:spice}\n",
+        "probe": "i(R3)",
+        "tolerance": 0.001
+      },
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "mesh_negative",
+      "topicId": "mesh_analysis",
+      "prompt": "With both mesh currents clockwise (I_1 in the mesh with V1, I_2 in the mesh with V2), solving R·i = v gives I_2 = {I2}. What does the minus sign mean?",
+      "variables": [
+        {
+          "name": "V1",
+          "unit": "V",
+          "values": [
+            9,
+            12
+          ]
+        },
+        {
+          "name": "V2",
+          "unit": "V",
+          "value": 5
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            4700,
+            5600,
+            6800,
+            8200
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1200,
+            1500,
+            1800,
+            2200
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "det",
+          "formula": "R1*R2+R1*R3+R2*R3",
+          "unit": ""
+        },
+        {
+          "name": "I1",
+          "formula": "(V1*(R2+R3)-R3*V2)/det",
+          "unit": "A"
+        },
+        {
+          "name": "I2",
+          "formula": "(R3*V1-(R1+R3)*V2)/det",
+          "unit": "A"
+        },
+        {
+          "name": "I2m",
+          "formula": "((R1+R3)*V2-R3*V1)/det",
+          "unit": "A"
+        }
+      ],
+      "choices": [
+        {
+          "text": "I_2 runs counterclockwise: {I2m} flows out of V2's + terminal into R2",
+          "correct": true,
+          "feedback": "Right: the answer is correct as it stands. A mesh current's direction is a guess made before solving; a negative result means the current runs against the guess, with the same size."
+        },
+        {
+          "text": "There is a sign error in the setup: a mesh current can't be negative",
+          "feedback": "Nothing is wrong. The clockwise direction was a choice; the circuit doesn't know about it. A negative result just means the current runs the other way."
+        },
+        {
+          "text": "{I2m} flows into V2's + terminal, so V2 is taking in energy",
+          "feedback": "That reads the sign backward. Clockwise, I_2 would flow from a through R2 into V2's + terminal; negative means it flows out of the + terminal, so V2 delivers energy."
+        },
+        {
+          "text": "The size is wrong as well: solve again with I_2 counterclockwise",
+          "feedback": "Reversing the guess only flips the sign: solving with I_2 counterclockwise gives +{I2m}. The size doesn't depend on the guess."
+        }
+      ],
+      "explanation": "Mesh directions are bookkeeping, chosen before solving. I_2 = {I2} means {I2m} flows counterclockwise in mesh 2: out of V2's + terminal, through R2 toward node a. Both supplies push current into node a, and R3 carries both down to ground.",
+      "followUps": [
+        {
+          "prompt": "Which supplies deliver energy to the circuit?",
+          "choices": [
+            {
+              "text": "Both: current leaves each supply at its + terminal",
+              "correct": true,
+              "feedback": "Right: I_1 = {I1} leaves V1's + terminal and {I2m} leaves V2's. Each supply delivers V × I."
+            },
+            {
+              "text": "Only V1: V2's current came out with a minus sign",
+              "feedback": "The minus sign is relative to the clockwise guess. The current leaves V2's + terminal, so V2 delivers energy too."
+            },
+            {
+              "text": "Only V1, because it has the higher voltage",
+              "feedback": "A lower-voltage source still delivers energy when current leaves its + terminal, as V2's does here."
+            },
+            {
+              "text": "Neither: they push against each other through R3",
+              "feedback": "They push the same way through R3: both raise node a, and R3 carries the sum of their currents to ground."
+            }
+          ],
+          "explanation": "A source delivers energy when current leaves its + terminal and absorbs it (as a battery on charge does) when current enters there. Read the direction from the sign of the mesh current and the direction you assumed."
+        }
+      ],
+      "schematic": {
+        "netlist": "two meshes\nV1 p 0 {V1:spice}\nR1 p a {R1:spice}\nR3 a 0 {R3:spice}\nR2 a q {R2:spice}\nV2 q 0 {V2:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n{V1}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              14,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              20,
+              2
+            ],
+            "rot": 90,
+            "label": "V2\n{V2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              14,
+              0
+            ]
+          ],
+          [
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              20,
+              0
+            ],
+            [
+              20,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              20,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              12,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "mesh_method_count",
+      "topicId": "mesh_analysis",
+      "prompt": "Count the equations each method needs for this circuit, as drawn and after combining series resistors.",
+      "variables": [
+        {
+          "name": "V1",
+          "unit": "V",
+          "values": [
+            9,
+            12
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R4",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R5",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "text": "As drawn: mesh 2, nodal 3. After combining R1 + R2 and R3 + R4: mesh 2, nodal 1.",
+          "correct": true,
+          "feedback": "Right: two windows either way. As drawn a, b and c are unknown; a and c are only joints between series resistors, so combining removes them and leaves b."
+        },
+        {
+          "text": "As drawn: mesh 3, nodal 2; combining changes neither",
+          "feedback": "The counts are swapped: the drawing has two windows and three unknown nodes (a, b, c). And combining does change nodal: it removes nodes a and c."
+        },
+        {
+          "text": "Both need 5 as drawn, one per resistor; combining leaves 3",
+          "feedback": "Equations go with unknowns, not parts: one per mesh for mesh analysis, one per unknown node for nodal."
+        },
+        {
+          "text": "As drawn: mesh 2, nodal 3; combining can't change the count, the circuit is the same",
+          "feedback": "The circuit's behavior is the same, but a and c were only series joints. Combining R1 + R2 and R3 + R4 removes those nodes, and their rows go with them: nodal needs only b."
+        }
+      ],
+      "explanation": "Meshes = branches − nodes + 1 = 7 − 6 + 1 = 2 as drawn (each supply a branch, ground a node), and 5 − 4 + 1 = 2 after combining. Unknown nodes: a, b and c as drawn; only b after. Simplify first, then count: here nodal wins after all, as it does on the worked example's circuit: two supplies, one shared resistor, one unknown node. SPICE never simplifies: MNA solves every node as drawn, and works for circuits that can't be drawn without crossings, where meshes aren't defined.",
+      "schematic": {
+        "netlist": "two meshes, three nodes\nV1 p 0 {V1:spice}\nR1 p a {R1:spice}\nR2 a b {R2:spice}\nR5 b 0 {R5:spice}\nR3 b c {R3:spice}\nR4 c q {R4:spice}\nV2 q 0 5\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V1}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R5",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "R5\n{R5}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              16,
+              0
+            ],
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              22,
+              0
+            ],
+            "label": "R4\n{R4}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              28,
+              2
+            ],
+            "rot": 90,
+            "label": "5 V"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              16,
+              0
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              2
+            ]
+          ],
+          [
+            [
+              20,
+              0
+            ],
+            [
+              22,
+              0
+            ]
+          ],
+          [
+            [
+              26,
+              0
+            ],
+            [
+              28,
+              0
+            ],
+            [
+              28,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              28,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              7,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              15,
+              0
+            ]
+          },
+          {
+            "text": "c",
+            "at": [
+              21,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "mesh_bridge_meter",
+      "topicId": "mesh_analysis",
+      "prompt": "Find the meter current, from c to d. Take three clockwise mesh currents: I_1 in the mesh with the supply, I_2 in the mesh with R3, I_3 in the mesh with R4. Solve R·i = v.",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "value": 5
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1200
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            2200,
+            2700
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "values": [
+            2200,
+            2700
+          ]
+        },
+        {
+          "name": "R4",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1200
+          ]
+        },
+        {
+          "name": "Rm",
+          "unit": "Ω",
+          "values": [
+            100,
+            470,
+            1000
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "S1",
+          "formula": "R1+R2",
+          "unit": "Ω"
+        },
+        {
+          "name": "S2",
+          "formula": "R1+R3+Rm",
+          "unit": "Ω"
+        },
+        {
+          "name": "S3",
+          "formula": "R2+Rm+R4",
+          "unit": "Ω"
+        },
+        {
+          "name": "det",
+          "formula": "S1*(S2*S3-Rm*Rm)-R1*R1*S3-2*R1*R2*Rm-S2*R2*R2",
+          "unit": ""
+        },
+        {
+          "name": "I1",
+          "formula": "V*(S2*S3-Rm*Rm)/det",
+          "unit": "A"
+        },
+        {
+          "name": "I2",
+          "formula": "V*(R1*S3+R2*Rm)/det",
+          "unit": "A"
+        },
+        {
+          "name": "I3",
+          "formula": "V*(R1*Rm+S2*R2)/det",
+          "unit": "A"
+        },
+        {
+          "name": "R4bal",
+          "formula": "R2*R3/R1",
+          "unit": "Ω"
+        },
+        {
+          "name": "R4wrong",
+          "formula": "R1*R3/R2",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "V*(R2*R3-R1*R4)/det",
+        "unit": "A",
+        "tolerance": 0.02
+      },
+      "explanation": "All three clockwise: R_11 = R1 + R2 = {S1}, R_22 = R1 + R3 + R_m = {S2}, R_33 = R2 + R_m + R4 = {S3}. Off the diagonal: −R1 (meshes 1 and 2 share R1), −R2 (meshes 1 and 3) and −R_m (meshes 2 and 3). v = ({V}, 0, 0): only mesh 1 has a source. Solving gives I_1 = {I1}, I_2 = {I2} and I_3 = {I3}. The meter is shared by meshes 2 and 3, which run through it in opposite directions, so it carries I_3 − I_2 = {answer} from c to d. Written out, that is V·(R2·R3 − R1·R4)/det: zero exactly when R2·R3 = R1·R4, the balance condition.",
+      "hints": [
+        "Three windows, three meshes. R1 and R2 are each shared with the supply's mesh; the meter is shared by the two inner meshes.",
+        "R = [[R1 + R2, −R1, −R2], [−R1, R1 + R3 + R_m, −R_m], [−R2, −R_m, R2 + R_m + R4]], v = (V, 0, 0); eliminate I_1 first. The calculator's Matrix mode (R·i = v) shows the steps. The meter carries I_3 − I_2."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(V*R2/(R1+R2)-V*R4/(R3+R4))/Rm",
+          "feedback": "That divides the unloaded c–d voltage by the meter's resistance, as if the meter didn't load the bridge. Its current changes the arm voltages; the mesh equations include that."
+        },
+        {
+          "formula": "V*(R1*Rm+S2*R2)/det",
+          "feedback": "That is I_3 alone. The meter is shared by meshes 2 and 3, which run through it in opposite directions, so it carries I_3 − I_2."
+        },
+        {
+          "formula": "V*(R1*Rm+S2*R2+R1*S3+R2*Rm)/det",
+          "feedback": "That adds I_3 and I_2. Clockwise, I_3 runs from c to d through the meter and I_2 from d to c, so the meter carries I_3 − I_2."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Which change makes the meter read zero, whatever its resistance?",
+          "choices": [
+            {
+              "text": "R4 = R2·R3/R1 = {R4bal}",
+              "correct": true,
+              "feedback": "Right: then R1·R4 = R2·R3, c and d sit at the same voltage, and no current flows through the meter, whatever its resistance."
+            },
+            {
+              "text": "R4 = R1·R3/R2 = {R4wrong}",
+              "feedback": "That makes R4/R3 = R1/R2, the left arm's top-to-bottom ratio upside down. Balance needs V_c = V_d: R2/(R1 + R2) = R4/(R3 + R4), so R4 = R2·R3/R1."
+            },
+            {
+              "text": "R4 = R3 = {R3}, equal arms",
+              "feedback": "Equal R3 and R4 put d at half the supply, but c sits at V·R2/(R1 + R2), not half. Balance needs R4 = R2·R3/R1."
+            },
+            {
+              "text": "A meter with far higher resistance",
+              "feedback": "A higher-resistance meter draws less current, but not zero: c and d still differ. Only balancing the arms removes the voltage across it."
+            }
+          ],
+          "explanation": "At balance V_c = V_d, so the meter has no voltage across it and carries no current, whatever its resistance. The mesh equations then decouple, and each arm is a plain divider."
+        }
+      ],
+      "schematic": {
+        "noBuild": "the meter is drawn as its internal resistance",
+        "netlist": "bridge with a meter\nV1 t 0 {V:spice}\nR1 t c {R1:spice}\nR2 c 0 {R2:spice}\nR3 t d {R3:spice}\nR4 d 0 {R4:spice}\nRM c d {Rm:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "R2",
+            "at": [
+              6,
+              6
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "R3",
+            "at": [
+              16,
+              0
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              6
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          },
+          {
+            "ref": "RM",
+            "at": [
+              9,
+              5
+            ],
+            "label": "meter\n{Rm}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              16,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              6,
+              6
+            ]
+          ],
+          [
+            [
+              16,
+              4
+            ],
+            [
+              16,
+              6
+            ]
+          ],
+          [
+            [
+              6,
+              5
+            ],
+            [
+              9,
+              5
+            ]
+          ],
+          [
+            [
+              13,
+              5
+            ],
+            [
+              16,
+              5
+            ]
+          ],
+          [
+            [
+              0,
+              8
+            ],
+            [
+              0,
+              10
+            ],
+            [
+              16,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            3,
+            10
+          ]
+        ],
+        "labels": [
+          {
+            "text": "c",
+            "at": [
+              7,
+              5
+            ]
+          },
+          {
+            "text": "d",
+            "at": [
+              14,
+              5
+            ]
+          }
+        ]
+      },
+      "simCheck": {
+        "netlist": "bridge with a meter\nV1 t 0 {V:spice}\nR1 t c {R1:spice}\nR2 c 0 {R2:spice}\nR3 t d {R3:spice}\nR4 d 0 {R4:spice}\nRM c d {Rm:spice}\n",
+        "probe": "i(RM)",
+        "tolerance": 0.001
+      },
+      "review": "checked"
+    },
+    {
+      "id": "mesh_r_entries",
+      "topicId": "mesh_analysis",
+      "level": "recall",
+      "prompt": "Write R·i = v with three clockwise mesh currents: I_1 in the mesh with the supply, I_2 in the mesh with R3, I_3 in the mesh with R4. Find R_22.",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "value": 5
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1200
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            2200,
+            2700
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "values": [
+            2200,
+            2700
+          ]
+        },
+        {
+          "name": "R4",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1200
+          ]
+        },
+        {
+          "name": "Rm",
+          "unit": "Ω",
+          "values": [
+            100,
+            470,
+            1000
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "S3",
+          "formula": "R2+Rm+R4",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "R1+R3+Rm",
+        "unit": "Ω",
+        "tolerance": 0.02
+      },
+      "explanation": "Mesh 2 runs through R1, R3 and the meter. Every resistance around it goes on the diagonal: R_22 = R1 + R3 + R_m = {R1} + {R3} + {Rm} = {answer}. It is the voltage mesh 2's own current would need per ampere if the other mesh currents were zero. R1 is shared with mesh 1 and the meter with mesh 3; that sharing shows up off the diagonal, as −R1 and −R_m.",
+      "hints": [
+        "Which resistors does mesh 2 pass through?",
+        "R_22 is the sum of every resistance around mesh 2, shared or not."
+      ],
+      "misconceptions": [
+        {
+          "formula": "R3+Rm",
+          "feedback": "R1 is missing. It is shared with mesh 1, but it is still in mesh 2's loop, and I_2 flows through it: every resistance around the mesh goes on the diagonal."
+        },
+        {
+          "formula": "R1+R3",
+          "feedback": "The meter's resistance is missing. Mesh 2 runs through the meter too (it is shared with mesh 3), so R_m goes on the diagonal."
+        },
+        {
+          "formula": "R1+R2+R3+R4+Rm",
+          "feedback": "That adds every resistor in the bridge. R2 and R4 aren't in mesh 2's loop; they belong to meshes 1 and 3."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Find R_23, the entry in row 2, column 3.",
+          "choices": [
+            {
+              "text": "−{Rm}: minus the meter's resistance, which meshes 2 and 3 share",
+              "correct": true,
+              "feedback": "Right: clockwise, I_3 runs through the meter opposite to I_2, so it enters mesh 2's equation as −R_m·I_3."
+            },
+            {
+              "text": "+{Rm}: the meter's resistance, which meshes 2 and 3 share",
+              "feedback": "The size is right, the sign isn't. With both clockwise, the two currents run through the meter in opposite directions, so the entry is −R_m."
+            },
+            {
+              "text": "−{R3}: minus R3, the resistor that only mesh 2 has",
+              "feedback": "R3 is in mesh 2 alone, so it appears only on the diagonal. Off the diagonal goes what the two meshes share: the meter."
+            },
+            {
+              "text": "−{S3}: minus all the resistance around mesh 3",
+              "feedback": "That is −R_33. Row 2, column 3 takes only what meshes 2 and 3 share, the meter."
+            }
+          ],
+          "explanation": "Off the diagonal, R_jk is minus the resistance two meshes share (with both clockwise), or 0 if they share none. Meshes 2 and 3 share the meter; meshes 1 and 2 share R1; meshes 1 and 3 share R2. R is symmetric."
+        }
+      ],
+      "schematic": {
+        "noBuild": "the meter is drawn as its internal resistance",
+        "netlist": "bridge with a meter\nV1 t 0 {V:spice}\nR1 t c {R1:spice}\nR2 c 0 {R2:spice}\nR3 t d {R3:spice}\nR4 d 0 {R4:spice}\nRM c d {Rm:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "R2",
+            "at": [
+              6,
+              6
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "R3",
+            "at": [
+              16,
+              0
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              6
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          },
+          {
+            "ref": "RM",
+            "at": [
+              9,
+              5
+            ],
+            "label": "meter\n{Rm}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              16,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              6,
+              6
+            ]
+          ],
+          [
+            [
+              16,
+              4
+            ],
+            [
+              16,
+              6
+            ]
+          ],
+          [
+            [
+              6,
+              5
+            ],
+            [
+              9,
+              5
+            ]
+          ],
+          [
+            [
+              13,
+              5
+            ],
+            [
+              16,
+              5
+            ]
+          ],
+          [
+            [
+              0,
+              8
+            ],
+            [
+              0,
+              10
+            ],
+            [
+              16,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            3,
+            10
+          ]
+        ],
+        "labels": [
+          {
+            "text": "c",
+            "at": [
+              7,
+              5
+            ]
+          },
+          {
+            "text": "d",
+            "at": [
+              14,
+              5
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "mesh_shared_difference",
+      "topicId": "mesh_analysis",
+      "level": "recall",
+      "prompt": "Solving R·i = v with both mesh currents clockwise gives I_1 = {I1} (the mesh with V1) and I_2 = {I2}. Find the current down through R3.",
+      "variables": [
+        {
+          "name": "V1",
+          "unit": "V",
+          "values": [
+            9,
+            12
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1200,
+            1500,
+            1800,
+            2200,
+            2700,
+            3300
+          ]
+        },
+        {
+          "name": "R4",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "det",
+          "formula": "(R1+R3)*(R2+R3+R4)-R3*R3",
+          "unit": ""
+        },
+        {
+          "name": "I1",
+          "formula": "V1*(R2+R3+R4)/det",
+          "unit": "A"
+        },
+        {
+          "name": "I2",
+          "formula": "V1*R3/det",
+          "unit": "A"
+        },
+        {
+          "name": "Isum",
+          "formula": "I1+I2",
+          "unit": "A"
+        },
+        {
+          "name": "Va",
+          "formula": "R3*(I1-I2)",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "I1-I2",
+        "unit": "A",
+        "tolerance": 0.02
+      },
+      "explanation": "R3 is the branch the two meshes share. Clockwise, I_1 runs down through it and I_2 runs up through it, so it carries the difference: I_1 − I_2 = {I1} − {I2} = {answer}, down. Check with Ohm's law: V_a = {answer} × {R3} = {Va}, and R2 plus R4 carry V_a/(R2 + R4), which is I_2. A mesh current is bookkeeping: it is a real branch current only in a resistor that belongs to one mesh alone.",
+      "hints": [
+        "Which mesh currents pass through R3, and in which direction does each go?",
+        "R3 is shared: it carries I_1 down and I_2 up."
+      ],
+      "misconceptions": [
+        {
+          "formula": "I1+I2",
+          "feedback": "That adds the two mesh currents. Both run clockwise, so in the shared branch they go opposite ways: I_1 down through R3, I_2 up. R3 carries I_1 − I_2."
+        },
+        {
+          "formula": "I1",
+          "feedback": "That is I_1 alone, the current in R1 and V1. R3 is shared with mesh 2, whose current runs up through it, so R3 carries I_1 − I_2."
+        },
+        {
+          "formula": "I2-I1",
+          "feedback": "That is the current up through R3. Clockwise, I_1 runs down through R3 and is the larger, so the current down is I_1 − I_2, a positive number."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Find the current through R4.",
+          "choices": [
+            {
+              "text": "I_2: R4 is in mesh 2 alone, so it carries I_2 and nothing else",
+              "correct": true,
+              "feedback": "Right: a resistor that only one mesh passes through carries that mesh current alone. R2 carries the same I_2."
+            },
+            {
+              "text": "I_1 − I_2: the same as R3, since R3 and R4 are both in mesh 2",
+              "feedback": "R3 is shared with mesh 1 and carries I_1 − I_2. R4 is in mesh 2 only, so only I_2 flows through it."
+            },
+            {
+              "text": "I_1: all of the supply's current returns to ground through R4",
+              "feedback": "The supply's current I_1 splits at node a: I_1 − I_2 goes down through R3 and I_2 through R2 and R4."
+            },
+            {
+              "text": "I_1 + I_2: R4 is on the return path for both mesh currents",
+              "feedback": "Only mesh 2 passes through R4. Mesh 1 closes through R3, so R4 carries I_2 alone."
+            }
+          ],
+          "explanation": "A resistor in one mesh carries that mesh's current; a resistor shared by two meshes carries the difference (both clockwise). KCL holds at node a: I_1 comes in through R1, I_1 − I_2 leaves through R3 and I_2 through R2."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n{V1}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              14,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              20,
+              2
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              14,
+              0
+            ]
+          ],
+          [
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              20,
+              0
+            ],
+            [
+              20,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              20,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              12,
+              0
+            ]
+          }
+        ],
+        "netlist": "ladder\nV1 p 0 {V1:spice}\nR1 p a {R1:spice}\nR3 a 0 {R3:spice}\nR2 a b {R2:spice}\nR4 b 0 {R4:spice}\n"
+      },
+      "simCheck": {
+        "netlist": "ladder\nV1 p 0 {V1:spice}\nR1 p a {R1:spice}\nR3 a 0 {R3:spice}\nR2 a b {R2:spice}\nR4 b 0 {R4:spice}\n",
+        "probe": "i(R3)",
+        "tolerance": 0.001
+      },
+      "review": "checked"
+    },
+    {
+      "id": "mesh_design_null",
+      "topicId": "mesh_analysis",
+      "prompt": "Choose R4 (E96) to null the meter, to within 2% of exact balance.",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "value": 5
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E96",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E96",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E96",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "Rm",
+          "unit": "Ω",
+          "values": [
+            100,
+            470,
+            1000
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "R4need",
+          "formula": "R2*R3/R1",
+          "unit": "Ω"
+        },
+        {
+          "name": "Vc",
+          "formula": "V*R2/(R1+R2)",
+          "unit": "V"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "R4",
+            "label": "R4",
+            "unit": "Ω",
+            "series": "E96",
+            "min": 100,
+            "max": 100000
+          }
+        ],
+        "result": "R4",
+        "resultLabel": "R4",
+        "resultUnit": "Ω",
+        "target": "R2*R3/R1",
+        "tolerance": 0.02
+      },
+      "explanation": "The meter reads zero when c and d sit at the same voltage. Then no current flows through it, the meshes decouple, and each arm is a plain divider: V·R2/(R1 + R2) = V·R4/(R3 + R4), which gives R4/R3 = R2/R1, so R4 = R2·R3/R1 = {R4need}. E96 values are about 2.4% apart, so the nearest one is within about 1.2% (sometimes two qualify). Neither the meter's resistance nor the supply voltage enters: at balance the meter carries no current, so it drops nothing. That is why a bridge measures a resistance by a null.",
+      "hints": [
+        "At null, what current flows through the meter, and what does that make each arm?",
+        "No meter current: V_c = V·R2/(R1 + R2) and V_d = V·R4/(R3 + R4). Set them equal and solve for R4."
+      ],
+      "schematic": {
+        "noBuild": "the meter is drawn as its internal resistance",
+        "netlist": "bridge with a meter\nV1 t 0 {V:spice}\nR1 t c {R1:spice}\nR2 c 0 {R2:spice}\nR3 t d {R3:spice}\nR4 d 0 {R4:spice}\nRM c d {Rm:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "R2",
+            "at": [
+              6,
+              6
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "R3",
+            "at": [
+              16,
+              0
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              6
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          },
+          {
+            "ref": "RM",
+            "at": [
+              9,
+              5
+            ],
+            "label": "meter\n{Rm}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              16,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              6,
+              6
+            ]
+          ],
+          [
+            [
+              16,
+              4
+            ],
+            [
+              16,
+              6
+            ]
+          ],
+          [
+            [
+              6,
+              5
+            ],
+            [
+              9,
+              5
+            ]
+          ],
+          [
+            [
+              13,
+              5
+            ],
+            [
+              16,
+              5
+            ]
+          ],
+          [
+            [
+              0,
+              8
+            ],
+            [
+              0,
+              10
+            ],
+            [
+              16,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            3,
+            10
+          ]
+        ],
+        "labels": [
+          {
+            "text": "c",
+            "at": [
+              7,
+              5
+            ]
+          },
+          {
+            "text": "d",
+            "at": [
+              14,
+              5
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "mesh_trouble_bridge",
+      "topicId": "mesh_analysis",
+      "level": "design",
+      "prompt": "The bridge was built to balance, with R3 as marked. The meter reads {Im} from c to d. R1, R2, R4 and the meter's resistance are as marked. Find R3's actual value.",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "value": 5
+        },
+        {
+          "name": "Ra",
+          "unit": "Ω",
+          "values": [
+            1000,
+            2200
+          ]
+        },
+        {
+          "name": "Rn",
+          "unit": "Ω",
+          "values": [
+            1000,
+            2200,
+            4700
+          ]
+        },
+        {
+          "name": "Rm",
+          "unit": "Ω",
+          "values": [
+            100,
+            470,
+            1000
+          ]
+        },
+        {
+          "name": "k",
+          "unit": "",
+          "values": [
+            0.82,
+            0.91,
+            1.1,
+            1.2
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "R3a",
+          "formula": "Rn*k",
+          "unit": "Ω"
+        },
+        {
+          "name": "det",
+          "formula": "(2*Ra)*((Ra+R3a+Rm)*(Ra+Rm+Rn)-Rm*Rm)-Ra*Ra*(Ra+Rm+Rn)-2*Ra*Ra*Rm-(Ra+R3a+Rm)*Ra*Ra",
+          "unit": ""
+        },
+        {
+          "name": "Im",
+          "formula": "V*Ra*(R3a-Rn)/det",
+          "unit": "A"
+        },
+        {
+          "name": "Dm",
+          "formula": "2*Ra*Rn",
+          "unit": ""
+        },
+        {
+          "name": "I1b",
+          "formula": "((V+Ra*Im)*(Ra+Rn)-2*Ra*(Ra+Rm+Rn)*Im)/Dm",
+          "unit": "A"
+        },
+        {
+          "name": "I2b",
+          "formula": "(Ra*(V+Ra*Im)-2*Ra*(Ra+Rm+Rn)*Im)/Dm",
+          "unit": "A"
+        },
+        {
+          "name": "I3b",
+          "formula": "(Ra*(V+Ra*Im)-2*Ra*(Ra+Rm+Rn)*Im)/Dm+Im",
+          "unit": "A"
+        },
+        {
+          "name": "Vm",
+          "formula": "Im*Rm",
+          "unit": "V"
+        },
+        {
+          "name": "Vd0",
+          "formula": "V/2-Im*Rm",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "(Ra*(I1b-I2b)+Rm*Im)/I2b",
+        "unit": "Ω",
+        "tolerance": 0.02
+      },
+      "explanation": "Mesh currents clockwise: I_1 with the supply, I_2 with R3, I_3 with R4. The meter carries I_m = I_3 − I_2, and I_m = {Im}. Meshes 1 and 3 don't contain R3, so with I_3 = I_2 + I_m they are two equations in I_1 and I_2. Mesh 1: {V} = R1·(I_1 − I_2) + R2·(I_1 − I_3). Mesh 3: 0 = R2·(I_3 − I_1) + R_m·I_m + R4·I_3. Solved: I_1 = {I1b}, I_2 = {I2b}, I_3 = {I3b}. Mesh 2 then gives R3: R3·I_2 = R1·(I_1 − I_2) + R_m·I_m, so R3 = {answer}. Marked {Rn}: outside any 5% part's tolerance.",
+      "hints": [
+        "The meter current is I_3 − I_2. Which mesh equations don't contain R3?",
+        "Use meshes 1 and 3, with I_3 = I_2 + I_meter, to find I_1 and I_2. Then mesh 2: R3·I_2 = R1·(I_1 − I_2) + R_m·I_meter."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Rn",
+          "feedback": "That is R3's marked value. With R3 as marked the bridge balances and the meter reads 0; it reads {Im}, so R3 is something else."
+        },
+        {
+          "formula": "Rn*(V-(V/2-Im*Rm))/(V/2-Im*Rm)",
+          "when": "abs(Rn*(V-(V/2-Im*Rm))/(V/2-Im*Rm)-(Ra*(I1b-I2b)+Rm*Im)/I2b)-0.03*Rn*k",
+          "feedback": "That takes c at V/2 as if no current left it, and d at V_c − I·R_m. The meter's current loads both arms, so c isn't at V/2: the mesh equations account for it."
+        }
+      ],
+      "schematic": {
+        "noBuild": "the meter is drawn as its internal resistance",
+        "netlist": "bridge with a meter\nV1 t 0 {V:spice}\nR1 t c {Ra:spice}\nR2 c 0 {Ra:spice}\nR3 t d {Rn:spice}\nR4 d 0 {Rn:spice}\nRM c d {Rm:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n{Ra}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "R2",
+            "at": [
+              6,
+              6
+            ],
+            "rot": 90,
+            "label": "R2\n{Ra}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "R3",
+            "at": [
+              16,
+              0
+            ],
+            "rot": 90,
+            "label": "R3\nmarked {Rn}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              6
+            ],
+            "rot": 90,
+            "label": "R4\n{Rn}"
+          },
+          {
+            "ref": "RM",
+            "at": [
+              9,
+              5
+            ],
+            "label": "meter\n{Rm}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              16,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              6,
+              6
+            ]
+          ],
+          [
+            [
+              16,
+              4
+            ],
+            [
+              16,
+              6
+            ]
+          ],
+          [
+            [
+              6,
+              5
+            ],
+            [
+              9,
+              5
+            ]
+          ],
+          [
+            [
+              13,
+              5
+            ],
+            [
+              16,
+              5
+            ]
+          ],
+          [
+            [
+              0,
+              8
+            ],
+            [
+              0,
+              10
+            ],
+            [
+              16,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            3,
+            10
+          ]
+        ],
+        "labels": [
+          {
+            "text": "c",
+            "at": [
+              7,
+              5
+            ]
+          },
+          {
+            "text": "d",
+            "at": [
+              14,
+              5
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "mesh_what_if_v2",
+      "topicId": "mesh_analysis",
+      "prompt": "Swap V2 for a 9 V supply. What happens to the current through R1? Assume ideal supplies.",
+      "variables": [
+        {
+          "name": "V1",
+          "unit": "V",
+          "values": [
+            9,
+            12
+          ]
+        },
+        {
+          "name": "V2",
+          "unit": "V",
+          "value": 5
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the current through R1",
+        "formula": "(V1*(R2+R3)-R3*V2)/(R1*R2+R1*R3+R2*R3)",
+        "unit": "A",
+        "change": {
+          "V2": "9"
+        },
+        "feedback": {
+          "same": "The meshes are coupled through R3: R_12 = −R3, so mesh 1's current depends on mesh 2's source. A higher V2 raises node a, and R1 then has less voltage across it ({V1} − V_a).",
+          "up": "V2 feeds node a through R2, so a higher V2 raises V_a. R1 then has less voltage across it, {V1} − V_a, so its current falls."
+        }
+      },
+      "explanation": "I_1 = (V1·(R2 + R3) − R3·V2)/(R1·R2 + R1·R3 + R2·R3): V2 enters with a minus sign, through the shared R3. Raising V2 from 5 V to 9 V lowers I_1 from {before} to {after}. In node terms, V_a rises, so R1's voltage, {V1} − V_a, shrinks.",
+      "hints": [
+        "Does V2 appear in mesh 1's current? Through which shared part?"
+      ],
+      "followUps": [
+        {
+          "prompt": "Which current rises?",
+          "choices": [
+            {
+              "text": "The current down through R3",
+              "correct": true,
+              "feedback": "Right: R3 carries I_1 − I_2 = (V1·R2 + V2·R1)/det, which grows with V2. Node a rises, and R3 has more voltage across it."
+            },
+            {
+              "text": "The current through R1",
+              "feedback": "R1's current falls: node a rises, so R1 has less voltage across it."
+            },
+            {
+              "text": "None: each supply drives only its own mesh",
+              "feedback": "The meshes share R3, so each supply's current depends on both. V2 now lifts node a, and R3 takes more current."
+            },
+            {
+              "text": "The current from a into V2's + terminal",
+              "feedback": "That current falls: with V2 higher, less current flows from a into V2 (or more flows out of it)."
+            }
+          ],
+          "explanation": "Shared resistance couples the meshes. A change in one mesh's source moves every mesh current; R·i = v shows it as the off-diagonal −R3."
+        }
+      ],
+      "schematic": {
+        "netlist": "two meshes\nV1 p 0 {V1:spice}\nR1 p a {R1:spice}\nR3 a 0 {R3:spice}\nR2 a q {R2:spice}\nV2 q 0 {V2:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n{V1}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              14,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              20,
+              2
+            ],
+            "rot": 90,
+            "label": "V2\n{V2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              14,
+              0
+            ]
+          ],
+          [
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              20,
+              0
+            ],
+            [
+              20,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              20,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              12,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "mesh_current_source",
+      "topicId": "mesh_analysis",
+      "prompt": "Find the mesh current I_1, in the mesh with V1. Take both mesh currents clockwise. Assume ideal sources.",
+      "variables": [
+        {
+          "name": "V1",
+          "unit": "V",
+          "values": [
+            9,
+            12
+          ]
+        },
+        {
+          "name": "Is",
+          "unit": "A",
+          "values": [
+            0.0005,
+            0.001
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "(V1+R3*Is)/(R1+R3)",
+        "unit": "A",
+        "tolerance": 0.02
+      },
+      "explanation": "The current source is in mesh 2 and in no other mesh, so it fixes I_2 = {Is}, clockwise, the same way as its arrow: no KVL equation is needed for mesh 2. Mesh 1: V1 = R1·I_1 + R3·(I_1 − I_2), so I_1 = (V1 + R3·{Is})/(R1 + R3) = {answer}. R2 doesn't appear: it is in series with the current source, which forces {Is} through it whatever it is.",
+      "hints": [
+        "What does the current source fix in mesh 2?",
+        "I_2 = I_S. Then one equation, KVL around mesh 1, gives I_1."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V1/(R1+R3)",
+          "feedback": "That ignores the current source. It forces I_2 = I_S through R3 the other way, so R3's drop in mesh 1 is R3·(I_1 − I_S)."
+        },
+        {
+          "formula": "(V1-R3*Is)/(R1+R3)",
+          "feedback": "A sign slipped. I_2 runs up through R3, against I_1, so R3's drop is R3·(I_1 − I_2) and I_2 adds to the left side's V1: I_1 = (V1 + R3·I_S)/(R1 + R3)."
+        },
+        {
+          "formula": "(V1+R3*Is)/(R1+R2+R3)",
+          "feedback": "R2 isn't in mesh 1. It is in mesh 2, in series with the current source, which fixes that mesh's current whatever R2 is."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why doesn't R2 appear in the answer?",
+          "choices": [
+            {
+              "text": "The source fixes I_2 whatever R2 is; R2 only sets the source's voltage",
+              "correct": true,
+              "feedback": "Right: an ideal current source delivers its current at any voltage. A larger R2 changes the voltage across the source, not any current."
+            },
+            {
+              "text": "R2 is in parallel with R3, so the two cancel",
+              "feedback": "R2 and R3 don't share both ends: R2 runs from a to the current source. And parallel parts never cancel; they combine."
+            },
+            {
+              "text": "R2 carries no current, since the source blocks it",
+              "feedback": "R2 carries the source's full {Is}: it is in series with it."
+            },
+            {
+              "text": "Both meshes share R2, so it drops out of the difference",
+              "feedback": "R2 is in mesh 2 only. It drops out because the current source fixes mesh 2's current, not because it is shared."
+            }
+          ],
+          "explanation": "A current source on an outer branch fixes its mesh current, and anything in series with it changes only the source's voltage. One mesh equation fewer: that is the mesh method's counterpart of a voltage source fixing a node."
+        }
+      ],
+      "schematic": {
+        "netlist": "current source mesh\nV1 p 0 {V1:spice}\nR1 p a {R1:spice}\nR3 a 0 {R3:spice}\nR2 a q {R2:spice}\nIS q 0 {Is:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n{V1}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              14,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "IS",
+            "at": [
+              20,
+              2
+            ],
+            "rot": 90,
+            "label": "{Is}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              14,
+              0
+            ]
+          ],
+          [
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              20,
+              0
+            ],
+            [
+              20,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              20,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              12,
+              0
+            ]
+          }
+        ]
+      },
+      "simCheck": {
+        "netlist": "current source mesh\nV1 p 0 {V1:spice}\nR1 p a {R1:spice}\nR3 a 0 {R3:spice}\nR2 a q {R2:spice}\nIS q 0 {Is:spice}\n",
+        "probe": "i(R1)",
+        "tolerance": 0.001
+      },
+      "review": "checked"
+    }
+  ]
+}

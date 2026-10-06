@@ -12,7 +12,8 @@
       ],
       "prerequisites": [
         "ohms_law",
-        "si_prefixes"
+        "si_prefixes",
+        "loops_nodes"
       ],
       "lensNotes": {
         "circuit": "Series parts share a current; parallel parts share a voltage. Most resistor networks reduce to a single resistance by combining pairs from the inside out.",
@@ -34,12 +35,13 @@
       ],
       "prerequisiteNotes": {
         "ohms_law": "Each series and parallel rule comes from applying V = IR to every resistor: in series the voltages add at one current; in parallel the currents add at one voltage.",
-        "si_prefixes": "Resistances come as 4.7 kΩ or 220 Ω; adding and combining them means working comfortably across prefixes."
+        "si_prefixes": "Resistances come as 4.7 kΩ or 220 Ω; adding and combining them means working comfortably across prefixes.",
+        "loops_nodes": "Recognizing series and parallel from the nodes comes first; this topic combines the resistances once the connections are read."
       },
       "goals": [
         "Find the total resistance of resistors in series, and of resistors in parallel",
         "Reduce a series-parallel network to one resistance by combining pairs from the inside out",
-        "Tell from a schematic which parts are in series and which are in parallel, by tracing the nodes their ends connect to",
+        "Read which resistors are in series and which are in parallel from the nodes of a network, even one drawn to mislead, before combining them",
         "Explain why adding a resistor in parallel always lowers the total resistance, whatever its value"
       ],
       "intuition": "A resistor added in series is one more part the same current must pass through, so resistance goes up; a resistor added in parallel is one more path for current between the same two nodes, so resistance goes down, below the smallest branch.",

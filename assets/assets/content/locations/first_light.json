@@ -4,6 +4,107 @@
   "region": "indicators",
   "title": "First light",
   "brief": "A 9 V battery, a 1 kΩ resistor and a red LED are on the Bench, wired except for the return from the LED's cathode to the battery's negative terminal. Before you run anything, predict the LED's current: the resistor drops what the LED leaves of the 9 V, and a red LED drops about 1.9 V when lit. Close the loop with one wire (W), press Run (F5) and read the current with the meter's A and W tool on the LED. Then submit the design.",
+  "card": {
+    "goal": "Close the loop and light the LED.",
+    "predict": "Predict the LED current before you run it.",
+    "objectives": {
+      "led_current": "LED current",
+      "led_voltage": "V across LED"
+    },
+    "parts": {
+      "V1": {
+        "label": "9 V battery",
+        "detail": "Modeled as an ideal 9 V source"
+      },
+      "R1": {
+        "label": "1 kΩ resistor",
+        "detail": "1 kΩ, given and fixed"
+      },
+      "D1": {
+        "label": "Red LED",
+        "detail": "Bench model DRED: about 1.9 V when lit"
+      }
+    },
+    "details": [
+      "Open: the return from the LED's cathode to the battery's negative terminal. One wire closes it.",
+      "R1 drops what the LED leaves of the 9 V."
+    ]
+  },
+  "silhouette": {
+    "netlist": "first light\nV1 1 0 9\nR1 1 2 1k\nD1 2 0 DRED\n",
+    "parts": [
+      {
+        "ref": "V1",
+        "at": [
+          0,
+          2
+        ],
+        "rot": 90
+      },
+      {
+        "ref": "R1",
+        "at": [
+          2,
+          0
+        ]
+      },
+      {
+        "ref": "D1",
+        "at": [
+          8,
+          2
+        ],
+        "rot": 90,
+        "symbol": "led"
+      }
+    ],
+    "wires": [
+      [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      [
+        [
+          6,
+          0
+        ],
+        [
+          8,
+          0
+        ],
+        [
+          8,
+          2
+        ]
+      ],
+      [
+        [
+          8,
+          6
+        ],
+        [
+          0,
+          6
+        ]
+      ]
+    ],
+    "grounds": [
+      [
+        0,
+        6
+      ]
+    ]
+  },
   "revealedAtStart": true,
   "topics": [],
   "neighbors": [

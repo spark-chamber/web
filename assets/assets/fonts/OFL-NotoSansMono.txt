@@ -1,16 +1,4 @@
-Noto Sans: Copyright 2022 The Noto Project Authors (https://github.com/notofonts/latin-greek-cyrillic)
-
-Noto Sans Math: Copyright 2022 Google LLC. All Rights Reserved. (https://github.com/notofonts/math)
-
-Noto Sans Symbols 2: Copyright 2022 The Noto Project Authors (https://github.com/notofonts/symbols)
-
-Noto Sans Mono: Copyright 2022 The Noto Project Authors (https://github.com/notofonts/latin-greek-cyrillic)
-
-Noto Sans Math and Noto Sans Symbols 2 are bundled as subsets (arrows, math
-operators, technical symbols, geometric shapes and dingbats), and Noto Sans
-Mono as a subset (Basic Latin, Latin-1, Greek, general punctuation, super-
-and subscripts and the minus sign), made with fontTools pyftsubset; see the
-fonts section of pubspec.yaml.
+Copyright 2022 The Noto Project Authors (https://github.com/notofonts/latin-greek-cyrillic)
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:

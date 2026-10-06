@@ -1,0 +1,3540 @@
+{
+  "topics": [
+    {
+      "id": "nodal_analysis",
+      "title": "Node-voltage analysis",
+      "mapTitle": "Node-voltage analysis",
+      "glyph": "node",
+      "summary": "Write Kirchhoff's current law at every unknown node at once, as G·v = i: read G and i off the drawing and solve, by hand for two nodes and with the Matrix mode for more. It is what SPICE's .op solves.",
+      "lenses": [
+        "circuit",
+        "math"
+      ],
+      "prerequisites": [
+        "kirchhoff"
+      ],
+      "lensNotes": {
+        "circuit": "Pick ground, name every other node, and write one KCL row per unknown node. A source to ground fixes its node, which then only feeds current into its neighbors' rows. The simulator's .op solves the same equations, with every voltage source's current as an extra unknown (modified nodal analysis).",
+        "math": "G·v = i is a linear system. For resistors and independent sources G is symmetric, its diagonal entries are positive and the rest are negative or zero. Each diagonal entry is at least the sum of the sizes of the other entries in its row (more when the node has a resistor to a known node), which is why G can be solved whenever every node has some path to ground. Two unknowns solve by Cramer's rule; more, by elimination."
+      },
+      "formulas": [
+        {
+          "label": "Node equations",
+          "tex": "G\\,\\mathbf{v} = \\mathbf{i}"
+        },
+        {
+          "label": "Diagonal entry",
+          "tex": "G_{kk} = \\sum \\frac{1}{R}\\ \\ (\\text{every resistor at node } k)"
+        },
+        {
+          "label": "Off-diagonal entry",
+          "tex": "G_{jk} = -\\frac{1}{R_{jk}}\\ \\ (0 \\text{ if nothing joins } j, k)"
+        },
+        {
+          "label": "Source current into node k",
+          "tex": "i_k = \\sum \\frac{V_s}{R_s} + \\sum I_s"
+        },
+        {
+          "label": "Two unknowns (Cramer)",
+          "tex": "V_a = \\frac{i_a G_{bb} - G_{ab}\\, i_b}{G_{aa} G_{bb} - G_{ab} G_{ba}}"
+        }
+      ],
+      "prerequisiteNotes": {
+        "kirchhoff": "KCL at one node, with each branch current written as a voltage difference over a resistance, is one row of G·v = i. This topic writes every row at once and solves them together."
+      },
+      "goals": [
+        "Write the conductance matrix G and the source currents i of a resistor network by inspection",
+        "Solve G·v = i for two node voltages by hand, and for three or more with the calculator's Matrix mode",
+        "Handle sources: a current source feeds i directly, a voltage source to ground fixes its node, and a floating one makes a supernode (or, as SPICE does, an extra unknown and row)",
+        "Find a fault or a wrong part from measured node voltages, using KCL at each node"
+      ],
+      "intuition": "Each node voltage settles where the currents through its resistors balance what the sources feed in; G·v = i writes that balance for every node at once, and solving it is plain elimination.",
+      "why": "Each resistor's current, (V_j − V_k)/R, is a straight-line function of the node voltages, so KCL at every node gives a set of linear equations: G·v = i. A node's diagonal entry is the total conductance touching it, the current that would leave per volt if that node alone rose. The entry between two nodes is minus the conductance joining them: raising the neighbor sends current in instead of out. One resistor between nodes j and k appears in both their rows with the same 1/R, so G_jk = G_kj: G is symmetric for any network of resistors and independent sources. An element whose current at one node is set by the voltage at another, such as a transistor's collector current set by its base voltage, adds a term to one row only and breaks the symmetry. A voltage source has no conductance: its current is whatever the rest of the circuit demands. Modified nodal analysis, the method SPICE's .op uses, keeps that current as an extra unknown and adds the source's own equation, V_+ − V_− = V_s, as an extra row, with a zero on its diagonal.",
+      "explanation": "Kirchhoff's laws stopped at one node: KCL with Ohm's law for each branch. Node-voltage analysis does every node at once, in matrix form. Choose a reference node, ground, and name the others. Nodes held by a voltage source to ground are known; the rest are the unknowns, v. Read G off the drawing. On the diagonal: the sum of the conductances (1/R) of every resistor touching that node. Off the diagonal: minus the conductance of the resistor joining the two nodes, or 0 where none does. The right side, i, is the current the sources feed into each node: a current source's value, or V_s/R for a resistor to a known node at V_s. Then solve G·v = i. Two unknowns go by hand with Cramer's rule; three or more go to the calculator's Matrix mode (Nodal), which shows the elimination. With v known, every branch current is (V_j − V_k)/R. A voltage source between two unknown nodes makes a supernode: one KCL equation around both nodes, plus V_j − V_k = V_s. SPICE's .op solves the same system, with each voltage source's current as one more unknown.",
+      "workedExample": {
+        "problem": "A 12 V rail feeds node a through R1 = 1 kΩ, and a 5 V rail feeds node b through R5 = 2 kΩ. R2 = 2 kΩ joins a and b; R3 = 2 kΩ goes from a to ground and R4 = 1 kΩ from b to ground. Find V_a and V_b.",
+        "steps": [
+          "Ground is the reference. The two rails are known, so the unknowns are V_a and V_b.",
+          "Diagonal: G_aa = 1/1 kΩ + 1/2 kΩ + 1/2 kΩ = 2 mS (R1, R2 and R3 touch a); G_bb = 1/2 kΩ + 1/1 kΩ + 1/2 kΩ = 2 mS (R2, R4 and R5 touch b).",
+          "Off the diagonal: only R2 joins a and b, so G_ab = G_ba = −1/2 kΩ = −0.5 mS.",
+          "Right side: i_a = 12 V/1 kΩ = 12 mA (from the 12 V rail through R1); i_b = 5 V/2 kΩ = 2.5 mA.",
+          "Row a: 2 mS·V_a − 0.5 mS·V_b = 12 mA. Row b: −0.5 mS·V_a + 2 mS·V_b = 2.5 mA. Determinant: (2 mS)(2 mS) − (0.5 mS)(0.5 mS) = 3.75 mS².",
+          "Cramer's rule: V_a = (12 mA × 2 mS + 0.5 mS × 2.5 mA)/3.75 mS² = 6.73 V; V_b = (2 mS × 2.5 mA + 0.5 mS × 12 mA)/3.75 mS² = 2.93 V.",
+          "Check KCL at a: (12 V − 6.73 V)/1 kΩ = 5.27 mA flows in through R1; 6.73 V/2 kΩ = 3.37 mA leaves through R3 and (6.73 V − 2.93 V)/2 kΩ = 1.90 mA through R2; 3.37 mA + 1.90 mA = 5.27 mA.",
+          "The simulator's .op on the same netlist gives V(a) = 6.733 V and V(b) = 2.933 V."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 10 \"DC Network Analysis\", section \"Node voltage method\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_10.html#xtocid87885",
+          "note": "Choose a reference node and write one KCL equation per remaining node; each diagonal coefficient is the sum of the conductances at that node, every other coefficient is minus the conductance between the two nodes, and the right side is the source current into each node (a voltage source with a series resistor becomes a current source with a parallel resistor), with two- and three-node examples checked against SPICE."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), \"SPICE Modeling of Resistor Circuits\", ch. 6 \"Primitive circuit examples\", section 6.1 \"DC voltage source with .op analysis\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_spice_r.pdf",
+          "note": "A netlist ending in .op makes SPICE report the DC voltage at every numbered node, with ground as node 0, and also the current through each voltage source."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "nod_g_diagonal",
+      "topicId": "nodal_analysis",
+      "level": "recall",
+      "prompt": "Write G·v = i for the unknown nodes a and b. Find G_aa, the entry in row a, column a.",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R4",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R5",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "G1",
+          "formula": "1/R1",
+          "unit": "S"
+        },
+        {
+          "name": "G2",
+          "formula": "1/R2",
+          "unit": "S"
+        },
+        {
+          "name": "G3",
+          "formula": "1/R3",
+          "unit": "S"
+        },
+        {
+          "name": "Gbb",
+          "formula": "1/R2+1/R4+1/R5",
+          "unit": "S"
+        }
+      ],
+      "answer": {
+        "formula": "1/R1+1/R2+1/R3",
+        "unit": "S",
+        "tolerance": 0.02
+      },
+      "explanation": "Every resistor with one end on node a adds its conductance to G_aa: R1 (to the 12 V rail), R2 (to b) and R3 (to ground). G_aa = 1/{R1} + 1/{R2} + 1/{R3} = {G1} + {G2} + {G3} = {answer}. It is the current that would leave a per volt if V_a alone rose with every other node held: each resistor at a carries 1/R more. Where a resistor's other end goes doesn't matter on the diagonal. It matters elsewhere: the 12 V rail feeds i_a = 12 V/R1 on the right side, and R2 sets the off-diagonal entry G_ab = −1/R2.",
+      "hints": [
+        "Which resistors have one end on node a?",
+        "G_aa is the sum of 1/R for every resistor touching a, wherever its other end goes."
+      ],
+      "misconceptions": [
+        {
+          "formula": "1/(R1+R2+R3)",
+          "feedback": "You added the resistances first. R1, R2 and R3 are separate paths out of node a, so their conductances add: G_aa = 1/R1 + 1/R2 + 1/R3."
+        },
+        {
+          "formula": "1/R1+1/R3",
+          "feedback": "R2 is missing. Its other end is node b, not ground, but it still touches a: if V_a rises with V_b held, R2 carries 1/R2 more out of a. Every resistor at a goes on the diagonal."
+        },
+        {
+          "formula": "1/R2+1/R3",
+          "feedback": "R1 is missing. Its other end is the 12 V rail, a known node, but R1 still carries more current out of a when V_a rises. The rail's voltage goes on the right side, i_a = 12 V/R1; R1's conductance still goes on the diagonal."
+        },
+        {
+          "formula": "1/R1+1/R2+1/R3+1/R4+1/R5",
+          "feedback": "That adds every resistor in the circuit. R4 and R5 don't touch a; they belong in G_bb."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Find G_ab, the entry in row a, column b.",
+          "choices": [
+            {
+              "text": "−{G2}: minus the conductance of R2, the only resistor joining a and b",
+              "correct": true,
+              "feedback": "Right: row a counts current leaving a. Raising V_b by 1 V with a held pushes 1/R2 into a through R2, the opposite of leaving it, so the entry is −1/R2."
+            },
+            {
+              "text": "+{G2}: the conductance of R2, the only resistor joining a and b",
+              "feedback": "The size is right, the sign isn't. A higher V_b pushes current into a through R2, the opposite of leaving it, so the entry is −1/R2."
+            },
+            {
+              "text": "0: neither R4 nor R5 touches node a, so b doesn't enter row a",
+              "feedback": "Off the diagonal, the entry is set by what joins the two nodes. R4 and R5 don't, but R2 does: G_ab = −1/R2."
+            },
+            {
+              "text": "−{Gbb}: minus the total conductance at node b, the column's node",
+              "feedback": "That is −G_bb: every resistor at b. Row a, column b takes only the resistor between a and b, R2."
+            }
+          ],
+          "explanation": "Off the diagonal, G_jk is minus the conductance joining nodes j and k, or 0 if nothing joins them. Here G_ab = −1/{R2} = −{G2}, and G_ba is the same: R2 appears in both rows."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          },
+          {
+            "ref": "R5",
+            "at": [
+              18,
+              0
+            ],
+            "label": "R5\n{R5}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              24,
+              2
+            ],
+            "rot": 90,
+            "label": "5 V"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              22,
+              0
+            ],
+            [
+              24,
+              0
+            ],
+            [
+              24,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              24,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              9,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              15,
+              0
+            ]
+          }
+        ],
+        "netlist": "two-rail network\nV1 p 0 12\nR1 p a {R1:spice}\nR2 a b {R2:spice}\nR3 a 0 {R3:spice}\nR4 b 0 {R4:spice}\nR5 b q {R5:spice}\nV2 q 0 5\n"
+      },
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "nod_i_source",
+      "topicId": "nodal_analysis",
+      "level": "recall",
+      "prompt": "Write G·v = i for the unknown nodes a and b. Find i_a, the source current on the right side of row a.",
+      "variables": [
+        {
+          "name": "Is",
+          "unit": "A",
+          "values": [
+            0.001,
+            0.002,
+            0.005
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R4",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "iR1",
+          "formula": "12/R1",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "12/R1+Is",
+        "unit": "A",
+        "tolerance": 0.02
+      },
+      "explanation": "i_a is the current the sources push into a, counted as if a were held at 0 V. The current source feeds {Is} straight in. The 12 V rail feeds a through R1: 12 V/{R1} = {iR1}. So i_a = {iR1} + {Is} = {answer}. R1 really carries (12 V − V_a)/R1; KCL at a moves the −V_a/R1 part to the left side, into G_aa, and leaves 12 V/R1 on the right. R2, R3 and R4 connect no source to a: they go only into G.",
+      "hints": [
+        "Which sources push current into a, directly or through a resistor from a known node?",
+        "i_a = 12 V/R1 + the current source's value."
+      ],
+      "misconceptions": [
+        {
+          "formula": "12/R1",
+          "feedback": "That leaves out the current source. It feeds its current straight into a whatever V_a is, so its value goes on the right side of row a."
+        },
+        {
+          "formula": "Is",
+          "feedback": "That leaves out the 12 V rail. It reaches a through R1, and KCL at a puts 12 V/R1 on the right side, with R1's conductance in G_aa."
+        },
+        {
+          "formula": "12/R1-Is",
+          "feedback": "A sign slipped. The source's arrow points into a, so its current adds to what the rail feeds in through R1."
+        },
+        {
+          "formula": "12/(R1+R2)+Is",
+          "feedback": "12 V/(R1 + R2) is the current of R1 and R2 as a divider string. The right side takes R1 alone: what the rail would push in with a held at 0 V. The part of R1's current that depends on V_a is already in G_aa."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "R1 carries (12 V − V_a)/R1 into a, not 12 V/R1. Where did the −V_a/R1 part go?",
+          "choices": [
+            {
+              "text": "Into G_aa: it is 1/R1 times V_a, so it moves to the left side",
+              "correct": true,
+              "feedback": "Right: KCL at a reads (V_a − 12 V)/R1 + V_a/R2 + (V_a − V_b)/R3 = I_s. Every term with V_a goes left, which puts 1/R1 in G_aa; 12 V/R1 and I_s go right."
+            },
+            {
+              "text": "It is dropped: V_a is small next to 12 V, so i_a ignores it",
+              "feedback": "Nothing is dropped: G·v = i is exact, whatever V_a is. The −V_a/R1 term moves to the left side as 1/R1 in G_aa."
+            },
+            {
+              "text": "Into G_ab: R1 ties a to the rail, so it sits off the diagonal",
+              "feedback": "Off-diagonal entries join two unknown nodes. The rail is a known node, so it has no column in G; R1's 1/R1 goes on the diagonal, G_aa."
+            },
+            {
+              "text": "Into i_b: the current R1 brings in leaves through R3 to b",
+              "feedback": "Row b counts what touches b: R3, R4 and nothing from a source. R1 touches only a and the rail, so its −V_a/R1 term stays in row a, in G_aa."
+            }
+          ],
+          "explanation": "Each resistor from a known node at V_s splits in two: 1/R into the diagonal of G, V_s/R into i. The same split holds for any number of rails, which is why G depends only on the resistors."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "IS",
+            "at": [
+              12,
+              6
+            ],
+            "rot": 270,
+            "label": "I_s\n{Is}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              14,
+              0
+            ],
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              20,
+              2
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              14,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              20,
+              0
+            ],
+            [
+              20,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              20,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              10,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              19,
+              0
+            ]
+          }
+        ],
+        "netlist": "rail and current source\nV1 p 0 12\nR1 p a {R1:spice}\nR2 a 0 {R2:spice}\nIS 0 a {Is:spice}\nR3 a b {R3:spice}\nR4 b 0 {R4:spice}\n"
+      },
+      "simCheck": {
+        "netlist": "a held at 0 V\nV1 p 0 12\nR1 p a {R1:spice}\nR2 a 0 {R2:spice}\nIS 0 a {Is:spice}\nR3 a b {R3:spice}\nR4 b 0 {R4:spice}\nVHOLD a 0 0\n",
+        "probe": "i(VHOLD)",
+        "tolerance": 0.001
+      },
+      "review": "checked"
+    },
+    {
+      "id": "nod_two_node",
+      "topicId": "nodal_analysis",
+      "prompt": "Find V_a. Assume ideal supplies.",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R4",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R5",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Gaa",
+          "formula": "1/R1+1/R2+1/R3",
+          "unit": "S"
+        },
+        {
+          "name": "Gbb",
+          "formula": "1/R2+1/R4+1/R5",
+          "unit": "S"
+        },
+        {
+          "name": "G2",
+          "formula": "1/R2",
+          "unit": "S"
+        },
+        {
+          "name": "ia",
+          "formula": "12/R1",
+          "unit": "A"
+        },
+        {
+          "name": "ib",
+          "formula": "5/R5",
+          "unit": "A"
+        },
+        {
+          "name": "det",
+          "formula": "Gaa*Gbb-G2*G2",
+          "unit": ""
+        },
+        {
+          "name": "Va",
+          "formula": "(ia*Gbb+G2*ib)/det",
+          "unit": "V"
+        },
+        {
+          "name": "Vb",
+          "formula": "(Gaa*ib+G2*ia)/det",
+          "unit": "V"
+        },
+        {
+          "name": "I1",
+          "formula": "(12-Va)/R1",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "(ia*Gbb+G2*ib)/det",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "Write G·v = i. Diagonal: G_aa = 1/R1 + 1/R2 + 1/R3 = {Gaa}; G_bb = 1/R2 + 1/R4 + 1/R5 = {Gbb}. Off the diagonal: −1/R2 = −{G2}. Right side: i_a = 12 V/{R1} = {ia}; i_b = 5 V/{R5} = {ib}. By Cramer's rule, V_a = (i_a·G_bb + i_b/R2)/(G_aa·G_bb − 1/R2²) = {answer}, and V_b = {Vb}. Check KCL at a: (12 V − V_a)/R1 = {I1} flows in, and V_a/R3 + (V_a − V_b)/R2 = {I1}: the net current leaving through R3 and R2 (R2's share is negative when b is higher).",
+      "hints": [
+        "Write one KCL row for a and one for b: conductances on the left, source currents on the right.",
+        "Row a: G_aa·V_a − V_b/R2 = 12 V/R1. Row b: −V_a/R2 + G_bb·V_b = 5 V/R5. Solve the pair."
+      ],
+      "misconceptions": [
+        {
+          "formula": "12*R3/(R1+R3)",
+          "when": "abs(12*R3/(R1+R3)-Va)-0.03*Va",
+          "feedback": "That is the R1–R3 divider with R2 left out. R2 joins a to b, so current also flows between them: solve both rows together."
+        },
+        {
+          "formula": "(ia*Gbb-G2*ib)/det",
+          "when": "2*G2*ib/det-0.03*Va",
+          "feedback": "A sign slipped. The off-diagonal entries are −1/R2, so in Cramer's rule the b-term adds: V_a = (i_a·G_bb + i_b/R2)/det."
+        },
+        {
+          "formula": "(Gaa*ib+G2*ia)/det",
+          "when": "abs(Vb-Va)-0.03*Va",
+          "feedback": "That is V_b. V_a is the first unknown: replace G's first column with i."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Raise the 5 V rail to 6 V. Which parts of G·v = i change?",
+          "choices": [
+            {
+              "text": "Only i_b, the current the rail feeds in through R5",
+              "correct": true,
+              "feedback": "Right: G holds only conductances, set by the resistors. A source's voltage enters through the right side: i_b = V/R5 goes from 5 V/R5 to 6 V/R5."
+            },
+            {
+              "text": "G_bb and i_b, the two terms that R5 brings into row b",
+              "feedback": "G_bb = 1/R2 + 1/R4 + 1/R5 depends only on resistors. The rail's voltage moves only the current it feeds in, i_b = V/R5."
+            },
+            {
+              "text": "Only v: the node voltages move, but G and i stay as they were",
+              "feedback": "v moves because i changed. The rail's voltage sits in i_b = V/R5; solving the new G·v = i gives the new v."
+            },
+            {
+              "text": "Every entry of G and i, since the whole network shifts with it",
+              "feedback": "Every node voltage shifts, but G is the resistors' conductances, which haven't changed, and only one source current has: i_b."
+            }
+          ],
+          "explanation": "Sources and resistors land in different places: conductances in G, source currents in i. A change of supply voltage changes only i, so the same G (and its inverse) serves every set of supply voltages. That is why a simulator can sweep a source quickly."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          },
+          {
+            "ref": "R5",
+            "at": [
+              18,
+              0
+            ],
+            "label": "R5\n{R5}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              24,
+              2
+            ],
+            "rot": 90,
+            "label": "5 V"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              22,
+              0
+            ],
+            [
+              24,
+              0
+            ],
+            [
+              24,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              24,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              9,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              15,
+              0
+            ]
+          }
+        ],
+        "netlist": "two-rail network\nV1 p 0 12\nR1 p a {R1:spice}\nR2 a b {R2:spice}\nR3 a 0 {R3:spice}\nR4 b 0 {R4:spice}\nR5 b q {R5:spice}\nV2 q 0 5\n"
+      },
+      "simCheck": {
+        "netlist": "two-rail network\nV1 p 0 12\nR1 p a {R1:spice}\nR2 a b {R2:spice}\nR3 a 0 {R3:spice}\nR4 b 0 {R4:spice}\nR5 b q {R5:spice}\nV2 q 0 5\n",
+        "probe": "v(a)",
+        "tolerance": 0.001
+      },
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "nod_current_source",
+      "topicId": "nodal_analysis",
+      "prompt": "Find V_a. Assume ideal sources.",
+      "variables": [
+        {
+          "name": "Is",
+          "unit": "A",
+          "values": [
+            0.0005,
+            0.001,
+            0.002
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R4",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Gaa",
+          "formula": "1/R1+1/R2",
+          "unit": "S"
+        },
+        {
+          "name": "Gbb",
+          "formula": "1/R2+1/R3+1/R4",
+          "unit": "S"
+        },
+        {
+          "name": "G2",
+          "formula": "1/R2",
+          "unit": "S"
+        },
+        {
+          "name": "ib",
+          "formula": "5/R4",
+          "unit": "A"
+        },
+        {
+          "name": "det",
+          "formula": "Gaa*Gbb-G2*G2",
+          "unit": ""
+        },
+        {
+          "name": "Va",
+          "formula": "(Is*Gbb+G2*ib)/det",
+          "unit": "V"
+        },
+        {
+          "name": "Vb",
+          "formula": "(Gaa*ib+G2*Is)/det",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "(Is*Gbb+G2*ib)/det",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "The current source feeds {Is} straight into node a, so i_a = {Is}. It adds nothing to G: its current doesn't depend on any node voltage. G_aa = 1/R1 + 1/R2 = {Gaa}; G_bb = 1/R2 + 1/R3 + 1/R4 = {Gbb}; G_ab = −1/R2 = −{G2}; i_b = 5 V/{R4} = {ib}. V_a = (i_a·G_bb + i_b/R2)/(G_aa·G_bb − 1/R2²) = {answer}, and V_b = {Vb}.",
+      "hints": [
+        "A current source's value goes straight into the right side of the node it feeds.",
+        "Row a: (1/R1 + 1/R2)·V_a − V_b/R2 = I_S. Row b: −V_a/R2 + (1/R2 + 1/R3 + 1/R4)·V_b = 5 V/R4."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Is*R1",
+          "when": "abs(Is*R1-Va)-0.03*Va",
+          "feedback": "That puts all of the source's current through R1 and ignores R2 and the 5 V rail: a is also tied to b through R2, so write both rows and solve them together."
+        },
+        {
+          "formula": "Is*Gbb/det",
+          "feedback": "That leaves out the 5 V rail. It feeds i_b = 5 V/R4 into b, which lifts b and, through R2, lifts a."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Where does the current source go in G·v = i?",
+          "choices": [
+            {
+              "text": "Only into i: +{Is} in row a, since its current is fixed",
+              "correct": true,
+              "feedback": "Right: its current is {Is} whatever the node voltages are, so it is a known term on the right side of the row of the node it feeds."
+            },
+            {
+              "text": "Into G_aa, as a conductance of {Is} divided by V_a",
+              "feedback": "A conductance is current per volt of the node's own voltage. The source's current is {Is} whatever V_a is, so it is a fixed term on the right side."
+            },
+            {
+              "text": "Into i twice: +{Is} in row a and −{Is} in row b",
+              "feedback": "Its current returns through ground, the reference node, which has no row. Row b sees it only through R2's current."
+            },
+            {
+              "text": "Nowhere: an ideal current source drops out as an open circuit",
+              "feedback": "A current source is an open circuit only when it is set to zero. This one pushes {Is} into a, and that current must appear in a's KCL row."
+            }
+          ],
+          "explanation": "Sources go on the right side. A current source between a node and ground adds its value to that node's i; one between two unknown nodes adds +I to one row and −I to the other. Neither touches G."
+        }
+      ],
+      "schematic": {
+        "netlist": "current source and rail\nIS 0 a {Is:spice}\nR1 a 0 {R1:spice}\nR2 a b {R2:spice}\nR3 b 0 {R3:spice}\nR4 b q {R4:spice}\nV1 q 0 5\n",
+        "parts": [
+          {
+            "ref": "IS",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 270,
+            "label": "{Is}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              4,
+              2
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              6,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              14,
+              0
+            ],
+            "label": "R4\n{R4}"
+          },
+          {
+            "ref": "V1",
+            "at": [
+              20,
+              2
+            ],
+            "rot": 90,
+            "label": "5 V"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              0
+            ]
+          ],
+          [
+            [
+              4,
+              0
+            ],
+            [
+              4,
+              2
+            ]
+          ],
+          [
+            [
+              10,
+              0
+            ],
+            [
+              14,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              20,
+              0
+            ],
+            [
+              20,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              20,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            16,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              2,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              11,
+              0
+            ]
+          }
+        ]
+      },
+      "simCheck": {
+        "netlist": "current source and rail\nIS 0 a {Is:spice}\nR1 a 0 {R1:spice}\nR2 a b {R2:spice}\nR3 b 0 {R3:spice}\nR4 b q {R4:spice}\nV1 q 0 5\n",
+        "probe": "v(a)",
+        "tolerance": 0.001
+      },
+      "review": "checked"
+    },
+    {
+      "id": "nod_three_node",
+      "topicId": "nodal_analysis",
+      "prompt": "Find V_c. Write G·v = i for nodes a, b and c and solve the 3 × 3 system.",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R4",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R5",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R6",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R7",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "A",
+          "formula": "1/R1+1/R2+1/R3",
+          "unit": "S"
+        },
+        {
+          "name": "B",
+          "formula": "1/R3+1/R4+1/R5",
+          "unit": "S"
+        },
+        {
+          "name": "C",
+          "formula": "1/R5+1/R6+1/R7",
+          "unit": "S"
+        },
+        {
+          "name": "g3",
+          "formula": "1/R3",
+          "unit": "S"
+        },
+        {
+          "name": "g5",
+          "formula": "1/R5",
+          "unit": "S"
+        },
+        {
+          "name": "i1",
+          "formula": "12/R1",
+          "unit": "A"
+        },
+        {
+          "name": "i3",
+          "formula": "5/R7",
+          "unit": "A"
+        },
+        {
+          "name": "det",
+          "formula": "A*(B*C-g5*g5)-g3*g3*C",
+          "unit": ""
+        },
+        {
+          "name": "Va",
+          "formula": "(i1*(B*C-g5*g5)+g3*g5*i3)/det",
+          "unit": "V"
+        },
+        {
+          "name": "Vb",
+          "formula": "(A*g5*i3+g3*C*i1)/det",
+          "unit": "V"
+        },
+        {
+          "name": "Vc",
+          "formula": "(i3*(A*B-g3*g3)+i1*g3*g5)/det",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "(i3*(A*B-g3*g3)+i1*g3*g5)/det",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "Diagonal: G_aa = 1/R1 + 1/R2 + 1/R3 = {A}; G_bb = 1/R3 + 1/R4 + 1/R5 = {B}; G_cc = 1/R5 + 1/R6 + 1/R7 = {C}. Off the diagonal: G_ab = −1/R3 = −{g3}, G_bc = −1/R5 = −{g5}, and G_ac = 0, since no resistor joins a and c. Right side: i_a = 12 V/R1 = {i1}, i_b = 0 (no source touches b), i_c = 5 V/R7 = {i3}. Elimination gives V_a = {Va}, V_b = {Vb} and V_c = {answer}. SPICE's .op on the same netlist gives the same three voltages.",
+      "hints": [
+        "Three unknowns: a 3 × 3 G. No resistor joins a and c, so G_ac = G_ca = 0, and no source touches b, so i_b = 0.",
+        "Eliminate V_a using rows a and b, then V_b. The calculator's Matrix mode (G·v = i) does the same elimination and shows it: entries as conductances (1/4.7k for 4.7 kΩ), i as currents (12/1k)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "i3*(A*B-g3*g3)/det",
+          "feedback": "That leaves out the 12 V rail's share. Its current enters at a and reaches c through R3 and R5: the i_a·(1/R3)·(1/R5) term."
+        },
+        {
+          "formula": "5*R6/(R6+R7)",
+          "when": "abs(5*R6/(R6+R7)-Vc)-0.03*Vc",
+          "feedback": "That is the R7–R6 divider with R5 left out. R5 joins c to b, which the 12 V side holds up, so c doesn't sit where the 5 V divider alone would put it."
+        },
+        {
+          "formula": "(A*g5*i3+g3*C*i1)/det",
+          "when": "abs(Vb-Vc)-0.03*Vc",
+          "feedback": "That is V_b, the middle unknown. V_c is the third."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "How many entries of G are zero, and why?",
+          "choices": [
+            {
+              "text": "Two, G_ac and G_ca: no resistor joins a and c directly",
+              "correct": true,
+              "feedback": "Right: an off-diagonal entry is minus the conductance directly between two nodes. a and c are coupled only through b, and the elimination takes care of that path."
+            },
+            {
+              "text": "None: a and c are linked through R3, node b and R5",
+              "feedback": "They are linked, but through node b, not directly. G records only direct connections; solving the system handles the path through b."
+            },
+            {
+              "text": "Two, G_ab and G_ba: R3 sits in series between a and b",
+              "feedback": "R3 joins a and b directly, so G_ab = −1/R3, not zero. The zeros are where nothing joins: a and c."
+            },
+            {
+              "text": "Four: each row keeps only its diagonal and one neighbor",
+              "feedback": "Row b has two neighbors, a and c, so it keeps all three entries. Only a and c have no resistor between them: two zeros."
+            }
+          ],
+          "explanation": "In a ladder each node couples only to its neighbors, so G is mostly zeros away from the diagonal. A real circuit with thousands of nodes has a G that is almost all zeros, and SPICE stores and solves it as a sparse matrix."
+        }
+      ],
+      "schematic": {
+        "netlist": "two-rail ladder\nV1 p 0 12\nR1 p a {R1:spice}\nR2 a 0 {R2:spice}\nR3 a b {R3:spice}\nR4 b 0 {R4:spice}\nR5 b c {R5:spice}\nR6 c 0 {R6:spice}\nR7 c q {R7:spice}\nV2 q 0 5\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          },
+          {
+            "ref": "R5",
+            "at": [
+              18,
+              0
+            ],
+            "label": "R5\n{R5}"
+          },
+          {
+            "ref": "R6",
+            "at": [
+              24,
+              2
+            ],
+            "rot": 90,
+            "label": "R6\n{R6}"
+          },
+          {
+            "ref": "R7",
+            "at": [
+              26,
+              0
+            ],
+            "label": "R7\n{R7}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              32,
+              2
+            ],
+            "rot": 90,
+            "label": "5 V"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              22,
+              0
+            ],
+            [
+              26,
+              0
+            ]
+          ],
+          [
+            [
+              24,
+              0
+            ],
+            [
+              24,
+              2
+            ]
+          ],
+          [
+            [
+              30,
+              0
+            ],
+            [
+              32,
+              0
+            ],
+            [
+              32,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              32,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              9,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              17,
+              0
+            ]
+          },
+          {
+            "text": "c",
+            "at": [
+              25,
+              0
+            ]
+          }
+        ]
+      },
+      "simCheck": {
+        "netlist": "two-rail ladder\nV1 p 0 12\nR1 p a {R1:spice}\nR2 a 0 {R2:spice}\nR3 a b {R3:spice}\nR4 b 0 {R4:spice}\nR5 b c {R5:spice}\nR6 c 0 {R6:spice}\nR7 c q {R7:spice}\nV2 q 0 5\n",
+        "probe": "v(c)",
+        "tolerance": 0.001
+      },
+      "review": "checked"
+    },
+    {
+      "id": "nod_symmetry",
+      "topicId": "nodal_analysis",
+      "prompt": "Write G for nodes a and b. Why is G_ab equal to G_ba?",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R4",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R5",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "text": "R2 is the only part joining a and b, and it enters both rows as −1/R2",
+          "correct": true,
+          "feedback": "Right: row a counts R2's current leaving a, (V_a − V_b)/R2; row b counts the same resistor's current leaving b, (V_b − V_a)/R2. The coefficient of the other node is −1/R2 in both."
+        },
+        {
+          "text": "The circuit is drawn alike on both sides of R2, so the two rows match",
+          "feedback": "Position on a drawing means nothing, and the sides aren't alike: R1 and R5 differ in general, and so do the rails. The rows share −1/R2 because the same resistor appears in both."
+        },
+        {
+          "text": "KVL around the loop through a, b and ground makes the entries equal",
+          "feedback": "The rows of G come from KCL at each node, not from loops. They match because one resistor, R2, sets both off-diagonal entries."
+        },
+        {
+          "text": "Each rail feeds one node, 12 V into a and 5 V into b, balancing G",
+          "feedback": "The rails don't enter G at all: their voltages go on the right side, as 12 V/R1 and 5 V/R5. G holds only conductances."
+        }
+      ],
+      "explanation": "G is symmetric for any network of resistors and independent sources: each resistor joins two nodes and appears in both of their rows with the same conductance. Here G_ab = G_ba = −1/{R2}.",
+      "followUps": [
+        {
+          "prompt": "Which added part would make G unsymmetric?",
+          "choices": [
+            {
+              "text": "A transistor stage that pushes current into b set by V_a alone",
+              "correct": true,
+              "feedback": "Right: V_a appears in row b, but V_b doesn't appear in row a, so G_ba gains a term that G_ab doesn't. A transistor modeled for small signals does this, and its G is no longer symmetric."
+            },
+            {
+              "text": "A second resistor from a to b, in parallel with R2 but of another value",
+              "feedback": "It adds −1/R to both G_ab and G_ba: still symmetric. Any resistor between two nodes enters both rows the same way."
+            },
+            {
+              "text": "A resistor from a to the 5 V rail, so that a sees both rails",
+              "feedback": "It adds 1/R to G_aa and 5 V/R to i_a; no off-diagonal entry changes. G stays symmetric."
+            },
+            {
+              "text": "A 1 mA current source from a to b, adding to R2's current",
+              "feedback": "A current source's current doesn't depend on any node voltage, so it goes on the right side: −1 mA in i_a, +1 mA in i_b. G is unchanged."
+            }
+          ],
+          "explanation": "Symmetry holds for resistors and independent sources. An element whose current at one node is set by another node's voltage (a transistor, or the controlled source that models one, in a later topic) adds a term to one row only. Simulators then solve the unsymmetric G the same way, by elimination."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          },
+          {
+            "ref": "R5",
+            "at": [
+              18,
+              0
+            ],
+            "label": "R5\n{R5}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              24,
+              2
+            ],
+            "rot": 90,
+            "label": "5 V"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              22,
+              0
+            ],
+            [
+              24,
+              0
+            ],
+            [
+              24,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              24,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              9,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              15,
+              0
+            ]
+          }
+        ],
+        "netlist": "two-rail network\nV1 p 0 12\nR1 p a {R1:spice}\nR2 a b {R2:spice}\nR3 a 0 {R3:spice}\nR4 b 0 {R4:spice}\nR5 b q {R5:spice}\nV2 q 0 5\n"
+      },
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "nod_what_if_fixed_node",
+      "topicId": "nodal_analysis",
+      "prompt": "Swap R4 for {new_R4}, ten times smaller. What happens to V_a? Assume ideal supplies.",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R4",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "P4",
+          "formula": "25*10/R4",
+          "unit": "W"
+        }
+      ],
+      "whatIf": {
+        "quantity": "V_a",
+        "formula": "(12/R1+5/R2)/(1/R1+1/R2+1/R3)",
+        "unit": "V",
+        "change": {
+          "R4": "R4/10"
+        },
+        "feedback": {
+          "down": "R4 now draws ten times the current, but from V2, which holds b at 5 V whatever it has to supply. With V_b fixed, a's KCL row, (1/R1 + 1/R2 + 1/R3)·V_a = 12 V/R1 + 5 V/R2, has no R4 in it.",
+          "up": "Nothing in a's row changes: V_a = (12 V/R1 + 5 V/R2)/(1/R1 + 1/R2 + 1/R3), with no R4 in it. V2 supplies R4's extra current and keeps b at 5 V."
+        }
+      },
+      "explanation": "Node b is held at 5 V by V2, so it is not an unknown: only a is. KCL at a: (1/{R1} + 1/{R2} + 1/{R3})·V_a = 12 V/{R1} + 5 V/{R2}, so V_a = {before}, before and after. R4 changes only V2's current. At {new_R4}, R4 dissipates (5 V)²/{new_R4} = {P4}: rate the part for at least twice that. A real 5 V regulator has a small output resistance, so b would dip slightly; an ideal source has none.",
+      "hints": [
+        "Which node voltages are unknown here? Is b one of them?"
+      ],
+      "followUps": [
+        {
+          "prompt": "How does the simulator's .op handle V2?",
+          "choices": [
+            {
+              "text": "It adds V2's current as an unknown, and the row V_b = 5 V",
+              "correct": true,
+              "feedback": "Right: modified nodal analysis. A voltage source's current can't be written from node voltages with Ohm's law, so it becomes an unknown, and the source's own equation becomes its row."
+            },
+            {
+              "text": "It leaves V2 out, since a source has no resistance to put in G",
+              "feedback": "Then b would float on R2 and R4 alone. V2 must enter the equations: its current is an extra unknown in b's KCL row, and V_b = 5 V is an extra row."
+            },
+            {
+              "text": "It sets V2's current to zero in b's row, as for an open circuit",
+              "feedback": "V2's current is whatever R2 and R4 demand; with R4 ten times smaller it grows about tenfold. That is why .op keeps it as an unknown instead of a fixed number."
+            },
+            {
+              "text": "It replaces V2 with a fixed current of 5 V/R4 into node b",
+              "feedback": "That fixes V2's current, which isn't fixed: it also carries R2's current. Modified nodal analysis solves for it, alongside the node voltages."
+            }
+          ],
+          "explanation": "Modified nodal analysis: the unknowns are every node voltage and every voltage source's current. Each source adds a row, V_+ − V_− = V_s, with a zero on its diagonal. By hand the same idea is a shortcut: a node a source fixes is simply known."
+        }
+      ],
+      "schematic": {
+        "netlist": "rail-held node\nV1 p 0 12\nR1 p a {R1:spice}\nR2 a b {R2:spice}\nR3 a 0 {R3:spice}\nV2 b 0 5\nR4 b 0 {R4:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              22,
+              2
+            ],
+            "rot": 90,
+            "label": "5 V"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              22,
+              0
+            ],
+            [
+              22,
+              2
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              22,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              9,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              15,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "nod_supernode",
+      "topicId": "nodal_analysis",
+      "prompt": "Find V_b. Assume ideal sources.",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1200,
+            1500,
+            1800,
+            2200
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            3300,
+            3900,
+            4700,
+            5600,
+            6800,
+            8200,
+            10000
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "values": [
+            3300,
+            3900,
+            4700,
+            5600,
+            6800,
+            8200,
+            10000
+          ]
+        },
+        {
+          "name": "Vs",
+          "unit": "V",
+          "values": [
+            1.5,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Gs",
+          "formula": "1/R1+1/R2+1/R3",
+          "unit": "S"
+        },
+        {
+          "name": "Va",
+          "formula": "(12/R1+Vs/R3)/Gs",
+          "unit": "V"
+        },
+        {
+          "name": "Vb",
+          "formula": "Va-Vs",
+          "unit": "V"
+        },
+        {
+          "name": "Iv",
+          "formula": "(Va-Vs)/R3",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "(12/R1+Vs/R3)/(1/R1+1/R2+1/R3)-Vs",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "V2 sits between two unknown nodes, so its current is unknown. Around a, V2 and b together (a supernode) that current stays inside and drops out of KCL: (V_a − 12 V)/{R1} + V_a/{R2} + V_b/{R3} = 0. The cell adds the second equation: V_a − V_b = {Vs}. Substituting, V_a·(1/R1 + 1/R2 + 1/R3) = 12 V/R1 + {Vs}/R3, so V_a = {Va} and V_b = {answer}. The cell carries {Iv}, the same current as R3. SPICE gets there another way: it keeps V2's current as an unknown and adds V_a − V_b = {Vs} as a row.",
+      "hints": [
+        "V2's current is unknown, so KCL at a alone brings in a third unknown. Draw one boundary around a, V2 and b, and write KCL for it.",
+        "Supernode: (V_a − 12 V)/R1 + V_a/R2 + V_b/R3 = 0, with V_a − V_b = V2's voltage."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(12/R1+Vs/R3)/(1/R1+1/R2+1/R3)",
+          "feedback": "That is V_a, at the cell's + terminal. b is at the − terminal, {Vs} lower."
+        },
+        {
+          "formula": "(12/R1+Vs/R3)/(1/R1+1/R2+1/R3)+Vs",
+          "feedback": "The cell's + terminal is at a, so b sits {Vs} below a, not above it."
+        },
+        {
+          "formula": "12*R2/(R1+R2)-Vs",
+          "feedback": "That leaves out R3. Current also leaves the supernode through R3, so a sits below the R1–R2 divider's value."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why can't KCL at node a alone be solved here?",
+          "choices": [
+            {
+              "text": "V2's current isn't set by Ohm's law, so it is a third unknown",
+              "correct": true,
+              "feedback": "Right: KCL at a is true, but it brings in V2's current, which no resistor law gives. Summing over the supernode cancels it; MNA keeps it and adds V2's equation."
+            },
+            {
+              "text": "KCL doesn't hold at a node joined to a voltage source",
+              "feedback": "KCL holds at every node. Written at a it is true; it just brings in V2's current, which no Ohm's law gives."
+            },
+            {
+              "text": "Node a has three branches, and KCL needs exactly two",
+              "feedback": "KCL works for any number of branches: the currents leaving a node sum to zero."
+            },
+            {
+              "text": "V_a is fixed at 12 V by the rail, so a needs no equation",
+              "feedback": "R1 sits between the rail and a and drops part of the 12 V: V_a = {Va}. a is an unknown."
+            }
+          ],
+          "explanation": "A voltage source fixes a voltage difference, not a current. Between two unknown nodes, either write KCL around both (the supernode, where its current cancels) or keep its current as an unknown and add its voltage equation as a row: the second is what SPICE does."
+        }
+      ],
+      "schematic": {
+        "netlist": "floating cell\nV1 p 0 12\nR1 p a {R1:spice}\nR2 a 0 {R2:spice}\nV2 a b {Vs:spice}\nR3 b 0 {R3:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              10,
+              0
+            ],
+            "label": "V2\n{Vs}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              16,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              9,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              15,
+              0
+            ]
+          }
+        ]
+      },
+      "simCheck": {
+        "netlist": "floating cell\nV1 p 0 12\nR1 p a {R1:spice}\nR2 a 0 {R2:spice}\nV2 a b {Vs:spice}\nR3 b 0 {R3:spice}\n",
+        "probe": "v(b)",
+        "tolerance": 0.001
+      },
+      "review": "checked"
+    },
+    {
+      "id": "nod_mna_unknowns",
+      "topicId": "nodal_analysis",
+      "prompt": "SPICE's .op solves this circuit by modified nodal analysis. How many unknowns does it solve for?",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R4",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R5",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "text": "6: four node voltages and the current in each supply",
+          "correct": true,
+          "feedback": "Right: every node except ground (the two rail nodes, a and b) and one current per voltage source. Each source adds a row: its own voltage equation."
+        },
+        {
+          "text": "2: V_a and V_b, since the rail voltages are known",
+          "feedback": "That is the hand method, which skips nodes a source fixes. MNA keeps them as unknowns and adds each source's current, so the same code handles a source between any two nodes."
+        },
+        {
+          "text": "4: one voltage per node, with ground left out",
+          "feedback": "That counts the node voltages. A voltage source's current can't be written from node voltages with Ohm's law, so MNA adds one unknown for each: 4 + 2."
+        },
+        {
+          "text": "5: one voltage per node, with ground included",
+          "feedback": "Ground is the reference, 0 V by definition: no unknown, no row. Four node voltages and the two sources' currents make 6."
+        }
+      ],
+      "explanation": "MNA writes KCL at every node except ground and one equation per voltage source. The unknowns are the four node voltages and the two sources' currents, so the solution includes each supply's current directly: .op reports i(V1) and i(V2) without any extra work. By hand, the two rail nodes are known, leaving only V_a and V_b.",
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          },
+          {
+            "ref": "R5",
+            "at": [
+              18,
+              0
+            ],
+            "label": "R5\n{R5}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              24,
+              2
+            ],
+            "rot": 90,
+            "label": "5 V"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              22,
+              0
+            ],
+            [
+              24,
+              0
+            ],
+            [
+              24,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              24,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              9,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              15,
+              0
+            ]
+          }
+        ],
+        "netlist": "two-rail network\nV1 p 0 12\nR1 p a {R1:spice}\nR2 a b {R2:spice}\nR3 a 0 {R3:spice}\nR4 b 0 {R4:spice}\nR5 b q {R5:spice}\nV2 q 0 5\n"
+      },
+      "review": "checked"
+    },
+    {
+      "id": "nod_design_ref",
+      "topicId": "nodal_analysis",
+      "prompt": "Choose R4 (E24) so that V_b = {Vt}, within 2%. Assume ideal supplies.",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            3300,
+            3900,
+            4700,
+            5600,
+            6800,
+            8200
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R5",
+          "unit": "Ω",
+          "values": [
+            3300,
+            3900,
+            4700,
+            5600,
+            6800,
+            8200
+          ]
+        },
+        {
+          "name": "R4t",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1100,
+            1200,
+            1300,
+            1500,
+            1600,
+            1800,
+            2000,
+            2200,
+            2400,
+            2700,
+            3000,
+            3300
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Gaa",
+          "formula": "1/R1+1/R2+1/R3",
+          "unit": "S"
+        },
+        {
+          "name": "Vt",
+          "formula": "(Gaa*(5/R5)+(1/R2)*(12/R1))/(Gaa*(1/R2+1/R4t+1/R5)-1/(R2*R2))",
+          "unit": "V"
+        },
+        {
+          "name": "Vat",
+          "formula": "(12/R1+Vt/R2)/Gaa",
+          "unit": "V"
+        },
+        {
+          "name": "I2t",
+          "formula": "(Vat-Vt)/R2",
+          "unit": "A"
+        },
+        {
+          "name": "I5t",
+          "formula": "(5-Vt)/R5",
+          "unit": "A"
+        },
+        {
+          "name": "Isum",
+          "formula": "(Vat-Vt)/R2+(5-Vt)/R5",
+          "unit": "A"
+        },
+        {
+          "name": "R4need",
+          "formula": "Vt/((Vat-Vt)/R2+(5-Vt)/R5)",
+          "unit": "Ω"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "R4",
+            "label": "R4",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 1000,
+            "max": 100000
+          }
+        ],
+        "result": "(Gaa*(5/R5)+(1/R2)*(12/R1))/(Gaa*(1/R2+1/R4+1/R5)-1/(R2*R2))",
+        "resultLabel": "V_b",
+        "resultUnit": "V",
+        "target": "Vt",
+        "tolerance": 0.02,
+        "sim": {
+          "netlist": "two-rail network\nV1 p 0 12\nR1 p a {R1:spice}\nR2 a b {R2:spice}\nR3 a 0 {R3:spice}\nR4 b 0 {R4:spice}\nR5 b q {R5:spice}\nV2 q 0 5\n.op\n",
+          "measure": "v(b)",
+          "note": "The simulator solves the same G·v = i, so it agrees with the hand result."
+        }
+      },
+      "explanation": "Fix V_b at the target and work backward. Row a then has one unknown: V_a = (12 V/R1 + V_b/R2)/(1/R1 + 1/R2 + 1/R3) = {Vat}. KCL at b: R2 brings in (V_a − V_b)/R2 = {I2t} and R5 brings in (5 V − V_b)/R5 = {I5t} (negative if it flows out to the 5 V rail). R4 must carry the sum, {Isum}, to ground: R4 = V_b/{Isum} = {R4need}. The nearest E24 value is within 2%.",
+      "hints": [
+        "Set V_b to the target. Which unknowns are left, and which row gives V_a?",
+        "Row a gives V_a. Then KCL at b: R4's current is R2's current plus R5's, and R4 = V_b divided by it."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          },
+          {
+            "ref": "R5",
+            "at": [
+              18,
+              0
+            ],
+            "label": "R5\n{R5}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              24,
+              2
+            ],
+            "rot": 90,
+            "label": "5 V"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              22,
+              0
+            ],
+            [
+              24,
+              0
+            ],
+            [
+              24,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              24,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              9,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              15,
+              0
+            ]
+          }
+        ],
+        "netlist": "two-rail network\nV1 p 0 12\nR1 p a {R1:spice}\nR2 a b {R2:spice}\nR3 a 0 {R3:spice}\nR4 b 0 {R4:spice}\nR5 b q {R5:spice}\nV2 q 0 5\n"
+      },
+      "review": "checked"
+    },
+    {
+      "id": "nod_fault",
+      "topicId": "nodal_analysis",
+      "prompt": "Which fault explains the readings? Assume ideal supplies.",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1200,
+            1500,
+            1800,
+            2200
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "values": [
+            4700,
+            5600,
+            6800,
+            8200,
+            10000
+          ]
+        },
+        {
+          "name": "R4",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1200,
+            1500,
+            1800,
+            2200
+          ]
+        },
+        {
+          "name": "R5",
+          "unit": "Ω",
+          "values": [
+            4700,
+            5600,
+            6800,
+            8200,
+            10000
+          ]
+        }
+      ],
+      "fault": {
+        "netlist": "two-rail network\nV1 p 0 12\nR1 p a {R1:spice}\nR2 a b {R2:spice}\nR3 a 0 {R3:spice}\nR4 b 0 {R4:spice}\nR5 b q {R5:spice}\nV2 q 0 5\n",
+        "probes": [
+          {
+            "label": "Voltage at node a",
+            "probe": "v(a)"
+          },
+          {
+            "label": "Voltage at node b",
+            "probe": "v(b)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "R1 is open",
+            "open": "R1",
+            "feedback": "An open R1 would cut a off from the 12 V rail: a would be fed only from b through R2, so V_a = V_b·R3/(R2 + R3), below V_b.",
+            "why": "V_a has fallen below V_b: a now gets current only from b, through R2. The 12 V rail's path, R1, is broken."
+          },
+          {
+            "text": "R2 is open",
+            "open": "R2",
+            "feedback": "An open R2 would split the network into two dividers: V_a = 12 V·R3/(R1 + R3) and V_b = 5 V·R4/(R4 + R5).",
+            "why": "Both readings match two separate dividers, R1–R3 from 12 V and R5–R4 from 5 V: no current flows between a and b, so R2 is open."
+          },
+          {
+            "text": "R3 is shorted",
+            "short": "R3",
+            "feedback": "A shorted R3 would pull a to 0 V, and b would sag too, since R2 would then pull it toward ground.",
+            "why": "a reads 0 V although R1 still connects it to the 12 V rail: only a short from a to ground does that."
+          },
+          {
+            "text": "R4 is open",
+            "open": "R4",
+            "feedback": "An open R4 would leave b with no path to ground of its own: both nodes would rise, b the most, and V_b would sit between V_a and 5 V.",
+            "why": "Both nodes rose, b the most: b has lost its own path to ground. With R4 gone, V_b is a weighted average of V_a and 5 V (weights 1/R2 and 1/R5)."
+          },
+          {
+            "text": "R4 is shorted",
+            "short": "R4",
+            "feedback": "A shorted R4 would pull b to 0 V, and a would sag too, since R2 would then pull it toward ground.",
+            "why": "b reads 0 V although R5 still connects it to the 5 V rail: only a short from b to ground does that."
+          }
+        ]
+      },
+      "explanation": "Run nodal analysis backward: each fault turns the network into something simpler, and the readings show which. An open R2 splits it into two dividers; an open R1 leaves a fed only from b through R2; a shorted R3 or R4 pins its node at 0 V; an open R4 leaves b only R2 and R5, so V_b sits between V_a and 5 V. Work out what each would read and compare.",
+      "hints": [
+        "For each fault, which node loses a path, and to where?",
+        "Check the simple cases first: a node at 0 V, readings that match two separate dividers, or a node that sits below the other with no supply of its own."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          },
+          {
+            "ref": "R5",
+            "at": [
+              18,
+              0
+            ],
+            "label": "R5\n{R5}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              24,
+              2
+            ],
+            "rot": 90,
+            "label": "5 V"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              22,
+              0
+            ],
+            [
+              24,
+              0
+            ],
+            [
+              24,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              24,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              9,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              15,
+              0
+            ]
+          }
+        ],
+        "netlist": "two-rail network\nV1 p 0 12\nR1 p a {R1:spice}\nR2 a b {R2:spice}\nR3 a 0 {R3:spice}\nR4 b 0 {R4:spice}\nR5 b q {R5:spice}\nV2 q 0 5\n"
+      },
+      "review": "checked"
+    },
+    {
+      "id": "nod_trouble_r3",
+      "topicId": "nodal_analysis",
+      "level": "design",
+      "prompt": "Expected V_a = {Vae}. Meters read V_a = {Va} and V_b = {Vb}. R1 and R2 measure their marked values. Find the actual value of R3.",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1200,
+            1500,
+            1800,
+            2200
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "values": [
+            4700,
+            5600,
+            6800,
+            8200,
+            10000
+          ]
+        },
+        {
+          "name": "R4",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R5",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3a",
+          "unit": "Ω",
+          "values": [
+            470,
+            560,
+            680,
+            820,
+            1000,
+            1200,
+            1500
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vae",
+          "formula": "(12/R1*(1/R2+1/R4+1/R5)+(1/R2)*(5/R5))/((1/R1+1/R2+1/R3)*(1/R2+1/R4+1/R5)-1/(R2*R2))",
+          "unit": "V"
+        },
+        {
+          "name": "Va",
+          "formula": "(12/R1*(1/R2+1/R4+1/R5)+(1/R2)*(5/R5))/((1/R1+1/R2+1/R3a)*(1/R2+1/R4+1/R5)-1/(R2*R2))",
+          "unit": "V"
+        },
+        {
+          "name": "Vb",
+          "formula": "((1/R1+1/R2+1/R3a)*(5/R5)+(1/R2)*(12/R1))/((1/R1+1/R2+1/R3a)*(1/R2+1/R4+1/R5)-1/(R2*R2))",
+          "unit": "V"
+        },
+        {
+          "name": "I1",
+          "formula": "(12-Va)/R1",
+          "unit": "A"
+        },
+        {
+          "name": "I2",
+          "formula": "(Va-Vb)/R2",
+          "unit": "A"
+        },
+        {
+          "name": "I3",
+          "formula": "(12-Va)/R1-(Va-Vb)/R2",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "Va/((12-Va)/R1-(Va-Vb)/R2)",
+        "unit": "Ω",
+        "tolerance": 0.02
+      },
+      "explanation": "KCL at a, run backward from the readings. R1 brings in (12 V − {Va})/{R1} = {I1}. R2 carries (V_a − V_b)/{R2} = {I2} from a to b (negative if it flows from b into a). The rest leaves through R3: {I1} − ({I2}) = {I3}, so R3 = {Va}/{I3} = {answer}. It should be {R3}: far more than drift or tolerance explains, so the wrong part was fitted.",
+      "hints": [
+        "R1 and R2 are good, and both node voltages are measured. Which currents does that give at node a?",
+        "I_R3 = (12 V − V_a)/R1 − (V_a − V_b)/R2; then R3 = V_a/I_R3."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Va*R1/(12-Va)",
+          "when": "abs(I2)-0.03*abs(I1)",
+          "feedback": "That puts all of R1's current through R3. R2 also carries current between a and b: subtract (V_a − V_b)/R2 from R1's current first."
+        },
+        {
+          "formula": "Va/((12-Va)/R1+(Va-Vb)/R2)",
+          "when": "abs(I2)-0.03*abs(I1)",
+          "feedback": "R2's current, (V_a − V_b)/R2, counts as leaving a, so it is subtracted from R1's current, not added."
+        },
+        {
+          "formula": "R3",
+          "feedback": "That is R3's marked value, which would put a at {Vae}. a reads {Va}: find R3's current from KCL at a first."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\nshould be {R3}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          },
+          {
+            "ref": "R5",
+            "at": [
+              18,
+              0
+            ],
+            "label": "R5\n{R5}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              24,
+              2
+            ],
+            "rot": 90,
+            "label": "5 V"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              22,
+              0
+            ],
+            [
+              24,
+              0
+            ],
+            [
+              24,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              24,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              9,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              15,
+              0
+            ]
+          }
+        ],
+        "netlist": "two-rail network\nV1 p 0 12\nR1 p a {R1:spice}\nR2 a b {R2:spice}\nR3 a 0 {R3:spice}\nR4 b 0 {R4:spice}\nR5 b q {R5:spice}\nV2 q 0 5\n"
+      },
+      "review": "checked"
+    }
+  ]
+}

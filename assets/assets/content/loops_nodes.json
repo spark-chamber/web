@@ -1,0 +1,1496 @@
+{
+  "topics": [
+    {
+      "id": "loops_nodes",
+      "title": "Loops, nodes, series and parallel",
+      "mapTitle": "Loops and nodes",
+      "glyph": "node",
+      "summary": "A schematic is a map of connections: current needs a closed loop, a node is one piece of joined metal, and series and parallel are decided by the nodes, never by the layout.",
+      "lenses": [
+        "circuit",
+        "physics"
+      ],
+      "prerequisites": [
+        "charge_current"
+      ],
+      "prerequisiteNotes": {
+        "charge_current": "Charge doesn't pile up in a steady circuit, so the current is the same all around a single loop. That one fact makes a break anywhere in a loop stop the current everywhere in it, and makes series parts carry one current."
+      },
+      "lensNotes": {
+        "circuit": "Read a schematic by its nodes. Put a finger on a wire and follow every piece of metal joined to it: that whole set is one node, however long or bent it is drawn. A dot joins wires; wires that cross without a dot pass each other; two net labels with the same name are one node even with no wire drawn between them (KiCad and SPICE both work this way). Then each two-terminal part is just a pair of nodes, and series and parallel follow from those pairs.",
+        "physics": "A node is one conductor. In the steady state no charge piles up on it, so the current flowing into a node equals the current flowing out. Where only two parts meet at a node, all of one part's current must pass into the other: they carry the same current, which is series. A part only connects to the circuit through its two nodes, so parts whose two ends land on the same two nodes are connected identically: a meter placed across either one reads the same, which is parallel."
+      },
+      "formulas": [
+        {
+          "label": "Series: a node with only two parts on it",
+          "tex": "I_1 = I_2"
+        },
+        {
+          "label": "A supply lead feeding two branches",
+          "tex": "I_{\\text{lead}} = I_1 + I_2"
+        },
+        {
+          "label": "A break in a loop",
+          "tex": "I = 0 \\ \\text{everywhere in that loop}"
+        },
+        {
+          "label": "Counting check",
+          "tex": "\\sum_{\\text{nodes}} (\\text{terminals on it}) = 2 \\times (\\text{two-terminal parts})"
+        }
+      ],
+      "goals": [
+        "Tell whether a circuit is a closed loop, and predict that a break anywhere in a loop stops the current everywhere in that loop",
+        "Mark the nodes of a schematic: joined wire, junction dots and same-named net labels are one node; wires that cross without a dot are not",
+        "Decide from the nodes which parts are in series and which are in parallel, however the drawing is laid out",
+        "Find a break from ammeter readings: a break in the shared path darkens every lamp, a break in one branch darkens only that branch"
+      ],
+      "intuition": "A schematic is a map of connections, not of positions: a node is one piece of metal, series parts share the only path, and parallel parts share the same two nodes.",
+      "why": "Charge is conserved and doesn't accumulate in a steady circuit, so whatever enters a part each second leaves it, and current can only flow around a closed path. Where two parts meet at a node nothing else touches, the charge leaving one has nowhere to go but into the other, so both carry the same current. A part is joined to the rest of the circuit only at its two terminals, so two parts whose terminals sit on the same two pieces of metal are connected the same way: a meter across either reads the same, and each is its own path, so a break in one leaves the other's loop intact.",
+      "explanation": "Current flows only around a closed loop: a conducting path from one terminal of the source, through the parts, back to the other terminal. Break the loop anywhere and the current stops everywhere in it, because charge cannot pile up at the break.\n\nA node is all the metal joined together. A wire drawn long, bent or looping across the page is still one node. On a schematic a dot joins wires, wires that cross without a dot are not joined, and two net labels with the same name are one node. Good drawings join wires only in T-junctions, so a lost dot can't turn a crossing into a joint.\n\nTwo parts are in series when they meet at a node that nothing else touches. There is then one path through both, so they carry the same current.\n\nParts are in parallel when both their ends sit on the same two nodes. Each is its own path, so a break in one branch leaves the others running.\n\nMany parts are neither. Judge only by the nodes: parts drawn side by side need not be in parallel, and parts drawn in a line need not be in series.",
+      "workedExample": {
+        "problem": "A 9 V battery feeds R1, whose far end splits two ways: LMP1 straight back to the battery's − terminal, and R2 then LMP2 back to the same terminal. Find the nodes, and say which parts are in series and which are in parallel.",
+        "steps": [
+          "Nodes: the battery's + terminal and R1's first end (node a); R1's far end with the tops of LMP1 and R2 (node b); the point between R2 and LMP2 (node c); the battery's − terminal with the bottoms of LMP1 and LMP2 (node d). Four nodes, however the wires are drawn.",
+          "Series: node a joins only the battery and R1, so they carry one current. Node c joins only R2 and LMP2, so R2 and LMP2 are in series. Node b has three parts on it, so R1 is not in series with LMP1 or with R2.",
+          "Parallel: LMP1 spans b and d. No other single part spans b and d, so LMP1 is in parallel with no single part. The string R2 + LMP2 does span b and d: as a pair, it is in parallel with LMP1.",
+          "Breaks: if LMP2's filament breaks, the loop through R2 and LMP2 opens and that branch goes dark, while LMP1 still has its loop through R1 and the battery. If R1 breaks, both branches go dark: R1 is in the only path to the battery's + terminal.",
+          "Check by counting terminals: four parts plus the battery have 10 terminals, and each one is on exactly one of the 4 nodes (2 + 3 + 2 + 3 = 10)."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 5 \"Series and Parallel Circuits\", section \"What are \\\"series\\\" and \\\"parallel\\\" circuits?\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_5.html",
+          "note": "Checked that a series circuit is a single path for current, that parallel parts share the same electrically common points, and that parts can be mixed series-parallel, with a part judged by its connections rather than its position on the page."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 5 \"Series and Parallel Circuits\", section \"Component failure analysis\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_5.html",
+          "note": "Checked that an open part in a series loop stops the current everywhere in it, while an open branch in a parallel circuit changes only that branch and the total supply current."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "ln_count_nodes",
+      "topicId": "loops_nodes",
+      "level": "recall",
+      "prompt": "Count the nodes in this circuit.",
+      "variables": [],
+      "answer": {
+        "formula": "4",
+        "unit": "",
+        "unitless": true,
+        "tolerance": 0.001
+      },
+      "explanation": "A node is all the metal joined together, so follow the wires instead of counting lines: the battery's + terminal and R1's left end (1); R1's right end, the dot above LMP1, the hump over the top and R2's left end, all one wire (2); between R2 and R3 (3); the long return along the bottom, joining the battery's − terminal, LMP1 and R3 (4). Check: five parts have 10 terminals, and 2 + 3 + 2 + 3 = 10.",
+      "hints": [
+        "Bends, length and a hump in a wire don't split it. Only a part does.",
+        "Start at one terminal and follow every piece of wire joined to it until you reach parts. That whole set is one node. Then do the same from a terminal you haven't reached yet."
+      ],
+      "misconceptions": [
+        {
+          "formula": "10",
+          "feedback": "That counts every part terminal as its own node. Terminals joined by wire are one node: R1's right end, LMP1's top and R2's left end are all one piece of metal."
+        },
+        {
+          "formula": "5",
+          "feedback": "One wire was counted twice. The hump over the top, the dot above LMP1 and the straight runs between them are all joined, so R1's right end, LMP1's top and R2's left end are one node."
+        },
+        {
+          "formula": "2",
+          "feedback": "That counts only the junctions where three or more parts meet. Every piece of joined metal is a node, including the one between R2 and R3 and the one from the battery's + terminal to R1."
+        },
+        {
+          "formula": "3",
+          "feedback": "Two nodes were merged. The point between R2 and R3 is a node of its own: R2 separates it from the wire over the top, and R3 separates it from the return along the bottom."
+        }
+      ],
+      "schematic": {
+        "netlist": "count\nV1 a d 6\nR1 a b 100\nRL1 b d 47\nR2 b c 2.2k\nR3 c d 3.3k\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "6 V",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n100 Ω"
+          },
+          {
+            "ref": "RL1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "LMP1",
+            "symbol": "lamp"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              16,
+              0
+            ],
+            "label": "R2\n2.2 kΩ"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              22,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n3.3 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              -3
+            ],
+            [
+              14,
+              -3
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              16,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              20,
+              0
+            ],
+            [
+              22,
+              0
+            ],
+            [
+              22,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              22,
+              6
+            ]
+          ]
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "ln_read_series",
+      "topicId": "loops_nodes",
+      "prompt": "",
+      "variables": [],
+      "reading": {
+        "netlist": "series\nV1 a d 12\nR2 a b 1k\nR1 b c 2.2k\nR3 b d 4.7k\nR4 c d 3.3k\n",
+        "ask": "series",
+        "targets": [
+          "R1",
+          "R4"
+        ],
+        "names": {
+          "a": "node a",
+          "b": "node b",
+          "c": "node c",
+          "d": "node d"
+        }
+      },
+      "explanation": "Series is a property of one node: two parts are in series when they meet at a node nothing else touches. R1 and R2 are drawn in one straight line, but node b also feeds R3, so the current can split there. R4 is drawn far away, around a corner, yet node c joins only R1 and R4.",
+      "hints": [
+        "Follow each end of the part to its node. What else connects there?",
+        "Series needs a node with exactly two parts on it. A third wire at the joint means the current can split."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n12 V",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R2\n1 kΩ"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              0
+            ],
+            "label": "R1\n2.2 kΩ"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              7,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n4.7 kΩ"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              24,
+              2
+            ],
+            "rot": 90,
+            "label": "R4\n3.3 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              7,
+              0
+            ],
+            [
+              7,
+              2
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              24,
+              0
+            ],
+            [
+              24,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              24,
+              6
+            ]
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              0,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              7,
+              0
+            ]
+          },
+          {
+            "text": "c",
+            "at": [
+              18,
+              0
+            ]
+          },
+          {
+            "text": "d",
+            "at": [
+              14,
+              6
+            ]
+          }
+        ],
+        "netlist": "series\nV1 a d 12\nR2 a b 1k\nR1 b c 2.2k\nR3 b d 4.7k\nR4 c d 3.3k\n"
+      },
+      "placement": true,
+      "review": "checked"
+    },
+    {
+      "id": "ln_parallel_which",
+      "topicId": "loops_nodes",
+      "prompt": "Which part is in parallel with LMP1?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "R3",
+          "correct": true,
+          "feedback": "Right: LMP1's two ends are on the top wire and the return along the bottom, and R3's two ends land on exactly those two nodes. Drawn far to the right, it is still connected exactly as LMP1 is."
+        },
+        {
+          "text": "R2",
+          "feedback": "R2 stands beside LMP1 and shares its top node, but R2's lower end goes to LMP2, not to the return. Parallel needs both ends on the same two nodes. R2 and LMP2 together span LMP1's two nodes; R2 alone does not."
+        },
+        {
+          "text": "LMP2",
+          "feedback": "LMP2 shares only LMP1's lower node, the return. Its upper end is the node between R2 and LMP2. Being the same kind of part says nothing about how it is connected."
+        },
+        {
+          "text": "R1",
+          "feedback": "R1 shares only LMP1's top node; its other end goes to the battery's + terminal. R1 is in the path that feeds LMP1, not across it."
+        }
+      ],
+      "explanation": "Trace both ends of LMP1: its top is the node shared by R1, R2 and R3, its bottom the return to the battery's − terminal. The only other part with one end on each of those two nodes is R3, at the far right. R2 is drawn right beside LMP1, but its lower end sits on a different node.",
+      "hints": [
+        "Name LMP1's two nodes first. Then check each part: are both of its ends on those two nodes?",
+        "Being drawn next to LMP1 doesn't count. Follow R2's lower lead: where does it go?"
+      ],
+      "schematic": {
+        "netlist": "parallel\nV1 a d 6\nR1 a b 100\nRL1 b d 47\nR2 b c 100\nRL2 c d 47\nR3 b d 1k\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "6 V",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n100 Ω"
+          },
+          {
+            "ref": "RL1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "LMP1",
+            "symbol": "lamp",
+            "labelOpposite": true
+          },
+          {
+            "ref": "R2",
+            "at": [
+              12,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n100 Ω"
+          },
+          {
+            "ref": "RL2",
+            "at": [
+              15,
+              6
+            ],
+            "rot": 0,
+            "label": "LMP2",
+            "symbol": "lamp"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              26,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n1 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              26,
+              0
+            ],
+            [
+              26,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              6
+            ],
+            [
+              8,
+              8
+            ]
+          ],
+          [
+            [
+              12,
+              6
+            ],
+            [
+              15,
+              6
+            ]
+          ],
+          [
+            [
+              19,
+              6
+            ],
+            [
+              21,
+              6
+            ],
+            [
+              21,
+              8
+            ]
+          ],
+          [
+            [
+              26,
+              6
+            ],
+            [
+              26,
+              8
+            ]
+          ],
+          [
+            [
+              0,
+              8
+            ],
+            [
+              26,
+              8
+            ]
+          ]
+        ]
+      },
+      "placement": true,
+      "review": "checked"
+    },
+    {
+      "id": "ln_crossing_labels",
+      "topicId": "loops_nodes",
+      "level": "recall",
+      "prompt": "The drawing has one crossing with no dot, and two labels named SENSE. Which is true?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "The crossing wires are not joined; the two SENSE labels are one node",
+          "correct": true,
+          "feedback": "Right: a crossing without a dot is two wires passing each other, and net labels with the same name are joined even though no wire is drawn between them."
+        },
+        {
+          "text": "The crossing wires are joined; the two SENSE labels are two nodes",
+          "feedback": "Both readings are backward. Wires that cross without a dot are not joined, which is why careful drawings join wires only at T-junctions. Same-named labels are one node: that is what a net label is for."
+        },
+        {
+          "text": "The crossing wires are joined; the two SENSE labels are one node",
+          "feedback": "The labels are right, the crossing is not. Touching on paper doesn't join wires: without a dot the two wires pass each other, so LMP1 is fed only through R1 and LMP2 only through R2."
+        },
+        {
+          "text": "The crossing wires are not joined; the two SENSE labels are two nodes",
+          "feedback": "The crossing is right, the labels are not. Net labels with the same name are one node, wire or no wire. KiCad and SPICE both join them, so R3's lower end and R4's upper end are connected."
+        }
+      ],
+      "explanation": "Two drawing conventions, used by KiCad and in SPICE netlists alike. A wire that crosses another without a dot passes it: here R1's output runs to LMP1 and R2's output to LMP2, and they don't meet. Net labels with the same name are one node, so SENSE joins R3's lower end to R4's upper end with no wire drawn between them.",
+      "hints": [
+        "On a schematic, what marks a real joint between wires?",
+        "A net label names a node. What does the same name in two places mean?"
+      ],
+      "schematic": {
+        "netlist": "labels\nV1 a d 9\nR1 a b 1k\nRL1 b d 47\nR2 a c 1k\nRL2 c d 47\nR3 a sense 10k\nR4 sense d 10k\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "9 V",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              4,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n1 kΩ",
+            "labelOpposite": true
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              0
+            ],
+            "rot": 90,
+            "label": "R2\n1 kΩ"
+          },
+          {
+            "ref": "RL1",
+            "at": [
+              14,
+              8
+            ],
+            "rot": 90,
+            "label": "LMP1",
+            "symbol": "lamp"
+          },
+          {
+            "ref": "RL2",
+            "at": [
+              8,
+              8
+            ],
+            "rot": 90,
+            "label": "LMP2",
+            "symbol": "lamp"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              20,
+              0
+            ],
+            "rot": 90,
+            "label": "R3\n10 kΩ"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              25,
+              8
+            ],
+            "rot": 90,
+            "label": "R4\n10 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              20,
+              0
+            ]
+          ],
+          [
+            [
+              4,
+              4
+            ],
+            [
+              4,
+              6
+            ],
+            [
+              14,
+              6
+            ],
+            [
+              14,
+              8
+            ]
+          ],
+          [
+            [
+              8,
+              4
+            ],
+            [
+              8,
+              8
+            ]
+          ],
+          [
+            [
+              20,
+              4
+            ],
+            [
+              20,
+              5
+            ]
+          ],
+          [
+            [
+              25,
+              8
+            ],
+            [
+              25,
+              7
+            ]
+          ],
+          [
+            [
+              0,
+              8
+            ],
+            [
+              0,
+              12
+            ],
+            [
+              25,
+              12
+            ]
+          ]
+        ],
+        "labels": [
+          {
+            "text": "SENSE",
+            "at": [
+              20,
+              5
+            ]
+          },
+          {
+            "text": "SENSE",
+            "at": [
+              25,
+              7
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "ln_series_break",
+      "topicId": "loops_nodes",
+      "prompt": "LMP2's filament breaks. Which reading does A1 show now?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "0 A: the loop is open, so no current flows anywhere in it",
+          "correct": true,
+          "feedback": "Right: there is only one loop, and the break is in it. Charge can't cross the gap or pile up beside it, so the current stops everywhere at once, A1's wire included."
+        },
+        {
+          "text": "0.25 A: A1 sits on the supply's side of the break, so it still reads",
+          "feedback": "Current doesn't flow up to a break and wait there. Charge can't pile up at the gap, so with no way across it, no charge moves through A1 either: the current stops all the way around."
+        },
+        {
+          "text": "0.25 A: LMP1 and LMP3 are still whole, so they keep their share",
+          "feedback": "LMP1 and LMP3 have no path of their own back to the supply: their only loop runs through LMP2. With that loop open, they go dark too."
+        },
+        {
+          "text": "0.38 A: with one lamp fewer to pass through, more current flows",
+          "feedback": "A broken filament doesn't leave a wire in its place; it leaves a gap. A gap passes no current, so the current falls to zero instead of rising."
+        }
+      ],
+      "explanation": "The supply and the three lamps form one loop, and the meter is in it. A break anywhere in a single loop stops the current everywhere in it: charge can't cross the gap, and it can't pile up beside it, so it stops moving around the whole loop. All three lamps go dark and A1 reads 0 A.",
+      "hints": [
+        "How many closed paths are there from the supply's + terminal back to its − terminal?",
+        "After the break, is there any closed path left that passes through A1?"
+      ],
+      "schematic": {
+        "netlist": "string\nV1 a d 12\nRL1 a b 16\nRL2 b c 16\nRL3 c d 16\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "RL1",
+            "at": [
+              4,
+              0
+            ],
+            "rot": 0,
+            "label": "LMP1",
+            "symbol": "lamp"
+          },
+          {
+            "ref": "RL2",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "LMP2",
+            "symbol": "lamp"
+          },
+          {
+            "ref": "RL3",
+            "at": [
+              10,
+              8
+            ],
+            "rot": 180,
+            "label": "LMP3",
+            "symbol": "lamp"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              4,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              10,
+              8
+            ]
+          ],
+          [
+            [
+              6,
+              8
+            ],
+            [
+              0,
+              8
+            ]
+          ]
+        ],
+        "meters": [
+          {
+            "text": "A1 0.25 A",
+            "at": [
+              0,
+              2
+            ],
+            "kind": "ammeter",
+            "left": true
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "ln_branch_break",
+      "topicId": "loops_nodes",
+      "level": "reason",
+      "prompt": "LMP2's filament breaks. Find the new reading on A2. Assume an ideal supply.",
+      "variables": [
+        {
+          "name": "I1",
+          "unit": "A",
+          "value": 0.3
+        },
+        {
+          "name": "I2",
+          "unit": "A",
+          "value": 0.2
+        },
+        {
+          "name": "Vs",
+          "unit": "V",
+          "value": 12
+        }
+      ],
+      "derived": [
+        {
+          "name": "Itot",
+          "formula": "I1+I2",
+          "unit": "A"
+        },
+        {
+          "name": "RL1",
+          "formula": "Vs/I1",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "I1",
+        "unit": "A",
+        "tolerance": 0.02
+      },
+      "explanation": "LMP1 has a loop of its own: from the supply's + terminal through A1 and A2, through LMP1 and back. The break is in LMP2's branch, outside that loop. An ideal supply drives each branch the same whether or not the other is connected (a real supply sags a little), so LMP1 carries what it did before: A2 stays at {I1}. Only LMP2's loop is open, so A3 falls to 0 A.",
+      "hints": [
+        "Trace the loop that runs through A2 and LMP1. Does it pass through LMP2?",
+        "LMP1's two ends are still on the supply's two terminals, and an ideal supply drives them just as before."
+      ],
+      "misconceptions": [
+        {
+          "formula": "0",
+          "feedback": "A break stops the current only in the loops that pass through it. LMP1's loop runs from the supply through A2 and LMP1 and back, and never touches LMP2, so it keeps flowing."
+        },
+        {
+          "formula": "Itot",
+          "feedback": "A2 can't take over LMP2's share. The ideal supply drives LMP1 just as before, so it draws what it drew before. The supply simply delivers less in total."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Which reading does A1, in the supply lead, show now?",
+          "choices": [
+            {
+              "text": "{I1}: the supply lead now feeds only LMP1",
+              "correct": true,
+              "feedback": "Right: the supply lead carries the sum of the branch currents. With LMP2's branch open, that sum is LMP1's current alone."
+            },
+            {
+              "text": "{Itot}: the supply delivers the same current as before",
+              "feedback": "The supply lead carries whatever the branches draw. One branch now draws nothing, so the total falls to LMP1's {I1}."
+            },
+            {
+              "text": "{I2}: A1 reads what LMP2 used to draw",
+              "feedback": "LMP2 now draws nothing. A1 carries the branch currents that are still flowing, which is only LMP1's {I1}."
+            },
+            {
+              "text": "0 A: a break anywhere stops the supply's current",
+              "feedback": "Only if the break is in every loop. The loop through LMP1 is intact, so the supply still delivers {I1} through A1."
+            }
+          ],
+          "explanation": "Charge entering the junction from the supply lead leaves through the branches, so A1 reads the sum of the branch currents: before the break {I1} + {I2} = {Itot}, after it {I1} + 0 = {I1}."
+        }
+      ],
+      "simCheck": {
+        "netlist": "one branch left\nV1 a 0 {Vs:spice}\nRL1 a 0 {RL1:spice}\n",
+        "probe": "i(RL1)"
+      },
+      "schematic": {
+        "netlist": "branches\nV1 a d 12\nRL1 a d 40\nRL2 a d 60\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              3
+            ],
+            "rot": 90,
+            "label": "12 V"
+          },
+          {
+            "ref": "RL1",
+            "at": [
+              10,
+              3
+            ],
+            "rot": 90,
+            "label": "LMP1",
+            "symbol": "lamp"
+          },
+          {
+            "ref": "RL2",
+            "at": [
+              20,
+              3
+            ],
+            "rot": 90,
+            "label": "LMP2",
+            "symbol": "lamp"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              3
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              20,
+              0
+            ],
+            [
+              20,
+              3
+            ]
+          ],
+          [
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              3
+            ]
+          ],
+          [
+            [
+              0,
+              7
+            ],
+            [
+              20,
+              7
+            ]
+          ]
+        ],
+        "meters": [
+          {
+            "text": "A1 0.50 A",
+            "at": [
+              5,
+              0
+            ],
+            "kind": "ammeter"
+          },
+          {
+            "text": "A2 0.30 A",
+            "at": [
+              10,
+              1.5
+            ],
+            "kind": "ammeter"
+          },
+          {
+            "text": "A3 0.20 A",
+            "at": [
+              20,
+              1.5
+            ],
+            "kind": "ammeter"
+          }
+        ]
+      },
+      "placement": true,
+      "review": "checked"
+    },
+    {
+      "id": "ln_fault_branches",
+      "topicId": "loops_nodes",
+      "prompt": "Which fault explains the readings?",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            120,
+            150,
+            180,
+            220
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            150,
+            180,
+            220,
+            270,
+            330
+          ]
+        }
+      ],
+      "fault": {
+        "netlist": "branches\nV1 a 0 9\nRS1 a b 0.01\nR1 b c {R1:spice}\nRL1 c 0 120\nR2 b e {R2:spice}\nRL2 e 0 120\n",
+        "probes": [
+          {
+            "label": "A1: supply lead",
+            "probe": "i(RS1)"
+          },
+          {
+            "label": "A2: branch with R1 and LMP1",
+            "probe": "i(R1)"
+          },
+          {
+            "label": "A3: branch with R2 and LMP2",
+            "probe": "i(R2)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "R1 has cracked open",
+            "open": "R1",
+            "feedback": "An open R1 would stop only its own branch: A2 would fall to 0 A while A3 kept its healthy reading, and A1 would drop to match A3.",
+            "why": "A2 reads 0 A while A3 is unchanged, so the break is in the R1–LMP1 branch alone; A1 now carries only A3's current. R1 cracked open stops that branch and nothing else."
+          },
+          {
+            "text": "LMP2's filament is broken",
+            "open": "RL2",
+            "feedback": "A broken LMP2 would stop only its own branch: A3 would fall to 0 A while A2 kept its healthy reading, and A1 would drop to match A2.",
+            "why": "A3 reads 0 A while A2 is unchanged, so the break is in the R2–LMP2 branch alone; A1 now carries only A2's current."
+          },
+          {
+            "text": "S1's contacts don't close",
+            "open": "RS1",
+            "feedback": "S1 is in the supply lead, shared by both branches. If it stayed open, every meter would read 0 A and both lamps would be dark.",
+            "why": "Every meter reads 0 A: the break is in the one path both branches share, the supply lead through S1, so no loop is left closed."
+          },
+          {
+            "text": "A solder bridge joins LMP1's two terminals",
+            "short": "RL1",
+            "feedback": "A bridge across LMP1 would leave R1 alone in that branch, so A2 would rise above its healthy reading, A1 would rise with it, and A3 would stay as it was.",
+            "why": "A2 rises while A3 is unchanged, and A1 rises by the same amount: something in the R1 branch now lets more current through. A bridge across LMP1's terminals leaves only R1 in that branch, and LMP1 goes dark."
+          }
+        ]
+      },
+      "explanation": "Read the meters as loops. The supply lead carries the sum of the two branches, so A1 = A2 + A3 in every case. A branch reading 0 A has a break in that branch only; every meter at 0 A means the break is in the path both branches share; a branch reading higher than healthy has had part of its path bridged.",
+      "hints": [
+        "Which meters read 0 A? A break stops the current in every loop that passes through it, and only those.",
+        "A1 is in the path both branches share. A2 and A3 are each in one branch."
+      ],
+      "schematic": {
+        "netlist": "branches\nV1 a d 9\nRS1 a b 0.01\nR1 b c {R1:spice}\nRL1 c d 120\nR2 b e {R2:spice}\nRL2 e d 120\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              3
+            ],
+            "rot": 90,
+            "label": "9 V"
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              4,
+              0
+            ],
+            "label": "S1",
+            "symbol": "switchClosed"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              10,
+              3
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "RL1",
+            "at": [
+              10,
+              7
+            ],
+            "rot": 90,
+            "label": "LMP1",
+            "symbol": "lamp"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              16,
+              3
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "RL2",
+            "at": [
+              16,
+              7
+            ],
+            "rot": 90,
+            "label": "LMP2",
+            "symbol": "lamp"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              3
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              4,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              3
+            ]
+          ],
+          [
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              3
+            ]
+          ],
+          [
+            [
+              0,
+              7
+            ],
+            [
+              0,
+              11
+            ],
+            [
+              16,
+              11
+            ]
+          ]
+        ],
+        "meters": [
+          {
+            "text": "A1",
+            "at": [
+              2,
+              0
+            ],
+            "kind": "ammeter"
+          },
+          {
+            "text": "A2",
+            "at": [
+              10,
+              1.5
+            ],
+            "kind": "ammeter",
+            "left": true
+          },
+          {
+            "text": "A3",
+            "at": [
+              16,
+              1.5
+            ],
+            "kind": "ammeter"
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "ln_design_always_on",
+      "topicId": "loops_nodes",
+      "level": "design",
+      "prompt": "Choose where to connect LMP2, a lamp identical to LMP1. It must light whenever the pack is connected, whatever S1 does, and S1 must still switch LMP1 on and off.",
+      "variables": [],
+      "choices": [
+        {
+          "text": "Between a and c, across the pack's two terminals",
+          "correct": true,
+          "feedback": "Right: LMP2 then has a loop of its own, pack to LMP2 and back, that never passes through S1. S1 opens and closes only LMP1's loop."
+        },
+        {
+          "text": "Between a and b, across S1's two terminals",
+          "feedback": "With S1 closed, a and b are one node, so both of LMP2's leads sit on it and LMP2 stays dark. With S1 open, LMP2 and LMP1 form one loop in series: LMP1 no longer turns off."
+        },
+        {
+          "text": "Between b and c, across LMP1's two terminals",
+          "feedback": "LMP2 would be in parallel with LMP1, and both would hang from S1: opening S1 breaks the only path from the pack to b, so LMP2 goes dark with LMP1."
+        },
+        {
+          "text": "Cut into the wire from LMP1 to c, in line with LMP1",
+          "feedback": "In series with LMP1, LMP2 shares LMP1's single loop, S1 included: opening S1 darkens both. Even with S1 closed, the two lamps in one loop pass less current and both glow dimly."
+        }
+      ],
+      "explanation": "Each requirement is a statement about loops. LMP2 must always light, so it needs a loop that doesn't pass through S1; S1 must still control LMP1, so LMP1's loop must still pass through S1 and must not gain a path around it. Across the pack, a to c, gives LMP2 its own branch: LMP2 and LMP1 are then in parallel paths from the pack, and S1 sits only in LMP1's.",
+      "hints": [
+        "For each option, trace LMP2's loop with S1 open, then with S1 closed.",
+        "A part whose two leads are on the same node has no loop through it."
+      ],
+      "followUps": [
+        {
+          "prompt": "LMP2 is connected between a and b instead, and S1 is opened. What do the two lamps do?",
+          "choices": [
+            {
+              "text": "Both glow dimly: they now share one loop in series",
+              "correct": true,
+              "feedback": "Right: with S1 open, the only loop runs from the pack through LMP2, then LMP1, and back. Two filaments in one loop pass less current than one, so both glow, dimly."
+            },
+            {
+              "text": "LMP2 lights fully and LMP1 goes dark",
+              "feedback": "LMP2's loop with S1 open runs on through LMP1 to reach c. Whatever passes through LMP2 must also pass through LMP1, so LMP1 can't be dark while LMP2 is lit."
+            },
+            {
+              "text": "Both go dark: S1 is open",
+              "feedback": "S1 is open, but LMP2 now bridges its two terminals and closes a loop around it: pack, LMP2, LMP1, back to the pack. Current flows through both lamps."
+            },
+            {
+              "text": "LMP1 stays fully lit and LMP2 stays dark",
+              "feedback": "With S1 open, LMP1's only path to the pack's + terminal runs through LMP2, so the two lamps carry the same current: both glow, and both dimly."
+            }
+          ],
+          "explanation": "Across S1, LMP2 is bypassed by S1 when it is closed and becomes LMP1's series partner when it is open, so S1 no longer turns LMP1 off; it only switches between LMP1 at full brightness and both lamps dim."
+        }
+      ],
+      "schematic": {
+        "netlist": "switch\nV1 a c 6\nRS1 a b 1e9\nRL1 b c 47\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "pack\n6 V",
+            "symbol": "battery"
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              3,
+              0
+            ],
+            "label": "S1",
+            "symbol": "switch"
+          },
+          {
+            "ref": "RL1",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "LMP1",
+            "symbol": "lamp"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          [
+            [
+              7,
+              0
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              10,
+              6
+            ],
+            [
+              0,
+              6
+            ]
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              1,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              8.5,
+              0
+            ]
+          },
+          {
+            "text": "c",
+            "at": [
+              5,
+              6
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    }
+  ]
+}

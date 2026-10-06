@@ -23,7 +23,7 @@
           "tex": "I = \\frac{Q}{t} \\quad (1\\ \\text{A} = 1\\ \\text{C/s})"
         },
         {
-          "label": "Elementary charge",
+          "label": "Charge of one electron (magnitude; q in the calculator)",
           "tex": "e = 1.602 \\times 10^{-19}\\ \\text{C}"
         },
         {
@@ -35,8 +35,24 @@
           "tex": "Q = (\\text{rating in Ah}) \\times 3600\\ \\text{s/h}"
         },
         {
-          "label": "Drift speed",
-          "tex": "v_d = \\frac{I}{n\\,A\\,e}"
+          "label": "A milliamp-hour as charge",
+          "tex": "1\\ \\text{mAh} = 3.6\\ \\text{C}"
+        },
+        {
+          "label": "Run time on a battery",
+          "tex": "t = \\frac{Q}{I}"
+        },
+        {
+          "label": "Drift speed (n ≈ 8.5 × 10²⁸ free electrons per m³ in copper; A in m²)",
+          "tex": "I = n\\,A\\,v\\,e, \\quad\\text{so}\\quad v = \\frac{I}{n\\,A\\,e}"
+        },
+        {
+          "label": "Area in square meters",
+          "tex": "1\\ \\text{mm}^2 = (10^{-3}\\ \\text{m})^2 = 10^{-6}\\ \\text{m}^2"
+        },
+        {
+          "label": "Drift time over a length L",
+          "tex": "t = \\frac{L}{v} \\quad (\\text{in hours: } t / 3600\\ \\text{s/h})"
         }
       ],
       "goals": [
@@ -78,6 +94,11 @@
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 2 \"Ohm's Law\", section \"How voltage, current, and resistance relate\"",
           "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_2.html#xtocid87160",
           "note": "One coulomb is about 6.24 × 10¹⁸ electrons, and one ampere is one coulomb passing a point per second."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. II (AC), ch. 14 \"Transmission Lines\", section \"Circuits and the speed of light\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/AC/AC_14.html#xtocid89841",
+          "note": "The effect of electron motion in a circuit travels at roughly the speed of light while the electrons themselves move nowhere near that fast, so a far-away load responds almost at once."
         }
       ],
       "visuals": [
@@ -94,7 +115,7 @@
       "id": "cc_current_from_charge",
       "topicId": "charge_current",
       "level": "recall",
-      "prompt": "A coulomb-counting fuel gauge in a battery pack measures {Q} of charge passing through the battery's negative lead in {t}. What is the average current?",
+      "prompt": "A meter in the wire to a battery's − terminal counts {Q} of charge passing in {t}. Find the average current. (1 mA, one milliamp, is 0.001 A.)",
       "variables": [
         {
           "name": "Q",
@@ -109,11 +130,28 @@
           "name": "t",
           "unit": "s",
           "values": [
-            20,
-            30,
-            60,
-            120
+            100,
+            120,
+            150,
+            180
           ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "IA",
+          "formula": "Q/t",
+          "unit": ""
+        },
+        {
+          "name": "IestA",
+          "formula": "fig1(fig1(Q)/fig1(t))",
+          "unit": ""
+        },
+        {
+          "name": "Iest",
+          "formula": "fig1(fig1(Q)/fig1(t))",
+          "unit": "A"
         }
       ],
       "answer": {
@@ -122,10 +160,21 @@
         "tolerance": 0.02
       },
       "estimate": true,
-      "explanation": "Current is the rate at which charge passes a point: I = Q/t = {Q} / {t} = {answer}. One ampere is one coulomb per second, so coulombs divided by seconds give amps directly.",
+      "estimateHint": "Rounded to one figure: {Q:fig1} C / {t:fig1} s ≈ {IestA} A, which is {Iest}.",
+      "estimateSteps": [
+        {
+          "text": "Rounded to one figure:"
+        },
+        {
+          "math": "\\frac{[[Q:fig1]]\\ \\mathrm{C}}{[[t:fig1]]\\ \\mathrm{s}}",
+          "result": "[[IestA]]\\ \\mathrm{A} = [[Iest]]",
+          "approx": true
+        }
+      ],
+      "explanation": "Current is the rate at which charge passes a point. One ampere is one coulomb per second, so coulombs divided by seconds give amperes: I = Q/t = {Q} / {t} = {IA} A. A milliamp (mA) is a thousandth of an ampere (1 mA = 0.001 A), so multiply by 1000: I = {IA} A × 1000 mA/A = {answer}.",
       "hints": [
-        "Current is charge per unit time.",
-        "I = Q/t, with Q in coulombs and t in seconds, gives amps."
+        "Current is the charge passing a point each second.",
+        "Divide the charge in coulombs by the time in seconds to get amperes; 1 A = 1000 mA."
       ],
       "misconceptions": [
         {
@@ -139,38 +188,54 @@
       ],
       "followUps": [
         {
-          "prompt": "An identical gauge is fitted in the battery's positive lead. Over the same {t}, how much charge does it count passing through the positive lead?",
+          "prompt": "The battery powers a lamp through two wires. A second meter goes in the wire to the battery's + terminal. Over the same {t}, how much charge passes it?",
           "choices": [
             {
-              "text": "The same {Q}: the charge through one terminal equals the charge through the other",
+              "text": "The same {Q}: what leaves one terminal comes back into the other",
               "correct": true,
-              "feedback": "Right: charge is conserved and can't keep accumulating in the load, so the charge through the + terminal each second equals the charge through the − terminal."
+              "feedback": "Right: charge is never used up or created, and it can't keep piling up anywhere in the loop, so as much charge passes the + terminal each second as passes the − terminal."
             },
             {
-              "text": "Less than {Q}, because the load used some of the charge",
-              "feedback": "The load converts energy, not charge. The charge gives up potential energy in the load, but none of it is lost, so the count is the same."
+              "text": "Less than {Q}: the load (whatever the battery powers) used some up",
+              "feedback": "The load converts energy, not charge. Charge gives up energy as it passes through the load, but none of the charge is lost, so the second meter counts the same {Q}."
             },
             {
-              "text": "More than {Q}, because the battery's chemistry adds charge as it discharges",
-              "feedback": "The chemistry does work on the charges but creates none; charge is conserved. The charge through the + terminal each second equals the charge through the − terminal."
+              "text": "More than {Q}: the battery's chemicals make extra charge as they react",
+              "feedback": "The chemicals give the charge energy but create none: charge is conserved. As much charge passes the + terminal as passes the − terminal."
             },
             {
-              "text": "Nothing: charge only passes the negative terminal",
+              "text": "None: charge passes only through the battery's − terminal",
               "feedback": "Current needs a closed loop. If no charge passed the + terminal, none could keep passing the − terminal either."
             }
           ],
-          "explanation": "In a single loop the current is the same at every point, including both battery terminals. Inside the battery the same current is carried by ions through the electrolyte. What the load takes is energy, which shows up as a voltage drop across it (the next topic)."
+          "explanation": "In a single loop the current is the same at every point, including both battery terminals. Inside the battery the same current is carried by ions (charged atoms and molecules) in the battery's chemicals. What the load takes is energy; the next topic measures the energy each coulomb gives up there as voltage."
         }
       ],
       "noDrawing": "about charge passing a point over time; no circuit to analyze",
       "review": "verified",
-      "placement": true
+      "placement": true,
+      "explanationSteps": [
+        {
+          "text": "Current is the rate at which charge passes a point. One ampere is one coulomb per second, so coulombs divided by seconds give amperes:"
+        },
+        {
+          "math": "I = \\frac{Q}{t} = \\frac{[[Q]]}{[[t]]}",
+          "result": "[[IA]]\\ \\mathrm{A}"
+        },
+        {
+          "text": "A milliamp (mA) is a thousandth of an ampere (1 mA = 0.001 A), so multiply by 1000:"
+        },
+        {
+          "math": "I = [[IA]]\\ \\mathrm{A} \\times 1000\\ \\frac{\\mathrm{mA}}{\\mathrm{A}}",
+          "result": "[[answer]]"
+        }
+      ]
     },
     {
       "id": "cc_electrons_per_second",
       "topicId": "charge_current",
       "level": "recall",
-      "prompt": "A wire carries a steady {I}. How many electrons pass through any cross-section of the wire each second? (Enter a power of ten as 2.5e18 or 2.5 × 10^18.)",
+      "prompt": "A wire carries a steady {I}. How many electrons pass any point along the wire each second? (Enter a power of ten as 2.5e18 or 2.5 × 10^18.)",
       "variables": [
         {
           "name": "I",
@@ -317,7 +382,14 @@
       "id": "cc_drift_time",
       "topicId": "charge_current",
       "level": "design",
-      "prompt": "A 12 V DC cable feeding an LED light strip has copper conductors of {Amm} mm² cross-section and carries a steady {I}. Copper has about 8.5 × 10²⁸ free electrons per cubic meter. On average, how long does one electron take to drift {L} along the cable? Give the time in hours.",
+      "ladder": [
+        "cc_drift_speed",
+        "cc_drift_area_units",
+        "cc_drift_speed_size",
+        "cc_drift_signal_speed",
+        "cc_what_if_drift_area"
+      ],
+      "prompt": "Find how long one electron takes, on average, to drift the length shown. This conductor, in a 12 V DC cable feeding an LED light strip, carries a steady current. Copper has about 8.5 × 10²⁸ free electrons per cubic meter. Give the time in hours.",
       "variables": [
         {
           "name": "I",
@@ -342,7 +414,7 @@
           "unit": "m",
           "values": [
             2,
-            5,
+            4,
             10
           ]
         }
@@ -420,34 +492,67 @@
         {
           "formula": "L/v/60",
           "feedback": "Dividing by 60 turns seconds into minutes. An hour is 3600 s, so divide the {tsec} by 3600."
+        },
+        {
+          "formula": "L*8.5e28*Amm*1e-12*1.602e-19/I/3600",
+          "feedback": "1 mm² = (10⁻³ m)² = 10⁻⁶ m², not 10⁻¹² m² (that is a square micrometer). With the area a million times too small, the drift comes out a million times too fast and the time a million times too short."
+        },
+        {
+          "formula": "L*8.5e28*Amm*1e-3*1.602e-19/I/3600",
+          "feedback": "You converted the area with 10⁻³, the factor for millimeters. A square millimeter is 10⁻³ m on each side: 1 mm² = 10⁻⁶ m². With the area a thousand times too large, the drift comes out a thousand times too slow and the time a thousand times too long."
+        },
+        {
+          "formula": "v/L",
+          "feedback": "That is speed ÷ length, which has units of 1/s, not a time. Time = distance ÷ speed: t = L/v = {tsec}, then divide by 3600 for hours."
+        },
+        {
+          "formula": "v/L/3600",
+          "feedback": "That is speed ÷ length, upside down: its units are 1/s, not a time. Time = distance ÷ speed: t = L/v = {tsec}, then divide by 3600 for hours."
+        },
+        {
+          "formula": "L*v",
+          "feedback": "Length × speed has units of m²/s, not a time. The time to cover a distance is distance ÷ speed: t = L/v = {tsec}, then divide by 3600 for hours."
+        },
+        {
+          "formula": "L*v/3600",
+          "feedback": "Length × speed has units of m²/s, not a time, so dividing it by 3600 gives no hours either. Time = distance ÷ speed: t = L/v = {tsec}, then divide by 3600."
+        },
+        {
+          "formula": "L/v*3600",
+          "feedback": "You multiplied by 3600, which turns hours into seconds. {tsec} is already in seconds; an hour is 3600 s, so divide: {tsec} / 3600."
         }
       ],
       "followUps": [
         {
-          "prompt": "Yet when a switch at the supply end of this cable is closed, current starts flowing in the LED strip at the far end within a fraction of a microsecond. Why?",
+          "prompt": "The strip has been lit for a minute. At this drift speed, none of the electrons that were at the supply end when the switch closed has reached the strip. Where does the energy the strip turns into light come from?",
           "choices": [
             {
-              "text": "The cable and the LED strip are already full of free carriers, and closing the switch sets up the field along the whole loop at a large fraction of the speed of light",
+              "text": "From the supply, through the field: the supply keeps up the field around the loop, and in the strip it pushes the strip's own electrons",
               "correct": true,
-              "feedback": "Right: the carriers at the far end were already there. What travels fast is the change in the electric field, not the electrons."
+              "feedback": "Right: the energy reaches the strip through the electric and magnetic fields along the cable, as fast as a change in the field travels. The electrons in the strip are what the field pushes on there."
             },
             {
-              "text": "Electrons near the switch rush to the strip right after it closes; the slow drift only applies once the current is steady",
-              "feedback": "Even at switch-on the drift stays a small fraction of a millimeter per second: hours to cross the cable. The carriers in the LED strip don't need to come from the switch; they are already there."
+              "text": "From electrons arriving from the supply end of the cable, each one bringing along the energy it picked up as it passed through the supply",
+              "feedback": "None of those electrons has arrived: at this drift speed the trip takes {answer}. The electrons passing through the LEDs now were already in the strip, or next to it, when the switch closed."
             },
             {
-              "text": "Electrons from the switch race to the strip at nearly the speed of light, then slow down to the drift speed",
-              "feedback": "No electron makes that trip quickly. It is the field, set up along the wires as an electromagnetic wave, that arrives at a large fraction of the speed of light, and it moves the carriers already at the far end."
+              "text": "From the strip's own free electrons, which are used up one by one as the LEDs turn their charge into light and heat",
+              "feedback": "Charge is conserved: every electron that enters an LED leaves it, and the strip keeps as many free electrons as it started with. The electrons give up energy the field gave them; they are not used up."
             },
             {
-              "text": "The LED strip holds a store of charge that lights it until the electrons from the switch arrive",
-              "feedback": "An LED strip doesn't run on stored charge, and electrons from the switch would take hours to arrive. The carriers already in the strip and the cable start moving as soon as the field reaches them."
+              "text": "From the current, which is larger going into the strip than coming out of it, with the difference being turned into light",
+              "feedback": "The current into the strip equals the current out of it: in a single loop it is the same everywhere. What the strip takes from each coulomb is energy; the next topic measures that energy per coulomb as voltage."
             }
           ],
-          "explanation": "Two speeds are at work. The change in the field travels along the cable as an electromagnetic wave at a large fraction of the speed of light (about two-thirds of it in a plastic-insulated cable, so {L} takes about {tprop}). The electrons themselves drift at a fraction of a millimeter per second. Current flows in the strip as soon as the field reaches it, and its LEDs emit light essentially at once."
+          "explanation": "Each electron needs {answer} to cross this cable, so the energy can't be riding along with the electrons from the supply. The supply keeps up the field along the loop, and the energy flows from the supply to the strip through the electric and magnetic fields in and around the cable, as fast as a change in the field travels. In the strip, the field pushes the strip's own free electrons through the LEDs. The charge goes around the loop and comes back; the energy is delivered on the way."
         }
       ],
-      "noDrawing": "about the motion of electrons in a wire; no circuit to analyze",
+      "wire": {
+        "area": "{Amm} mm²",
+        "length": "{L}",
+        "current": "{I}",
+        "material": "copper"
+      },
       "review": "verified"
     },
     {
@@ -499,7 +604,7 @@
     {
       "id": "cc_what_if_drift_area",
       "topicId": "charge_current",
-      "prompt": "A copper wire of {Amm} mm² cross-section carries {I}. It is replaced by a copper wire with twice the cross-section, carrying the same {I}. What happens to the electrons' drift speed?",
+      "prompt": "Replace this wire with a copper one of twice the cross-section (the area of its cut face), carrying the same current. What happens to the electrons' drift speed (their net speed along the wire)?",
       "variables": [
         {
           "name": "I",
@@ -530,7 +635,10 @@
           "Amm": "2*Amm"
         },
         "askFactor": true,
+        "factorIntro": "The drift speed is the slow net speed at which the free electrons advance along a wire that carries current. In this wire it is {before} (1 µm/s = 0.001 mm/s), under half a millimeter per second. The free electrons also move at roughly 10⁶ m/s, but in random directions that cancel, so that motion carries no current. A change, such as a switch closing, travels along the wire far faster than the drift: the change in the field moves as an electromagnetic wave, at a large fraction of the speed of light. The current is the charge crossing a section each second, I = nAve (n free electrons per cubic meter, area A, drift speed v, electron charge e), so v = I/(nAe).",
+        "factorWhy": "A is under the line, to the first power, so doubling it halves v.",
         "feedback": {
+          "down": "Twice the cross-section holds twice as many free electrons in each meter of wire. The same coulombs per second are now shared among twice as many carriers, so each one drifts more slowly.",
           "up": "A thicker wire doesn't push its electrons harder. Each meter of it holds more free electrons, so the same coulombs per second are shared among more carriers, and each one needs to drift more slowly.",
           "same": "The current is the same, but each slice of the thicker wire holds more free electrons to share it, so each one carries less of the flow and drifts more slowly."
         }
@@ -540,7 +648,11 @@
         "The same current must cross every section. How many free electrons share it in the thicker wire?",
         "v = I/(nAe): the current and n are unchanged, and A doubles."
       ],
-      "noDrawing": "about electrons in a wire; no circuit to analyze",
+      "wire": {
+        "area": "{Amm} mm²",
+        "current": "{I}",
+        "material": "copper"
+      },
       "review": "verified"
     },
     {
@@ -925,7 +1037,7 @@
     {
       "id": "cc_fault_meters",
       "topicId": "charge_current",
-      "prompt": "A {V} battery drives current through R1 = {R1} and a lamp (treat the lamp as a fixed 100 Ω). Ammeter A1 is in the wire from the battery's + terminal to R1; ammeter A2 is in the wire from R1 to the lamp. When the circuit is healthy, both read {h0}. The readings are below. Which fault explains them?",
+      "prompt": "Ammeters A1 and A2 are in the loop: the current passes through each. Find the fault that explains the readings.",
       "variables": [
         {
           "name": "V",
@@ -950,48 +1062,39 @@
         "netlist": "single loop\nV1 a 0 {V:spice}\nR1 a b {R1:spice}\nRL1 b 0 100\n",
         "probes": [
           {
-            "label": "A1: in the wire from the battery's + terminal to R1",
+            "label": "A1",
             "probe": "i(R1)"
           },
           {
-            "label": "A2: in the wire from R1 to the lamp",
+            "label": "A2",
             "probe": "i(RL1)"
           }
         ],
         "faults": [
           {
-            "text": "The lamp's filament is broken (open)",
+            "text": "The lamp's filament has burned through, leaving a gap inside the lamp",
             "open": "RL1",
-            "feedback": "A broken filament opens the only path, so no current would flow anywhere: both meters would read 0 A.",
-            "why": "With the filament open there is no closed path, so both meters read 0 A: a break anywhere in a single loop stops the current everywhere in it."
+            "feedback": "A burned-through filament leaves a gap in the only path, so no current would flow anywhere: both meters would read 0 A.",
+            "why": "Both meters read 0 A: the burned-through filament leaves a gap in the only path, and a break anywhere in a single loop stops the current everywhere in it."
           },
           {
-            "text": "A solder bridge directly across the lamp's two terminals (on the lamp side of A2)",
-            "short": "RL1",
-            "feedback": "A bridge across the lamp's terminals would leave only R1 to limit the current, so both meters would rise, and they would still agree: A2 sits between R1 and the bridge, so the bridge's current passes through it and the circuit is still one loop.",
-            "why": "Both meters rise and still agree. The bridge across the lamp's terminals leaves only R1 to limit the current, and A2, between R1 and the bridge, carries all of it: it is still one loop."
-          },
-          {
-            "text": "R1 is ten times its marked value (a misread color band)",
-            "value": {
-              "ref": "R1",
-              "formula": "R1*10"
-            },
-            "feedback": "A larger R1 would cut the current, but the circuit is still one loop, so both meters would read the same, smaller value.",
-            "why": "Both meters read the same, much smaller current: R1 limits the current far more, and in a single loop the current is the same at every point."
-          },
-          {
-            "text": "A 100 Ω resistor was fitted by mistake from the wire between R1 and A2 to the battery's − terminal",
+            "text": "An extra resistor (a part that conducts, like R1) joins the wire between R1 and A2 to the battery's − terminal",
             "add": "Rx b 0 100",
-            "feedback": "An extra path from the junction would let part of the current bypass the lamp: A1 would read more than A2, the difference flowing in the extra resistor.",
-            "why": "A1 and A2 disagree, which a single loop never allows: the difference, A1 − A2, is the current leaving through the extra 100 Ω path. A1 rises because two paths now share the return, and A2 falls."
+            "feedback": "That resistor would give charge a second way back to the − terminal, leaving the loop between the meters: A1 would read more than A2, and the difference would flow through the extra resistor.",
+            "why": "A1 reads more than A2, which a single loop never allows: charge is leaving the loop between the meters. The extra resistor gives it a second way back to the − terminal, and the difference, A1 − A2, flows through it. A1 changes too, because the extra path changes how much current the battery drives; how much is Ohm's law, two topics on."
+          },
+          {
+            "text": "An extra resistor joins the battery's + terminal, before A1, to the wire between R1 and A2",
+            "add": "Rx a b 100",
+            "feedback": "That resistor would carry charge from the + terminal around A1 and R1, joining the loop between the meters: A2 would read more than A1, and the difference would flow through the extra resistor.",
+            "why": "A2 reads more than A1: charge is joining the loop between the meters. The extra resistor carries it from the + terminal around A1 and R1, and the difference, A2 − A1, flows through it. A1 changes too, because the extra path changes how much current the battery drives; how much is Ohm's law, two topics on."
           }
         ]
       },
-      "explanation": "In a single loop the current is the same at every point, so two series ammeters must agree. Both at zero means a break; both equal but changed means that a part in the loop changed (a shorted part raises the current, a high-value part lowers it); unequal readings mean a second path branches off between the two meters; a path that bypasses a part but not a meter (like a bridge across the lamp's terminals, on the lamp side of A2) changes both readings equally.",
+      "explanation": "In a single loop, two ammeters must agree: charge can't pile up or vanish between them. Both at zero: a break somewhere in the loop. A1 above A2: charge leaves the loop between the meters, through a second path. A2 above A1: charge joins the loop between the meters, from a second path.",
       "hints": [
         "First compare A1 with A2. When can two meters in one loop disagree?",
-        "Zero means no closed path; equal but changed means the one loop changed; unequal means a second path branches off between the two meters."
+        "Current flows from the + terminal through A1, R1 and then A2. Charge that leaves the loop between the meters never reaches A2; charge that joins between them passes A2 but not A1."
       ],
       "schematic": {
         "parts": [
@@ -1011,7 +1114,7 @@
               2,
               0
             ],
-            "label": "R1\n{R1}"
+            "label": "R1"
           },
           {
             "ref": "RL1",
@@ -1020,7 +1123,7 @@
               2
             ],
             "rot": 90,
-            "label": "lamp\n100 Ω",
+            "label": "lamp",
             "symbol": "lamp"
           }
         ],
@@ -1089,7 +1192,390 @@
           }
         ]
       },
+      "review": "verified",
+      "explanationSteps": [
+        {
+          "text": "In a single loop, two ammeters must agree: charge can't pile up or vanish between them."
+        },
+        {
+          "text": "Both at zero: a break somewhere in the loop."
+        },
+        {
+          "text": "A1 above A2: charge leaves the loop between the meters, through a second path."
+        },
+        {
+          "text": "A2 above A1: charge joins the loop between the meters, from a second path."
+        }
+      ]
+    },
+    {
+      "id": "cc_drift_area_units",
+      "topicId": "charge_current",
+      "level": "recall",
+      "prompt": "Convert this cable conductor's cross-section (the area of its cut face) to square meters. Enter the number only, with a power of ten as 3e-9 or 3 × 10^-9.",
+      "variables": [
+        {
+          "name": "Amm",
+          "unit": "",
+          "values": [
+            0.5,
+            0.75,
+            1,
+            1.5,
+            2.5
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "Amm*1e-6",
+        "unit": "",
+        "unitless": true,
+        "tolerance": 0.02
+      },
+      "explanation": "A square millimeter is a square 1 mm on each side, and 1 mm = 10⁻³ m, so 1 mm² = (10⁻³ m)² = 10⁻⁶ m²: the conversion factor is squared along with the unit. So {Amm} mm² = {Amm} × 10⁻⁶ m², entered as {Amm}e-6. The drift-speed formula v = I/(nAe) needs the area in m², because n counts free electrons per cubic meter.",
+      "explanationSteps": [
+        {
+          "text": "A square millimeter is a square 1 mm on each side, and 1 mm = 10⁻³ m, so"
+        },
+        {
+          "math": "1\\ \\mathrm{mm^{2}} = (10^{-3}\\ \\mathrm{m})^{2}",
+          "result": "10^{-6}\\ \\mathrm{m^{2}}"
+        },
+        {
+          "text": "The conversion factor is squared along with the unit. So the area is"
+        },
+        {
+          "math": "[[Amm]]\\ \\mathrm{mm^{2}}",
+          "result": "[[Amm]]\\times 10^{-6}\\ \\mathrm{m^{2}}"
+        },
+        {
+          "text": "Enter it as {Amm}e-6. The drift-speed formula needs the area in m², because n counts free electrons per cubic meter:"
+        },
+        {
+          "math": "v = \\frac{I}{nAe}"
+        }
+      ],
+      "hints": [
+        "A square millimeter is a square 1 mm on each side. What is 1 mm in meters?",
+        "1 mm = 10⁻³ m, so 1 mm² = (10⁻³ m)² = 10⁻⁶ m²."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Amm*1e-3",
+          "feedback": "You used 10⁻³, the factor for millimeters. A square millimeter is 10⁻³ m in each of two directions, so the factor is squared: 1 mm² = (10⁻³ m)² = 10⁻⁶ m²."
+        },
+        {
+          "formula": "Amm*1e-12",
+          "feedback": "Squaring 10⁻³ doubles its exponent: 1 mm² = (10⁻³ m)² = 10⁻⁶ m². 10⁻¹² m² is (10⁻⁶ m)², a square micrometer, a million times smaller."
+        },
+        {
+          "formula": "Amm*1e6",
+          "feedback": "You converted the wrong way. A square meter holds a million square millimeters, so the same area is a much smaller number of square meters: 1 mm² = 10⁻⁶ m², so divide by 10⁶."
+        },
+        {
+          "formula": "Amm",
+          "feedback": "That is still the number of square millimeters. Each one is 10⁻⁶ m², because 1 mm² = (10⁻³ m)²: multiply by 10⁻⁶."
+        }
+      ],
+      "wire": {
+        "area": "{Amm} mm²",
+        "material": "copper"
+      },
       "review": "verified"
+    },
+    {
+      "id": "cc_drift_speed",
+      "topicId": "charge_current",
+      "level": "recall",
+      "prompt": "Find the electrons' drift speed in this conductor (the net speed at which its free electrons advance along it), in meters per second. The current is steady. Copper has about 8.5 × 10²⁸ free electrons per cubic meter. Enter the number only, with a power of ten as 3e-9 or 3 × 10^-9.",
+      "variables": [
+        {
+          "name": "I",
+          "unit": "A",
+          "values": [
+            0.5,
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "name": "Amm",
+          "unit": "",
+          "values": [
+            0.75,
+            1,
+            1.5,
+            2.5
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Qm",
+          "formula": "8.5e28*Amm*1e-6*1.602e-19",
+          "unit": "C"
+        },
+        {
+          "name": "v",
+          "formula": "I/(8.5e28*Amm*1e-6*1.602e-19)",
+          "unit": "m/s"
+        }
+      ],
+      "answer": {
+        "formula": "I/(8.5e28*Amm*1e-6*1.602e-19)",
+        "unit": "",
+        "unitless": true,
+        "tolerance": 0.03
+      },
+      "explanation": "In one second, the free electrons in a length v of the conductor cross a section, so the current is the charge they carry: I = nAve, and v = I/(nAe). With the area in square meters, {Amm} mm² = {Amm} × 10⁻⁶ m²: v = {I} / (8.5 × 10²⁸ m⁻³ × {Amm} × 10⁻⁶ m² × 1.602 × 10⁻¹⁹ C) = {v} (1 µm/s = 10⁻⁶ m/s). The free electrons in each meter of this conductor carry {Qm} in all, which is why so slow a drift carries amps.",
+      "explanationSteps": [
+        {
+          "text": "In one second, the free electrons in a length v of the conductor cross a section, so the current is the charge they carry:"
+        },
+        {
+          "math": "I = nAve"
+        },
+        {
+          "math": "v = \\frac{I}{nAe}"
+        },
+        {
+          "text": "With the area in square meters:"
+        },
+        {
+          "math": "[[Amm]]\\ \\mathrm{mm^{2}} = [[Amm]]\\times 10^{-6}\\ \\mathrm{m^{2}}"
+        },
+        {
+          "math": "v = \\frac{[[I]]}{8.5\\times 10^{28}\\ \\mathrm{m^{-3}}\\times [[Amm]]\\times 10^{-6}\\ \\mathrm{m^{2}}\\times 1.602\\times 10^{-19}\\ \\mathrm{C}}",
+          "result": "[[v]]"
+        },
+        {
+          "math": "1\\ \\mathrm{\\text{µ}m/s} = 10^{-6}\\ \\mathrm{m/s}"
+        },
+        {
+          "text": "The free electrons in each meter of this conductor carry {Qm} in all, which is why so slow a drift carries amps."
+        }
+      ],
+      "hints": [
+        "In one second, the free electrons in a length v of the conductor cross a section. How much charge is that?",
+        "I = nAve, so v = I/(nAe), with A in square meters (1 mm² = 10⁻⁶ m²) and e = 1.602 × 10⁻¹⁹ C."
+      ],
+      "misconceptions": [
+        {
+          "formula": "I/(8.5e28*Amm*1.602e-19)",
+          "feedback": "The area must be in square meters: 1 mm² = (10⁻³ m)² = 10⁻⁶ m². Left in mm², the area is a million times too large, so the drift comes out a million times too slow."
+        },
+        {
+          "formula": "I/(8.5e28*Amm*1e-3*1.602e-19)",
+          "feedback": "You converted the area with 10⁻³, the factor for millimeters. A square millimeter is 10⁻³ m on each side: 1 mm² = 10⁻⁶ m². With the area a thousand times too large, the drift comes out a thousand times too slow."
+        },
+        {
+          "formula": "I/(8.5e28*Amm*1e-12*1.602e-19)",
+          "feedback": "1 mm² = (10⁻³ m)² = 10⁻⁶ m², not 10⁻¹² m² (that is a square micrometer). With the area a million times too small, the drift comes out a million times too fast."
+        },
+        {
+          "formula": "I/(8.5e28*Amm*1e-6)",
+          "feedback": "You left out the electron's charge. n·A·v counts the electrons crossing a section each second; the current is coulombs per second, so I = nAve and v = I/(nAe)."
+        },
+        {
+          "formula": "I*8.5e28*Amm*1e-6*1.602e-19",
+          "feedback": "You multiplied the current by n·A·e. The current is the product I = nAve, so the drift speed is the current divided by n·A·e: v = I/(nAe)."
+        },
+        {
+          "formula": "I/(8.5e28*Amm*1e-6*1.602e-19)*1e3",
+          "feedback": "That is the drift speed in millimeters per second. The question asks for meters per second: 1 mm/s = 10⁻³ m/s."
+        }
+      ],
+      "wire": {
+        "area": "{Amm} mm²",
+        "current": "{I}",
+        "material": "copper"
+      },
+      "review": "verified",
+      "placement": true
+    },
+    {
+      "id": "cc_drift_speed_size",
+      "topicId": "charge_current",
+      "level": "reason",
+      "prompt": "Estimate the electrons' drift speed in this conductor without a calculator: which is closest? Copper has about 8.5 × 10²⁸ free electrons per cubic meter.",
+      "variables": [
+        {
+          "name": "I",
+          "unit": "A",
+          "values": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "name": "Amm",
+          "unit": "",
+          "values": [
+            0.75,
+            1,
+            1.5
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Qm",
+          "formula": "8.5e28*Amm*1e-6*1.602e-19",
+          "unit": "C"
+        },
+        {
+          "name": "v",
+          "formula": "I/(8.5e28*Amm*1e-6*1.602e-19)",
+          "unit": "m/s"
+        }
+      ],
+      "choices": [
+        {
+          "text": "About 10⁻⁴ m/s: a tenth of a millimeter each second",
+          "correct": true,
+          "feedback": "Right: the free electrons in each meter of this conductor carry {Qm} in all, so passing {I} needs them to advance only {v}."
+        },
+        {
+          "text": "About 1 m/s: one meter of conductor each second",
+          "feedback": "A drift that fast would carry over a thousand times this current. The free electrons in each meter of this conductor carry {Qm} in all, so passing {I} needs them to advance only {v}."
+        },
+        {
+          "text": "About 10³ m/s: a kilometer of conductor each second",
+          "feedback": "Free electrons do move that fast and faster, around 10⁶ m/s, but in random directions: that motion averages to zero and carries no current. The net drift the field adds is only {v}, because each meter of conductor holds {Qm} of free-electron charge."
+        },
+        {
+          "text": "About 2 × 10⁸ m/s: two-thirds of the speed of light",
+          "feedback": "That is roughly how fast a change in the field travels along a cable, not how fast the electrons move. A drift that fast would carry over a billion times this current; with {Qm} of free-electron charge in each meter, {I} needs only {v}."
+        }
+      ],
+      "explanation": "The current is the charge in the free electrons crossing a section each second: I = nAve, so v = I/(nAe) = {I} / (8.5 × 10²⁸ m⁻³ × {Amm} × 10⁻⁶ m² × 1.602 × 10⁻¹⁹ C) = {v}: of the four options, nearest to 10⁻⁴ m/s, a tenth of a millimeter each second. To one figure: n·e ≈ 9 × 10²⁸ × 2 × 10⁻¹⁹ C ≈ 2 × 10¹⁰ C per cubic meter, so each meter of a 1 mm² conductor (10⁻⁶ m²) holds about 2 × 10⁴ C of free-electron charge, and an ampere moves it about 1/(2 × 10⁴) m = 5 × 10⁻⁵ m each second. The drift is slow because the free electrons are so many.",
+      "explanationSteps": [
+        {
+          "text": "The current is the charge in the free electrons crossing a section each second:"
+        },
+        {
+          "math": "I = nAve,\\quad \\text{so}\\quad v = \\frac{I}{nAe}"
+        },
+        {
+          "math": "v = \\frac{[[I]]}{8.5\\times 10^{28}\\ \\mathrm{m^{-3}}\\times [[Amm]]\\times 10^{-6}\\ \\mathrm{m^{2}}\\times 1.602\\times 10^{-19}\\ \\mathrm{C}}",
+          "result": "[[v]]"
+        },
+        {
+          "text": "That is nearest to 10⁻⁴ m/s of the four options: a tenth of a millimeter each second. To one figure:"
+        },
+        {
+          "math": "n\\cdot e \\approx 9\\times 10^{28}\\times 2\\times 10^{-19}\\ \\mathrm{C}",
+          "result": "2\\times 10^{10}\\ \\mathrm{C/m^{3}}",
+          "approx": true
+        },
+        {
+          "text": "So each meter of a 1 mm² conductor (10⁻⁶ m²) holds about 2 × 10⁴ C of free-electron charge, and each second an ampere moves it about"
+        },
+        {
+          "math": "\\frac{1}{2\\times 10^{4}}\\ \\mathrm{m}",
+          "result": "5\\times 10^{-5}\\ \\mathrm{m}"
+        },
+        {
+          "text": "The drift is slow because the free electrons are so many."
+        }
+      ],
+      "hints": [
+        "The current is the charge in the free electrons crossing a section each second: I = nAve.",
+        "Round to one figure: n·e ≈ 9 × 10²⁸ × 2 × 10⁻¹⁹ C ≈ 2 × 10¹⁰ C per cubic meter, and 1 mm² = 10⁻⁶ m²."
+      ],
+      "wire": {
+        "area": "{Amm} mm²",
+        "current": "{I}",
+        "material": "copper"
+      },
+      "review": "verified"
+    },
+    {
+      "id": "cc_drift_signal_speed",
+      "topicId": "charge_current",
+      "level": "reason",
+      "prompt": "Each free electron takes about {thours} to drift the length of this cable, yet current starts flowing in the 12 V light strip at the cable's far end within a fraction of a microsecond of closing a switch at the supply end. Why?",
+      "variables": [
+        {
+          "name": "I",
+          "unit": "A",
+          "values": [
+            1,
+            2
+          ]
+        },
+        {
+          "name": "L",
+          "unit": "m",
+          "values": [
+            5,
+            10
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "v",
+          "formula": "I/(8.5e28*0.75e-6*1.602e-19)",
+          "unit": "m/s"
+        },
+        {
+          "name": "thours",
+          "formula": "L/v/3600",
+          "unit": "h"
+        },
+        {
+          "name": "tprop",
+          "formula": "L/2e8",
+          "unit": "s"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Free electrons already fill the loop, and the change in the field travels along the cable at a large fraction of the speed of light",
+          "correct": true,
+          "feedback": "Right: the carriers at the far end were already there. What travels fast is the change in the electric field, not the electrons."
+        },
+        {
+          "text": "Electrons near the switch rush to the strip in the first instant after it closes; the slow drift only sets in once the current is steady",
+          "feedback": "Even at switch-on the drift stays a small fraction of a millimeter per second: hours to cross the cable. The carriers in the strip don't need to come from the switch; they are already there."
+        },
+        {
+          "text": "Electrons leave the switch at nearly the speed of light, then slow down to the drift speed once the strip draws its full current",
+          "feedback": "No electron makes that trip quickly. It is the field, set up along the wires as an electromagnetic wave, that arrives at a large fraction of the speed of light, and it moves the carriers already at the far end."
+        },
+        {
+          "text": "The light strip holds a store of charge that keeps it lit until the electrons from the switch arrive at the far end, hours later",
+          "feedback": "A light strip doesn't run on stored charge, and electrons from the switch would take hours to arrive. The carriers already in the strip and the cable start moving as soon as the field reaches them."
+        }
+      ],
+      "explanation": "Two speeds are at work. The electrons drift at {v}, so each takes about {thours} to cover {L}. The change in the field travels along the cable as an electromagnetic wave at a large fraction of the speed of light (about two-thirds of it in a plastic-insulated cable, so {L} takes about {tprop}). The cable and the strip are full of free electrons from the start, so current flows in the strip as soon as the field reaches it, and it lights essentially at once.",
+      "hints": [
+        "Where are the free electrons that flow through the strip just after the switch closes?",
+        "Two things move: the electrons, and the change in the field that pushes them. Which one has to reach the strip?"
+      ],
+      "wire": {
+        "area": "0.75 mm²",
+        "length": "{L}",
+        "current": "{I}",
+        "material": "copper"
+      },
+      "review": "verified",
+      "placement": true,
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. II (AC), ch. 14 \"Transmission Lines\", section \"Circuits and the speed of light\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/AC/AC_14.html#xtocid89841",
+          "note": "The effect of electron motion in a circuit travels at roughly the speed of light while the electrons themselves move nowhere near that fast, so a far-away load responds almost at once."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. II (AC), ch. 14 \"Transmission Lines\", section \"Characteristic impedance\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/AC/AC_14.html#xtocid89842",
+          "note": "A cable's velocity factor is its propagation speed as a fraction of c, typically 0.66 to 0.80, set by the insulation's relative permittivity as 1/√εr; so about two-thirds of c for a plastic-insulated cable."
+        }
+      ]
     }
   ]
 }

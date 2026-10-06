@@ -1,0 +1,2618 @@
+{
+  "topics": [
+    {
+      "id": "first_order_switching",
+      "title": "Switching transients: initial value, final value, τ",
+      "mapTitle": "Switching transients",
+      "glyph": "scopeRc",
+      "summary": "Any circuit with one capacitor or one inductor after a switch event: start where v_C or i_L was, head for the new final value, with τ from the Thevenin resistance.",
+      "lenses": [
+        "circuit",
+        "signals",
+        "math"
+      ],
+      "prerequisites": [
+        "rc_time_constant",
+        "rl_time_constant",
+        "thevenin"
+      ],
+      "prerequisiteNotes": {
+        "rc_time_constant": "The RC exponential and t = τ·ln(…) generalize here to any start and any end.",
+        "rl_time_constant": "τ = L/R and the rule that an inductor's current carries over through a switch event come from the RL topic.",
+        "thevenin": "τ uses the Thevenin resistance the capacitor or inductor sees, and the final value is its Thevenin voltage."
+      },
+      "lensNotes": {
+        "circuit": "Power-up delays, bleeders on hold-up capacitors, relay drivers and debouncing are all the same three numbers: where the response starts, where it ends, and τ.",
+        "signals": "A square wave into an RC is a chain of steps. On a scope each corner rounds off with τ; once settled, the trace swings between two fixed levels, centered on the input's average.",
+        "math": "Every first-order circuit obeys dx/dt = (x_final − x)/τ. Its solution, x(t) = x_final + (x_start − x_final)·e^(−t/τ), needs only the starting value, the final value and τ."
+      },
+      "formulas": [
+        {
+          "label": "Any first-order response",
+          "tex": "x(t) = x_\\infty + (x_0 - x_\\infty)\\, e^{-t/\\tau}"
+        },
+        {
+          "label": "Time constant",
+          "tex": "\\tau = R_\\text{th}\\, C \\quad\\text{or}\\quad \\tau = \\frac{L}{R_\\text{th}}"
+        },
+        {
+          "label": "Time to reach a level",
+          "tex": "t = \\tau \\ln\\frac{x_0 - x_\\infty}{x - x_\\infty}"
+        },
+        {
+          "label": "Continuous at a switch event",
+          "tex": "v_C(0^+) = v_C(0^-),\\quad i_L(0^+) = i_L(0^-)"
+        }
+      ],
+      "goals": [
+        "Write any first-order response from three numbers: the starting value, the final value and τ",
+        "Tell which quantities are continuous at a switch event (a capacitor's voltage, an inductor's current) and which may jump, and find the jumps",
+        "Find τ from the Thevenin resistance a capacitor or inductor sees with the sources zeroed",
+        "Solve for the time a response takes to reach a level, and size a bleeder resistor to discharge a capacitor in time"
+      ],
+      "intuition": "After a switch event a first-order circuit starts from where its capacitor voltage or inductor current was, heads for the value the new circuit would settle at, and closes 63% of the remaining gap every τ.",
+      "why": "A capacitor's voltage changes only as charge flows in, dv/dt = i/C, and an inductor's current only as voltage is applied, di/dt = v/L. A jump would need an infinite current or an infinite voltage, so v_C and i_L carry over unchanged through a switch event. Everything else, a capacitor's current, an inductor's voltage, the voltage across a resistor, is set by the circuit around them and can jump. Seen from the capacitor or inductor, the circuit after the event is a Thevenin source: V_th behind R_th. So the capacitor obeys the single-RC equation: its voltage moves toward V_th at a rate proportional to the gap left, with τ = R_th·C, and an inductor's current does the same with τ = L/R_th. Zeroing the sources to find R_th is right because a source fixes a voltage or current whatever flows through it; the sources set where the response ends, not how fast it gets there.",
+      "explanation": "Every circuit with one capacitor or one inductor, plus resistors and DC sources, responds to a switch event the same way. Find three numbers. The starting value: a capacitor's voltage and an inductor's current cannot jump, so they start where they were just before the event. The final value: what the new circuit settles at, with the capacitor as an open circuit and the inductor as a short. The time constant: replace each voltage source by a wire and each current source by a break, find the resistance the capacitor or inductor sees, R_th, and τ = R_th·C or L/R_th. Then x(t) = x_final + (x_start − x_final)·e^(−t/τ). Everything else may jump at the event: a capacitor's current, an inductor's voltage, a resistor's voltage. Find those at t = 0⁺ from the starting values with KVL and KCL. To find when the response reaches a level x, solve the same equation: t = τ·ln((x_start − x_final)/(x − x_final)). Two events in a row chain: the end of the first is the start of the second. A square wave is a string of such events; once settled, the capacitor swings between two fixed levels every cycle.",
+      "workedExample": {
+        "problem": "C1 = 47 µF holds 5 V, with nothing connected. At t = 0 a switch connects it to a divider: R1 = 10 kΩ from a 12 V supply to C1's top, and R2 = 10 kΩ from C1's top to ground. Find the starting value, the final value and τ; v_C at t = 235 ms; the time to reach 5.9 V; and C1's current just after the switch closes.",
+        "steps": [
+          "Start: C1's voltage cannot jump, so v_C(0⁺) = 5 V.",
+          "Final: once settled C1 draws no current, so the divider sets it: 12 V × 10 kΩ / (10 kΩ + 10 kΩ) = 6 V.",
+          "τ: replace the 12 V supply by a wire; C1 sees R1 ∥ R2 = 10 kΩ ∥ 10 kΩ = 5 kΩ. τ = 5 kΩ × 47 µF = 235 ms.",
+          "v_C(t) = 6 V + (5 V − 6 V)·e^(−t/235 ms). At t = 235 ms: 6 V − 1 V × 0.368 = 5.63 V.",
+          "5.9 V: 6 V − 1 V·e^(−t/τ) = 5.9 V, so e^(−t/τ) = 0.1 and t = τ·ln 10 = 235 ms × 2.303 = 541 ms.",
+          "At t = 0⁺: R1 carries (12 V − 5 V) / 10 kΩ = 0.7 mA in, R2 carries 5 V / 10 kΩ = 0.5 mA out, so C1 takes 0.2 mA, a jump from zero. Check with the Thevenin form: (6 V − 5 V) / 5 kΩ = 0.2 mA."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 16 \"RC and L/R Time Constants\", section \"Voltage and current calculations\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_16.html#xtocid88423",
+          "note": "The recipe of taking the starting value of the quantity a capacitor (voltage) or inductor (current) holds constant, then the final value with the capacitor open or the inductor shorted, then the time constant, and combining them in one formula that moves 63% of the remaining gap per τ."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 16 \"RC and L/R Time Constants\", section \"Complex voltage and current calculations\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_16.html#xtocid88425",
+          "note": "The start value does not have to be zero: an inductor carries its pre-switch current into the new circuit, the final current and τ come from the circuit after the switch, and the inductor voltage is found from the resistor drop afterwards."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 16 \"RC and L/R Time Constants\", section \"Complex circuits\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_16.html#xtocid88426",
+          "note": "A capacitor or inductor in a series-parallel network sees a Thevenin source (open-circuit voltage as the final value, sources removed for the resistance), so τ uses R_th and the response is the same single exponential."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "fos_nonzero_start",
+      "topicId": "first_order_switching",
+      "prompt": "V1 has held its first value for a long time. Find the voltage across C1 at t = {t}.",
+      "variables": [
+        {
+          "name": "V0",
+          "unit": "V",
+          "values": [
+            2,
+            9
+          ]
+        },
+        {
+          "name": "Vf",
+          "unit": "V",
+          "values": [
+            5,
+            12
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -7,
+            -6
+          ]
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "values": [
+            0.5,
+            1,
+            2
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "tau",
+          "formula": "R*C",
+          "unit": "s"
+        },
+        {
+          "name": "t",
+          "formula": "1e-6*round(1e6*n*R*C)",
+          "unit": "s"
+        },
+        {
+          "name": "ts",
+          "formula": "1e-6*round(1e6*n*R*C)/500",
+          "unit": "s"
+        }
+      ],
+      "answer": {
+        "formula": "Vf+(V0-Vf)*exp(-t/(R*C))",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "Before the step C1 sits at {V0}, and its voltage can't jump, so it starts there. After the step it heads for {Vf}, with τ = RC = {R} × {C} = {tau}. v(t) = V_final + (V_start − V_final)·e^(−t/τ) = {Vf} + ({V0} − {Vf}) × e^(−{t} / {tau}) = {answer}.",
+      "hints": [
+        "Where does C1's voltage start, where does it end up, and how fast?",
+        "v = V_final + (V_start − V_final)·e^(−t/τ), with τ = RC."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vf*(1-exp(-t/(R*C)))",
+          "feedback": "That is charging from 0 V. C1 starts at {V0}, where the old input left it: v = V_final + (V_start − V_final)·e^(−t/τ)."
+        },
+        {
+          "formula": "V0*exp(-t/(R*C))",
+          "feedback": "That is a discharge toward 0 V. After the step C1 heads for {Vf}, not 0 V."
+        },
+        {
+          "formula": "Vf+(V0-Vf)*(1-exp(-t/(R*C)))",
+          "feedback": "The e^(−t/τ) factor is the share of the gap still left, which shrinks with time: v = V_final + (V_start − V_final)·e^(−t/τ)."
+        },
+        {
+          "formula": "Vf",
+          "feedback": "{Vf} is where C1 ends up, after about 5τ. At t = {t} it is still on its way."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Compared with charging the same C1 from 0 V, how long does it take to close 63% of the gap from {V0} to {Vf}?",
+          "choices": [
+            {
+              "text": "The same τ = RC: each τ closes 63% of whatever gap remains, so the start only sets the size of the gap",
+              "feedback": "Right: the exponential has no memory of where it started; τ depends on R and C alone.",
+              "correct": true
+            },
+            {
+              "text": "Less time: the gap from {V0} is smaller, so it is closed sooner",
+              "feedback": "A smaller gap means a smaller current, in the same proportion. The fraction closed per τ stays 63%."
+            },
+            {
+              "text": "More time: starting partway up the curve puts C1 on its slow part",
+              "feedback": "There is no slow part of the curve to start on: wherever it starts, the current is the gap over R, and each τ closes 63% of the gap."
+            },
+            {
+              "text": "It depends on {Vf}: a higher final voltage charges C1 faster",
+              "feedback": "A larger gap drives a larger current, but there is more to close. The two scale together, so τ = RC alone sets the timing."
+            }
+          ],
+          "explanation": "The current into C1 is (V_final − v)/R, proportional to the gap, so the gap shrinks by the same fraction in every interval: 63% per τ, from any start."
+        }
+      ],
+      "schematic": {
+        "netlist": "RC step\nV1 in 0 PULSE({V0:spice} {Vf:spice} 0 1n 1n 10 20)\nR1 in out {R:spice}\nC1 out 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n{V0} → {Vf}\nat t = 0"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "fos_discharge_time",
+      "topicId": "first_order_switching",
+      "prompt": "Find how long after S1 closes the voltage across C1 falls below {Vx}.",
+      "variables": [
+        {
+          "name": "V0",
+          "unit": "V",
+          "values": [
+            5,
+            9,
+            12
+          ]
+        },
+        {
+          "name": "Vx",
+          "unit": "V",
+          "values": [
+            0.5,
+            1
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -6,
+            -5
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "tau",
+          "formula": "R*C",
+          "unit": "s"
+        },
+        {
+          "name": "th",
+          "formula": "R*C*ln(2)",
+          "unit": "s"
+        },
+        {
+          "name": "t2",
+          "formula": "2*R*C*ln(V0/Vx)",
+          "unit": "s"
+        }
+      ],
+      "answer": {
+        "formula": "R*C*ln(V0/Vx)",
+        "unit": "s",
+        "tolerance": 0.02
+      },
+      "explanation": "C1 starts at {V0} and decays toward 0 V: v = {V0} × e^(−t/τ), with τ = RC = {R} × {C} = {tau}. Set v = {Vx}: e^(−t/τ) = {Vx} / {V0}, so t = τ·ln(V_start/V_x) = {tau} × ln({V0} / {Vx}) = {answer}.",
+      "hints": [
+        "Write C1's voltage as it decays from its start toward 0 V.",
+        "{V0}·e^(−t/τ) = {Vx}, so t = τ·ln(V_start/V_x), with τ = RC."
+      ],
+      "misconceptions": [
+        {
+          "formula": "R*C",
+          "feedback": "One τ takes C1 down to 37% of {V0}, not to {Vx}. Solve {V0}·e^(−t/τ) = {Vx}: t = τ·ln(V_start/V_x)."
+        },
+        {
+          "formula": "5*R*C",
+          "feedback": "5τ is the rule of thumb for fully discharged (0.7% left). C1 passes {Vx} at t = τ·ln(V_start/V_x)."
+        },
+        {
+          "formula": "R*C*ln(V0/(V0-Vx))",
+          "feedback": "That is the charging formula, the time to rise from 0 V to {Vx}. Here C1 falls from {V0}: t = τ·ln(V_start/V_x)."
+        },
+        {
+          "formula": "R*C*log10(V0/Vx)",
+          "feedback": "That uses log₁₀. The inverse of e^x is the natural log: t = τ·ln(V_start/V_x)."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "How much longer would C1 take to fall from {Vx} to half of {Vx}?",
+          "choices": [
+            {
+              "text": "{th} more: every τ·ln 2 halves whatever voltage is left",
+              "feedback": "Right: the decay is exponential, so each halving takes the same time, τ·ln 2 = 0.69τ.",
+              "correct": true
+            },
+            {
+              "text": "{answer} more: halving the level doubles the total time",
+              "feedback": "Time adds logarithmically: t = τ·ln(V_start/V_x), and halving V_x adds τ·ln 2 = {th}, not another {answer}."
+            },
+            {
+              "text": "{tau} more: one more τ for each halving",
+              "feedback": "One τ divides the voltage by e ≈ 2.72, not by 2. Halving takes τ·ln 2 = 0.69τ = {th}."
+            },
+            {
+              "text": "More than {answer}: near 0 V the current is small, so each step down takes longer",
+              "feedback": "The current does shrink, but so does the voltage still to go, in the same proportion. Every halving takes the same τ·ln 2 = {th}."
+            }
+          ],
+          "explanation": "The current through R1 is v/R, proportional to the voltage still left, so the voltage loses the same fraction in every equal interval: half in each τ·ln 2."
+        }
+      ],
+      "schematic": {
+        "netlist": "discharge\nC1 a 0 {C:spice}\nRS1 a b 1m\nR1 b 0 {R:spice}\n",
+        "parts": [
+          {
+            "ref": "C1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}\nat {V0}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "S1\n(closes)",
+            "symbol": "switchClosed"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R1\n{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "checked"
+    },
+    {
+      "id": "fos_thevenin_tau",
+      "topicId": "first_order_switching",
+      "prompt": "Find the time constant of the current in L1 after V1 steps. Treat L1 as ideal.",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            3
+          ]
+        },
+        {
+          "name": "L",
+          "unit": "H",
+          "series": "E12",
+          "decades": [
+            -2,
+            -1
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rp",
+          "formula": "R1 || R2",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rth",
+          "formula": "R3+(R1 || R2)",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "L/(R3+(R1 || R2))",
+        "unit": "s",
+        "tolerance": 0.02
+      },
+      "explanation": "Replace V1 by a wire (an ideal voltage source has no resistance of its own). L1 then looks back into R3 in series with R1 ∥ R2: R_th = {R3} + {Rp} = {Rth}. τ = L/R_th = {L} / {Rth} = {answer}. V1 and the divider set where the current ends up, not how fast it gets there.",
+      "hints": [
+        "Replace V1 by a wire. Which resistance does L1 see, looking back into the circuit?",
+        "R_th = R3 + R1 ∥ R2, and τ = L/R_th."
+      ],
+      "misconceptions": [
+        {
+          "formula": "L/(R1+R2+R3)",
+          "feedback": "R1 and R2 aren't in series as L1 sees them. With V1 replaced by a wire, both run from node a to ground, in parallel: R_th = R3 + R1 ∥ R2."
+        },
+        {
+          "formula": "L/R3",
+          "feedback": "R3 isn't the only resistance in the way. The current in L1 also passes the node a, which sits behind R1 ∥ R2: R_th = R3 + R1 ∥ R2.",
+          "when": "(R1 || R2)/(R3+(R1 || R2))-0.03"
+        },
+        {
+          "formula": "L/(R1+R3)",
+          "feedback": "That leaves out R2. With V1 replaced by a wire, R2 is in parallel with R1: R_th = R3 + R1 ∥ R2.",
+          "when": "(R1-(R1 || R2))/(R3+(R1 || R2))-0.03"
+        },
+        {
+          "formula": "L*(R3+(R1 || R2))",
+          "feedback": "τ = L/R, not L·R."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why is V1 replaced by a wire to find the resistance L1 sees?",
+          "choices": [
+            {
+              "text": "V1 holds its voltage whatever current flows, so it passes changes in current as a wire would; it sets where the current ends, not how fast",
+              "feedback": "Right: for changes, an ideal voltage source has no resistance, so R1 and R2 act in parallel.",
+              "correct": true
+            },
+            {
+              "text": "V1 is off after the step, so it is a short circuit",
+              "feedback": "V1 is on after the step; it holds its new voltage. It is replaced by a wire because it has no resistance of its own, not because it is off."
+            },
+            {
+              "text": "V1 is replaced by an open circuit, leaving R1 in series with R3",
+              "feedback": "An open would mean V1 blocks current. An ideal voltage source passes any current at a fixed voltage, which for changes looks like a wire."
+            },
+            {
+              "text": "It doesn't matter: V1's value appears in τ either way",
+              "feedback": "τ = L/R_th contains no source values at all. V1 only sets the final current."
+            }
+          ],
+          "explanation": "A change of current in L1 meets V1 as a fixed voltage, which adds nothing to the change: a wire. So L1 sees R3 plus R1 ∥ R2, the Thevenin resistance."
+        }
+      ],
+      "schematic": {
+        "netlist": "Thevenin RL\nV1 in 0 PULSE(0 12 0 1n 1n 1 2)\nR1 in a {R1:spice}\nR2 a 0 {R2:spice}\nR3 a b {R3:spice}\nL1 b 0 {L:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V\nstep"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "L1\n{L}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              16,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "fos_two_events",
+      "topicId": "first_order_switching",
+      "prompt": "C1 starts empty. Find the voltage across C1 at t = {tq}.",
+      "variables": [
+        {
+          "name": "Vp",
+          "unit": "V",
+          "values": [
+            3.3,
+            5
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -8,
+            -7
+          ]
+        },
+        {
+          "name": "n1",
+          "unit": "",
+          "values": [
+            0.5,
+            1,
+            2
+          ]
+        },
+        {
+          "name": "n2",
+          "unit": "",
+          "values": [
+            0.5,
+            1
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "tau",
+          "formula": "R*C",
+          "unit": "s"
+        },
+        {
+          "name": "tp",
+          "formula": "1e-6*round(1e6*n1*R*C)",
+          "unit": "s"
+        },
+        {
+          "name": "dt",
+          "formula": "1e-6*round(1e6*n2*R*C)",
+          "unit": "s"
+        },
+        {
+          "name": "tq",
+          "formula": "1e-6*round(1e6*n1*R*C)+1e-6*round(1e6*n2*R*C)",
+          "unit": "s"
+        },
+        {
+          "name": "v1",
+          "formula": "Vp*(1-exp(-1e-6*round(1e6*n1*R*C)/(R*C)))",
+          "unit": "V"
+        },
+        {
+          "name": "ts",
+          "formula": "(1e-6*round(1e6*n1*R*C)+1e-6*round(1e6*n2*R*C))/1000",
+          "unit": "s"
+        }
+      ],
+      "answer": {
+        "formula": "Vp*(1-exp(-tp/(R*C)))*exp(-dt/(R*C))",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "During the pulse C1 charges from 0 V toward {Vp} with τ = RC = {R} × {C} = {tau}: at t = {tp}, v = {Vp} × (1 − e^(−{tp} / {tau})) = {v1}. Then V1 returns to 0 V and C1 discharges from {v1} toward 0 V through R1, with the same τ. After {dt} more: v = {v1} × e^(−{dt} / {tau}) = {answer}.",
+      "hints": [
+        "Split it at the end of the pulse: where is C1 then, and where does it head next?",
+        "End of the pulse: v₁ = V_p(1 − e^(−t_p/τ)). After it: v = v₁·e^(−(t − t_p)/τ)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vp*exp(-dt/(R*C))",
+          "feedback": "That discharges from the full {Vp}. C1 reached only {v1} by the end of the pulse.",
+          "when": "exp(-tp/(R*C))-0.03"
+        },
+        {
+          "formula": "Vp*(1-exp(-tp/(R*C)))",
+          "feedback": "That is the voltage at the end of the pulse. After it, C1 discharges through R1 into V1, now at 0 V."
+        },
+        {
+          "formula": "Vp*(1-exp(-tq/(R*C)))",
+          "feedback": "That keeps C1 charging after the pulse ends. Once V1 returns to 0 V, C1 discharges."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does C1 discharge with the same τ it charged with?",
+          "choices": [
+            {
+              "text": "At 0 V, V1 still connects R1 to a fixed voltage, so C1 sees the same R1 in both phases",
+              "feedback": "Right: an ideal source at 0 V is a wire to ground, so the discharge path is R1 again.",
+              "correct": true
+            },
+            {
+              "text": "It doesn't: C1 discharges faster, because the charge flows back out more easily",
+              "feedback": "Charge flows through the same R1 either way, driven by C1's voltage instead of V1's; the resistance and so τ are the same."
+            },
+            {
+              "text": "When V1 drops to 0 V it disconnects, and C1 discharges through its own leakage",
+              "feedback": "A source at 0 V is not disconnected: it holds R1's left end at 0 V, and C1 discharges through R1."
+            },
+            {
+              "text": "τ depends only on C1, so it never changes",
+              "feedback": "τ = R·C depends on the resistance C1 sees too. It is the same here only because R1 is the path in both phases."
+            }
+          ],
+          "explanation": "Each switch event starts a new exponential from where the last one left off. Here both phases see R1 to a fixed voltage, so both have τ = R1·C1; a circuit that discharges through a different path would change τ at the event."
+        }
+      ],
+      "schematic": {
+        "netlist": "RC pulse\nV1 in 0 PULSE(0 {Vp:spice} 0 1n 1n {tp:spice} 1)\nR1 in out {R:spice}\nC1 out 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n{Vp} pulse\n0 to {tp}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "fos_square_wave_pp",
+      "topicId": "first_order_switching",
+      "prompt": "Find the peak-to-peak swing of the voltage across C1 on a scope, once the trace has settled.",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            3.3,
+            5
+          ]
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "values": [
+            500,
+            1000,
+            2000
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            2200,
+            4700
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            2.2e-07,
+            4.7e-07
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "tau",
+          "formula": "R*C",
+          "unit": "s"
+        },
+        {
+          "name": "th",
+          "formula": "1/(2*f)",
+          "unit": "s"
+        },
+        {
+          "name": "T",
+          "formula": "1/f",
+          "unit": "s"
+        },
+        {
+          "name": "x",
+          "formula": "exp(-1/(2*f*R*C))",
+          "unit": ""
+        },
+        {
+          "name": "vhi",
+          "formula": "V/(1+exp(-1/(2*f*R*C)))",
+          "unit": "V"
+        },
+        {
+          "name": "vlo",
+          "formula": "V*exp(-1/(2*f*R*C))/(1+exp(-1/(2*f*R*C)))",
+          "unit": "V"
+        },
+        {
+          "name": "Vh",
+          "formula": "V/2",
+          "unit": "V"
+        },
+        {
+          "name": "ts",
+          "formula": "1/(200*f)",
+          "unit": "s"
+        },
+        {
+          "name": "tstop",
+          "formula": "20*R*C+20/f",
+          "unit": "s"
+        }
+      ],
+      "answer": {
+        "formula": "V*(1-exp(-1/(2*f*R*C)))/(1+exp(-1/(2*f*R*C)))",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "Once settled, C1 swings between the same two levels every cycle. τ = RC = {tau}, and each half-period lasts T/2 = {th}; in it the gap to the input's new level shrinks by the factor x = e^(−T/2τ) = {x}. Rising from V_lo toward {V}: V_hi = {V} − ({V} − V_lo)·x. Falling from V_hi toward 0 V: V_lo = V_hi·x. Together: V_hi = V/(1 + x) = {vhi} and V_lo = V·x/(1 + x) = {vlo}, so the swing is V(1 − x)/(1 + x) = {answer}, centered on {Vh}.",
+      "hints": [
+        "Once settled, C1 starts each half-cycle at the level where the last one ended. Write both halves.",
+        "With x = e^(−T/2τ): V_hi = V − (V − V_lo)·x and V_lo = V_hi·x. Solve the pair."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V",
+          "feedback": "That is the input's full swing. C1 reaches it only if each half-period lasts many τ; here T/2 = {th} against τ = {tau}.",
+          "when": "exp(-1/(2*f*R*C))-0.03"
+        },
+        {
+          "formula": "V*(1-exp(-1/(2*f*R*C)))",
+          "feedback": "That is how far C1 charges in one half-period from 0 V. Once settled, each half starts from the last one's end, not from 0 V, and the swing is V(1 − x)/(1 + x).",
+          "when": "exp(-1/(2*f*R*C))-0.03"
+        },
+        {
+          "formula": "V*(1-exp(-1/(f*R*C)))/(1+exp(-1/(f*R*C)))",
+          "feedback": "That uses a whole period for each half. The input changes level every T/2 = {th}, so x = e^(−T/2τ).",
+          "when": "exp(-1/(2*f*R*C))-0.03"
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does the settled trace center on {Vh}, half the input's high level?",
+          "choices": [
+            {
+              "text": "The input is high half the time and low half the time, so once settled C1 gains as much charge while it is high as it loses while it is low",
+              "feedback": "Right: with equal times and the same τ both ways, the two halves mirror each other about the input's average, {Vh}.",
+              "correct": true
+            },
+            {
+              "text": "R1 and C1 divide the input voltage in half",
+              "feedback": "R1 and C1 don't form a divider for a steady voltage: at DC no current flows and C1 would reach the full input. The center comes from averaging, not dividing."
+            },
+            {
+              "text": "C1 can only charge to half the input in one half-period",
+              "feedback": "How far C1 gets in one half depends on T/2 against τ; it sets the swing, not the center. Any τ gives a trace centered on {Vh}."
+            },
+            {
+              "text": "It doesn't: the trace keeps rising until it centers on {V} after 5τ",
+              "feedback": "C1 discharges every time the input goes low, so it can't climb to {V}. It settles where the charge in and out per cycle balance."
+            }
+          ],
+          "explanation": "Once settled, the average current into C1 over a cycle is zero, so the average voltage across R1 is zero and C1's average equals the input's average: {Vh} for a square wave from 0 to {V}."
+        }
+      ],
+      "schematic": {
+        "netlist": "RC square wave\nV1 in 0 PULSE(0 {V:spice} 0 1n 1n {th:spice} {T:spice})\nR1 in out {R:spice}\nC1 out 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n0 to {V} square\n{f}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "fos_jump_which",
+      "topicId": "first_order_switching",
+      "prompt": "Both branches are at rest before the step. Which quantities change instantly at t = 0?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "C1's current and L1's voltage: each jumps from zero, to 10 mA and to 10 V",
+          "feedback": "Right: C1's voltage and L1's current are the two that cannot jump, so the circuit around them must take up the step.",
+          "correct": true
+        },
+        {
+          "text": "C1's voltage and L1's current: each jumps from zero, to 10 V and to 10 mA",
+          "feedback": "Those are the two that cannot jump: C1's voltage changes only as charge flows in, dv/dt = i/C, and L1's current only as voltage is applied, di/dt = v/L."
+        },
+        {
+          "text": "All four: a step at the input makes every voltage and current step",
+          "feedback": "C1's voltage and L1's current cannot step: a jump would need an infinite current into C1 or an infinite voltage across L1."
+        },
+        {
+          "text": "None of them: every voltage and current starts from zero and rises",
+          "feedback": "C1's voltage and L1's current do. But with C1 at 0 V, R1 has the whole 10 V across it, so 10 mA flows into C1 at once, and with no current yet R2 drops nothing, so L1 has 10 V."
+        }
+      ],
+      "explanation": "At t = 0⁺ C1 still holds 0 V, so R1 has all 10 V across it: C1's current jumps to 10 V / 1 kΩ = 10 mA. L1 still carries 0 A, so R2 drops nothing and L1 has all 10 V across it. Then C1's current decays with τ = R1·C1 = 1 ms as its voltage rises, and L1's voltage decays with τ = L1/R2 = 100 µs as its current rises toward 10 mA.",
+      "schematic": {
+        "netlist": "RC and RL\nV1 in 0 PULSE(0 10 0 1n 1n 1 2)\nR1 in a 1k\nC1 a 0 1u\nR2 in b 1k\nL1 b 0 100m\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "0 → 10 V\nat t = 0"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              5,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n1 kΩ"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              5,
+              4
+            ],
+            "rot": 90,
+            "label": "C1\n1 µF"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              13,
+              0
+            ],
+            "rot": 90,
+            "label": "R2\n1 kΩ"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              13,
+              4
+            ],
+            "rot": 90,
+            "label": "L1\n100 mH"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              5,
+              0
+            ]
+          ],
+          [
+            [
+              5,
+              0
+            ],
+            [
+              13,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              8
+            ],
+            [
+              5,
+              8
+            ]
+          ],
+          [
+            [
+              5,
+              8
+            ],
+            [
+              13,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            9,
+            8
+          ]
+        ],
+        "labels": []
+      },
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "fos_final_value",
+      "topicId": "first_order_switching",
+      "level": "recall",
+      "prompt": "Find the current in L1 once it has settled after the step. Treat L1 as ideal.",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            5,
+            9,
+            12
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "V/R1",
+        "unit": "A",
+        "tolerance": 0.02
+      },
+      "explanation": "Once the current is steady, L1's voltage is L·di/dt = 0: it acts as a short circuit. Node a sits at 0 V, so R2 carries nothing, and all of R1's current, {V} / {R1} = {answer}, flows in L1. The final value is the second of the three numbers every switching problem needs, after the starting value and before τ.",
+      "hints": [
+        "What voltage does an ideal inductor have across it once its current stops changing?",
+        "L1 is then a short circuit from a to ground: what does R2 carry, and what does R1?"
+      ],
+      "misconceptions": [
+        {
+          "formula": "V/(R1+R2)",
+          "feedback": "That treats L1 as an open circuit, as a capacitor would be once settled. A settled inductor has no voltage across it, so it shorts R2: the current is V/R1."
+        },
+        {
+          "formula": "V*R2/(R1+R2)/R1",
+          "feedback": "That splits R1's current between R2 and L1 as if both had the divider's voltage across them. L1 holds node a at 0 V once settled, so R2 carries nothing."
+        },
+        {
+          "formula": "V/R2",
+          "feedback": "R2 is shorted by the settled L1 and carries no current. The current comes through R1: V/R1.",
+          "when": "abs(R1-R2)/R1-0.05"
+        }
+      ],
+      "schematic": {
+        "netlist": "RL settled\nV1 in 0 PULSE(0 {V:spice} 0 1n 1n 1 2)\nR1 in a {R1:spice}\nR2 a 0 {R2:spice}\nL1 a 0 100m\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n0 → {V}\nat t = 0"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "L1\n100 mH"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              14,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              11,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "fos_vr_jump",
+      "topicId": "first_order_switching",
+      "level": "recall",
+      "prompt": "V1 has held its first value for a long time. Find the voltage across R1 just after the step.",
+      "variables": [
+        {
+          "name": "V0",
+          "unit": "V",
+          "values": [
+            2,
+            3.3,
+            5
+          ]
+        },
+        {
+          "name": "Vf",
+          "unit": "V",
+          "values": [
+            9,
+            12
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            4
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "series": "E12",
+          "decades": [
+            -7,
+            -6
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "I0",
+          "formula": "(Vf-V0)/R",
+          "unit": "A"
+        },
+        {
+          "name": "tau",
+          "formula": "R*C",
+          "unit": "s"
+        }
+      ],
+      "answer": {
+        "formula": "Vf-V0",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "Before the step C1 has sat at {V0} long enough to stop charging. Its voltage can't jump, so just after the step it still holds {V0}, and KVL leaves the rest of V1 for R1: {Vf} − {V0} = {answer}. R1's voltage jumped from 0 V, and its current from zero to {answer} / {R} = {I0}, all of it flowing into C1. Both then decay with τ = RC = {tau} as C1 charges toward {Vf}. This is the starting value, the first of the three numbers every switching problem needs.",
+      "hints": [
+        "What voltage does C1 hold just before the step, and can it change instantly?",
+        "At t = 0⁺ C1 still holds its old voltage. KVL around the loop gives R1 the rest of V1."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vf",
+          "feedback": "That treats C1 as empty. It has held {V0} for a long time, and its voltage can't jump, so R1 gets only the difference: {Vf} − {V0}."
+        },
+        {
+          "formula": "V0",
+          "feedback": "{V0} is C1's voltage, which carries over the step. R1 takes the rest of V1: {Vf} − {V0}."
+        },
+        {
+          "formula": "0",
+          "feedback": "Zero is R1's voltage before the step, when no current flowed. C1's voltage can't change instantly, but R1's can: it takes the whole difference at once."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why can R1's voltage jump at the step when C1's can't?",
+          "choices": [
+            {
+              "text": "C1's voltage moves only as charge flows in, dv/dt = i/C; R1's is i·R1 at every instant",
+              "correct": true,
+              "feedback": "Right: a jump in C1's voltage would need an infinite current. A resistor has no such limit, so its current and voltage follow at once."
+            },
+            {
+              "text": "R1 is closer to V1, so the step reaches R1 first and C1 a moment later",
+              "feedback": "Position on the drawing means nothing, and the delay along a wire is nanoseconds. C1 lags because its voltage changes only as charge flows in: dv/dt = i/C."
+            },
+            {
+              "text": "R1's voltage can't jump either: it starts at 0 V and rises as the current builds up",
+              "feedback": "Nothing limits a resistor's current: with C1 still at {V0}, R1 has {answer} across it at once and passes {I0}. The current is largest at t = 0⁺ and then decays."
+            },
+            {
+              "text": "C1 blocks DC, so it ignores the step until enough time passes for a change to reach it",
+              "feedback": "Current flows into C1 at once, {I0} at t = 0⁺. What C1 resists is a sudden change in its voltage, because the charge that sets it takes time to arrive."
+            }
+          ],
+          "explanation": "A capacitor's voltage is its charge over C, and charge arrives only as fast as the current brings it, so v_C is continuous. The rest of the loop adjusts at once: at t = 0⁺ R1 takes {answer} and C1's current jumps to {I0}."
+        }
+      ],
+      "schematic": {
+        "netlist": "RC step\nV1 in 0 PULSE({V0:spice} {Vf:spice} 0 1n 1n 10 20)\nR1 in out {R:spice}\nC1 out 0 {C:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n{V0} → {Vf}\nat t = 0"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "fos_vl_jump",
+      "topicId": "first_order_switching",
+      "level": "reason",
+      "prompt": "V1 has held its first value for a long time. Find the voltage across L1 just after the step. Treat L1 as ideal.",
+      "variables": [
+        {
+          "name": "Va",
+          "unit": "V",
+          "values": [
+            2,
+            5
+          ]
+        },
+        {
+          "name": "Vb",
+          "unit": "V",
+          "values": [
+            9,
+            12
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "I0",
+          "formula": "Va/R1",
+          "unit": "A"
+        },
+        {
+          "name": "If",
+          "formula": "Vb/R1",
+          "unit": "A"
+        },
+        {
+          "name": "Rp",
+          "formula": "R1 || R2",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "(Vb-Va)*R2/(R1+R2)",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "Before the step L1's current is steady, so it drops nothing (v = L·di/dt = 0): R2 has 0 V across it and L1 carries {Va} / {R1} = {I0}. L1's current can't jump, so just after the step it still carries {I0}. KCL at a: ({Vb} − v)/R1 = v/R2 + {I0}, so v = ({Vb} − {Va}) × {R2} / ({R1} + {R2}) = {answer}. That is L1's voltage, which jumped from 0 V. It then decays with τ = L/(R1 ∥ R2) as the current climbs toward {Vb} / R1 = {If}.",
+      "hints": [
+        "What current does L1 carry just before the step, and can it change instantly?",
+        "At t = 0⁺ treat L1 as a current source of V_a/R1 and write KCL at a."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vb*R2/(R1+R2)",
+          "feedback": "That treats L1 as carrying no current, as if it started from rest. It already carries {I0}, and that current can't jump."
+        },
+        {
+          "formula": "Vb-Va",
+          "feedback": "That puts the whole step on L1. R2 is across L1 and draws current as soon as there is voltage there, so R1 and R2 divide the step: v = (V_b − V_a)·R2/(R1 + R2).",
+          "when": "R1/(R1+R2)-0.03"
+        },
+        {
+          "formula": "0",
+          "feedback": "Zero is L1's voltage before the step, while its current was steady. L1's current can't change instantly, but its voltage can."
+        },
+        {
+          "formula": "Vb",
+          "feedback": "That puts all of V1 across L1, as if R1 dropped nothing. R1 still carries {I0} plus R2's share, so it drops part of the step."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "What happens to the current in L1 at the instant of the step?",
+          "choices": [
+            {
+              "text": "Nothing: it stays at {I0} and starts to rise from there",
+              "feedback": "Right: v = L·di/dt, so a jump in current would need an infinite voltage. The voltage jumps instead, and sets how fast the current starts to rise.",
+              "correct": true
+            },
+            {
+              "text": "It jumps to {If}, the new final current",
+              "feedback": "Getting there instantly would need an infinite voltage across L1. It rises toward {If} with τ = L/(R1 ∥ R2)."
+            },
+            {
+              "text": "It drops to zero and builds up again",
+              "feedback": "L1's current can't jump down any more than up. It carries on at {I0} and rises from there."
+            },
+            {
+              "text": "It jumps by the step's size divided by R1",
+              "feedback": "That would need an infinite voltage across L1. The step changes L1's voltage at once and its current only gradually."
+            }
+          ],
+          "explanation": "An inductor's current is continuous through a switch event; its voltage is not. Here L1's voltage jumps from 0 V to {answer} while its current stays at {I0}."
+        }
+      ],
+      "schematic": {
+        "netlist": "RL step from a held level\nV1 in 0 PULSE({Va:spice} {Vb:spice} 0 1n 1n 1 2)\nR1 in a {R1:spice}\nR2 a 0 {R2:spice}\nL1 a 0 100m\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n{Va} → {Vb}\nat t = 0"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "L1\n100 mH"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              14,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              11,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "fos_what_if_bleeder",
+      "topicId": "first_order_switching",
+      "prompt": "A second {R} resistor is added in series with R1. What happens to the time C1 takes to fall below {Vx} after S1 opens?",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            0.00047,
+            0.001,
+            0.0022
+          ]
+        },
+        {
+          "name": "Vx",
+          "unit": "V",
+          "values": [
+            0.5,
+            1
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "P",
+          "formula": "144/R",
+          "unit": "W"
+        },
+        {
+          "name": "P2",
+          "formula": "72/R",
+          "unit": "W"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the discharge time",
+        "formula": "R*C*ln(12/Vx)",
+        "unit": "s",
+        "change": {
+          "R": "2*R"
+        },
+        "askFactor": true,
+        "feedback": {
+          "down": "A larger resistance lets less current flow at every voltage, and C1 still has the same charge to lose, so it drains more slowly.",
+          "same": "The time depends on τ = RC as well as on the voltages: twice the resistance halves the discharge current at every voltage, so the same charge takes twice as long to leave."
+        }
+      },
+      "explanation": "t = RC·ln(12 V / {Vx}) is proportional to R, so doubling R doubles it: {before} → {after}.",
+      "followUps": [
+        {
+          "prompt": "While S1 is closed, what happens to the power the bleeder wastes?",
+          "choices": [
+            {
+              "text": "It halves: 12 V² / 2R = {P2} instead of {P}",
+              "feedback": "Right: the bleeder draws V²/R from the supply the whole time the circuit runs.",
+              "correct": true
+            },
+            {
+              "text": "It doubles: twice the resistance takes twice the power",
+              "feedback": "At a fixed voltage, more resistance draws less current: P = V²/R halves."
+            },
+            {
+              "text": "It stays the same: C1 sets the voltage on the bleeder",
+              "feedback": "C1 sits at 12 V either way. The bleeder's power is V²/R, which halves when R doubles."
+            },
+            {
+              "text": "Zero: a bleeder only draws current while C1 discharges",
+              "feedback": "The bleeder is across C1 all the time, so while S1 is closed it draws 12 V / R from the supply."
+            }
+          ],
+          "explanation": "A bleeder is a trade: more resistance wastes less power while the circuit runs and takes longer to make it safe after switch-off."
+        }
+      ],
+      "schematic": {
+        "netlist": "hold-up and bleeder\nV1 a 0 12\nRS1 a b 1e9\nC1 b 0 {C:spice}\nR1 b 0 {R:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V",
+            "symbol": "battery"
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "S1\n(opens)",
+            "symbol": "switch"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "R1\n{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              14,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "checked"
+    },
+    {
+      "id": "fos_tau_which_r",
+      "topicId": "first_order_switching",
+      "prompt": "Which resistance sets the time constant of the voltage across C1 after V1 steps?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "R3 + R1 ∥ R2 = 9.7 kΩ, so τ = 9.7 ms",
+          "feedback": "Right: with V1 replaced by a wire, C1 sees R3 in series with R1 and R2 in parallel.",
+          "correct": true
+        },
+        {
+          "text": "R1 + R2 + R3 = 24.7 kΩ, so τ = 24.7 ms",
+          "feedback": "R1 and R2 aren't in series as C1 sees them. With V1 replaced by a wire, both run from node a to ground, in parallel."
+        },
+        {
+          "text": "R3 alone = 4.7 kΩ, so τ = 4.7 ms",
+          "feedback": "Node a is not a fixed voltage: it sags as C1 draws current through R3. With V1 replaced by a wire, a sits behind R1 ∥ R2 = 5 kΩ, in series with R3."
+        },
+        {
+          "text": "R1 + R3 = 14.7 kΩ, so τ = 14.7 ms",
+          "feedback": "That leaves out R2. With V1 replaced by a wire, R2 is in parallel with R1: R3 + R1 ∥ R2 = 9.7 kΩ."
+        }
+      ],
+      "explanation": "Seen from C1, the rest of the circuit is a Thevenin source: V_th = 5 V × 10 kΩ / 20 kΩ = 2.5 V behind R_th. To find R_th, replace V1 by a wire (an ideal voltage source has no resistance): R1 ∥ R2 = 5 kΩ, plus R3 in series, 9.7 kΩ. τ = 9.7 kΩ × 1 µF = 9.7 ms, and C1 charges toward 2.5 V with it.",
+      "schematic": {
+        "netlist": "Thevenin RC\nV1 in 0 PULSE(0 5 0 1n 1n 1 2)\nR1 in a 10k\nR2 a 0 10k\nR3 a b 4.7k\nC1 b 0 1u\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "5 V\nstep"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n10 kΩ"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n10 kΩ"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R3\n4.7 kΩ"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n1 µF"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              16,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "fos_design_bleeder",
+      "topicId": "first_order_switching",
+      "prompt": "Choose the largest E12 bleeder R1 that brings C1 below 0.5 V within {T} after S1 opens.",
+      "variables": [
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            0.00047,
+            0.001,
+            0.0022
+          ]
+        },
+        {
+          "name": "T",
+          "unit": "s",
+          "values": [
+            5,
+            10
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rmax",
+          "formula": "T/(C*ln(24))",
+          "unit": "Ω"
+        },
+        {
+          "name": "Pmax",
+          "formula": "144*C*ln(24)/T",
+          "unit": "W"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "R",
+            "label": "R1",
+            "unit": "Ω",
+            "series": "E12",
+            "min": 100,
+            "max": 1000000
+          }
+        ],
+        "result": "R*C*ln(24)",
+        "resultLabel": "time to fall below 0.5 V",
+        "resultUnit": "s",
+        "target": "T",
+        "tolerance": 0.18,
+        "mode": "atMost"
+      },
+      "explanation": "After S1 opens, C1 decays from 12 V as 12 V × e^(−t/RC), and passes 0.5 V at t = RC·ln(12 V / 0.5 V) = RC·ln 24 = 3.18·RC. For that to be at most {T}: R ≤ {T} / ({C} × 3.18) = {Rmax}. Take the E12 value at or just below it. The largest R that meets the time wastes the least power while the circuit runs: P = V²/R, {Pmax} at {Rmax}, and a little more at the E12 value.",
+      "hints": [
+        "C1 decays from 12 V toward 0 V through R1. When does it pass 0.5 V?",
+        "t = RC·ln(12/0.5) ≤ {T}, so R ≤ {T} / (C·ln 24). Round down to E12."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why choose the largest R1 that meets the time, rather than a much smaller one?",
+          "choices": [
+            {
+              "text": "R1 draws (12 V)²/R1 from the supply the whole time the circuit runs: a tenth of the resistance wastes ten times the power",
+              "feedback": "Right: the bleeder is a permanent load, so it is made as light as the discharge time allows.",
+              "correct": true
+            },
+            {
+              "text": "A smaller R1 would discharge C1 too fast and damage it",
+              "feedback": "Discharging 12 V through a few hundred ohms draws tens of milliamperes, well within what an electrolytic of this size handles. The cost of a small R1 is power while running."
+            },
+            {
+              "text": "A smaller R1 discharges C1 more slowly",
+              "feedback": "Less resistance passes more current at every voltage, so C1 discharges faster: τ = RC shrinks."
+            },
+            {
+              "text": "A larger R1 holds C1's voltage up while the supply runs",
+              "feedback": "With S1 closed, C1 sits at 12 V whatever R1 is; R1 only draws current from the supply."
+            }
+          ],
+          "explanation": "A bleeder runs whenever the circuit does. At 12 V, 2.7 kΩ wastes 53 mW; 270 Ω would waste 0.53 W and need a larger resistor. Choose the largest value that still meets the discharge time."
+        }
+      ],
+      "schematic": {
+        "netlist": "hold-up and bleeder\nV1 a 0 12\nRS1 a b 1e9\nC1 b 0 {C:spice}\nR1 b 0 {Rmax:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V",
+            "symbol": "battery"
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "S1\n(opens)",
+            "symbol": "switch"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "R1 = ?"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              14,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "checked"
+    },
+    {
+      "id": "fos_trouble_bleeder",
+      "topicId": "first_order_switching",
+      "level": "design",
+      "prompt": "After S1 opens, C1 should be below 0.5 V within {Te}. The scope shows it still at {Vm} at t = {tm}. Find R1's actual value.",
+      "variables": [
+        {
+          "name": "Rn",
+          "unit": "Ω",
+          "values": [
+            1500,
+            2200,
+            2700
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            0.00047,
+            0.001
+          ]
+        },
+        {
+          "name": "tm",
+          "unit": "s",
+          "values": [
+            5,
+            10
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Ra",
+          "formula": "10*Rn",
+          "unit": "Ω"
+        },
+        {
+          "name": "Vm",
+          "formula": "12*exp(-tm/(10*Rn*C))",
+          "unit": "V"
+        },
+        {
+          "name": "Te",
+          "formula": "Rn*C*ln(24)",
+          "unit": "s"
+        },
+        {
+          "name": "lnm",
+          "formula": "ln(12/(12*exp(-tm/(10*Rn*C))))",
+          "unit": ""
+        },
+        {
+          "name": "taum",
+          "formula": "10*Rn*C",
+          "unit": "s"
+        },
+        {
+          "name": "tlong",
+          "formula": "10*Rn*C*ln(24)",
+          "unit": "s"
+        }
+      ],
+      "answer": {
+        "formula": "tm/(C*ln(12/Vm))",
+        "unit": "Ω",
+        "tolerance": 0.02
+      },
+      "explanation": "The scope reading fixes τ: {Vm} = 12 V × e^(−t/τ) at t = {tm}, so τ = t / ln(12 V / {Vm}) = {tm} / {lnm} = {taum}. Then R1 = τ/C = {taum} / {C} = {answer}, ten times the marked {Rn}: a wrong part fitted, from a misread multiplier band or the wrong reel. With it, C1 takes {tlong} to fall below 0.5 V instead of {Te}.",
+      "hints": [
+        "What does one point on an exponential decay from 12 V tell you about τ?",
+        "τ = t / ln(12 V / V_measured), then R1 = τ / C."
+      ],
+      "misconceptions": [
+        {
+          "formula": "tm/C",
+          "feedback": "That takes {tm} as one τ. After one τ the voltage would be 37% of 12 V, 4.41 V; it reads {Vm}, so τ = t / ln(12 V / V_measured).",
+          "when": "abs(ln(12/Vm)-1)-0.03"
+        },
+        {
+          "formula": "Rn",
+          "feedback": "That is the marked value, which would bring C1 below 0.5 V within {Te}. The scope shows a slower decay."
+        },
+        {
+          "formula": "tm/(C*log10(12/Vm))",
+          "feedback": "That uses log₁₀. The inverse of e^x is the natural log: τ = t / ln(12 V / V_measured)."
+        },
+        {
+          "formula": "tm/(C*ln(12/(12-Vm)))",
+          "feedback": "That treats the reading as a charging curve. C1 is discharging from 12 V: V = 12 V·e^(−t/τ)."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does C1's value need to be known as well as the scope reading?",
+          "choices": [
+            {
+              "text": "The scope gives only τ = R1·C1: a low C1 would shorten τ just as a low R1 would, so one of them has to be known",
+              "feedback": "Right: one exponential fixes the product RC, not the two parts. Measure C1, or lift R1 and measure it.",
+              "correct": true
+            },
+            {
+              "text": "It doesn't: the reading gives R1 directly, whatever C1 is",
+              "feedback": "The reading gives τ, and the same τ fits any R1 and C1 with that product."
+            },
+            {
+              "text": "C1's value sets the starting voltage on the scope",
+              "feedback": "The starting voltage is the supply's, 12 V. C1's value sets how much charge that is, and with R1, how fast it drains."
+            },
+            {
+              "text": "C1 must be checked for leakage, which adds to the bleeder's current",
+              "feedback": "Leakage in C1 would speed the discharge, not slow it. To turn τ into R1 you need C1's capacitance."
+            }
+          ],
+          "explanation": "A decay on a scope measures τ. Splitting τ into R and C needs one of them from another measurement, and electrolytic capacitors are often 20% or more off their marking."
+        }
+      ],
+      "schematic": {
+        "netlist": "hold-up and bleeder\nV1 a 0 12\nRS1 a b 1e9\nC1 b 0 {C:spice}\nR1 b 0 {Rn:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V",
+            "symbol": "battery"
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "S1\n(opens)",
+            "symbol": "switch"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}\n(measured)"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "R1\nmarked {Rn}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              14,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "checked"
+    }
+  ]
+}

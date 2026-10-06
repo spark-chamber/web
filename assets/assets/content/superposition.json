@@ -1,0 +1,3517 @@
+{
+  "topics": [
+    {
+      "id": "superposition",
+      "title": "Superposition and source transformation",
+      "mapTitle": "Superposition",
+      "glyph": "cell",
+      "summary": "In a linear circuit each source's effect adds: find each source's share with the others zeroed, then sum the shares. Power doesn't add. Source transformations collapse a ladder one step at a time.",
+      "lenses": [
+        "circuit",
+        "math",
+        "signals"
+      ],
+      "prerequisites": [
+        "thevenin",
+        "kirchhoff"
+      ],
+      "lensNotes": {
+        "circuit": "To find one source's share, redraw the circuit with every other independent source zeroed: voltage sources as wires, current sources as breaks. Each redrawn circuit usually reduces with series and parallel steps, with no simultaneous equations. Source transformations do the same job on a ladder: swap a voltage source and its series resistor for a current source and parallel resistor, merge, and swap back.",
+        "math": "Superposition is linearity. Node-voltage analysis writes the circuit as G·v = i, with G set by the resistors and the sources only in i. So v = G⁻¹·i, and splitting i into one vector per source splits v into one share per source. A quantity that is not linear in v, such as the power v²/R, doesn't split.",
+        "signals": "Every amplifier analysis splits the circuit the same way: the DC bias with the signal source zeroed, and the signal with every DC supply zeroed, so a supply rail is ground for signals. A meter, which averages, reads the DC share; a scope's peak-to-peak reading is the signal's share."
+      },
+      "formulas": [
+        {
+          "label": "Superposition",
+          "tex": "V = V' + V'' + \\cdots\\ \\ (\\text{each share with the other sources zeroed})"
+        },
+        {
+          "label": "Zeroed sources",
+          "tex": "V_s = 0\\text{: wire}\\qquad I_s = 0\\text{: break}"
+        },
+        {
+          "label": "Power doesn't superpose",
+          "tex": "\\frac{(V' + V'')^2}{R} = \\frac{V'^2}{R} + \\frac{V''^2}{R} + \\frac{2V'V''}{R}"
+        },
+        {
+          "label": "Source transformation",
+          "tex": "V_s \\text{ in series with } R\\ \\Leftrightarrow\\ \\frac{V_s}{R} \\text{ in parallel with } R"
+        },
+        {
+          "label": "Linearity",
+          "tex": "\\mathbf{v} = G^{-1}(\\mathbf{i}_1 + \\mathbf{i}_2) = G^{-1}\\mathbf{i}_1 + G^{-1}\\mathbf{i}_2"
+        }
+      ],
+      "prerequisiteNotes": {
+        "thevenin": "Zeroing sources (a voltage source becomes a wire, a current source a break) is how R_th was found, and the Thevenin–Norton conversion is the single step that source transformation repeats.",
+        "kirchhoff": "Each share is a one-source circuit solved with KCL, KVL and the series and parallel rules; the shares add because every part obeys a straight-line law."
+      },
+      "goals": [
+        "Find each source's share of a node voltage with the other sources zeroed (a voltage source becomes a wire, a current source a break), and add the shares",
+        "Predict how a node voltage moves when one source changes, and explain why the powers of the shares don't add",
+        "Collapse a ladder with repeated source transformations",
+        "Split a signal riding on a DC bias into its two shares, and use the shares to design a level-shifting network or find a faulty part"
+      ],
+      "intuition": "In a linear circuit every source pushes its own share through the network as if it were alone; a meter reads the sum of the shares, so turning one source up moves only its own share.",
+      "why": "Every part of a resistor network obeys a straight-line law: a resistor's current is in proportion to its voltage, and an independent source's value is fixed. Kirchhoff's laws only add and subtract voltages and currents, so every node voltage comes out as a weighted sum of the source values, V_a = k1·V1 + k2·V2 + r·I_S, with weights set by the resistors alone. Node-voltage analysis shows it directly: G·v = i, where G holds only conductances and the sources sit only in i, so v = G⁻¹·i. Zeroing a source sets its value to zero; it doesn't remove it. A voltage source at 0 V still holds its two ends at one voltage, which is a wire; a current source at 0 A still passes no current, which is a break. Power is not linear: P = V²/R, and (V' + V'')² = V'² + V''² + 2V'V'', so the total differs from the sum of the shares' powers by the cross term. A part whose current is not in proportion to its voltage, such as a lamp filament whose resistance rises as it heats, breaks the straight-line law, and superposition then fails.",
+      "explanation": "Thevenin's theorem zeroed sources to find R_th. Superposition uses the same move to split a circuit with several sources into several one-source circuits. Keep one source and zero the others: a voltage source becomes a wire (0 V across it at any current), a current source a break (0 A through it at any voltage). Solve what is left with the series and parallel rules; the result is that source's share. Repeat for each source and add the shares, with their signs. This works for every voltage and current in a linear circuit, but not for power, which goes as the square. The same split runs every amplifier analysis: the supplies set a DC bias, a small signal rides on it, and each is found with the other zeroed, so for the signal a supply rail is ground. Source transformation is the other reduction tool: a voltage source V with series R is, at its terminals, the same as a current source V/R with R in parallel. Converting back and forth while merging series and parallel resistors collapses a ladder to one source and one resistor.",
+      "workedExample": {
+        "problem": "A 12 V supply V1 feeds node a through R1 = 1 kΩ; R3 = 2 kΩ goes from a to ground. R2 = 2 kΩ joins a to node b, R4 = 1 kΩ goes from b to ground, and a 5 V supply V2 feeds b through R5 = 2 kΩ. Find V_a by superposition, the power in R3, and V_a after V2 is raised to 10 V.",
+        "steps": [
+          "V1's share: V2 at 0 V is a wire, so R5 goes from b to ground, in parallel with R4: 1 kΩ ∥ 2 kΩ = 0.667 kΩ. With R2 in series that branch is 2.667 kΩ, and in parallel with R3: 2 kΩ ∥ 2.667 kΩ = 1.143 kΩ.",
+          "V_a' = 12 V × 1.143 kΩ/(1 kΩ + 1.143 kΩ) = 6.40 V.",
+          "V2's share: V1 at 0 V is a wire, so R1 is in parallel with R3: 1 kΩ ∥ 2 kΩ = 0.667 kΩ. From b, R2 plus that is 2.667 kΩ, in parallel with R4: 1 kΩ ∥ 2.667 kΩ = 0.727 kΩ. V_b'' = 5 V × 0.727 kΩ/(2 kΩ + 0.727 kΩ) = 1.333 V.",
+          "From b to a, R2 and R1 ∥ R3 divide: V_a'' = 1.333 V × 0.667 kΩ/(2 kΩ + 0.667 kΩ) = 0.333 V.",
+          "V_a = 6.40 V + 0.333 V = 6.73 V, the value node-voltage analysis and the simulator's .op give (6.733 V).",
+          "Power in R3: (6.733 V)²/2 kΩ = 22.67 mW. The shares' powers, (6.40 V)²/2 kΩ + (0.333 V)²/2 kΩ = 20.48 mW + 0.06 mW = 20.54 mW, miss the cross term 2 × 6.40 V × 0.333 V/2 kΩ = 2.13 mW.",
+          "V2 raised to 10 V: only V2's share doubles, to 0.667 V, so V_a = 6.40 V + 0.667 V = 7.07 V."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 10 \"DC Network Analysis\", section \"Superposition Theorem\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_10.html#xtocid87888",
+          "note": "Checked the one-source-at-a-time method, voltage sources replaced by wires and current sources by breaks, the limit to linear quantities (voltage and current, not power), the failure for lamps and other parts whose resistance changes, and the remark that the theorem is used for AC mixed with DC."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 10 \"DC Network Analysis\", section \"Thevenin-Norton equivalencies\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_10.html#xtocid878811",
+          "note": "Checked that the series and parallel resistances are equal and that the Norton current is the Thevenin voltage divided by that resistance, which is the single source-transformation step the topic repeats."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Modular Electronics Learning (ModEL), \"Superposition Theorem\", ch. 2 \"Tutorial\", section 2.2 \"The Superposition Theorem\", and ch. 3 \"Derivations and Technical References\", section 3.1 \"Superposition of AC signals\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_super.pdf",
+          "note": "Checked the statement that superposition holds for linear quantities but not for power (P = I^2 R), the incandescent-lamp example of a nonlinear part, and the use of superposition for a DC bias added to a signal."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "sup_share_one",
+      "topicId": "superposition",
+      "prompt": "Find V1's share of V_a: set V2 to zero. Assume ideal supplies.",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R4",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R5",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rb",
+          "formula": "R4||R5",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rbr",
+          "formula": "R2+(R4||R5)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rx",
+          "formula": "(R3||(R2+(R4||R5)))",
+          "unit": "Ω"
+        },
+        {
+          "name": "s2",
+          "formula": "5*(R4||(R2+(R1||R3)))/(R5+(R4||(R2+(R1||R3))))*(R1||R3)/(R2+(R1||R3))",
+          "unit": "V"
+        },
+        {
+          "name": "Va",
+          "formula": "(12/R1*(1/R2+1/R4+1/R5)+(1/R2)*(5/R5))/((1/R1+1/R2+1/R3)*(1/R2+1/R4+1/R5)-1/(R2*R2))",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "12*(R3||(R2+(R4||R5)))/(R1+(R3||(R2+(R4||R5))))",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "V2 at 0 V is a wire, so R5's right end goes to ground and R5 sits in parallel with R4: {R4} ∥ {R5} = {Rb}. R2 in series with that is {Rbr}, and that branch is in parallel with R3: {Rx}. V1's share is the divider R1 over {Rx}: 12 V × {Rx}/({R1} + {Rx}) = {answer}. V2's share, found the same way with V1 as a wire, is {s2}; the two add to the full V_a = {Va}, the value node-voltage analysis gives.",
+      "hints": [
+        "A source set to 0 V still joins its two ends. Where does R5's right end go?",
+        "With V2 a wire, R5 is in parallel with R4. Fold the right side into one resistance from a to ground, in parallel with R3, then use the divider with R1."
+      ],
+      "misconceptions": [
+        {
+          "formula": "12*(R3||(R2+R4))/(R1+(R3||(R2+R4)))",
+          "when": "abs(12*(R3||(R2+R4))/(R1+(R3||(R2+R4)))-12*(R3||(R2+(R4||R5)))/(R1+(R3||(R2+(R4||R5)))))-0.025*12*(R3||(R2+(R4||R5)))/(R1+(R3||(R2+(R4||R5))))",
+          "feedback": "That takes V2 out and leaves R5 hanging. A source set to 0 V still holds its two ends at the same voltage: it is a wire, so R5 runs from b to ground, in parallel with R4."
+        },
+        {
+          "formula": "12*R3/(R1+R3)",
+          "when": "abs(12*R3/(R1+R3)-12*(R3||(R2+(R4||R5)))/(R1+(R3||(R2+(R4||R5)))))-0.025*12*(R3||(R2+(R4||R5)))/(R1+(R3||(R2+(R4||R5))))",
+          "feedback": "That is the R1–R3 divider alone. R2 still joins a to b, and with V2 a wire, b has two paths to ground: R2 + (R4 ∥ R5) is in parallel with R3."
+        },
+        {
+          "formula": "(12/R1*(1/R2+1/R4+1/R5)+(1/R2)*(5/R5))/((1/R1+1/R2+1/R3)*(1/R2+1/R4+1/R5)-1/(R2*R2))",
+          "when": "abs(5*(R4||(R2+(R1||R3)))/(R5+(R4||(R2+(R1||R3))))*(R1||R3)/(R2+(R1||R3)))-0.025*12*(R3||(R2+(R4||R5)))/(R1+(R3||(R2+(R4||R5))))",
+          "feedback": "That is the full V_a, with both supplies on. V1's share is what is left with V2 set to 0 V; the full V_a is that plus V2's share."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does V2 become a wire, not a break, when it is set to zero?",
+          "choices": [
+            {
+              "text": "A 0 V source holds its two ends at one voltage, at any current",
+              "correct": true,
+              "feedback": "Right: that is what a wire does. A voltage source fixes the voltage across it, whatever current flows; at 0 V that voltage is zero."
+            },
+            {
+              "text": "A source set to zero supplies no current, so its branch is cut",
+              "feedback": "That is a current source set to 0 A: it passes no current at any voltage, a break. A voltage source fixes a voltage, not a current; at 0 V its ends are tied together."
+            },
+            {
+              "text": "Only because its negative end is on ground: a floating source set to 0 V would be a break",
+              "feedback": "A floating voltage source at 0 V is also a wire: it joins its two nodes to each other. A voltage source fixes 0 V across itself wherever it sits; only a current source at 0 A is a break."
+            },
+            {
+              "text": "Either will do: the share at a comes out the same both ways",
+              "feedback": "As a break, R5 would hang from b with nothing at its other end, and V1's share would come out higher. Only the wire is a source at 0 V."
+            }
+          ],
+          "explanation": "Zeroing a source sets its value to zero; it doesn't remove it. A voltage source at 0 V keeps its ends at the same voltage, a wire. A current source at 0 A carries no current, a break. These are the same replacements used to find a Thevenin resistance."
+        },
+        {
+          "prompt": "Why do the two shares add up to the full V_a?",
+          "choices": [
+            {
+              "text": "Every part is linear, so V_a is a fixed weighted sum of 12 V and 5 V",
+              "correct": true,
+              "feedback": "Right: each resistor's current is a straight-line function of its voltage, so node-voltage analysis gives G·v = i with the supplies only in i. Then v = G⁻¹·i, and splitting i into one part per supply splits v the same way."
+            },
+            {
+              "text": "KCL and KVL hold everywhere, so the currents from each supply add",
+              "feedback": "KCL and KVL hold in any circuit, a lamp's or a transistor's too, where shares don't add. What makes the shares add is that every part here is linear."
+            },
+            {
+              "text": "Both supplies are ideal, so neither one loads or changes the other",
+              "feedback": "Ideal supplies make the shares easy to find, but a real supply with an internal resistance is still linear: draw that resistance in and the shares still add."
+            },
+            {
+              "text": "No resistor carries current from both supplies at the same time",
+              "feedback": "R2, R3 and R4 all carry current from both supplies. Each part's current is the sum of the two supplies' currents, because every part is linear."
+            }
+          ],
+          "explanation": "Superposition is linearity. With resistors and independent sources only, every node voltage is a weighted sum of the source values, with weights set by the resistors alone. Node-voltage analysis shows it directly: G·v = i, G holds only conductances, and the sources sit only in i."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          },
+          {
+            "ref": "R5",
+            "at": [
+              18,
+              0
+            ],
+            "label": "R5\n{R5}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              24,
+              2
+            ],
+            "rot": 90,
+            "label": "V2\n5 V"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              22,
+              0
+            ],
+            [
+              24,
+              0
+            ],
+            [
+              24,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              24,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              9,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              15,
+              0
+            ]
+          }
+        ],
+        "netlist": "two-rail network\nV1 p 0 12\nR1 p a {R1:spice}\nR2 a b {R2:spice}\nR3 a 0 {R3:spice}\nR4 b 0 {R4:spice}\nR5 b q {R5:spice}\nV2 q 0 5\n"
+      },
+      "simCheck": {
+        "netlist": "V1 alone\nV1 p 0 12\nR1 p a {R1:spice}\nR2 a b {R2:spice}\nR3 a 0 {R3:spice}\nR4 b 0 {R4:spice}\nR5 b q {R5:spice}\nV2 q 0 0\n",
+        "probe": "v(a)",
+        "tolerance": 0.001
+      },
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "sup_mixed_sources",
+      "topicId": "superposition",
+      "prompt": "Find V_a by superposition. Assume ideal sources.",
+      "variables": [
+        {
+          "name": "V1",
+          "unit": "V",
+          "values": [
+            5,
+            9,
+            12
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500,
+            2200,
+            3300,
+            4700
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500,
+            2200,
+            3300,
+            4700
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500,
+            2200,
+            3300,
+            4700
+          ]
+        },
+        {
+          "name": "Is",
+          "unit": "A",
+          "values": [
+            0.0005,
+            0.001
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "s1",
+          "formula": "V1*R2/(R1+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "Rp",
+          "formula": "R1||R2",
+          "unit": "Ω"
+        },
+        {
+          "name": "s2",
+          "formula": "Is*(R1||R2)",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "V1*R2/(R1+R2)+Is*(R1||R2)",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "V1's share: I_S set to 0 A is a break, so R3 has one end free and carries nothing. What is left is the R1–R2 divider: {V1} × {R2}/({R1} + {R2}) = {s1}. I_S's share: V1 set to 0 V is a wire, so R1 runs from a to ground, in parallel with R2: {Rp}. All of I_S flows through R3 into that pair: {Is} × {Rp} = {s2}. V_a = {s1} + {s2} = {answer}. R3 doesn't appear: it carries I_S whatever its value.",
+      "hints": [
+        "Two sources: find each one's share at a with the other zeroed. Which replacement does each source get?",
+        "V1 alone: I_S is a break, leaving the R1–R2 divider. I_S alone: V1 is a wire, so I_S flows into R1 ∥ R2."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V1*R2/(R1+R2)+Is*R2",
+          "feedback": "For I_S's share, V1 was taken out, leaving R1 hanging. V1 set to 0 V is a wire: R1 then runs from a to ground, and I_S divides between R1 and R2."
+        },
+        {
+          "formula": "V1*(R2||R3)/(R1+(R2||R3))+Is*(R1||R2)",
+          "feedback": "For V1's share, I_S was replaced with a wire, which puts R3 from a to ground. A current source set to 0 A passes no current: it is a break, and R3 carries nothing."
+        },
+        {
+          "formula": "V1*R2/(R1+R2)",
+          "feedback": "That is V1's share only. I_S pushes its current into a too, through R1 ∥ R2 with V1 zeroed: add that share."
+        },
+        {
+          "formula": "Is*(R1||R2)",
+          "feedback": "That is I_S's share only. Add V1's share, the R1–R2 divider with I_S set to 0 A (a break)."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Swap R3 for one ten times larger. What happens to V_a?",
+          "choices": [
+            {
+              "text": "Nothing: R3 carries I_S whatever its value",
+              "correct": true,
+              "feedback": "Right: R3 is in series with an ideal current source, so its current is I_S, set by the source. Only the voltage at c, the source's terminal, rises."
+            },
+            {
+              "text": "It falls: less current gets through R3",
+              "feedback": "An ideal current source pushes its current through any resistance in series with it. The voltage across the source rises instead."
+            },
+            {
+              "text": "It rises: R3 now drops more voltage",
+              "feedback": "R3 does drop more, but that drop is between c and a. The source's own voltage rises to supply it; the current into a stays I_S."
+            },
+            {
+              "text": "It falls: R3 now loads node a less",
+              "feedback": "R3 doesn't load a at all here: its other end goes to a current source, which only ever passes I_S."
+            }
+          ],
+          "explanation": "A resistor in series with an ideal current source changes nothing outside that branch: the branch current is the source's. The same is why R3 drops out of V1's share, where I_S is a break."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n{V1}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "IS",
+            "at": [
+              16,
+              6
+            ],
+            "rot": 270,
+            "label": "I_S\n{Is}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              16,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              9,
+              0
+            ]
+          },
+          {
+            "text": "c",
+            "at": [
+              15,
+              0
+            ]
+          }
+        ],
+        "netlist": "voltage and current source\nV1 p 0 {V1:spice}\nR1 p a {R1:spice}\nR2 a 0 {R2:spice}\nR3 a c {R3:spice}\nIS 0 c {Is:spice}\n"
+      },
+      "simCheck": {
+        "netlist": "voltage and current source\nV1 p 0 {V1:spice}\nR1 p a {R1:spice}\nR2 a 0 {R2:spice}\nR3 a c {R3:spice}\nIS 0 c {Is:spice}\n",
+        "probe": "v(a)",
+        "tolerance": 0.001
+      },
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "sup_zero_rules",
+      "topicId": "superposition",
+      "level": "recall",
+      "prompt": "Find V1's share of V_a. What replaces I_S while you do?",
+      "variables": [
+        {
+          "name": "V1",
+          "unit": "V",
+          "values": [
+            5,
+            9,
+            12
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500,
+            2200,
+            3300,
+            4700
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500,
+            2200,
+            3300,
+            4700
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500,
+            2200,
+            3300,
+            4700
+          ]
+        },
+        {
+          "name": "Is",
+          "unit": "A",
+          "values": [
+            0.0005,
+            0.001
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "s1",
+          "formula": "V1*R2/(R1+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "Rp",
+          "formula": "R1||R2",
+          "unit": "Ω"
+        },
+        {
+          "name": "s2",
+          "formula": "Is*(R1||R2)",
+          "unit": "V"
+        }
+      ],
+      "choices": [
+        {
+          "text": "A break: a current source at 0 A passes no current",
+          "correct": true,
+          "feedback": "Right: a current source fixes its current, whatever the voltage across it. At 0 A that is a break. R3 is then left with one end free, so V1's share is the R1–R2 divider: {s1}."
+        },
+        {
+          "text": "A wire: a source set to zero has nothing across it",
+          "feedback": "That is the rule for a voltage source. A current source at 0 A passes no current at any voltage, so it is a break. As a wire it would put R3 from a to ground and pull V1's share down."
+        },
+        {
+          "text": "A resistor of R3's value, the part that sets its current",
+          "feedback": "R3 doesn't set I_S: the source does, whatever R3 is. Zeroed, the source is a break, and R3, with one end free, carries nothing."
+        },
+        {
+          "text": "A resistor of V1/I_S, the source's own resistance",
+          "feedback": "An ideal current source has no resistance of that kind: its current doesn't change with its voltage. Set to 0 A, it is a break."
+        }
+      ],
+      "explanation": "Zeroing a source sets its value to zero; it stays in the circuit. A current source at 0 A passes no current whatever the voltage across it: a break. With I_S a break, V1's share is {V1} × {R2}/({R1} + {R2}) = {s1}. For I_S's share the roles swap: V1 at 0 V is a wire, R1 joins R2 in parallel ({Rp}), and I_S's share is {Is} × {Rp} = {s2}.",
+      "followUps": [
+        {
+          "prompt": "Then, to find I_S's share, what replaces V1?",
+          "choices": [
+            {
+              "text": "A wire: a source at 0 V keeps its ends at one voltage",
+              "correct": true,
+              "feedback": "Right: R1's left end then goes to ground, so R1 is in parallel with R2, and I_S's share is {Is} × {Rp} = {s2}."
+            },
+            {
+              "text": "A break: a source set to zero supplies no current",
+              "feedback": "That is the current source's rule. A voltage source at 0 V still carries whatever current the circuit sends through it, with no voltage across it: a wire."
+            },
+            {
+              "text": "Nothing: take V1 and R1 out, since no current comes from V1",
+              "feedback": "Current does flow through R1 and the zeroed V1: part of I_S returns to ground that way. Taking R1 out would put all of I_S through R2."
+            },
+            {
+              "text": "A resistor of R1's value, in place of the supply",
+              "feedback": "R1 stays where it is. Only V1 is replaced, by a wire, which puts R1 in parallel with R2."
+            }
+          ],
+          "explanation": "Voltage source to zero: a wire. Current source to zero: a break. Each rule keeps what the zeroed source fixes (0 V across it, or 0 A through it) and lets the other quantity be whatever the circuit needs."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n{V1}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "IS",
+            "at": [
+              16,
+              6
+            ],
+            "rot": 270,
+            "label": "I_S\n{Is}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              16,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              9,
+              0
+            ]
+          },
+          {
+            "text": "c",
+            "at": [
+              15,
+              0
+            ]
+          }
+        ],
+        "netlist": "voltage and current source\nV1 p 0 {V1:spice}\nR1 p a {R1:spice}\nR2 a 0 {R2:spice}\nR3 a c {R3:spice}\nIS 0 c {Is:spice}\n"
+      },
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "sup_shares_add",
+      "topicId": "superposition",
+      "level": "recall",
+      "prompt": "A meter at a reads {Va} with both supplies on and {s2} with V1 replaced by a wire. Find V1's share of V_a. Assume ideal supplies.",
+      "variables": [
+        {
+          "name": "V1",
+          "unit": "V",
+          "values": [
+            9,
+            12
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Va",
+          "formula": "(V1/R1+5/R2)/(1/R1+1/R2+1/R3)",
+          "unit": "V"
+        },
+        {
+          "name": "s2",
+          "formula": "5*(R1||R3)/(R2+(R1||R3))",
+          "unit": "V"
+        },
+        {
+          "name": "Rp",
+          "formula": "R2||R3",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "Va-s2",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "Every part here is linear, so V_a is the sum of the two supplies' shares: V_a = V1's share + V2's share. With V1 a wire, only V2 drives the circuit, so the second reading is V2's share. V1's share is the rest: {Va} − {s2} = {answer}. It is also what a would read with V2 replaced by a wire instead: R2 ∥ R3 = {Rp}, and {V1} × {Rp}/({R1} + {Rp}) = {answer}.",
+      "hints": [
+        "What does the second reading measure, with V1 a wire?",
+        "The full V_a is V1's share plus V2's share."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Va",
+          "feedback": "That is the full V_a, with both supplies on. It holds V2's share too: take away the reading with V1 a wire."
+        },
+        {
+          "formula": "Va+s2",
+          "feedback": "The shares add up to the full V_a, so V1's share is the full V_a minus V2's share, not plus."
+        },
+        {
+          "formula": "s2",
+          "when": "abs(s2-(Va-s2))-0.03*(Va-s2)",
+          "feedback": "That is V2's share: with V1 a wire, only V2 drives a. V1's share is the rest of the full reading."
+        },
+        {
+          "formula": "V1",
+          "feedback": "V1's share is the part of V_a that V1 makes through R1 and the rest of the network, not V1's own voltage. The network divides it down."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "With V1 replaced by a wire, why doesn't the meter at a read 0 V?",
+          "choices": [
+            {
+              "text": "The wire grounds R1's far end, not a; V2 still drives a through R2",
+              "correct": true,
+              "feedback": "Right: V1 at 0 V ties R1's left end to ground. R1 then joins R3 from a to ground, and V2 drives that pair through R2."
+            },
+            {
+              "text": "A real wire has some resistance, so a few volts remain across it",
+              "feedback": "The meter isn't across the wire, and an ideal wire drops nothing. Node a sits at V2's share because V2 still drives it through R2."
+            },
+            {
+              "text": "V1 keeps its voltage even as a wire; only its current is taken away",
+              "feedback": "That describes a current source set to zero. A voltage source set to zero has 0 V across it: a wire from R1's left end to ground."
+            },
+            {
+              "text": "R3 holds the voltage it had while V1 was on, until it discharges",
+              "feedback": "A resistor stores no charge: its voltage is set by its current at each instant. The reading comes from V2, which still drives a through R2."
+            }
+          ],
+          "explanation": "Zeroing V1 doesn't zero a: it zeroes V1's contribution. What is left is the other source's share, found in a circuit where R1 runs from a to ground."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n{V1}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              10,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              14,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              20,
+              2
+            ],
+            "rot": 90,
+            "label": "V2\n5 V"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              14,
+              0
+            ]
+          ],
+          [
+            [
+              10,
+              0
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              20,
+              0
+            ],
+            [
+              20,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              20,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            5,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              12,
+              0
+            ]
+          }
+        ],
+        "netlist": "two supplies\nV1 p 0 {V1:spice}\nR1 p a {R1:spice}\nR3 a 0 {R3:spice}\nR2 a q {R2:spice}\nV2 q 0 5\n"
+      },
+      "simCheck": {
+        "netlist": "V1 alone\nV1 p 0 {V1:spice}\nR1 p a {R1:spice}\nR3 a 0 {R3:spice}\nR2 a q {R2:spice}\nV2 q 0 0\n",
+        "probe": "v(a)",
+        "tolerance": 0.001
+      },
+      "review": "checked"
+    },
+    {
+      "id": "sup_what_if_double",
+      "topicId": "superposition",
+      "prompt": "Double V2 to {new_V2}. What happens to V_a? Assume ideal supplies.",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R4",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R5",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "V2",
+          "unit": "V",
+          "value": 5
+        }
+      ],
+      "derived": [
+        {
+          "name": "s1",
+          "formula": "12*(R3||(R2+(R4||R5)))/(R1+(R3||(R2+(R4||R5))))",
+          "unit": "V"
+        },
+        {
+          "name": "s2",
+          "formula": "V2*(R4||(R2+(R1||R3)))/(R5+(R4||(R2+(R1||R3))))*(R1||R3)/(R2+(R1||R3))",
+          "unit": "V"
+        }
+      ],
+      "whatIf": {
+        "quantity": "V_a",
+        "formula": "(12/R1*(1/R2+1/R4+1/R5)+(1/R2)*(V2/R5))/((1/R1+1/R2+1/R3)*(1/R2+1/R4+1/R5)-1/(R2*R2))",
+        "unit": "V",
+        "change": {
+          "V2": "2*V2"
+        },
+        "feedback": {
+          "up": "V2 pushes current into b through R5, and part of it reaches a through R2, so V2 has a positive share of V_a.",
+          "down": "V2 pushes current into b through R5, and part of it reaches a through R2: its share of V_a, {s2}, is positive. Doubling V2 doubles that share, so V_a rises.",
+          "same": "V2 reaches a through R5, b and R2, so it has a share of V_a: {s2}. Doubling V2 doubles that share, so V_a rises."
+        }
+      },
+      "explanation": "By superposition, V_a = V1's share + V2's share. V1's share, {s1}, is found with V2 as a wire and doesn't depend on V2 at all. V2's share, {s2}, is proportional to V2, so it doubles. V_a goes from {before} to {after}: up by V2's old share.",
+      "hints": [
+        "Split V_a into V1's share and V2's share. Which of them depends on V2?"
+      ],
+      "followUps": [
+        {
+          "prompt": "By how much does V_a rise?",
+          "choices": [
+            {
+              "text": "By V2's old share: that share doubles, V1's stays put",
+              "correct": true,
+              "feedback": "Right: V_a = s1 + s2, and only s2 is proportional to V2. Doubling V2 adds one more s2."
+            },
+            {
+              "text": "By 5 V: a follows the supply that was raised by 5 V",
+              "feedback": "a is tied to V2 only through R5, R4, R2 and R3, which divide V2 down: only a fraction of V2's change reaches a. That fraction is V2's share per volt."
+            },
+            {
+              "text": "It doubles: the circuit is linear, so V_a is in proportion",
+              "feedback": "Linear means V_a is a weighted sum of both supplies, not in proportion to one of them. Doubling every source would double V_a; doubling V2 alone doubles only V2's share."
+            },
+            {
+              "text": "By three times V2's old share: the share goes as V2 squared",
+              "feedback": "Every share is in proportion to its source: twice the volts, twice the share. Power goes as the square of a voltage, but voltages and currents don't."
+            }
+          ],
+          "explanation": "A node voltage in a linear circuit is k1·V1 + k2·V2, with k1 and k2 set by the resistors. Changing one source by ΔV moves the node by its k times ΔV, whatever the other sources are doing. The Bench lab on this network shows it: raising V2 from 5 V to 10 V adds exactly V2's 5 V share to V(a)."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          },
+          {
+            "ref": "R5",
+            "at": [
+              18,
+              0
+            ],
+            "label": "R5\n{R5}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              24,
+              2
+            ],
+            "rot": 90,
+            "label": "V2\n{V2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              22,
+              0
+            ],
+            [
+              24,
+              0
+            ],
+            [
+              24,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              24,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              9,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              15,
+              0
+            ]
+          }
+        ],
+        "netlist": "two-rail network\nV1 p 0 12\nR1 p a {R1:spice}\nR2 a b {R2:spice}\nR3 a 0 {R3:spice}\nR4 b 0 {R4:spice}\nR5 b q {R5:spice}\nV2 q 0 {V2:spice}\n"
+      },
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "sup_linear_why",
+      "topicId": "superposition",
+      "prompt": "Which change to this circuit would make superposition give the wrong V_a?",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R4",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R5",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "text": "R3 swapped for a small incandescent lamp",
+          "correct": true,
+          "feedback": "Right: a filament's resistance rises as it heats, so its current isn't in proportion to its voltage. V_a is then no longer a fixed weighted sum of 12 V and 5 V, and the shares found one supply at a time don't add up to it."
+        },
+        {
+          "text": "A third source added: a 1 mA current source from ground into b",
+          "feedback": "A current source is linear too: it just adds a third share, 1 mA times the resistance seen from b, with both supplies zeroed. The three shares still add."
+        },
+        {
+          "text": "V2 turned around, so that b is fed from −5 V instead of +5 V",
+          "feedback": "Then V2's share simply changes sign. Every part is still linear, so V_a is still V1's share plus V2's (now negative) share."
+        },
+        {
+          "text": "R2 swapped for a 1 MΩ resistor, so a and b barely interact",
+          "feedback": "Any resistor is linear, whatever its value. With 1 MΩ, V2's share at a becomes tiny, but the shares still add exactly."
+        }
+      ],
+      "explanation": "Superposition needs every part to be linear: current in proportion to voltage (resistors), or fixed (independent sources). Then G·v = i, the node equations, has G set by the resistors alone and the sources only in i, so v = G⁻¹·i splits into one share per source. A lamp filament heats and its resistance rises with current, so its entry in G depends on the very voltages being solved for, and the split fails. The circuit can still be solved, by iterating or by the simulator, but not by adding shares.",
+      "followUps": [
+        {
+          "prompt": "What makes superposition hold for the circuit as drawn?",
+          "choices": [
+            {
+              "text": "Each part's current is a straight-line function of its voltage",
+              "correct": true,
+              "feedback": "Right: then KCL at every node is a linear equation, the node voltages are a weighted sum of the source values, and each source's share can be found alone."
+            },
+            {
+              "text": "KCL and KVL hold at every node and around every loop",
+              "feedback": "They hold in any lumped circuit, the lamp's version too, where shares don't add. Linearity of every part is what superposition needs."
+            },
+            {
+              "text": "Both supplies are ideal and share the same ground",
+              "feedback": "A supply with an internal resistance is still linear, and shares still add. What breaks superposition is a part whose current isn't in proportion to its voltage."
+            },
+            {
+              "text": "The resistors are fixed values from the E12 series",
+              "feedback": "Any fixed resistance works, E-series or not. It matters that each resistance doesn't change with the voltage across it."
+            }
+          ],
+          "explanation": "Kirchhoff's laws hold for any circuit; Ohm's law with a fixed R is what makes it linear. Superposition is the statement that a linear system's response to a sum of inputs is the sum of its responses."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          },
+          {
+            "ref": "R5",
+            "at": [
+              18,
+              0
+            ],
+            "label": "R5\n{R5}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              24,
+              2
+            ],
+            "rot": 90,
+            "label": "V2\n5 V"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              22,
+              0
+            ],
+            [
+              24,
+              0
+            ],
+            [
+              24,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              24,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              9,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              15,
+              0
+            ]
+          }
+        ],
+        "netlist": "two-rail network\nV1 p 0 12\nR1 p a {R1:spice}\nR2 a b {R2:spice}\nR3 a 0 {R3:spice}\nR4 b 0 {R4:spice}\nR5 b q {R5:spice}\nV2 q 0 5\n"
+      },
+      "review": "checked"
+    },
+    {
+      "id": "sup_power_both",
+      "topicId": "superposition",
+      "prompt": "Find the power in R3. Assume ideal supplies.",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "s1",
+          "formula": "12*(R2||R3)/(R1+(R2||R3))",
+          "unit": "V"
+        },
+        {
+          "name": "s2",
+          "formula": "5*(R1||R3)/(R2+(R1||R3))",
+          "unit": "V"
+        },
+        {
+          "name": "Va",
+          "formula": "12*(R2||R3)/(R1+(R2||R3))+5*(R1||R3)/(R2+(R1||R3))",
+          "unit": "V"
+        },
+        {
+          "name": "P1",
+          "formula": "(12*(R2||R3)/(R1+(R2||R3)))^2/R3",
+          "unit": "W"
+        },
+        {
+          "name": "P2",
+          "formula": "(5*(R1||R3)/(R2+(R1||R3)))^2/R3",
+          "unit": "W"
+        },
+        {
+          "name": "Psum",
+          "formula": "((12*(R2||R3)/(R1+(R2||R3)))^2+(5*(R1||R3)/(R2+(R1||R3)))^2)/R3",
+          "unit": "W"
+        },
+        {
+          "name": "Px",
+          "formula": "2*(12*(R2||R3)/(R1+(R2||R3)))*(5*(R1||R3)/(R2+(R1||R3)))/R3",
+          "unit": "W"
+        }
+      ],
+      "answer": {
+        "formula": "(12*(R2||R3)/(R1+(R2||R3))+5*(R1||R3)/(R2+(R1||R3)))^2/R3",
+        "unit": "W",
+        "tolerance": 0.02
+      },
+      "explanation": "Find V_a first, by superposition. V1's share (V2 a wire, so R2 ∥ R3 below a): 12 V × (R2 ∥ R3)/(R1 + R2 ∥ R3) = {s1}. V2's share (V1 a wire): 5 V × (R1 ∥ R3)/(R2 + R1 ∥ R3) = {s2}. V_a = {Va}, and P = V_a²/R3 = {answer}. (Whenever V_a is above 5 V, as it is for many of these values, current flows into V2's + terminal: an ideal supply sinks it, but a typical bench supply can't, and its output would rise.) Adding the shares' powers, {P1} + {P2} = {Psum}, misses the cross term 2·s1·s2/R3 = {Px}: power goes as the square of the voltage, so it doesn't superpose.",
+      "hints": [
+        "Superpose the voltage at a first, then find the power from the total.",
+        "V_a = 12 V·(R2 ∥ R3)/(R1 + R2 ∥ R3) + 5 V·(R1 ∥ R3)/(R2 + R1 ∥ R3); then P = V_a²/R3."
+      ],
+      "misconceptions": [
+        {
+          "formula": "((12*(R2||R3)/(R1+(R2||R3)))^2+(5*(R1||R3)/(R2+(R1||R3)))^2)/R3",
+          "feedback": "That adds the power each supply would put into R3 alone. Power goes as V²: (s1 + s2)² = s1² + s2² + 2·s1·s2, so the sum misses the cross term. Superpose the voltage, then square it."
+        },
+        {
+          "formula": "(12*(R2||R3)/(R1+(R2||R3)))^2/R3",
+          "feedback": "That is the power with V1 alone. V2 also pushes current into R3: add the voltage shares first, then find the power."
+        },
+        {
+          "formula": "(12/R1+5/R2)^2*R3",
+          "feedback": "That puts both supplies' short-circuit currents through R3 alone. Each supply's current divides: find each share of V_a, add them, then P = V_a²/R3."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why isn't the power the sum of each supply's power in R3 alone?",
+          "choices": [
+            {
+              "text": "P goes as V², so (s1 + s2)² has a cross term, 2·s1·s2",
+              "correct": true,
+              "feedback": "Right: here both shares have the same sign, so the cross term adds {Px}. With one share negative it would subtract, and the total could be less than either alone."
+            },
+            {
+              "text": "Each supply loses part of its power in its own resistor",
+              "feedback": "That loss happens in R1 and R2, not in R3. The power in R3 is V_a²/R3 with the full V_a, and that square is what doesn't split."
+            },
+            {
+              "text": "Superposition holds for currents, but not for voltages",
+              "feedback": "It holds for both: every voltage and every current is a sum of shares. Power, a product of the two, is the quantity that doesn't split."
+            },
+            {
+              "text": "The two shares partly cancel where the currents meet at a",
+              "feedback": "Here both supplies push current down through R3: the shares add, and the power is more than the sum of the separate powers, not less."
+            }
+          ],
+          "explanation": "Superposition applies to quantities that are linear in the sources: voltages and currents. Power is V·I, or V²/R, which is quadratic. Superpose V or I first, then square."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "V2\n5 V"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              16,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              9,
+              0
+            ]
+          }
+        ],
+        "netlist": "three-branch network\nV1 p 0 12\nR1 p a {R1:spice}\nR3 a 0 {R3:spice}\nR2 a q {R2:spice}\nV2 q 0 5\n"
+      },
+      "review": "checked"
+    },
+    {
+      "id": "sup_transform_equiv",
+      "topicId": "superposition",
+      "prompt": "Which quantity differs between the two sources, with nothing connected to either? Each is the source transformation of the other.",
+      "variables": [
+        {
+          "name": "Vs",
+          "unit": "V",
+          "values": [
+            5,
+            9,
+            12
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500,
+            2200,
+            3300,
+            4700
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Is",
+          "formula": "Vs/R",
+          "unit": "A"
+        },
+        {
+          "name": "P",
+          "formula": "Vs^2/R",
+          "unit": "W"
+        }
+      ],
+      "choices": [
+        {
+          "text": "The power heating the resistor inside the source",
+          "correct": true,
+          "feedback": "Right: at a no current flows, so R dissipates nothing. At b all of {Is} circulates through R: ({Is})² × {R} = {P}. The equivalence holds only at the terminals."
+        },
+        {
+          "text": "The voltage between the open terminals of each",
+          "feedback": "Both read {Vs}. At a no current flows, so R drops nothing; at b all of {Is} flows through R: {Is} × {R} = {Vs}."
+        },
+        {
+          "text": "The current a wire across the terminals would carry",
+          "feedback": "Both give {Is}. At a, a wire puts {Vs} across R alone; at b, a wire takes all of {Is} and leaves R with nothing across it."
+        },
+        {
+          "text": "The resistance seen looking back into the terminals",
+          "feedback": "Both are {R}. Zero each source: the voltage source becomes a wire, leaving R in series; the current source becomes a break, leaving R in parallel."
+        }
+      ],
+      "explanation": "A voltage source V_s behind R and a current source V_s/R across R give the same voltage for every current a load draws: V = V_s − I·R in both. So any circuit connected to the terminals sees the same thing. Inside, they differ: unloaded, the voltage form dissipates nothing and the current form dissipates (V_s/R)²·R = {P} in its resistor. A transformation is a tool for finding terminal voltages and currents, never the power inside the source.",
+      "followUps": [
+        {
+          "prompt": "Why can a ladder still be collapsed with source transformations?",
+          "choices": [
+            {
+              "text": "The rest of the ladder sees only terminal behavior, which is kept",
+              "correct": true,
+              "feedback": "Right: each step swaps a source and its resistor for one with the same V–I line at its two terminals. Every voltage and current outside that pair is unchanged."
+            },
+            {
+              "text": "Each transformation keeps the power in every resistor the same",
+              "feedback": "It doesn't: the power in the transformed source's own resistor changes. Only voltages and currents outside the pair are kept."
+            },
+            {
+              "text": "Both forms carry the same current through their own resistor",
+              "feedback": "Unloaded, the series R carries nothing and the parallel R carries all of the source's current. What matches is the terminal voltage and current."
+            },
+            {
+              "text": "A transformation is exact only while the terminals are open",
+              "feedback": "It holds for every load: both forms follow V = V_s − I·R at the terminals. That is why it can be used step after step inside a circuit."
+            }
+          ],
+          "explanation": "Source transformation is Thevenin's and Norton's forms used as a reduction step. Each step keeps the V–I line at the pair's terminals, so the answer outside is exact, while anything inside the transformed pair (its resistor's current and power) is not."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vs}"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R\n{R}"
+          },
+          {
+            "ref": "IS",
+            "at": [
+              14,
+              6
+            ],
+            "rot": 270,
+            "label": "{Is}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "RP",
+            "at": [
+              18,
+              2
+            ],
+            "rot": 90,
+            "label": "R\n{R}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              14,
+              2
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              21,
+              0
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              18,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              6
+            ],
+            [
+              21,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ],
+          [
+            20,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              8,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              21,
+              0
+            ]
+          }
+        ],
+        "netlist": "two equivalent sources\nVS p 0 {Vs:spice}\nRS p a {R:spice}\nIS 0 b {Is:spice}\nRP b 0 {R:spice}\n"
+      },
+      "review": "checked"
+    },
+    {
+      "id": "sup_ladder_transform",
+      "topicId": "superposition",
+      "prompt": "Find V_b. Collapse the ladder from the left with source transformations. Assume ideal sources.",
+      "variables": [
+        {
+          "name": "V1",
+          "unit": "V",
+          "values": [
+            5,
+            9,
+            12
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "R4",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "Is",
+          "unit": "A",
+          "values": [
+            0.0005,
+            0.001
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Ia",
+          "formula": "V1/R1",
+          "unit": "A"
+        },
+        {
+          "name": "Rp",
+          "formula": "R1||R2",
+          "unit": "Ω"
+        },
+        {
+          "name": "Vp",
+          "formula": "V1*R2/(R1+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "Rq",
+          "formula": "(R1||R2)+R3",
+          "unit": "Ω"
+        },
+        {
+          "name": "In1",
+          "formula": "(V1*R2/(R1+R2))/((R1||R2)+R3)",
+          "unit": "A"
+        },
+        {
+          "name": "In",
+          "formula": "(V1*R2/(R1+R2))/((R1||R2)+R3)+Is",
+          "unit": "A"
+        },
+        {
+          "name": "Rf",
+          "formula": "((R1||R2)+R3)||R4",
+          "unit": "Ω"
+        },
+        {
+          "name": "sV",
+          "formula": "(V1*R2/(R1+R2))/((R1||R2)+R3)*(((R1||R2)+R3)||R4)",
+          "unit": "V"
+        },
+        {
+          "name": "sI",
+          "formula": "Is*(((R1||R2)+R3)||R4)",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "((V1*R2/(R1+R2))/((R1||R2)+R3)+Is)*(((R1||R2)+R3)||R4)",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "1. V1 behind R1 becomes {Ia} (V1/R1) in parallel with R1. 2. R1 ∥ R2 = {Rp}. 3. Back to a voltage source: {Ia} × {Rp} = {Vp}, behind {Rp}. 4. R3 is now in series with it: {Rq}. 5. Transform again: {Vp}/{Rq} = {In1}, in parallel with {Rq}. 6. At b this current source is in parallel with I_S, so the two add: {In}; and {Rq} is in parallel with R4: {Rf}. V_b = {In} × {Rf} = {answer}. The last step is superposition in another form: V1's share of V_b is {sV} and I_S's is {sI}.",
+      "hints": [
+        "Start at V1: a voltage source with a series resistor becomes a current source with that resistor in parallel. Then merge what is in parallel, and convert back to pass through R3.",
+        "After R3, convert to a current source once more. At b, current sources in parallel add, and so do conductances: V_b = (sum of currents) × (Rq ∥ R4)."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(V1*R2/(R1+R2))/((R1||R2)+R3)*(((R1||R2)+R3)||R4)",
+          "feedback": "That is V1's share only. I_S also feeds b: after the last transformation the two current sources are in parallel and add."
+        },
+        {
+          "formula": "(V1/R1+Is)*(R1||R2||R4)",
+          "when": "abs((V1/R1+Is)*(R1||R2||R4)-((V1*R2/(R1+R2))/((R1||R2)+R3)+Is)*(((R1||R2)+R3)||R4))-0.03*((V1*R2/(R1+R2))/((R1||R2)+R3)+Is)*(((R1||R2)+R3)||R4)",
+          "feedback": "That adds V1/R1 and I_S as if both fed the same node. V1/R1 enters at a; R3 sits between a and b, so convert back to a voltage source, add R3 in series, and convert again before adding I_S."
+        },
+        {
+          "formula": "(V1*R2/(R1+R2))*R4/((R1||R2)+R3+R4)+Is*R4",
+          "feedback": "I_S's share used R4 alone. With V1 zeroed, the rest of the ladder (R1 ∥ R2 + R3) is also a path from b to ground, in parallel with R4."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Seen from b, with R4 removed, what is the rest of the circuit?",
+          "choices": [
+            {
+              "text": "A current source of {In} in parallel with {Rq}",
+              "correct": true,
+              "feedback": "Right: that is the Norton form of everything left of b, I_S included. Any resistor across b then sets V_b = {In} × (that resistor ∥ {Rq})."
+            },
+            {
+              "text": "A current source of {Is} in parallel with {Rq}",
+              "feedback": "That leaves out V1. V1's current, transformed through R1, R2 and R3, arrives at b as {In1} and adds to I_S."
+            },
+            {
+              "text": "A current source of {Ia} in parallel with {Rp}",
+              "feedback": "That is the first step, seen from a. R3 still has to be folded in, and I_S added at b."
+            },
+            {
+              "text": "A voltage source of {V1} behind R1 + R2 + R3",
+              "feedback": "R2 goes from a to ground, not in series: it divides V1 down and is in parallel with R1, not added to it."
+            }
+          ],
+          "explanation": "Repeated source transformations end in the Norton equivalent at the last node, with every source folded in: here {In} in parallel with {Rq}. It is the same equivalent Thevenin's theorem gives, found one step at a time."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n{V1}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          },
+          {
+            "ref": "IS",
+            "at": [
+              22,
+              6
+            ],
+            "rot": 270,
+            "label": "I_S\n{Is}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              22,
+              0
+            ],
+            [
+              22,
+              2
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              22,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              9,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              19,
+              0
+            ]
+          }
+        ],
+        "netlist": "ladder\nV1 p 0 {V1:spice}\nR1 p a {R1:spice}\nR2 a 0 {R2:spice}\nR3 a b {R3:spice}\nR4 b 0 {R4:spice}\nIS 0 b {Is:spice}\n"
+      },
+      "simCheck": {
+        "netlist": "ladder\nV1 p 0 {V1:spice}\nR1 p a {R1:spice}\nR2 a 0 {R2:spice}\nR3 a b {R3:spice}\nR4 b 0 {R4:spice}\nIS 0 b {Is:spice}\n",
+        "probe": "v(b)",
+        "tolerance": 0.001
+      },
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "sup_signal_on_bias",
+      "topicId": "superposition",
+      "prompt": "Find the peak-to-peak signal at a, as a scope would show it.",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            10000,
+            15000,
+            22000,
+            33000,
+            47000
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            10000,
+            15000,
+            22000,
+            33000,
+            47000
+          ]
+        },
+        {
+          "name": "RS",
+          "unit": "Ω",
+          "values": [
+            4700,
+            10000,
+            22000
+          ]
+        },
+        {
+          "name": "Vpp",
+          "unit": "V",
+          "values": [
+            0.2,
+            0.5,
+            1
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vpk",
+          "formula": "Vpp/2",
+          "unit": "V"
+        },
+        {
+          "name": "Rp",
+          "formula": "R1||R2",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rq",
+          "formula": "R2||RS",
+          "unit": "Ω"
+        },
+        {
+          "name": "Vdc",
+          "formula": "5*(R2||RS)/(R1+(R2||RS))",
+          "unit": "V"
+        },
+        {
+          "name": "Vdiv",
+          "formula": "5*R2/(R1+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "Vsig",
+          "formula": "Vpp*(R1||R2)/(RS+(R1||R2))",
+          "unit": "V"
+        },
+        {
+          "name": "Vdivpk",
+          "formula": "5*R2/(R1+R2)+Vpp/2",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "Vpp*(R1||R2)/(RS+(R1||R2))",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "Split a's voltage into the supply's share (DC) and the sensor's share (the signal). For the signal, zero the 5 V supply: it becomes a wire, so R1 runs from a to ground, in parallel with R2: {Rp}. The sensor drives that through R_S: {Vpp} × {Rp}/({RS} + {Rp}) = {answer} peak to peak. The DC level is the other share, with the sensor zeroed to a wire, so R_S goes to ground: 5 V × (R2 ∥ R_S)/(R1 + R2 ∥ R_S) = {Vdc}. a carries {Vdc} DC with {answer} peak to peak on it.",
+      "hints": [
+        "Find the sensor's share alone. What does the 5 V supply become when it is zeroed?",
+        "The zeroed supply is a wire: R1 goes to ground beside R2. The signal divides between R_S and R1 ∥ R2."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vpp*R2/(RS+R2)",
+          "feedback": "That leaves R1 out. For the signal, the 5 V supply is zeroed to a wire, so R1 runs from a to ground in parallel with R2: a supply rail is ground for signals."
+        },
+        {
+          "formula": "Vpp",
+          "feedback": "The sensor's signal reaches a through R_S, which forms a divider with R1 ∥ R2 (the supply zeroed). Only part of it gets to a."
+        },
+        {
+          "formula": "Vpp*RS/(RS+(R1||R2))",
+          "feedback": "That is the part of the signal dropped across R_S. The part at a is across R1 ∥ R2: Vpp × (R1 ∥ R2)/(R_S + R1 ∥ R2)."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "What DC voltage does a meter read at a?",
+          "choices": [
+            {
+              "text": "{Vdc}: the supply's share, with R_S to ground",
+              "correct": true,
+              "feedback": "Right: zeroing the sensor makes it a wire, so R_S runs from a to ground in parallel with R2: 5 V × {Rq}/({R1} + {Rq}) = {Vdc}. The meter averages, and the signal's share averages to zero."
+            },
+            {
+              "text": "{Vdiv}: the R1–R2 divider, as the signal averages out",
+              "feedback": "The signal does average to zero, but zeroing the sensor leaves R_S from a to ground (a 0 V source is a wire). R_S loads the divider: {Vdc}."
+            },
+            {
+              "text": "{Vdivpk}: the R1–R2 divider plus the signal's peak",
+              "feedback": "A meter averages: the signal adds as much as it subtracts over a cycle. And the DC share is loaded by R_S, which goes to ground through the zeroed sensor: {Vdc}."
+            },
+            {
+              "text": "5 V: no steady current flows into the sensor",
+              "feedback": "The sensor's output sits at 0 V on average, below a, so a steady current flows from a through R_S into it. With the sensor zeroed to a wire, the DC share is {Vdc}."
+            }
+          ],
+          "explanation": "Every amplifier stage is analyzed this way: the DC bias with the signal source zeroed, and the signal with the supplies zeroed. Each share sees a different circuit: R_S loads the bias, and R1 shunts the signal. A real stage usually couples the signal in through a capacitor, which passes the signal but blocks the DC, so the sensor doesn't load the bias."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "VB",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "supply\n5 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R_S\n{RS}"
+          },
+          {
+            "ref": "VS",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "sensor\n{Vpp} pk-pk, 1 kHz\n0 V offset"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              16,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              9,
+              0
+            ]
+          }
+        ],
+        "netlist": "bias and sensor\nVB p 0 5\nR1 p a {R1:spice}\nR2 a 0 {R2:spice}\nRS a s {RS:spice}\nVS s 0 SIN(0 {Vpk:spice} 1k)\n"
+      },
+      "simCheck": {
+        "netlist": "signal share: supply zeroed, sensor at its peak-to-peak value\nVB p 0 0\nR1 p a {R1:spice}\nR2 a 0 {R2:spice}\nRS a s {RS:spice}\nVS s 0 {Vpp:spice}\n",
+        "probe": "v(a)",
+        "tolerance": 0.001
+      },
+      "review": "checked"
+    },
+    {
+      "id": "sup_fault_bias",
+      "topicId": "superposition",
+      "prompt": "Which fault explains the readings?",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            10000,
+            15000,
+            22000,
+            33000,
+            47000
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            10000,
+            15000,
+            22000,
+            33000,
+            47000
+          ]
+        },
+        {
+          "name": "RS",
+          "unit": "Ω",
+          "values": [
+            4700,
+            10000,
+            22000
+          ]
+        },
+        {
+          "name": "Vpp",
+          "unit": "V",
+          "values": [
+            0.2,
+            0.5,
+            1
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vpk",
+          "formula": "Vpp/2",
+          "unit": "V"
+        },
+        {
+          "name": "Rp",
+          "formula": "R1||R2",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rq",
+          "formula": "R2||RS",
+          "unit": "Ω"
+        },
+        {
+          "name": "Vdc",
+          "formula": "5*(R2||RS)/(R1+(R2||RS))",
+          "unit": "V"
+        },
+        {
+          "name": "Vdiv",
+          "formula": "5*R2/(R1+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "Vsig",
+          "formula": "Vpp*(R1||R2)/(RS+(R1||R2))",
+          "unit": "V"
+        },
+        {
+          "name": "Vdivpk",
+          "formula": "5*R2/(R1+R2)+Vpp/2",
+          "unit": "V"
+        },
+        {
+          "name": "VdcR2open",
+          "formula": "5*RS/(R1+RS)",
+          "unit": "V"
+        },
+        {
+          "name": "VsigR1open",
+          "formula": "Vpp*R2/(RS+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "VsigR2open",
+          "formula": "Vpp*R1/(RS+R1)",
+          "unit": "V"
+        }
+      ],
+      "fault": {
+        "netlist": "bias and sensor\nVB p 0 5\nR1 p a {R1:spice}\nR2 a 0 {R2:spice}\nRS a s {RS:spice}\nVS s 0 SIN(0 {Vpk:spice} 1k)\n.tran 10u 4m\n",
+        "probes": [
+          {
+            "label": "DC voltage at a (meter)",
+            "probe": "avg:v(a)"
+          },
+          {
+            "label": "Signal at a (scope, peak to peak)",
+            "probe": "pp:v(a)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "R1 is open",
+            "open": "R1",
+            "feedback": "An open R1 would cut a off from the supply: the meter would read 0 V, and the signal would grow to about {VsigR1open}, since only R2 would shunt it.",
+            "why": "The DC level is gone while the signal grew: the supply's share has vanished, so its path, R1, is broken. With R1 gone, the signal divides between R_S and R2 alone, which is a bigger share."
+          },
+          {
+            "text": "R1 is shorted",
+            "short": "R1",
+            "feedback": "A shorted R1 would tie a to the 5 V supply: the meter would read 5 V and the scope a flat line, since an ideal supply holds a still.",
+            "why": "a sits at exactly 5 V with no signal on it: it is joined straight to the supply. A supply holds its node fixed whatever current the sensor pushes, which is why a supply rail is ground for signals."
+          },
+          {
+            "text": "R2 is open",
+            "open": "R2",
+            "feedback": "An open R2 would raise both readings: the DC to about {VdcR2open}, set by R1 and R_S alone, and the signal to about {VsigR2open}, shunted by R1 alone.",
+            "why": "Both shares grew: a lost a path to ground that loaded both of them. R2 sits in both shares' circuits (in the DC divider and in the signal's shunt), so only R2 can move both the same way."
+          },
+          {
+            "text": "R2 is shorted",
+            "short": "R2",
+            "feedback": "A shorted R2 would pin a at 0 V: no DC and no signal.",
+            "why": "Both readings are zero: a is tied straight to ground, so neither source has a share left there."
+          },
+          {
+            "text": "R_S is open (the sensor's lead has come off)",
+            "open": "RS",
+            "feedback": "With R_S open, no signal would reach a, and the DC would rise to the unloaded R1–R2 divider, {Vdiv}, since the sensor no longer pulls a down.",
+            "why": "The signal is gone and the DC rose to the plain R1–R2 divider, {Vdiv}: the sensor's path to a is broken, so neither its signal nor its DC load reaches a."
+          }
+        ]
+      },
+      "explanation": "The meter reads the supply's share (the signal averages to zero) and the scope the sensor's share. Each fault changes the circuit each share sees. R1 is in the DC path from the supply and, with the supply zeroed, in the signal's shunt to ground; R2 is in both shares' circuits too; R_S carries the signal in and, with the sensor zeroed, loads the bias. Work out what each fault does to each share and compare.",
+      "hints": [
+        "The meter shows the DC share and the scope the signal's share. Which of the two changed, and which way?",
+        "A share at zero means its source can't reach a, or a is tied to a node a source holds still (ground, or the supply)."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "VB",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "supply\n5 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R_S\n{RS}"
+          },
+          {
+            "ref": "VS",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "sensor\n{Vpp} pk-pk, 1 kHz\n0 V offset"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              16,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              9,
+              0
+            ]
+          }
+        ],
+        "netlist": "bias and sensor\nVB p 0 5\nR1 p a {R1:spice}\nR2 a 0 {R2:spice}\nRS a s {RS:spice}\nVS s 0 SIN(0 {Vpk:spice} 1k)\n"
+      },
+      "review": "checked"
+    },
+    {
+      "id": "sup_design_adc",
+      "topicId": "superposition",
+      "prompt": "Map the signal onto the ADC's 0 to 3.3 V input: its negative peak to 0 V and its positive peak to 3.3 V, each within 66 mV (2% of the range). Choose R1, R2 and R3 (E24 values, 1% parts, 1 kΩ to 100 kΩ).",
+      "variables": [
+        {
+          "name": "Vs",
+          "unit": "V",
+          "values": [
+            5,
+            10
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "span",
+          "formula": "2*Vs",
+          "unit": "V"
+        },
+        {
+          "name": "k1",
+          "formula": "3.3/(2*Vs)",
+          "unit": ""
+        },
+        {
+          "name": "R1i",
+          "formula": "10000/(2*3.3/(2*Vs))",
+          "unit": "Ω"
+        },
+        {
+          "name": "R3i",
+          "formula": "10000/(2*(0.5-3.3/(2*Vs)))",
+          "unit": "Ω"
+        },
+        {
+          "name": "R1e",
+          "formula": "3000*Vs",
+          "unit": "Ω"
+        },
+        {
+          "name": "R3e",
+          "formula": "45000-3000*Vs",
+          "unit": "Ω"
+        },
+        {
+          "name": "Vloe",
+          "formula": "(-Vs/(3000*Vs)+3.3/10000)/(1/(3000*Vs)+1/10000+1/(45000-3000*Vs))",
+          "unit": "V"
+        },
+        {
+          "name": "Vhie",
+          "formula": "(Vs/(3000*Vs)+3.3/10000)/(1/(3000*Vs)+1/10000+1/(45000-3000*Vs))",
+          "unit": "V"
+        },
+        {
+          "name": "Vover",
+          "formula": "(Vs/(3000*Vs)+3.3/10000)/(1/(3000*Vs)+1/10000+1/(45000-3000*Vs))-3.3",
+          "unit": "V"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "R1",
+            "label": "R1 (from the signal)",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 1000,
+            "max": 100000
+          },
+          {
+            "name": "R2",
+            "label": "R2 (from the reference)",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 1000,
+            "max": 100000
+          },
+          {
+            "name": "R3",
+            "label": "R3 (to ground)",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 1000,
+            "max": 100000
+          }
+        ],
+        "result": "max(abs((-Vs/R1+3.3/R2)/(1/R1+1/R2+1/R3)),abs((Vs/R1+3.3/R2)/(1/R1+1/R2+1/R3)-3.3))",
+        "resultLabel": "the larger end error",
+        "resultUnit": "V",
+        "target": "0.066",
+        "tolerance": 0.999,
+        "mode": "atMost"
+      },
+      "explanation": "Superpose the two sources at the ADC pin. The signal's share is k1·v_sig, with k1 = (R2 ∥ R3)/(R1 + R2 ∥ R3); the reference's is k2 × 3.3 V, with k2 = (R1 ∥ R3)/(R2 + R1 ∥ R3). The signal swings {span}, and its share must swing 3.3 V: k1 = 3.3 V/{span} = {k1}. At 0 V in, the pin must sit mid-range, 1.65 V: k2 = 0.5. In conductances, k1 = G1/G and k2 = G2/G, where G = G1 + G2 + G3, so G3/G = 1 − k1 − k2. Pick R2 = 10 kΩ: G = 2/R2 = 0.2 mS, R1 = 1/(k1·G) = {R1i} and R3 = 1/((1 − k1 − k2)·G) = {R3i}. The nearest E24 values, R1 = {R1e} and R3 = {R3e}, put the ends at {Vloe} and {Vhie}: within 66 mV. The {Vover} past each rail is harmless (an ADC pin's absolute maximum is typically −0.3 V to V_DD + 0.3 V, set by its clamp diodes); the pin reads code 0 or full scale for those last {Vover}. To avoid even that, aim the ends a little inside the range. Tolerance matters more than the E24 step here: with 5% parts the worst-case end error of this design would be about 190 mV, while 1% parts keep it near 50 mV. A different R2 scales all three, but the E24 values may then land further off.",
+      "hints": [
+        "Each source's share is a divider: the signal through R1 into R2 ∥ R3, and the reference through R2 into R1 ∥ R3. What must each share be?",
+        "The signal's share must swing 3.3 V over the signal's full swing; the reference's share must be 1.65 V (mid-range at 0 V in). In conductances: G1/G = 3.3 V/(full swing), G2/G = 0.5. Start from R2 = 10 kΩ."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "signal\n±{Vs}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "VR",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "reference\n3.3 V"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              16,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "ADC",
+            "at": [
+              9,
+              0
+            ]
+          }
+        ],
+        "netlist": "ADC level shift\nVS s 0 {Vs:spice}\nR1 s adc {R1:spice}\nR3 adc 0 {R3:spice}\nR2 adc r {R2:spice}\nVR r 0 3.3\n"
+      },
+      "review": "checked"
+    },
+    {
+      "id": "sup_trouble_drift",
+      "topicId": "superposition",
+      "level": "design",
+      "prompt": "Find the actual value of the one resistor that has gone high. With V2 replaced by a wire, a reads {s1m} (expected {s1e}); with V1 replaced by a wire, it reads {s2m} (expected {s2e}).",
+      "variables": [
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500,
+            2200,
+            3300,
+            4700
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500,
+            2200,
+            3300,
+            4700
+          ]
+        },
+        {
+          "name": "R3",
+          "unit": "Ω",
+          "values": [
+            1000,
+            1500,
+            2200,
+            3300,
+            4700
+          ]
+        },
+        {
+          "name": "d",
+          "unit": "",
+          "values": [
+            1.5,
+            2,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "s1e",
+          "formula": "12*(R2||R3)/(R1+(R2||R3))",
+          "unit": "V"
+        },
+        {
+          "name": "s2e",
+          "formula": "5*(R1||R3)/(R2+(R1||R3))",
+          "unit": "V"
+        },
+        {
+          "name": "s1m",
+          "formula": "12*((d*R2)||R3)/(R1+((d*R2)||R3))",
+          "unit": "V"
+        },
+        {
+          "name": "s2m",
+          "formula": "5*(R1||R3)/(d*R2+(R1||R3))",
+          "unit": "V"
+        },
+        {
+          "name": "Rp13",
+          "formula": "(R1||R3)",
+          "unit": "Ω"
+        },
+        {
+          "name": "R2a",
+          "formula": "d*R2",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "(R1||R3)*(5-(5*(R1||R3)/(d*R2+(R1||R3))))/(5*(R1||R3)/(d*R2+(R1||R3)))",
+        "unit": "Ω",
+        "tolerance": 0.02
+      },
+      "explanation": "Read the pattern first. V1's share rose and V2's share fell. R1 going high would weaken V1's path and lower V1's share; R3 going high would remove load from a and raise both shares. Only R2 going high does both: with V2 a wire, R2 is a load from a to ground, so a larger R2 loads a less and V1's share rises; with V1 a wire, R2 is V2's path in, so V2's share falls. Then solve with V2's reading: with V1 a wire, a sees R1 ∥ R3 = {Rp13} to ground, fed from 5 V through R2. The divider gives {s2m} = 5 V × {Rp13}/(R2 + {Rp13}), so R2 = {Rp13} × (5 V − {s2m})/{s2m} = {answer}, against {R2} marked. V1's reading agrees: 12 V × (R2 ∥ R3)/(R1 + R2 ∥ R3) with R2 = {answer} gives {s1m}.",
+      "hints": [
+        "Compare each reading with its expected value. Which resistor, gone high, raises V1's share and lowers V2's?",
+        "It is R2. With V1 a wire, a sees R1 ∥ R3 to ground, fed from 5 V through R2: solve that divider for R2."
+      ],
+      "misconceptions": [
+        {
+          "formula": "R2",
+          "feedback": "That is R2's marked value, which would give the expected readings. The readings differ: solve the divider for V2's share with the measured value."
+        },
+        {
+          "formula": "(R2||R3)*(12-(12*((d*R2)||R3)/(R1+((d*R2)||R3))))/(12*((d*R2)||R3)/(R1+((d*R2)||R3)))",
+          "feedback": "That treats R1 as the part that went high, but it comes out below its marked value, and the resistor went high. R1 high would lower V1's share; it rose. Only R2 high raises V1's share and lowers V2's."
+        },
+        {
+          "formula": "R1*(12*((d*R2)||R3)/(R1+((d*R2)||R3)))/(12-(12*((d*R2)||R3)/(R1+((d*R2)||R3))))",
+          "feedback": "That is R2 ∥ R3, the resistance from a to ground with V2 a wire, found from V1's reading. R2 itself is in parallel with R3 there; V2's reading gives R2 directly, from the divider R2 over R1 ∥ R3."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Which readings would R3 going high have given?",
+          "choices": [
+            {
+              "text": "Both shares above their expected values",
+              "correct": true,
+              "feedback": "Right: R3 is the load from a to ground in both shares' circuits. A larger R3 lets each source pull a higher, so both shares rise. That is how R3 is told apart from R1 and R2."
+            },
+            {
+              "text": "Both shares below their expected values",
+              "feedback": "That is R3 going low: more load from a to ground pulls both shares down."
+            },
+            {
+              "text": "V1's share above expected, V2's share below",
+              "feedback": "That is the pattern here, R2 high: V2's path in weakens, so its share falls, and R2 loads a less in V1's share."
+            },
+            {
+              "text": "V1's share below expected, V2's share above",
+              "feedback": "That is R1 high: V1's path weakens and its share falls, while V2's share rises."
+            }
+          ],
+          "explanation": "Each resistor sits in the two shares' circuits in a different place, so a drift in each one moves the pair of shares in its own pattern. Removing the sources in turn is a standard way to localize a fault in a network with several sources."
+        }
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n12 V"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R2\nmarked {R2}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "V2\n5 V"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              16,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              9,
+              0
+            ]
+          }
+        ],
+        "netlist": "three-branch network\nV1 p 0 12\nR1 p a {R1:spice}\nR3 a 0 {R3:spice}\nR2 a q {R2:spice}\nV2 q 0 5\n"
+      },
+      "review": "checked"
+    }
+  ]
+}

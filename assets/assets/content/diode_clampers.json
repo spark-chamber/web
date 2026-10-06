@@ -1,0 +1,2121 @@
+{
+  "topics": [
+    {
+      "id": "diode_clampers",
+      "title": "Clampers and voltage doublers",
+      "mapTitle": "Clampers and doublers",
+      "glyph": "diode",
+      "summary": "A capacitor charged through a diode shifts a waveform without changing its shape; a second diode and capacitor catch the shifted peak, doubling the voltage or making a negative rail from a logic square wave.",
+      "lenses": [
+        "circuit",
+        "signals"
+      ],
+      "prerequisites": [
+        "diode_rectifiers",
+        "diode_clippers_logic"
+      ],
+      "lensNotes": {
+        "circuit": "A clamper is a series capacitor and a diode to ground (or to a reference); add a second diode and capacitor and it becomes a half-wave voltage doubler. Driven by a logic square wave, with both diodes turned around, the same four parts make a negative supply rail for a few milliamps.",
+        "signals": "A clamper adds a DC level to a waveform and leaves its AC part alone: the peak-to-peak swing and the shape are the same, only the average moves. A peak detector keeps the highest value the input has reached; with a resistor across its capacitor it follows the envelope of a signal whose amplitude changes slowly."
+      },
+      "formulas": [
+        {
+          "label": "Clamper output (diode from ground to the output)",
+          "tex": "v_{out} = v_{in} + (V_p - V_D)"
+        },
+        {
+          "label": "Biased clamper: lowest point",
+          "tex": "V_{min} = V_{ref} - V_D"
+        },
+        {
+          "label": "Half-wave doubler, no load",
+          "tex": "V_{out} \\approx 2V_p - 2V_D"
+        },
+        {
+          "label": "Doubler ripple",
+          "tex": "\\Delta V \\approx \\frac{I}{f C_2}"
+        },
+        {
+          "label": "Doubler under load, C_1 = C_2 = C (DC meter)",
+          "tex": "V_{out} \\approx 2V_p - 2V_D - \\frac{3}{2}\\,\\frac{I}{f C}"
+        },
+        {
+          "label": "Square-wave charge pump (negative rail)",
+          "tex": "V_{out} \\approx -(V_{high} - 2V_D)"
+        },
+        {
+          "label": "Charge-pump ripple",
+          "tex": "\\Delta V \\approx \\frac{I}{2 f C_2}"
+        }
+      ],
+      "prerequisiteNotes": {
+        "diode_rectifiers": "The doubler's output stage is a half-wave rectifier with a reservoir capacitor, refilled once per cycle, so its ripple is the same I/(f·C) sag.",
+        "diode_clippers_logic": "A clamper turns on at the same point as a clipper, one drop past its reference, but with a capacitor in series instead of a resistor it shifts the waveform instead of cutting it off."
+      },
+      "goals": [
+        "Find the output of a diode clamper, with or without a reference, and explain why the waveform keeps its shape while its DC level moves",
+        "Explain why a peak detector holds the highest value it has seen, and what lets it follow a falling input",
+        "Find the output of a half-wave voltage doubler with and without a load, and choose its capacitors for a ripple limit",
+        "Make a negative rail from a logic square wave with a charge pump, and explain where its two diode drops go"
+      ],
+      "intuition": "A capacitor charged through a diode at one extreme of the input keeps that charge between extremes, so it adds a fixed voltage in series with the signal; catch the shifted peak with a second diode and capacitor, and the output is about the input's peak-to-peak swing, less one drop per diode and a sag set by the load.",
+      "why": "A capacitor's voltage changes only when charge flows into or out of it, ΔV = Q/C. In a clamper the diode lets charge in only when the output tries to pass one drop beyond its reference, which happens at one peak of the input; for the rest of the cycle the diode is reverse biased and the capacitor's voltage stays where that peak left it. That fixed voltage sits in series with the input, so every point of the waveform moves by the same amount. A load drains charge between peaks, Q = I/f per cycle, and the diodes must put it back in short pulses near the peaks; the voltage lost while they do is Q/C for each capacitor the charge passes through, which is why a doubler's output falls in proportion to the load current and in inverse proportion to f·C.",
+      "explanation": "Put a capacitor in series with a signal and a diode from the far side to ground, anode at ground. On the first negative peak the diode conducts and charges the capacitor to V_p − 0.7 V. After that the diode is off except for a brief top-up at each negative peak, and the capacitor's voltage adds to the input: the output swings from −0.7 V up to 2V_p − 0.7 V. The shape and the peak-to-peak swing are unchanged; only the DC level moved. This is a clamper. Turn the diode around and the shift reverses; put a reference in series with it and the clamp level moves to V_ref − 0.7 V. A diode feeding a capacitor is a peak detector: it charges to the input's highest value less one drop and holds it. A peak detector after a clamper is a half-wave voltage doubler, about 2V_p − 1.4 V with no load. A load lowers it in proportion to I/(f·C). Driven by a 0-to-5 V square wave with both diodes turned around, the same circuit is a charge pump: a negative rail of about −(5 V − 1.4 V) = −3.6 V.",
+      "workedExample": {
+        "problem": "A function generator gives a 5 V peak, 1 kHz sine. It feeds C1 = 10 µF in series to node a; D1, a 1N4148, runs from ground (anode) to node a. D2, another 1N4148, runs from node a (anode) to the output, where C2 = 10 µF goes to ground and a load draws a steady 1 mA. Use the 0.7 V model. Find the waveform at node a, the output with no load, and the top, ripple and DC meter reading of the output under load. Then find the output when both diodes are turned around and a 0-to-5 V square wave drives C1.",
+        "steps": [
+          "First negative peak: the input is at −5 V. D1 turns on once node a falls to −0.7 V, so C1 charges to 5 V − 0.7 V = 4.3 V, its input side negative.",
+          "From then on D1 is off except for a brief top-up at each negative peak. C1's 4.3 V adds to the input, so node a swings from −5 V + 4.3 V = −0.7 V up to 5 V + 4.3 V = 9.3 V: still 10 V peak to peak, now centered on 4.3 V.",
+          "D2 and C2 are a peak detector on node a. With no load, C2 charges to 9.3 V − 0.7 V = 8.6 V, which is 2 × 5 V − 2 × 0.7 V.",
+          "Under load, each cycle the load takes Q = I/f = 1 mA / 1 kHz = 1 µC from C2.",
+          "C2 gets that charge back from C1 through D2 near each positive peak. C1 drops by Q/C1 = 1 µC / 10 µF = 0.1 V while handing it over, so the top of the output is 8.6 V − 0.1 V = 8.5 V.",
+          "Between top-ups C2 alone feeds the load and sags by Q/C2 = 1 µC / 10 µF = 0.1 V: the ripple is 0.1 V peak to peak, and the output swings between 8.4 V and 8.5 V.",
+          "A DC voltmeter reads the middle of that ripple: 8.5 V − 0.05 V = 8.45 V. That is 2V_p − 1.4 V − 1.5 × I/(f·C) = 10 V − 1.4 V − 1.5 × 0.1 V = 8.45 V.",
+          "Square-wave drive, diodes turned around: while the input is at 5 V, D1 holds node a at +0.7 V and C1 charges to 5 V − 0.7 V = 4.3 V. When the input drops to 0 V, node a goes to −4.3 V, and D2 pulls the output to −4.3 V + 0.7 V = −3.6 V. The square wave swings only 5 V peak to peak, half the sine's 10 V, so the output is that swing less two drops: −(5 V − 1.4 V) = −3.6 V."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 3 \"Diodes and Rectifiers\", section \"Peak detector\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_3.html#xtocid90274",
+          "note": "A diode and capacitor in series charge to the input's peak less the 0.7 V silicon drop and hold it while the input falls, which is a half-wave rectifier with a filter capacitor."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 3 \"Diodes and Rectifiers\", section \"Clamper circuits\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_3.html#xtocid90276",
+          "note": "A series capacitor with a diode charges to the peak less 0.7 V and shifts the whole waveform so one peak sits at the clamp level; reversing the diode picks the other peak, and a DC reference in series moves the clamp level by that reference less the drop."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 3 \"Diodes and Rectifiers\", section \"Voltage multipliers\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_3.html#xtocid90277",
+          "note": "A half-wave doubler is a clamper followed by a peak detector and settles at twice the peak less two diode drops with no load, and any real load lowers it."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "clamp_positive_peak",
+      "topicId": "diode_clampers",
+      "prompt": "Find the highest voltage the output reaches. Use the 0.7 V model for D1.",
+      "variables": [
+        {
+          "name": "Vp",
+          "unit": "V",
+          "range": {
+            "min": 4,
+            "max": 8,
+            "step": 1
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vc",
+          "formula": "Vp-0.7",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "2*Vp-0.7",
+        "unit": "V"
+      },
+      "explanation": "On the first negative peak the input is at −{Vp}. D1 turns on once the output falls to −0.7 V, so C1 charges to {Vp} − 0.7 V = {Vc}, its input side negative. From then on D1 is off except for a brief top-up at each negative peak, and C1 holds {Vc} in series with the input: the output is the input shifted up by {Vc}. It swings from −0.7 V up to {Vp} + {Vc} = {answer}. R_L·C1 = 100 kΩ × 1 µF = 100 ms, a hundred periods of the 1 kHz input, so C1 loses only a little charge between top-ups. This is the clipper's turn-on point, one drop past its reference (here ground), with a capacitor in place of the series resistor.",
+      "hints": [
+        "What voltage does C1 charge to on the first negative peak, when D1 conducts?",
+        "C1 then holds V_p − 0.7 V in series with the input. Add that to the input's positive peak."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vp",
+          "feedback": "That is where the output would peak with no shift. C1 holds V_p − 0.7 V in series with the input, so every point of the waveform moves up by that much."
+        },
+        {
+          "formula": "2*Vp",
+          "feedback": "D1 stops C1 charging once the output reaches −0.7 V, so C1 holds V_p − 0.7 V, not V_p: the peak is 2V_p − 0.7 V."
+        },
+        {
+          "formula": "Vp-0.7",
+          "feedback": "V_p − 0.7 V is the voltage across C1, the shift. The output is the input plus that shift, so it peaks at V_p + (V_p − 0.7 V)."
+        }
+      ],
+      "schematic": {
+        "netlist": "Clamper\nVIN in 0 SIN(0 {Vp:spice} 1k)\nC1 in out 1u\nD1 0 out DSIG\nRL out 0 100k\n.model DSIG D(IS=2.52n N=1.752)\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vp} peak\n1 kHz"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "C1\n1 µF"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              10,
+              4
+            ],
+            "rot": 270,
+            "label": "D1\n1N4148"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              16,
+              0
+            ],
+            "rot": 90,
+            "label": "R_L\n100 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              20,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            10,
+            4
+          ],
+          [
+            16,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              20,
+              0
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "Why does the output reach nearly twice the input's peak when C1 never holds more than V_p − 0.7 V?",
+          "choices": [
+            {
+              "text": "C1 holds a fixed voltage in series with the input, so the output is the input plus that voltage at every instant",
+              "correct": true,
+              "feedback": "Right: D1 only tops C1 up at the negative peaks. In between, C1's voltage stays put and adds to the input, so the positive peak lands at V_p + (V_p − 0.7 V)."
+            },
+            {
+              "text": "D1 conducts on the positive half-cycle too and pumps a second V_p of charge into C1 every cycle",
+              "feedback": "D1 conducts only when the output tries to fall below −0.7 V, at the negative peaks. On the positive half its cathode is far above its anode, so it is off."
+            },
+            {
+              "text": "C1 and R_L resonate at the input frequency, and the output rings up to about twice the input",
+              "feedback": "A resistor and a capacitor can't resonate: that needs an inductor as well. R_L only drains a little charge from C1 between top-ups."
+            },
+            {
+              "text": "C1 and R_L form a high-pass filter whose gain rises to 2 near its corner frequency",
+              "feedback": "A passive RC filter never has a gain above 1. The extra voltage comes from the charge C1 holds, not from a filter response."
+            }
+          ],
+          "explanation": "A capacitor's voltage changes only when charge flows. D1 lets charge into C1 only at the negative peaks, so for the rest of the cycle C1 keeps V_p − 0.7 V across it and the output is v_in + (V_p − 0.7 V). The positive peak is the input's V_p plus that shift. Nothing is amplified: the swing is still 2V_p peak to peak, only moved up."
+        }
+      ],
+      "placement": true
+    },
+    {
+      "id": "clamp_biased_meter",
+      "topicId": "diode_clampers",
+      "prompt": "Find what a DC voltmeter reads at the output. Use the 0.7 V model for D1.",
+      "variables": [
+        {
+          "name": "Vp",
+          "unit": "V",
+          "range": {
+            "min": 4,
+            "max": 6,
+            "step": 0.5
+          }
+        },
+        {
+          "name": "Vref",
+          "unit": "V",
+          "values": [
+            1.5,
+            3,
+            4.5
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vlow",
+          "formula": "Vref-0.7",
+          "unit": "V"
+        },
+        {
+          "name": "Vhigh",
+          "formula": "Vref-0.7+2*Vp",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "Vp+Vref-0.7",
+        "unit": "V"
+      },
+      "explanation": "D1 conducts when the output falls one drop below the cell: {Vref} − 0.7 V = {Vlow}. At each negative peak it tops C1 up so that the output's lowest point sits there, and C1 holds the shift in between. The output swings from {Vlow} up to {Vlow} + 2 × {Vp} = {Vhigh}. A DC voltmeter reads the average, and the sine part averages to zero, so the meter reads the middle of the swing: {Vlow} + {Vp} = {answer}. The cell sets the clamp level; the input's peak sets how far above it the average sits.",
+      "hints": [
+        "Below what output voltage does D1 conduct?",
+        "The lowest point is V_ref − 0.7 V. The output swings 2V_p above that, and a DC meter reads the middle of the swing."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vref-0.7",
+          "feedback": "That is the output's lowest point, where D1 clamps it. The output swings 2V_p up from there, so its average is V_p higher."
+        },
+        {
+          "formula": "2*Vp+Vref-0.7",
+          "feedback": "That is the output's highest point. A DC voltmeter averages the waveform, which puts it at the middle of the swing: V_ref − 0.7 V + V_p."
+        },
+        {
+          "formula": "Vp+Vref",
+          "feedback": "D1 has 0.7 V across it while it conducts, so the clamp level is V_ref − 0.7 V, not V_ref: the average is V_p + V_ref − 0.7 V."
+        },
+        {
+          "formula": "Vp-0.7",
+          "feedback": "That is the reading without the cell. With the cell in series with D1, D1 turns on at V_ref − 0.7 V instead of −0.7 V, so the whole waveform sits V_ref higher."
+        }
+      ],
+      "schematic": {
+        "netlist": "Biased clamper\nVIN in 0 SIN(0 {Vp:spice} 1k)\nC1 in out 1u\nD1 ref out DSIG\nVREF ref 0 {Vref:spice}\nRL out 0 100k\n.model DSIG D(IS=2.52n N=1.752)\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vp} peak\n1 kHz"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "C1\n1 µF"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              10,
+              4
+            ],
+            "rot": 270,
+            "label": "D1\n1N4148"
+          },
+          {
+            "ref": "VREF",
+            "at": [
+              10,
+              4
+            ],
+            "rot": 90,
+            "label": "{Vref}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              16,
+              0
+            ],
+            "rot": 90,
+            "label": "R_L\n100 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              20,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            10,
+            8
+          ],
+          [
+            16,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              20,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "clamp_cap_voltage",
+      "topicId": "diode_clampers",
+      "level": "recall",
+      "prompt": "Find the steady voltage across C1, v_out − v_in. Use the 0.7 V model for D1.",
+      "variables": [
+        {
+          "name": "Vp",
+          "unit": "V",
+          "range": {
+            "min": 4,
+            "max": 8,
+            "step": 1
+          }
+        }
+      ],
+      "answer": {
+        "formula": "Vp-0.7",
+        "unit": "V"
+      },
+      "explanation": "At each negative peak the input is at −{Vp}. D1 conducts once out falls to −0.7 V, so C1 charges until v_out − v_in = −0.7 V − (−{Vp}) = {Vp} − 0.7 V = {answer}. Between peaks D1 is off, and C1 can lose charge only through R_L; R_L·C1 = 100 kΩ × 1 µF = 100 ms, a hundred periods of the 1 kHz input, so C1 holds {answer}. That fixed voltage in series with the input shifts the whole waveform up without changing its shape.",
+      "hints": [
+        "When does D1 conduct, and where is the input then?",
+        "At the input's negative peak D1 holds out at −0.7 V, while in is at −V_p."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vp",
+          "feedback": "D1 stops conducting once out is at −0.7 V, with in at −V_p, so C1 charges to V_p − 0.7 V, not the full V_p."
+        },
+        {
+          "formula": "2*Vp-0.7",
+          "feedback": "That is the output's highest point: the input's positive peak plus the voltage C1 holds. C1 itself holds V_p − 0.7 V."
+        },
+        {
+          "formula": "-(Vp-0.7)",
+          "feedback": "Right size, wrong sign. At the negative peak in is at −{Vp} and out at −0.7 V, so out sits above in: v_out − v_in is positive."
+        },
+        {
+          "formula": "Vp+0.7",
+          "feedback": "The diode's drop subtracts: D1 holds out at −0.7 V while in is at −V_p, so C1 has V_p − 0.7 V across it."
+        }
+      ],
+      "schematic": {
+        "netlist": "Clamper\nVIN in 0 SIN(0 {Vp:spice} 1k)\nC1 in out 1u\nD1 0 out DSIG\nRL out 0 100k\n.model DSIG D(IS=2.52n N=1.752)\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vp} peak\n1 kHz"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "C1\n1 µF"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              10,
+              4
+            ],
+            "rot": 270,
+            "label": "D1\n1N4148"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              16,
+              0
+            ],
+            "rot": 90,
+            "label": "R_L\n100 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              20,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            10,
+            4
+          ],
+          [
+            16,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              1,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              20,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "clamp_reversed_diode",
+      "topicId": "diode_clampers",
+      "prompt": "D1 has been turned around: its anode now goes to the output and its cathode to ground. Which describes the output? Use the 0.7 V model.",
+      "variables": [
+        {
+          "name": "Vp",
+          "unit": "V",
+          "range": {
+            "min": 4,
+            "max": 8,
+            "step": 1
+          }
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vc",
+          "formula": "Vp-0.7",
+          "unit": "V"
+        },
+        {
+          "name": "Vs",
+          "formula": "2*Vp-0.7",
+          "unit": "V"
+        }
+      ],
+      "choices": [
+        {
+          "text": "It swings between +0.7 V and −{Vs}",
+          "correct": true,
+          "feedback": "Right: D1 now conducts at the positive peaks and holds the output at +0.7 V there, so C1 charges to {Vc} the other way round and the whole waveform moves down."
+        },
+        {
+          "text": "It swings between −0.7 V and +{Vs}",
+          "feedback": "That is the output before the change. Turned around, D1 conducts at the positive peaks instead of the negative ones, so C1 charges the other way and the shift reverses."
+        },
+        {
+          "text": "It swings between +0.7 V and −{Vp}",
+          "feedback": "That is a clipper's output, with a resistor in series. Here C1 is in series: the charge D1 lets in stays on C1, so the whole waveform moves down instead of only its top being cut off."
+        },
+        {
+          "text": "It swings between +{Vp} and −{Vp}",
+          "feedback": "The clamp still works with D1 turned around; it just acts at the other peak. D1 conducts when the output reaches +0.7 V and charges C1, which then shifts the waveform down."
+        }
+      ],
+      "explanation": "With its anode at the output, D1 conducts when the output rises to +0.7 V, which happens at the positive peak. C1 charges to {Vp} − 0.7 V = {Vc}, its input side positive this time, and holds it. The output is the input minus {Vc}: from {Vp} − {Vc} = +0.7 V down to −{Vp} − {Vc} = −{Vs}. Same shape and same 2V_p swing; the shift has the opposite sign. Which peak gets clamped is set by which way the diode points, exactly as a clipper's diode direction sets which side gets cut.",
+      "hints": [
+        "At which peak of the input does D1 conduct now?"
+      ],
+      "schematic": {
+        "netlist": "Clamper\nVIN in 0 SIN(0 {Vp:spice} 1k)\nC1 in out 1u\nD1 out 0 DSIG\nRL out 0 100k\n.model DSIG D(IS=2.52n N=1.752)\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vp} peak\n1 kHz"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "C1\n1 µF"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "D1\n1N4148"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              16,
+              0
+            ],
+            "rot": 90,
+            "label": "R_L\n100 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              20,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            10,
+            4
+          ],
+          [
+            16,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              20,
+              0
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "Why does turning D1 around reverse the shift instead of stopping it?",
+          "choices": [
+            {
+              "text": "D1 now conducts at the positive peak, so C1 charges with its input side positive and subtracts V_p − 0.7 V",
+              "correct": true,
+              "feedback": "Right: the diode still decides when C1 is topped up, and now that is at the positive peak, so the stored voltage has the opposite sign."
+            },
+            {
+              "text": "A diode turned around drops −0.7 V instead of +0.7 V, and that sign change flips the whole waveform over",
+              "feedback": "The waveform isn't flipped: its shape and orientation are the same. Only its DC level moves, because C1 is now charged at the other peak."
+            },
+            {
+              "text": "C1 now discharges through D1 on every cycle, and the charge it loses each time pulls the output negative",
+              "feedback": "C1 isn't discharged each cycle. D1 conducts only briefly at each positive peak to top C1 up; in between, C1 holds a steady charge, and that charge is the shift."
+            },
+            {
+              "text": "The reversed diode blocks the positive half of every cycle, so only the negative half reaches the output",
+              "feedback": "Blocking would need D1 in series with the output. Here it runs from the output to ground, so it can only stop the output rising above +0.7 V while it charges C1."
+            }
+          ],
+          "explanation": "In either direction, the diode conducts at the one peak where the output tries to pass 0.7 V beyond ground, and C1 charges until the output stops there. The stored voltage is V_p − 0.7 V either way; the diode's direction sets its sign, so the waveform is pushed up (anode at ground) or down (anode at the output)."
+        }
+      ]
+    },
+    {
+      "id": "clamp_what_if_c",
+      "topicId": "diode_clampers",
+      "prompt": "C1 is swapped for {new_C}. What happens to the highest voltage the output reaches? Use the 0.7 V model.",
+      "variables": [
+        {
+          "name": "Vp",
+          "unit": "V",
+          "range": {
+            "min": 4,
+            "max": 8,
+            "step": 1
+          }
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            1e-06,
+            2.2e-06
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Iavg",
+          "formula": "(Vp-0.7)/100000",
+          "unit": "A"
+        },
+        {
+          "name": "sag1",
+          "formula": "(Vp-0.7)/100000/(1000*C)",
+          "unit": "V"
+        },
+        {
+          "name": "sag2",
+          "formula": "(Vp-0.7)/100000/(1000*10*C)",
+          "unit": "V"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the output's highest voltage",
+        "formula": "2*Vp-0.7",
+        "unit": "V",
+        "change": {
+          "C": "10*C"
+        },
+        "feedback": {
+          "up": "More capacitance stores more charge per volt, not more volts. C1 still charges only until the output's negative peak reaches −0.7 V, which leaves V_p − 0.7 V across it whatever its size; its size sets only how far the level sags between top-ups.",
+          "down": "A larger C1 doesn't end up charged to less. Each negative peak tops it up through D1 until the output reaches −0.7 V; a larger C1 needs more charge and a few more cycles after switch-on to get there, then holds the same V_p − 0.7 V."
+        }
+      },
+      "explanation": "C1 charges until the output's negative peak sits at −0.7 V, which leaves {Vp} − 0.7 V across it whatever its size. A larger capacitor needs more charge to get there, and D1 delivers it straight from the source within the first few cycles. So the output still swings from −0.7 V up to 2 × {Vp} − 0.7 V: the peak stays at {before}. What C1 does set is how far the level sags between top-ups. R_L draws about {Iavg} on average, and in one period C1 loses about I/(f·C1) = {sag1}; with {new_C} that falls to {sag2}. Either way it is a small fraction of the swing.",
+      "hints": [
+        "What decides when D1 stops charging C1?"
+      ],
+      "schematic": {
+        "netlist": "Clamper\nVIN in 0 SIN(0 {Vp:spice} 1k)\nC1 in out {C:spice}\nD1 0 out DSIG\nRL out 0 100k\n.model DSIG D(IS=2.52n N=1.752)\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vp} peak\n1 kHz"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "C1\n{C}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              10,
+              4
+            ],
+            "rot": 270,
+            "label": "D1\n1N4148"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              16,
+              0
+            ],
+            "rot": 90,
+            "label": "R_L\n100 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              20,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            10,
+            4
+          ],
+          [
+            16,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              20,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "clamp_peak_hold",
+      "topicId": "diode_clampers",
+      "prompt": "The generator's amplitude is turned down to {Vp2} peak. What does the meter read a few cycles later? Use the 0.7 V model.",
+      "variables": [
+        {
+          "name": "Vp1",
+          "unit": "V",
+          "values": [
+            5,
+            6
+          ]
+        },
+        {
+          "name": "Vp2",
+          "unit": "V",
+          "values": [
+            2,
+            3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vh1",
+          "formula": "Vp1-0.7",
+          "unit": "V"
+        },
+        {
+          "name": "Vh2",
+          "formula": "Vp2-0.7",
+          "unit": "V"
+        }
+      ],
+      "choices": [
+        {
+          "text": "About {Vh1}: nothing but the meter can drain C1",
+          "correct": true,
+          "feedback": "Right: with C1 at {Vh1}, the smaller sine never gets D1's anode 0.7 V above its cathode, so D1 stays off. Only the meter's 10 MΩ drains C1, with R·C = 10 s."
+        },
+        {
+          "text": "About {Vh2}: C1 follows the new, lower peak",
+          "feedback": "C1's voltage can only fall if charge leaves it, and D1 passes current only toward C1. The new peak, {Vp2}, is below C1's voltage, so D1 stays off and C1 keeps its charge."
+        },
+        {
+          "text": "About {Vh2}: C1 discharges back through D1",
+          "feedback": "A diode conducts from anode to cathode, here toward C1. Discharging C1 into the generator would need current the other way, which D1 blocks."
+        },
+        {
+          "text": "About 0 V: D1 now blocks the smaller sine",
+          "feedback": "D1 does block the generator now, but C1 keeps what it already holds: with D1 off, only the meter's 10 MΩ is connected across C1, so it stays near {Vh1}."
+        }
+      ],
+      "explanation": "D1 and C1 are a peak detector: C1 charged to {Vp1} − 0.7 V = {Vh1} on the earlier peaks. After the amplitude falls, D1's anode never rises 0.7 V above its cathode, so D1 stays off and C1 can only lose charge through the meter. With 10 MΩ × 1 µF = 10 s, a few milliseconds change almost nothing: the meter still reads about {Vh1}. A peak detector remembers the highest peak until something discharges it. This is the half-wave rectifier's reservoir capacitor with almost no load.",
+      "hints": [
+        "Which way can current flow through D1, and which way would it have to flow for C1 to discharge?"
+      ],
+      "schematic": {
+        "netlist": "Peak detector\nVIN in 0 SIN(0 {Vp1:spice} 1k)\nD1 in out DSIG\nC1 out 0 1u\nRM out 0 10meg\n.model DSIG D(IS=2.52n N=1.752)\n",
+        "parts": [
+          {
+            "ref": "VIN",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vp1} peak\n1 kHz"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "D1\n1N4148"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "C1\n1 µF"
+          },
+          {
+            "ref": "RM",
+            "at": [
+              16,
+              0
+            ],
+            "rot": 90,
+            "label": "meter\n10 MΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              20,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            10,
+            4
+          ],
+          [
+            16,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              20,
+              0
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "Which added part lets the output follow the amplitude down within a few tens of cycles?",
+          "choices": [
+            {
+              "text": "A resistor across C1, with R·C of several periods of the sine",
+              "correct": true,
+              "feedback": "Right: it drains C1 a little between peaks, so when the peaks shrink the output falls with them, at a rate set by R·C."
+            },
+            {
+              "text": "A larger C1, so it settles on the new peak more accurately",
+              "feedback": "A larger C1 discharges even more slowly through the meter, so it holds the old peak longer. What is missing is a path for the charge to leave."
+            },
+            {
+              "text": "A resistor in series with D1, to limit how far C1 charges",
+              "feedback": "A series resistor only slows charging; once D1 is off it carries no current. C1 still has no way to discharge."
+            },
+            {
+              "text": "A second diode from the output to ground, anode at the output",
+              "feedback": "That diode would conduct whenever the output passed +0.7 V, so it would clamp the output near 0.7 V instead of letting it follow the peaks."
+            }
+          ],
+          "explanation": "A peak detector discharges only through whatever is connected across its capacitor. A resistor there makes it an envelope detector: R·C long compared with one period keeps the ripple modest (ten periods: about 10% sag per cycle), and short compared with how fast the amplitude changes lets the output follow it. With C1 = 1 µF at 1 kHz, 10 kΩ gives R·C = 10 ms, ten periods. AM radio receivers recover the audio this way."
+        }
+      ]
+    },
+    {
+      "id": "dbl_fault",
+      "topicId": "diode_clampers",
+      "prompt": "Which fault explains the measured readings?",
+      "variables": [
+        {
+          "name": "Vrms",
+          "unit": "V",
+          "values": [
+            6.3,
+            9
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            2200,
+            4700
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vp",
+          "formula": "Vrms*sqrt(2)",
+          "unit": "V"
+        }
+      ],
+      "fault": {
+        "netlist": "Half-wave doubler\nV1 in 0 SIN(0 {Vp:spice} 60)\nC1 in a 470u\nD1 0 a DSIL\nD2 a out DSIL\nC2 out 0 470u\nRL out 0 {RL:spice}\n.model DSIL D(IS=2.5n N=1.75)\n.tran 100u 500m\n",
+        "probes": [
+          {
+            "label": "DC voltage at the output (meter)",
+            "probe": "avg:v(out)"
+          },
+          {
+            "label": "Ripple at the output (scope, peak to peak)",
+            "probe": "pp:v(out)"
+          },
+          {
+            "label": "DC voltage at the D1–D2 junction (meter)",
+            "probe": "avg:v(a)"
+          }
+        ],
+        "faults": [
+          {
+            "text": "C1 has failed open",
+            "open": "C1",
+            "feedback": "With C1 open, no AC would reach the diodes at all: the output and the D1–D2 junction would both read 0 V, with no ripple.",
+            "why": "Every reading is zero, the junction included, so nothing from the winding reaches the diodes: of the faults listed, only C1 open does that. A fault after the junction leaves the junction alive: D2 open leaves its meter reading normal, D2 shorted drags it down to the output's level, and a bad C2 leaves it about normal."
+          },
+          {
+            "text": "C2 has failed open",
+            "open": "C2",
+            "feedback": "With no C2 to hold the peak, the output would follow the clamped wave through D2, nearly a full sine, from 0 V up to nearly twice the winding's peak with nothing to hold it up between peaks: ripple of almost the whole output, and a meter reading about half the healthy one.",
+            "why": "The scope shows ripple nearly as large as the healthy output: nothing holds the output up between peaks. The junction still reads about normal, so C1 and D1 still shift the waveform up and D2 still passes its top; the part that should store the charge is missing."
+          },
+          {
+            "text": "D2 has failed open",
+            "open": "D2",
+            "feedback": "With D2 open, the clamper part would still work and the junction would read about normal, but no charge would reach C2: the output would read 0 V with no ripple.",
+            "why": "The junction reads about normal, so C1 and D1 still shift the waveform up. The output reads zero, so the charge stops between the junction and C2: D2 is the break."
+          },
+          {
+            "text": "C2 has dried out to about a tenth of its value",
+            "value": {
+              "ref": "C2",
+              "formula": "0.000047"
+            },
+            "feedback": "A C2 at a tenth of its value would leave the junction normal and the DC reading slightly low, but the ripple would be nearly ten times the healthy {h1}.",
+            "why": "The ripple is nearly ten times normal while the junction is unchanged and the DC reading has dropped by much less than that. C2 is still topped up every cycle, but it holds a tenth of the charge per volt, so the same load makes it sag much further between top-ups (ΔV ≈ I/(f·C2))."
+          },
+          {
+            "text": "D2 has failed short",
+            "short": "D2",
+            "feedback": "A shorted D2 would join the junction to the output, so both would read the same, a fraction of the healthy output, and the output would swing by about the winding's peak voltage.",
+            "why": "The output and the junction read the same, so nothing separates them: D2 is shorted. C1 and C2 then split the winding's swing between them as a capacitive divider, so the output swings by about V_p, half of the 2V_p swing, and D1 still stops it at −0.7 V, so it averages only about V_p/2 − 0.7 V."
+          }
+        ]
+      },
+      "explanation": "Read the junction first. When it is healthy, C1 and D1 clamp the winding's sine so the junction swings from −0.7 V to about 2V_p and averages about V_p − 0.7 V; D2 and C2 then catch the top. A dead junction, with every reading zero, means nothing from the winding reaches the diodes: of these faults, only C1 open does that. A normal junction with a dead output means the break is in D2. A normal junction with huge ripple means C2 can't hold the charge (open), and nearly ten times the ripple at nearly the same DC means it holds too little (dried out). An output that reads the same as the junction means D2 is shorted. The ripple is the half-wave I/(f·C) from Rectifiers and ripple, with C2 as the reservoir.",
+      "hints": [
+        "Compare the junction with the output: which reading is still normal tells you which half of the doubler still works.",
+        "The clamper is C1 and D1; the peak detector is D2 and C2."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vrms} rms\n60 Hz",
+            "symbol": "transformer"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "C1\n470 µF"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              4
+            ],
+            "rot": 270,
+            "label": "D1"
+          },
+          {
+            "ref": "D2",
+            "at": [
+              10,
+              0
+            ],
+            "label": "D2"
+          },
+          {
+            "ref": "C2",
+            "at": [
+              17,
+              0
+            ],
+            "rot": 90,
+            "label": "C2\n470 µF"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              23,
+              0
+            ],
+            "rot": 90,
+            "label": "R_L\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              26,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            8,
+            4
+          ],
+          [
+            17,
+            4
+          ],
+          [
+            23,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              26,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "dbl_loaded_output",
+      "topicId": "diode_clampers",
+      "prompt": "Find what a DC voltmeter reads at the output. Use the 0.7 V model.",
+      "variables": [
+        {
+          "name": "Vrms",
+          "unit": "V",
+          "values": [
+            6.3,
+            9
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "values": [
+            0.00047,
+            0.00068
+          ]
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "values": [
+            0.03,
+            0.04,
+            0.05
+          ]
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "value": 60
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vp",
+          "formula": "Vrms*sqrt(2)",
+          "unit": "V"
+        },
+        {
+          "name": "Vnl",
+          "formula": "2*Vrms*sqrt(2)-1.4",
+          "unit": "V"
+        },
+        {
+          "name": "Q",
+          "formula": "I/f",
+          "unit": "C"
+        },
+        {
+          "name": "dV",
+          "formula": "I/(f*C)",
+          "unit": "V"
+        },
+        {
+          "name": "dVh",
+          "formula": "I/(2*f*C)",
+          "unit": "V"
+        },
+        {
+          "name": "Vtop",
+          "formula": "2*Vrms*sqrt(2)-1.4-I/(f*C)",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "2*Vrms*sqrt(2)-1.4-1.5*I/(f*C)",
+        "unit": "V",
+        "tolerance": 0.01
+      },
+      "explanation": "Peak of the winding: {Vrms} × √2 = {Vp}. With no load, D1 and C1 shift the sine up by {Vp} − 0.7 V, and D2 and C2 catch its top one more drop down: 2 × {Vp} − 1.4 V = {Vnl}. Under load, each cycle the load takes Q = I/f = {I} / {f} = {Q} from C2. C2 gets it back from C1 through D2 near each positive peak, and C1 drops by Q/C = {dV} while handing it over, so the top of the output is {Vnl} − {dV} = {Vtop}. Then C2 alone feeds the load until the next top-up and sags by another Q/C = {dV}: that is the ripple. The meter reads the middle of the ripple, {dVh} below the top: {answer}. In one line: 2V_p − 1.4 V − 1.5 × I/(f·C).",
+      "hints": [
+        "Start with no load: how many diode drops lie between the winding's peak and the output?",
+        "Each cycle the load removes Q = I/f. C1 loses Q/C handing it to C2, and C2 loses Q/C feeding the load; the meter reads the middle of C2's ripple."
+      ],
+      "misconceptions": [
+        {
+          "formula": "2*Vrms*sqrt(2)-1.4",
+          "feedback": "That is the output with no load. The load takes I/f of charge every cycle, and losing it costs both capacitors voltage."
+        },
+        {
+          "formula": "2*Vrms*sqrt(2)-1.4-I/(f*C)",
+          "feedback": "That is the top of the output. Between top-ups C2 sags by another I/(f·C), and a DC meter reads the middle of that ripple, half of it lower."
+        },
+        {
+          "formula": "2*Vrms*sqrt(2)-1.4-0.5*I/(f*C)",
+          "feedback": "That counts C2's sag but not C1's loss. C1 hands I/f of charge to C2 each cycle and drops by I/(f·C) while it does, which lowers the top of the output too."
+        },
+        {
+          "formula": "2*Vrms-1.4-1.5*I/(f*C)",
+          "feedback": "{Vrms} is the winding's RMS value. The capacitors charge toward its peak, √2 × {Vrms}."
+        },
+        {
+          "formula": "2*Vrms*sqrt(2)-0.7-1.5*I/(f*C)",
+          "feedback": "The charge passes through two diodes on its way to the output: D1 when C1 charges and D2 when C2 does. Subtract 0.7 V for each."
+        }
+      ],
+      "schematic": {
+        "netlist": "Half-wave doubler\nV1 in 0 SIN(0 {Vp:spice} 60)\nC1 in a {C:spice}\nD1 0 a DSIL\nD2 a out DSIL\nC2 out 0 {C:spice}\nI1 out 0 {I:spice}\n.model DSIL D(IS=2.5n N=1.75)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vrms} rms\n60 Hz",
+            "symbol": "transformer"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "C1\n{C}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              4
+            ],
+            "rot": 270,
+            "label": "D1"
+          },
+          {
+            "ref": "D2",
+            "at": [
+              10,
+              0
+            ],
+            "label": "D2"
+          },
+          {
+            "ref": "C2",
+            "at": [
+              17,
+              0
+            ],
+            "rot": 90,
+            "label": "C2\n{C}"
+          },
+          {
+            "ref": "I1",
+            "at": [
+              23,
+              0
+            ],
+            "rot": 90,
+            "label": "load\n{I}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              26,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            8,
+            4
+          ],
+          [
+            17,
+            4
+          ],
+          [
+            23,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              26,
+              0
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "Why does the load lower the meter reading by 1.5 × I/(f·C) when the ripple is only I/(f·C)?",
+          "choices": [
+            {
+              "text": "C1 loses I/(f·C) handing charge to C2, which lowers the top, and the meter reads half a ripple below the top",
+              "correct": true,
+              "feedback": "Right: two capacitors give up voltage. C1's loss lowers the peak C2 is topped up to, and C2's own sag sets the ripple, whose middle is what the meter reads."
+            },
+            {
+              "text": "The load current flows through both diodes all the time, and each diode's drop grows by I/(f·C)",
+              "feedback": "The diodes conduct only in short pulses near the peaks; between them C2 alone feeds the load. The loss comes from charge leaving the capacitors, Q/C, not from extra diode drop."
+            },
+            {
+              "text": "C2 sags by I/(f·C) on each half-cycle, twice per cycle, and the meter averages the two sags together",
+              "feedback": "C2 is topped up once per cycle, near the positive peak, so it sags once per cycle by I/(f·C). The extra comes from C1, which loses voltage passing the charge on."
+            },
+            {
+              "text": "The winding's peak falls by I/(f·C) under the load, and C2 sags by another half of that",
+              "feedback": "In this model the winding is ideal and its peak doesn't move with load. The extra loss is C1's: it drops by Q/C while it hands each cycle's charge to C2."
+            }
+          ],
+          "explanation": "Follow the charge. Each cycle the load takes Q = I/f from C2. C2 gets it back from C1, which falls by Q/C1 while it delivers it, so C2 is topped up to 2V_p − 1.4 V − Q/C1. Then C2 sags by Q/C2 before the next top-up. With C1 = C2 = C, the top is I/(f·C) low and the average another half of I/(f·C) lower. More stages lose much more: in a multi-stage multiplier the charge passes through every capacitor on the way."
+        }
+      ],
+      "placement": true
+    },
+    {
+      "id": "dbl_design_c",
+      "topicId": "diode_clampers",
+      "prompt": "Choose C, the value for both C1 and C2, from the E6 series (1.0, 1.5, 2.2, 3.3, 4.7, 6.8 times a power of ten) so the ripple at the output is at most {Vr} peak to peak, but no less than half that: larger capacitors cost more, take more space and draw larger charging pulses through the diodes. The simulator checks your choice with real diodes.",
+      "variables": [
+        {
+          "name": "Vrms",
+          "unit": "V",
+          "values": [
+            6.3,
+            9
+          ]
+        },
+        {
+          "name": "I",
+          "unit": "A",
+          "values": [
+            0.02,
+            0.05,
+            0.1
+          ]
+        },
+        {
+          "name": "Vr",
+          "unit": "V",
+          "values": [
+            0.5,
+            1
+          ]
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "value": 60
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vp",
+          "formula": "Vrms*sqrt(2)",
+          "unit": "V"
+        },
+        {
+          "name": "Cmin",
+          "formula": "I/(f*Vr)",
+          "unit": "F"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "C",
+            "label": "C (C1 and C2)",
+            "unit": "F",
+            "series": "E6",
+            "min": 0.0001,
+            "max": 0.01
+          }
+        ],
+        "result": "I/(f*C)",
+        "resultLabel": "ripple",
+        "resultUnit": "V",
+        "target": "Vr",
+        "tolerance": 0.5,
+        "mode": "atMost",
+        "sim": {
+          "netlist": "Half-wave doubler\nV1 in 0 SIN(0 {Vp:spice} 60)\nC1 in a {C:spice}\nD1 0 a DSIL\nD2 a out DSIL\nC2 out 0 {C:spice}\nI1 out 0 {I:spice}\n.model DSIL D(IS=2.5n N=1.75)\n.tran 100u 500m\n",
+          "measure": "pp:v(out)",
+          "note": "The estimate I/(f·C) assumes C2 alone feeds the load for a whole period. In fact D2 starts topping C2 up a little before each positive peak, so C2 sags for less than a full period and the simulated ripple is about a tenth below this estimate (8–12% over this problem's values)."
+        }
+      },
+      "explanation": "Between top-ups, C2 alone feeds the load for about one period, 1/f, losing Q = I/f, so its voltage falls by ΔV ≈ I/(f·C2). C1 lowers the output's level by handing that charge to C2, but it doesn't set the ripple. For ΔV ≤ {Vr}: C ≥ I/(f·ΔV) = {I} / ({f} × {Vr}) = {Cmin}. Take the next E6 value up. In the simulator the ripple comes out about a tenth below this estimate (8–12% over this problem's values), because D2 starts topping C2 up a little before each peak, so C2 sags for less than a full period; the estimate errs on the safe side, and the value one step below may also pass. This is the half-wave ripple I/(f·C) from Rectifiers and ripple: the doubler's output stage is a peak detector refilled once per cycle.",
+      "hints": [
+        "Which capacitor feeds the load between top-ups, and for how long?",
+        "ΔV ≈ I/(f·C2). Solve for C and round up to the next E6 value."
+      ],
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{Vrms} rms\n60 Hz",
+            "symbol": "transformer"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "C1\nC = ?"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              4
+            ],
+            "rot": 270,
+            "label": "D1"
+          },
+          {
+            "ref": "D2",
+            "at": [
+              10,
+              0
+            ],
+            "label": "D2"
+          },
+          {
+            "ref": "C2",
+            "at": [
+              17,
+              0
+            ],
+            "rot": 90,
+            "label": "C2\nC = ?"
+          },
+          {
+            "ref": "I1",
+            "at": [
+              23,
+              0
+            ],
+            "rot": 90,
+            "label": "load\n{I}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              26,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            8,
+            4
+          ],
+          [
+            17,
+            4
+          ],
+          [
+            23,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              26,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "pump_negative_rail",
+      "topicId": "diode_clampers",
+      "prompt": "A logic output drives C1 with a square wave. Find the output voltage. Use the 0.7 V model for D1 and D2.",
+      "variables": [
+        {
+          "name": "Vh",
+          "unit": "V",
+          "values": [
+            3.3,
+            5
+          ]
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "value": 10000
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vc1",
+          "formula": "Vh-0.7",
+          "unit": "V"
+        },
+        {
+          "name": "T",
+          "formula": "1/f",
+          "unit": "s"
+        },
+        {
+          "name": "Th",
+          "formula": "1/(2*f)-0.000001",
+          "unit": "s"
+        }
+      ],
+      "answer": {
+        "formula": "-(Vh-1.4)",
+        "unit": "V"
+      },
+      "explanation": "While the square wave is at {Vh}, D1 conducts and holds the C1–D1 junction at +0.7 V, so C1 charges to {Vh} − 0.7 V = {Vc1}. When the input drops to 0 V, C1 keeps that charge, so the junction goes to 0 V − {Vc1} = −{Vc1}. D2, anode at the output, now conducts and pulls the output to one drop above that: −{Vc1} + 0.7 V = {answer}. C2 holds it between edges. This is the doubler with both diodes turned around: C1 and D1 clamp the square wave so it swings from +0.7 V down to −{Vc1}, and D2 and C2 catch its negative peak. The output is the input's {Vh} swing less two drops. The diodes carry a few milliamps while they conduct, where a 1N4148's drop is within a few tens of millivolts of 0.7 V, so a bench reading lands slightly more negative, within about 0.1 V of this. At switch-on the empty capacitors draw a surge from the driver. A resistor R in series with the pin limits it to about {Vh}/R, but costs about 4I·R of output: the pin carries about twice the load current I in each half of the cycle, charging C1 while high and passing C1's charge on to the load and C2 while low. A driver rated for the surge avoids that loss.",
+      "hints": [
+        "While the input is high, what voltage does C1 charge to?",
+        "When the input falls to 0 V, C1 keeps its charge. Where does that put the C1–D1 junction, and where does D2 then pull the output?"
+      ],
+      "misconceptions": [
+        {
+          "formula": "-Vh",
+          "feedback": "That treats D1 and D2 as ideal. D1 stops C1 charging 0.7 V short of the input, and D2 drops another 0.7 V passing the charge to C2."
+        },
+        {
+          "formula": "-(Vh-0.7)",
+          "feedback": "That counts only one drop. C1 charges to V_high − 0.7 V through D1, and D2 drops another 0.7 V on the way to the output."
+        },
+        {
+          "formula": "Vh-1.4",
+          "feedback": "The output is negative. D2's anode is at the output, so it can only pull the output down toward the junction's negative swing."
+        },
+        {
+          "formula": "-(2*Vh-1.4)",
+          "feedback": "A sine doubler gets 2V_p because a sine swings 2V_p peak to peak. This square wave swings only from 0 to V_high, so the pump gets that swing less two drops."
+        }
+      ],
+      "schematic": {
+        "netlist": "Charge pump\nVP pin 0 PULSE(0 {Vh:spice} 0 1u 1u {Th:spice} {T:spice})\nC1 pin a 10u\nD1 a 0 DSIG\nD2 out a DSIG\nC2 out 0 10u\nRL out 0 1k\n.model DSIG D(IS=2.52n N=1.752)\n",
+        "parts": [
+          {
+            "ref": "VP",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "0 to {Vh}\n10 kHz"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "C1\n10 µF"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              0
+            ],
+            "rot": 90,
+            "label": "D1\n1N4148"
+          },
+          {
+            "ref": "D2",
+            "at": [
+              14,
+              0
+            ],
+            "rot": 180,
+            "label": "D2\n1N4148"
+          },
+          {
+            "ref": "C2",
+            "at": [
+              17,
+              0
+            ],
+            "rot": 90,
+            "label": "C2\n10 µF"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              23,
+              0
+            ],
+            "rot": 90,
+            "label": "R_L\n1 kΩ"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              26,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            8,
+            4
+          ],
+          [
+            17,
+            4
+          ],
+          [
+            23,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              26,
+              0
+            ]
+          }
+        ]
+      },
+      "followUps": [
+        {
+          "prompt": "Why does the output reach only about −({Vh} − 1.4 V) and not −{Vh}?",
+          "choices": [
+            {
+              "text": "D1 stops C1 charging 0.7 V short of {Vh}, and D2 drops another 0.7 V passing the charge on",
+              "correct": true,
+              "feedback": "Right: one drop is lost charging C1 and one transferring its charge to C2; the two add along the way."
+            },
+            {
+              "text": "C1 and C2 share the same charge, so each ends up holding only part of the {Vh} swing",
+              "feedback": "C1 and C2 don't split the swing. Each edge tops C2 up toward the junction's negative peak; only the diode drops keep it short of that."
+            },
+            {
+              "text": "The load current through R_L drops 1.4 V, which is taken off the square wave's swing",
+              "feedback": "R_L is the load, not a part in series with the output, so it has the whole output voltage across it. A light load only adds a small ripple; the 1.4 V is two diode drops."
+            },
+            {
+              "text": "D1 and D2 conduct together at every edge, and their two drops add in series",
+              "feedback": "They take turns: D1 conducts while the input is high, D2 while it is low. Each costs its own 0.7 V at a different moment."
+            }
+          ],
+          "explanation": "Trace one cycle. High: D1 conducts and C1 charges to V_high − 0.7 V. Low: the junction drops to −(V_high − 0.7 V), and D2 conducts until the output is 0.7 V above that. Each diode costs one drop, at a different moment, and nothing restores them. This is the 0.7 V model from Practical diodes applied to each conducting diode in turn."
+        },
+        {
+          "prompt": "Which change brings the output much closer to −{Vh}?",
+          "choices": [
+            {
+              "text": "Replacing D1 and D2 with Schottky diodes",
+              "correct": true,
+              "feedback": "Right: a Schottky (metal–semiconductor) junction conducts at a lower forward voltage than a silicon pn junction, so both drops shrink and the output moves toward −{Vh}."
+            },
+            {
+              "text": "Making C1 and C2 ten times larger",
+              "feedback": "Larger capacitors shrink the ripple and the sag under load, which are already small at this load. They don't change the two diode drops, which keep the output short of −{Vh}."
+            },
+            {
+              "text": "Doubling the square wave's frequency",
+              "feedback": "A faster square wave tops C2 up more often, which shrinks the ripple. The level it tops C2 up to is still set by the two diode drops."
+            },
+            {
+              "text": "Adding a third 1N4148 in series with D2",
+              "feedback": "Another diode in the path adds another drop, so the output would move further from −{Vh}, not closer."
+            }
+          ],
+          "explanation": "The gap between the output and −V_high is the two diodes' forward drops. Only a diode with a lower forward voltage closes it. Schottky diodes do that, which is why small charge pumps use them; capacitor size and frequency set the ripple and the droop under load, not the drops."
+        }
+      ],
+      "placement": true
+    },
+    {
+      "id": "pump_what_if_freq",
+      "topicId": "diode_clampers",
+      "prompt": "The square wave's frequency is doubled, to {new_f}. What happens to the peak-to-peak ripple on the output?",
+      "variables": [
+        {
+          "name": "Vh",
+          "unit": "V",
+          "value": 5
+        },
+        {
+          "name": "f",
+          "unit": "Hz",
+          "values": [
+            5000,
+            10000
+          ]
+        },
+        {
+          "name": "RL",
+          "unit": "Ω",
+          "values": [
+            1000,
+            2200
+          ]
+        },
+        {
+          "name": "C",
+          "unit": "F",
+          "value": 1e-05
+        }
+      ],
+      "derived": [
+        {
+          "name": "I",
+          "formula": "(Vh-1.4)/RL",
+          "unit": "A"
+        },
+        {
+          "name": "T",
+          "formula": "1/f",
+          "unit": "s"
+        },
+        {
+          "name": "Th",
+          "formula": "1/(2*f)-0.000001",
+          "unit": "s"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the ripple",
+        "formula": "(Vh-1.4)/RL/(2*f*C)",
+        "unit": "V",
+        "change": {
+          "f": "2*f"
+        },
+        "askFactor": true,
+        "feedback": {
+          "up": "A faster square wave doesn't make the load draw more: R_L still takes about (5 V − 1.4 V)/R_L. What changes is how long C2 feeds it alone between top-ups, which is half a period, and that gets shorter.",
+          "same": "The load current and C2 are unchanged, so C2 sags at the same rate, I/C2. But it is topped up twice as often, so each sag lasts half as long before the next edge restores it."
+        },
+        "factorHint": "The ripple is the charge C2 loses while it feeds the load alone, over C2: ΔV ≈ I·Δt/C2, where Δt is half a period."
+      },
+      "explanation": "The load draws about (5 V − 1.4 V)/R_L = {I}, whatever the frequency. While the input is low, D2 conducts and C1 feeds the load and refills C2; while it is high, D2 is off, C1 is recharging through D1, and C2 feeds the load alone for half a period, 1/(2f). It loses Q = I/(2f) and sags by ΔV ≈ I/(2f·C2). Twice the frequency halves that time and the charge lost: {before} → {after}. That is why charge pumps run at tens of kilohertz or more: the capacitors can be smaller for the same ripple.",
+      "hints": [
+        "How long does C2 feed the load on its own in each period?"
+      ],
+      "schematic": {
+        "netlist": "Charge pump\nVP pin 0 PULSE(0 {Vh:spice} 0 1u 1u {Th:spice} {T:spice})\nC1 pin a 10u\nD1 a 0 DSIG\nD2 out a DSIG\nC2 out 0 10u\nRL out 0 {RL:spice}\n.model DSIG D(IS=2.52n N=1.752)\n",
+        "parts": [
+          {
+            "ref": "VP",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "0 to 5 V\n{f}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "C1\n10 µF"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              0
+            ],
+            "rot": 90,
+            "label": "D1\n1N4148"
+          },
+          {
+            "ref": "D2",
+            "at": [
+              14,
+              0
+            ],
+            "rot": 180,
+            "label": "D2\n1N4148"
+          },
+          {
+            "ref": "C2",
+            "at": [
+              17,
+              0
+            ],
+            "rot": 90,
+            "label": "C2\n10 µF"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              23,
+              0
+            ],
+            "rot": 90,
+            "label": "R_L\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              26,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            8,
+            4
+          ],
+          [
+            17,
+            4
+          ],
+          [
+            23,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              26,
+              0
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

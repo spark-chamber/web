@@ -418,7 +418,8 @@
       "answer": {
         "formula": "-10*log10(1+x^2)",
         "unit": "dB",
-        "tolerance": 0.035
+        "tolerance": 0.035,
+        "ratio": "voltage"
       },
       "explanation": "|H| = 1 / √(1 + (f/f_c)²). Here f/f_c = {x}, so gain = 20·log₁₀|H| = −10·log₁₀(1 + {x}²) = {answer}. At f = f_c this is −3.01 dB; far above f_c it falls 20 dB per decade.",
       "hints": [

@@ -402,6 +402,227 @@
       "placement": true
     },
     {
+      "id": "ohm_series_drop",
+      "topicId": "ohms_law",
+      "level": "recall",
+      "prompt": "A voltmeter from out to ground reads {Vm}. Find the voltage across R1.",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            5,
+            9,
+            12
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            1500,
+            2200,
+            3300,
+            4700
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            1200,
+            1800,
+            2700,
+            3900,
+            5600,
+            6800
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vm",
+          "formula": "V*R2/(R1+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "VR1",
+          "formula": "V*R1/(R1+R2)",
+          "unit": "V"
+        },
+        {
+          "name": "I",
+          "formula": "V/(R1+R2)",
+          "unit": "A"
+        },
+        {
+          "name": "Ifull",
+          "formula": "V/R1",
+          "unit": "A"
+        },
+        {
+          "name": "Iout",
+          "formula": "Vm/R1",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "V-Vm",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "R1 runs from the source's + terminal, {V} above ground, to out, {Vm} above ground. The voltage across a part is the difference of the voltages at its two ends: V_R1 = {V} − {Vm} = {answer}. In terms of energy: the source lifts each coulomb by {V} (joules per coulomb) and it gives all of that back on the way around, {answer} across R1 and {Vm} across R2, so the two voltages add up to the supply. R2's value isn't needed; the reading at out is enough. This is the first step in finding an unknown part from one reading: R1's own voltage and its value then give the current through both resistors.",
+      "explanationSteps": [
+        {
+          "text": "R1 runs from the source's + terminal, {V} above ground, to out, {Vm} above ground. The voltage across a part is the difference of the voltages at its two ends:"
+        },
+        {
+          "math": "V_{R1} = [[V]] - [[Vm]]",
+          "result": "[[answer]]"
+        },
+        {
+          "text": "In terms of energy: the source lifts each coulomb by {V} (joules per coulomb) and it gives all of that back on the way around, {answer} across R1 and {Vm} across R2, so the two voltages add up to the supply. R2's value isn't needed; the reading at out is enough. This is the first step in finding an unknown part from one reading: R1's own voltage and its value then give the current through both resistors."
+        }
+      ],
+      "hints": [
+        "One end of R1 is on the source's + terminal, the other on out. What is the voltage at each end, measured from ground?",
+        "The voltage across a part is the difference of its two node voltages: V_R1 = V_+ − V_out."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Vm",
+          "feedback": "That is the reading itself: the voltage from out to ground, which is the voltage across R2. R1 runs from the + terminal, {V} above ground, down to out, so its voltage is the difference of those two node voltages."
+        },
+        {
+          "formula": "V",
+          "feedback": "R1 would have the whole {V} across it only if out were at ground. The current through R2 holds out {Vm} above ground, so R1 has the difference of its two node voltages, not the full supply."
+        },
+        {
+          "formula": "V+Vm",
+          "feedback": "The voltage across R1 is the difference of its two node voltages, not their sum. No part in this loop can have more than the supply's {V}: each coulomb gains {V} in the source and gives it up in R1 and R2 together."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "What current flows through R2?",
+          "choices": [
+            {
+              "text": "{I}: R1's own {VR1} divided by R1's {R1}",
+              "correct": true,
+              "feedback": "Right: R1's voltage and resistance give the current through it, I = V_R1/R1. R1 and R2 form one path with no junction between them, so every coulomb through R1 goes on through R2."
+            },
+            {
+              "text": "{Ifull}: the supply's {V} divided by R1's {R1}",
+              "feedback": "That treats R1 as if it had the whole {V} across it. It has only {VR1}; the other {Vm} is across R2. The current through R1 is set by R1's own voltage: {VR1} / {R1} = {I}."
+            },
+            {
+              "text": "{Iout}: the reading's {Vm} divided by R1's {R1}",
+              "feedback": "{Vm} is the voltage across R2, not across R1, so dividing it by R1's resistance mixes two parts. Use R1's own voltage with R1's resistance: {VR1} / {R1} = {I}."
+            },
+            {
+              "text": "Unknown: R2's value isn't marked, so its current can't be found",
+              "feedback": "R2's value isn't needed. R1's voltage and resistance give its current, {I}, and with one path and no junction between them the same current flows through R2."
+            }
+          ],
+          "explanation": "In a single loop the current is the same at every point (charge and current), so R1's current is R2's current. R1's value and its own voltage give it: I = {VR1} / {R1} = {I}. With that current and R2's voltage, R2 = {Vm} / {I} = {R2}: one reading and one known resistor find the other, which is how a wrong part is tracked down on a board."
+        }
+      ],
+      "schematic": {
+        "netlist": "source, R1 and R2 in series\nV1 in 0 {V:spice}\nR1 in out {R1:spice}\nR2 out 0 {R2:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "verified",
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 5 \"Series and Parallel Circuits\", section \"Simple series circuits\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_5.html#xtocid87431",
+          "note": "In a series circuit the supply voltage equals the sum of the individual voltage drops, so one resistor's drop is the supply minus the others'."
+        }
+      ]
+    },
+    {
       "id": "ohm_conductance",
       "topicId": "ohms_law",
       "prompt": "Circuit simulators solve for node voltages using conductances (amperes per volt) rather than resistances. What is the conductance of a {R} resistor? Answer in siemens (S); prefixes such as m and µ are fine.",
@@ -494,7 +715,7 @@
     {
       "id": "ohm_wire_resistance",
       "topicId": "ohms_law",
-      "prompt": "A spool holds {L} of {awg} AWG solid copper hookup wire, {Amm} mm² in cross-section. Copper wire has a resistivity of 1.72 × 10⁻⁸ Ω·m at 20 °C. What is the resistance from one end of the wire to the other, at 20 °C?",
+      "prompt": "Find the end-to-end resistance of this hookup wire at 20 °C; copper's resistivity there is 1.72 × 10⁻⁸ Ω·m.",
       "variables": [
         {
           "name": "L",
@@ -558,10 +779,34 @@
         {
           "formula": "1.72e-8*(Amm*1e-6)/L",
           "feedback": "Length and area are swapped. A longer wire has more resistance (R ∝ L) and a thicker one less (R ∝ 1/A): R = ρL/A."
+        },
+        {
+          "formula": "1.72e-8*L/(Amm*1e-12)",
+          "feedback": "1 mm² = (10⁻³ m)² = 10⁻⁶ m², not 10⁻¹² m² (that is a square micrometer). With the area a million times too small, the resistance comes out a million times too large."
+        },
+        {
+          "formula": "1.72e-8*L/(Amm*1e6)",
+          "feedback": "You converted the wrong way. A square meter holds a million square millimeters, so the area is a much smaller number of square meters: multiply by 10⁻⁶, not 10⁶. As it is, the area is 10¹² times too large and the resistance 10¹² times too small."
         }
       ],
-      "noDrawing": "about one length of wire on a spool; no circuit to analyze",
-      "review": "verified"
+      "wire": {
+        "area": "{Amm} mm²",
+        "length": "{L}",
+        "material": "{awg} AWG solid copper"
+      },
+      "review": "verified",
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 12 \"Physics of Conductors and Insulators\", section \"Specific resistance\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_12.html#xtocid88064",
+          "note": "R = ρl/A with length in meters and area in square meters when ρ is in Ω·m; resistance grows with length and falls with area; its table gives pure copper, not the 1.72 × 10⁻⁸ Ω·m annealed-wire value."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 12 \"Physics of Conductors and Insulators\", section \"Conductor size\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_12.html#xtocid88061",
+          "note": "The AWG table of diameters and areas for solid copper wire (checked for 24, 22, 20, 14 and 12 AWG, converted from inches and circular mils), and that every three gauge steps roughly double the area; a larger gauge number is a thinner wire."
+        }
+      ]
     },
     {
       "id": "ohm_wire_drop",
@@ -771,7 +1016,19 @@
         ],
         "labels": []
       },
-      "review": "verified"
+      "review": "verified",
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 12 \"Physics of Conductors and Insulators\", section \"Specific resistance\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_12.html#xtocid88064",
+          "note": "R = ρl/A with length in meters and area in square meters when ρ is in Ω·m; resistance grows with length and falls with area; its table gives pure copper, not the 1.72 × 10⁻⁸ Ω·m annealed-wire value."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 12 \"Physics of Conductors and Insulators\", section \"Conductor size\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_12.html#xtocid88061",
+          "note": "The AWG table of diameters and areas for solid copper wire (checked for 24, 22, 20, 14 and 12 AWG, converted from inches and circular mils), and that every three gauge steps roughly double the area; a larger gauge number is a thinner wire."
+        }
+      ]
     },
     {
       "id": "ohm_winding_temp",
@@ -1119,7 +1376,7 @@
     {
       "id": "ohm_what_if_wire_length",
       "topicId": "ohms_law",
-      "prompt": "A {L} run of copper wire with a {Amm} mm² cross-section is replaced by a run of the same wire {new_L} long. What happens to the resistance of the run?",
+      "prompt": "Replace this wire with {new_L} of the same wire. What happens to its resistance?",
       "variables": [
         {
           "name": "L",
@@ -1158,13 +1415,17 @@
         "Think of the run as many one-meter pieces, one after another.",
         "R = ρL/A: only L changes."
       ],
-      "noDrawing": "about one wire's dimensions; no circuit to analyze",
+      "wire": {
+        "area": "{Amm} mm²",
+        "length": "{L}",
+        "material": "copper"
+      },
       "review": "verified"
     },
     {
       "id": "ohm_what_if_wire_diameter",
       "topicId": "ohms_law",
-      "prompt": "A {L} run of round copper wire {d} mm in diameter is replaced by copper wire {new_d} mm in diameter, the same length. What happens to its resistance?",
+      "prompt": "Replace this wire with copper wire {new_d} mm in diameter, the same length. What happens to its resistance?",
       "variables": [
         {
           "name": "L",
@@ -1205,7 +1466,11 @@
         "R depends on the area, not directly on the diameter. How does a circle's area change when its diameter doubles?",
         "A = πd²/4: doubling d multiplies A by 4."
       ],
-      "noDrawing": "about one wire's dimensions; no circuit to analyze",
+      "wire": {
+        "diameter": "{d} mm",
+        "length": "{L}",
+        "material": "copper"
+      },
       "review": "verified"
     },
     {
@@ -2163,6 +2428,11 @@
       "id": "ohm_trouble_wrong_part",
       "topicId": "ohms_law",
       "level": "design",
+      "ladder": [
+        "ohm_current",
+        "ohm_series_drop",
+        "ohm_resistance_from_meters"
+      ],
       "prompt": "Expected {Ve} at out, but a meter from out to ground reads {Vm}. R1 measures its marked value with one lead lifted. Find the actual value of R2.",
       "variables": [
         {

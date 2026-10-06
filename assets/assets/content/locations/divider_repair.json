@@ -5,6 +5,99 @@
   "title": "Repair ticket: a divider that reads wrong",
   "kind": "repair",
   "brief": "A divider on a returned board reads wrong. One fault is hidden in it: the drawing shows the circuit as designed, and the meter reads the board as it is. Measure with the power on (V to ground, V between, or a part's current), then name the fault. A good technician splits the suspects in half with each reading; the budget is the worst case of that route over every suspect, plus two.",
+  "card": {
+    "goal": "Find the fault in a divider that reads wrong.",
+    "objectives": {
+      "fault_named": "Fault named",
+      "readings_used": "Readings taken"
+    },
+    "parts": {
+      "board": {
+        "label": "Divider board",
+        "detail": "Returned board with one hidden fault; its parts are the suspects."
+      }
+    },
+    "details": [
+      "The drawing shows the circuit as designed; the meter reads the board as it is.",
+      "Readings are taken with the power on: V to ground, V between, or a part's current.",
+      "Split the suspects in half with each reading.",
+      "Reading budget: the worst case of that split-half route over every suspect, plus two."
+    ]
+  },
+  "silhouette": {
+    "netlist": "divider\nV1 1 0 9\nR1 1 2 10k\nR2 2 0 10k\n",
+    "parts": [
+      {
+        "ref": "V1",
+        "at": [
+          0,
+          2
+        ],
+        "rot": 90
+      },
+      {
+        "ref": "R1",
+        "at": [
+          2,
+          0
+        ]
+      },
+      {
+        "ref": "R2",
+        "at": [
+          8,
+          2
+        ],
+        "rot": 90
+      }
+    ],
+    "wires": [
+      [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      [
+        [
+          6,
+          0
+        ],
+        [
+          8,
+          0
+        ],
+        [
+          8,
+          2
+        ]
+      ],
+      [
+        [
+          0,
+          6
+        ],
+        [
+          8,
+          6
+        ]
+      ]
+    ],
+    "grounds": [
+      [
+        0,
+        6
+      ]
+    ]
+  },
   "topics": [
     "dividers",
     "kirchhoff"

@@ -168,6 +168,757 @@
       ]
     },
     {
+      "id": "two_source_network",
+      "title": "Two-source network",
+      "branch": "DC",
+      "summary": "Two supplies feed a resistor network. Write G·v = i for nodes a and b, predict both voltages, then run .op.",
+      "params": [
+        {
+          "name": "V1",
+          "label": "V1",
+          "unit": "V",
+          "value": "12"
+        },
+        {
+          "name": "V2",
+          "label": "V2",
+          "unit": "V",
+          "value": "5"
+        },
+        {
+          "name": "R1",
+          "label": "R1 (V1 to a)",
+          "unit": "Ω",
+          "value": "1k"
+        },
+        {
+          "name": "R2",
+          "label": "R2 (a to b)",
+          "unit": "Ω",
+          "value": "2k"
+        },
+        {
+          "name": "R3",
+          "label": "R3 (a to ground)",
+          "unit": "Ω",
+          "value": "2k"
+        },
+        {
+          "name": "R4",
+          "label": "R4 (b to ground)",
+          "unit": "Ω",
+          "value": "1k"
+        },
+        {
+          "name": "R5",
+          "label": "R5 (V2 to b)",
+          "unit": "Ω",
+          "value": "2k"
+        }
+      ],
+      "netlist": "Two-source network\nV1 p 0 {V1}\nR1 p a {R1}\nR2 a b {R2}\nR3 a 0 {R3}\nR4 b 0 {R4}\nR5 b q {R5}\nV2 q 0 {V2}\n.op\n",
+      "probes": [
+        "a",
+        "b"
+      ],
+      "predict": {
+        "label": "Before you simulate: what will V(a) be?",
+        "measure": "v(a)",
+        "unit": "V",
+        "tolerance": 0.02,
+        "explain": "G = [[2, −0.5], [−0.5, 2]] mS (1/R1 + 1/R2 + 1/R3 on a's diagonal, −1/R2 between a and b) and i = (12 V/1 kΩ, 5 V/2 kΩ) = (12, 2.5) mA. Determinant 3.75 mS², so V_a = (12 × 2 + 0.5 × 2.5)/3.75 = 6.73 V."
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\n{V1}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R1}"
+          },
+          {
+            "ref": "R3",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              10,
+              0
+            ],
+            "label": "R2\n{R2}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              2
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          },
+          {
+            "ref": "R5",
+            "at": [
+              18,
+              0
+            ],
+            "label": "R5\n{R5}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              24,
+              2
+            ],
+            "rot": 90,
+            "label": "V2\n{V2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              14,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              16,
+              2
+            ]
+          ],
+          [
+            [
+              22,
+              0
+            ],
+            [
+              24,
+              0
+            ],
+            [
+              24,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              24,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              9,
+              0
+            ]
+          },
+          {
+            "text": "b",
+            "at": [
+              15,
+              0
+            ]
+          }
+        ]
+      },
+      "showDc": true,
+      "lab": [
+        {
+          "set": {
+            "V2": "10"
+          },
+          "label": "V2 is raised to 10 V; nothing else changes. What will V(a) be now?",
+          "measure": "v(a)",
+          "unit": "V",
+          "tolerance": 0.02,
+          "explain": "Only i_b changes, to 10 V/2 kΩ = 5 mA: G is the resistors and hasn't changed. V_a = (12 × 2 + 0.5 × 5)/3.75 = 7.07 V."
+        },
+        {
+          "set": {
+            "R2": "1Meg"
+          },
+          "label": "R2 is now 1 MΩ (V2 still 10 V). What will V(a) be?",
+          "measure": "v(a)",
+          "unit": "V",
+          "tolerance": 0.02,
+          "explain": "G_ab is now only −1 µS: a and b barely interact. a is almost the R1–R3 divider, 12 V × 2 kΩ/3 kΩ = 8 V (7.997 V exactly)."
+        },
+        {
+          "set": {
+            "R2": "2k",
+            "R3": "1k"
+          },
+          "label": "R2 is back to 2 kΩ and R3 drops to 1 kΩ (V2 still 10 V). What will V(b) be?",
+          "measure": "v(b)",
+          "unit": "V",
+          "tolerance": 0.02,
+          "explain": "G_aa = 1 + 0.5 + 1 = 2.5 mS, G_bb = 2 mS, G_ab = −0.5 mS; i = (12, 5) mA. Determinant 4.75 mS²: V_b = (2.5 × 5 + 0.5 × 12)/4.75 = 3.89 V. A change at a moves b too, through R2."
+        },
+        {
+          "set": {
+            "V2": "0",
+            "R3": "2k"
+          },
+          "label": "Superposition: V2 is set to 0 V and R3 is back to 2 kΩ, the original circuit with V2 zeroed. What will V(a) be? This is V1's share.",
+          "measure": "v(a)",
+          "unit": "V",
+          "tolerance": 0.02,
+          "explain": "V2 at 0 V is a wire, so R5 runs from b to ground beside R4: 1 kΩ ∥ 2 kΩ = 0.667 kΩ. Add R2: 2.667 kΩ, in parallel with R3: 1.143 kΩ. V_a = 12 V × 1.143/(1 + 1.143) = 6.40 V. In G·v = i only i changes, to (12, 0) mA: V_a = 12 × 2/3.75 = 6.40 V."
+        },
+        {
+          "set": {
+            "V1": "0",
+            "V2": "5"
+          },
+          "label": "Now V1 is set to 0 V and V2 is back to 5 V. What will V(a) be? This is V2's share.",
+          "measure": "v(a)",
+          "unit": "V",
+          "tolerance": 0.02,
+          "explain": "V1 at 0 V is a wire, so R1 sits in parallel with R3: 0.667 kΩ. In G·v = i, i = (0, 2.5) mA: V_a = 0.5 × 2.5/3.75 = 0.333 V. The two shares, 6.40 V + 0.333 V, add to the 6.73 V of the first prediction, with both supplies on."
+        }
+      ],
+      "topics": [
+        "nodal_analysis",
+        "superposition"
+      ]
+    },
+    {
+      "id": "wheatstone_bridge",
+      "title": "Wheatstone bridge with a meter",
+      "branch": "DC",
+      "summary": "A bridge with a meter between its midpoints: predict the meter current from R·i = v, then balance the bridge.",
+      "params": [
+        {
+          "name": "V",
+          "label": "Supply",
+          "unit": "V",
+          "value": "5"
+        },
+        {
+          "name": "R1",
+          "label": "R1 (top left)",
+          "unit": "Ω",
+          "value": "1k"
+        },
+        {
+          "name": "R2",
+          "label": "R2 (bottom left)",
+          "unit": "Ω",
+          "value": "2.2k"
+        },
+        {
+          "name": "R3",
+          "label": "R3 (top right)",
+          "unit": "Ω",
+          "value": "2.2k"
+        },
+        {
+          "name": "R4",
+          "label": "R4 (bottom right)",
+          "unit": "Ω",
+          "value": "1k"
+        },
+        {
+          "name": "Rm",
+          "label": "Meter resistance",
+          "unit": "Ω",
+          "value": "470"
+        }
+      ],
+      "netlist": "Wheatstone bridge with a meter\nV1 t 0 {V}\nR1 t c {R1}\nR2 c 0 {R2}\nR3 t d {R3}\nR4 d 0 {R4}\nRM c d {Rm}\n.op\n",
+      "probes": [
+        "c",
+        "d"
+      ],
+      "predict": {
+        "label": "Before you simulate: what current will the meter carry, from c to d?",
+        "measure": "i(RM)",
+        "unit": "A",
+        "tolerance": 0.02,
+        "explain": "Three clockwise meshes: R = [[3.2k, −1k, −2.2k], [−1k, 3.67k, −470], [−2.2k, −470, 3.67k]] Ω, v = (5, 0, 0) V. The meter carries I_3 − I_2 = 5 V × (2.2k × 2.2k − 1k × 1k)/det = 1.02 mA."
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              4
+            ],
+            "rot": 90,
+            "label": "V1\n{V}"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "R2",
+            "at": [
+              6,
+              6
+            ],
+            "rot": 90,
+            "label": "R2\n{R2}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "R3",
+            "at": [
+              16,
+              0
+            ],
+            "rot": 90,
+            "label": "R3\n{R3}"
+          },
+          {
+            "ref": "R4",
+            "at": [
+              16,
+              6
+            ],
+            "rot": 90,
+            "label": "R4\n{R4}"
+          },
+          {
+            "ref": "RM",
+            "at": [
+              9,
+              5
+            ],
+            "label": "meter\n{Rm}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              16,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              4
+            ],
+            [
+              6,
+              6
+            ]
+          ],
+          [
+            [
+              16,
+              4
+            ],
+            [
+              16,
+              6
+            ]
+          ],
+          [
+            [
+              6,
+              5
+            ],
+            [
+              9,
+              5
+            ]
+          ],
+          [
+            [
+              13,
+              5
+            ],
+            [
+              16,
+              5
+            ]
+          ],
+          [
+            [
+              0,
+              8
+            ],
+            [
+              0,
+              10
+            ],
+            [
+              16,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            3,
+            10
+          ]
+        ],
+        "labels": [
+          {
+            "text": "c",
+            "at": [
+              7,
+              5
+            ]
+          },
+          {
+            "text": "d",
+            "at": [
+              14,
+              5
+            ]
+          }
+        ]
+      },
+      "showDc": true,
+      "lab": [
+        {
+          "set": {
+            "R4": "4.84k"
+          },
+          "label": "R4 is now 4.84 kΩ, so R1·R4 = R2·R3. What will V(d) be?",
+          "measure": "v(d)",
+          "unit": "V",
+          "tolerance": 0.02,
+          "explain": "Balanced: R4/R3 = R2/R1, so d sits where c does, 5 V × 2.2k/3.2k = 3.44 V, and the meter carries no current."
+        },
+        {
+          "set": {
+            "Rm": "10k"
+          },
+          "label": "Still balanced, the meter is swapped for one of 10 kΩ. What will V(c) be?",
+          "measure": "v(c)",
+          "unit": "V",
+          "tolerance": 0.02,
+          "explain": "At balance the meter carries no current, so its resistance changes nothing: still 3.44 V. That is why a bridge measures by a null."
+        },
+        {
+          "set": {
+            "R4": "1k"
+          },
+          "label": "R4 goes back to 1 kΩ, with the 10 kΩ meter. What current will the meter carry, from c to d?",
+          "measure": "i(RM)",
+          "unit": "A",
+          "tolerance": 0.02,
+          "explain": "Unbalanced again: R_22 = R_33 = 13.2 kΩ now, and the mesh solve gives 5 V × 3.84 kΩ²/116.48 kΩ³ = 0.165 mA, far less than the 470 Ω meter's 1.02 mA. A higher-resistance meter loads the bridge less, and reads less current."
+        }
+      ],
+      "topics": [
+        "mesh_analysis",
+        "nodal_analysis"
+      ]
+    },
+    {
+      "id": "voltage_amplifier_model",
+      "title": "Voltage amplifier model",
+      "branch": "DC",
+      "summary": "A sensor (v_s behind R_s) drives an amplifier model, R_in, a dependent source A_vo·v_in and R_out, into a load R_L. Predict the loaded output from the two dividers, then run .op.",
+      "params": [
+        {
+          "name": "Vs",
+          "label": "v_s (sensor)",
+          "unit": "V",
+          "value": "20m"
+        },
+        {
+          "name": "Rs",
+          "label": "R_s (sensor output)",
+          "unit": "Ω",
+          "value": "10k"
+        },
+        {
+          "name": "Rin",
+          "label": "R_in (amplifier input)",
+          "unit": "Ω",
+          "value": "100k"
+        },
+        {
+          "name": "Avo",
+          "label": "A_vo (gain, no load)",
+          "unit": "",
+          "value": "50"
+        },
+        {
+          "name": "Rout",
+          "label": "R_out (amplifier output)",
+          "unit": "Ω",
+          "value": "200"
+        },
+        {
+          "name": "RL",
+          "label": "R_L (load)",
+          "unit": "Ω",
+          "value": "2.2k"
+        }
+      ],
+      "netlist": "Voltage amplifier model\nVS sig 0 {Vs}\nRS sig in {Rs}\nRIN in 0 {Rin}\nE1 x 0 in 0 {Avo}\nROUT x out {Rout}\nRL out 0 {RL}\n.op\n",
+      "probes": [
+        "in",
+        "out"
+      ],
+      "predict": {
+        "label": "Before you simulate: what will V(out) be?",
+        "measure": "v(out)",
+        "unit": "V",
+        "tolerance": 0.02,
+        "explain": "Input divider: v_in = 20 mV × 100 kΩ/110 kΩ = 18.18 mV. The dependent source gives A_vo·v_in = 50 × 18.18 mV = 909.1 mV. Output divider: v_o = 909.1 mV × 2.2 kΩ/2.4 kΩ = 833.3 mV. The loaded gain is 41.7, not 50."
+      },
+      "schematic": {
+        "noBuild": "an amplifier model: R_in, A_vo·v_in and R_out stand for the amplifier",
+        "parts": [
+          {
+            "ref": "VS",
+            "at": [
+              0,
+              0
+            ],
+            "rot": 90,
+            "label": "v_s\n{Vs}"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R_s {Rs}"
+          },
+          {
+            "ref": "RIN",
+            "at": [
+              6,
+              0
+            ],
+            "rot": 90,
+            "label": "R_in\n{Rin}"
+          },
+          {
+            "ref": "E1",
+            "at": [
+              11,
+              0
+            ],
+            "rot": 90,
+            "label": "A_vo·v_in\nA_vo = {Avo}"
+          },
+          {
+            "ref": "ROUT",
+            "at": [
+              11,
+              0
+            ],
+            "label": "R_out {Rout}"
+          },
+          {
+            "ref": "RL",
+            "at": [
+              18,
+              0
+            ],
+            "rot": 90,
+            "label": "R_L\n{RL}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              15,
+              0
+            ],
+            [
+              18,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              4
+            ],
+            [
+              18,
+              4
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            8.5,
+            4
+          ]
+        ],
+        "labels": [
+          {
+            "text": "in",
+            "at": [
+              6,
+              0
+            ]
+          },
+          {
+            "text": "out",
+            "at": [
+              16.5,
+              0
+            ]
+          }
+        ],
+        "voltages": [
+          {
+            "text": "v_in",
+            "across": "RIN"
+          }
+        ]
+      },
+      "showDc": true,
+      "lab": [
+        {
+          "set": {
+            "RL": "1.1k"
+          },
+          "label": "A second, identical load goes in parallel: R_L is now 1.1 kΩ. What will V(out) be?",
+          "measure": "v(out)",
+          "unit": "V",
+          "tolerance": 0.02,
+          "explain": "The input side doesn't see the load: A_vo·v_in is still 909.1 mV. The output divider is now 1.1 kΩ/(200 Ω + 1.1 kΩ) = 0.846, so v_o = 769.2 mV."
+        },
+        {
+          "set": {
+            "Rs": "100k"
+          },
+          "label": "The sensor is swapped for one with R_s = 100 kΩ (R_L still 1.1 kΩ). What will V(out) be?",
+          "measure": "v(out)",
+          "unit": "V",
+          "tolerance": 0.02,
+          "explain": "R_s now equals R_in, so only half of v_s reaches the input: v_in = 10 mV, A_vo·v_in = 500 mV, and v_o = 500 mV × 0.846 = 423.1 mV."
+        },
+        {
+          "set": {
+            "Rin": "1Meg"
+          },
+          "label": "The amplifier is swapped for one with R_in = 1 MΩ, the same A_vo and R_out. What will V(out) be?",
+          "measure": "v(out)",
+          "unit": "V",
+          "tolerance": 0.02,
+          "explain": "R_in is ten times R_s again: v_in = 20 mV × 1 MΩ/1.1 MΩ = 18.18 mV, A_vo·v_in = 909.1 mV, v_o = 769.2 mV. What matters is the ratio of R_in to R_s, not either value alone."
+        },
+        {
+          "set": {
+            "Rout": "20"
+          },
+          "label": "A buffered output brings R_out down to 20 Ω. What will V(out) be now?",
+          "measure": "v(out)",
+          "unit": "V",
+          "tolerance": 0.02,
+          "explain": "The output divider is 1.1 kΩ/1.12 kΩ = 0.982, so v_o = 909.1 mV × 0.982 = 892.9 mV, within 2% of A_vo·v_in."
+        }
+      ],
+      "topics": [
+        "dependent_sources"
+      ]
+    },
+    {
       "id": "rc_lowpass",
       "title": "RC low-pass filter",
       "branch": "Filters",
@@ -3497,6 +4248,522 @@
           "tolerance": 0.3,
           "explain": "With the MOSFET fully on, 6 V = 2·V_LED + I·2.49 Ω. At about 12 mA each LED needs 3.1 − 0.12·log10(100/12) ≈ 2.99 V, and the two take 5.97 V, leaving only about 30 mV across R_s: the simulator gives 11.8 mA."
         }
+      ]
+    },
+    {
+      "id": "rl_step",
+      "title": "RL step: coil current rise",
+      "branch": "Filters",
+      "summary": "A step through R into an inductor: the current starts at zero, rises at V/L, and settles at V/R with τ = L/R. The run ends at the time t you set, so the last point is the current at t.",
+      "params": [
+        {
+          "name": "V",
+          "label": "Step",
+          "unit": "V",
+          "value": "12"
+        },
+        {
+          "name": "R",
+          "label": "R",
+          "unit": "Ω",
+          "value": "240"
+        },
+        {
+          "name": "L",
+          "label": "L",
+          "unit": "H",
+          "value": "100m"
+        },
+        {
+          "name": "t",
+          "label": "Run length t",
+          "unit": "s",
+          "value": "417u"
+        }
+      ],
+      "derived": [
+        {
+          "name": "tau",
+          "formula": "L/R"
+        },
+        {
+          "name": "tstep",
+          "formula": "t/400"
+        }
+      ],
+      "netlist": "RL step\nV1 in 0 PULSE(0 {V} 0 1n 1n 1 2)\nR1 in a {R}\nL1 a 0 {L}\n.tran {tstep} {t}\n",
+      "probes": [
+        "in",
+        "a",
+        "I(L1)"
+      ],
+      "predict": {
+        "label": "Before you simulate: what current flows in L1 at the end of the run, 417 µs after the step?",
+        "measure": "final:i(L1)",
+        "unit": "A",
+        "tolerance": 0.03,
+        "explain": "τ = L/R = 100 mH / 240 Ω = 417 µs, so the run ends at one τ: 63.2% of 12 V / 240 Ω = 50 mA, which is 31.6 mA. At the first instant the current is zero and all 12 V is across L1 (node a jumps to 12 V); as the current rises, R takes more of the step."
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\nstep"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "L1\n{L}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "lab": [
+        {
+          "set": {
+            "R": "480"
+          },
+          "label": "R is now 480 Ω. What current flows at the same 417 µs?",
+          "measure": "final:i(L1)",
+          "unit": "A",
+          "tolerance": 0.03,
+          "explain": "The final current halves to 12 V / 480 Ω = 25 mA, and τ = L/R halves to 208 µs, so 417 µs is now 2τ: 25 mA × (1 − e^(−2)) = 21.6 mA. More resistance: less current, reached sooner. An RC circuit does the opposite."
+        },
+        {
+          "set": {
+            "L": "47m"
+          },
+          "label": "Keep R = 480 Ω and use a 47 mH coil. What current flows at 417 µs?",
+          "measure": "final:i(L1)",
+          "unit": "A",
+          "tolerance": 0.03,
+          "explain": "τ = 47 mH / 480 Ω = 97.9 µs, so 417 µs is 4.26τ and the current is within 1.5% of its final value: 25 mA × (1 − e^(−4.26)) = 24.6 mA. L sets only how fast; the final current is V/R whatever L is."
+        }
+      ],
+      "topics": [
+        "rl_time_constant",
+        "first_order_switching"
+      ]
+    },
+    {
+      "id": "rc_square_wave",
+      "title": "RC square-wave response",
+      "branch": "Filters",
+      "summary": "A square wave from 0 to V into R and C: each edge is a switch event, C's voltage starts each half where the last one ended, and once settled it swings between two fixed levels centered on V/2.",
+      "params": [
+        {
+          "name": "V",
+          "label": "Square wave high level",
+          "unit": "V",
+          "value": "5"
+        },
+        {
+          "name": "R",
+          "label": "R",
+          "unit": "Ω",
+          "value": "10k"
+        },
+        {
+          "name": "C",
+          "label": "C",
+          "unit": "F",
+          "value": "1u"
+        },
+        {
+          "name": "f",
+          "label": "Frequency",
+          "unit": "Hz",
+          "value": "50"
+        }
+      ],
+      "derived": [
+        {
+          "name": "T",
+          "formula": "1/f"
+        },
+        {
+          "name": "th",
+          "formula": "1/(2*f)"
+        },
+        {
+          "name": "tstep",
+          "formula": "1/(200*f)"
+        },
+        {
+          "name": "tstop",
+          "formula": "20/f+20*R*C"
+        }
+      ],
+      "netlist": "RC square wave\nV1 in 0 PULSE(0 {V} 0 1n 1n {th} {T})\nR1 in out {R}\nC1 out 0 {C}\n.tran {tstep} {tstop}\n",
+      "probes": [
+        "in",
+        "out"
+      ],
+      "predict": {
+        "label": "Before you simulate: once the trace has settled, how far does C1's voltage swing, peak to peak?",
+        "measure": "pp:v(out)",
+        "unit": "V",
+        "tolerance": 0.03,
+        "explain": "Each half-period, 10 ms, is exactly one τ = RC = 10 kΩ × 1 µF = 10 ms, so each half closes 63.2% of the gap to the input's new level. Settled, C1 swings between V/(1 + e^(−1)) = 3.66 V and 5 V − 3.66 V = 1.34 V: 2.31 V peak to peak, centered on 2.5 V."
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\nsquare"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              0
+            ]
+          }
+        ]
+      },
+      "lab": [
+        {
+          "set": {
+            "f": "10"
+          },
+          "label": "Slow the square wave to 10 Hz, 50 ms per half. How far does C1 swing now?",
+          "measure": "pp:v(out)",
+          "unit": "V",
+          "tolerance": 0.03,
+          "explain": "Each half is now 5τ, so C1 gets within 1% of each level before the input reverses: x = e^(−5) = 0.0067, and the swing is 5 V × (1 − x)/(1 + x) = 4.93 V. The trace looks like the square wave with rounded corners."
+        },
+        {
+          "set": {
+            "f": "500"
+          },
+          "label": "Speed it up to 500 Hz, 1 ms per half. How far does C1 swing now?",
+          "measure": "pp:v(out)",
+          "unit": "V",
+          "tolerance": 0.03,
+          "explain": "Each half is only 0.1τ: C1 barely moves before the input reverses. x = e^(−0.1) = 0.905, and the swing is 5 V × (1 − 0.905)/(1 + 0.905) = 0.250 V, a small triangle around 2.5 V; for T/2 much shorter than τ it approaches V·T/(4τ). The RC is averaging the square wave."
+        }
+      ],
+      "topics": [
+        "first_order_switching",
+        "rc_time_constant"
+      ]
+    },
+    {
+      "id": "rlc_step",
+      "title": "Series RLC step",
+      "branch": "Filters",
+      "summary": "A step through R and L into C: the capacitor's voltage overshoots the step and rings at about f₀ = 1/(2π√(LC)), with ζ = (R/2)√(C/L) setting how far it overshoots and how fast the ringing dies. R stands for all the loop's resistance, the coil's winding included.",
+      "params": [
+        {
+          "name": "V",
+          "label": "Step",
+          "unit": "V",
+          "value": "5"
+        },
+        {
+          "name": "R",
+          "label": "R (whole loop)",
+          "unit": "Ω",
+          "value": "47"
+        },
+        {
+          "name": "L",
+          "label": "L",
+          "unit": "H",
+          "value": "10m"
+        },
+        {
+          "name": "C",
+          "label": "C",
+          "unit": "F",
+          "value": "100n"
+        },
+        {
+          "name": "t",
+          "label": "Run length",
+          "unit": "s",
+          "value": "2m"
+        }
+      ],
+      "derived": [
+        {
+          "name": "tstep",
+          "formula": "t/2000"
+        }
+      ],
+      "netlist": "Series RLC step\nV1 in 0 PULSE(0 {V} 0 1n 1n 1 2)\nR1 in a {R}\nL1 a out {L}\nC1 out 0 {C}\n.tran {tstep} {t}\n",
+      "probes": [
+        "in",
+        "out",
+        "I(L1)"
+      ],
+      "predict": {
+        "label": "Before you simulate: how high does C1's voltage go after the 5 V step?",
+        "measure": "max:v(out)",
+        "unit": "V",
+        "tolerance": 0.03,
+        "explain": "√(L/C) = √(10 mH / 100 nF) = 316 Ω, so ζ = (R/2)√(C/L) = 23.5 Ω / 316 Ω = 0.074: lightly damped. The first peak overshoots the step by e^(−πζ/√(1 − ζ²)) = e^(−0.234) = 79%, so C1 reaches 5 V × 1.79 = 8.96 V, at t = π/ω_d = 99.6 µs. It then rings at f_d = f₀√(1 − ζ²) = 5.02 kHz, the envelope shrinking as e^(−αt) with α = R/(2L) = 2350 s⁻¹."
+      },
+      "schematic": {
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V1\nstep"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              7,
+              0
+            ],
+            "label": "L1\n{L}"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              13,
+              2
+            ],
+            "rot": 90,
+            "label": "C1\n{C}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              7,
+              0
+            ]
+          ],
+          [
+            [
+              11,
+              0
+            ],
+            [
+              13,
+              0
+            ],
+            [
+              13,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              13,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            6,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              13,
+              0
+            ]
+          }
+        ]
+      },
+      "lab": [
+        {
+          "set": {
+            "R": "220"
+          },
+          "label": "R is now 220 Ω. How high does C1's voltage go now?",
+          "measure": "max:v(out)",
+          "unit": "V",
+          "tolerance": 0.03,
+          "explain": "ζ = 110 Ω / 316 Ω = 0.348, so the overshoot is e^(−π × 0.348/√(1 − 0.121)) = e^(−1.166) = 31%: C1 peaks at 5 V × 1.31 = 6.56 V. The ringing frequency hardly moves (4.72 kHz against 5.02 kHz), but each cycle now loses far more of its energy in R: α = R/(2L) = 11 000 s⁻¹, and the ringing is gone within 8L/R = 0.36 ms."
+        },
+        {
+          "set": {
+            "R": "680"
+          },
+          "label": "R is now 680 Ω. How high does C1's voltage go now?",
+          "measure": "max:v(out)",
+          "unit": "V",
+          "tolerance": 0.03,
+          "explain": "Critical damping is at R = 2√(L/C) = 632 Ω. At 680 Ω, ζ = 1.08: overdamped. There is no ringing and no overshoot; C1 creeps up to the 5 V step and stops there, so the peak is 5.00 V. Critical damping is the fastest rise that never overshoots; more R than that only slows the rise."
+        }
+      ],
+      "topics": [
+        "rlc_step"
       ]
     }
   ]

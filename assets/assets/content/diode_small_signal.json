@@ -1,0 +1,2072 @@
+{
+  "topics": [
+    {
+      "id": "diode_small_signal",
+      "title": "Small signals on a biased diode",
+      "mapTitle": "Diode small signals",
+      "glyph": "diodeGlass",
+      "summary": "Around its bias point a diode's exponential curve is nearly a straight line: to a small signal the diode is a resistance r_d = nV_T/I_D, set by the DC current through it.",
+      "lenses": [
+        "circuit",
+        "signals",
+        "math"
+      ],
+      "prerequisites": [
+        "diode_models",
+        "diode_practical",
+        "reactance_impedance"
+      ],
+      "prerequisiteNotes": {
+        "diode_models": "r_d is the slope of the Shockley equation I = I_S(e^(V/(nV_T)) − 1) at the bias point, and the 0.7 V model's narrow band of forward drops is the same exponential seen at a distance.",
+        "diode_practical": "A Zener's dynamic resistance r_z is the same idea in breakdown: it decides how much supply ripple reaches a Zener regulator's output, and an LED's r_d decides how much ripple current it passes.",
+        "reactance_impedance": "Splitting a circuit into DC and AC needs the capacitor's reactance: a coupling capacitor whose 1/(2πfC) is small next to the resistance around it is a short to the signal and an open to DC."
+      },
+      "lensNotes": {
+        "circuit": "Analyze in two passes. DC first: find the bias current I_D with the 0.7 V model or a measured drop. Then AC: replace every DC source by a wire (its voltage never changes, so it adds no signal), every large coupling capacitor by a wire, and the diode by r_d = nV_T/I_D. The AC circuit is then plain resistors, and divider and parallel rules give the signal anywhere.",
+        "signals": "A diode with a few millivolts of signal on top of its bias passes the signal undistorted, as a resistor of r_d. With tens of millivolts the exponential shows: the current swings further up than down, the positive peaks are stretched and the negative ones squashed, and new frequencies (harmonics) appear. The small-signal rule of thumb is a signal well under nV_T across the junction, a few millivolts.",
+        "math": "Linearize: I(V_D + v) ≈ I(V_D) + (dI/dV)·v, the first term of a Taylor series. For I = I_S e^(V/(nV_T)), dI/dV = I/(nV_T), so g_d = I_D/(nV_T) and r_d = nV_T/I_D. The next term is v²/(2(nV_T)²) times I_D, small next to the linear term v/(nV_T) only while v ≪ 2nV_T."
+      },
+      "formulas": [
+        {
+          "label": "Dynamic (small-signal) resistance",
+          "tex": "r_d = \\frac{n V_T}{I_D}"
+        },
+        {
+          "label": "At room temperature, n = 1",
+          "tex": "r_d \\approx \\frac{25.85\\ \\text{mV}}{I_D}\\quad (25.85\\ \\Omega \\text{ at } 1\\ \\text{mA})"
+        },
+        {
+          "label": "Signal across a biased diode in a divider",
+          "tex": "v_d = v_s \\, \\frac{r_d}{R + r_d}"
+        },
+        {
+          "label": "Small-signal condition",
+          "tex": "|v_d| \\ll n V_T"
+        }
+      ],
+      "goals": [
+        "Find a biased diode's dynamic resistance r_d = nV_T/I_D, and explain why it falls as the bias current rises",
+        "Split a diode circuit into a DC bias problem and an AC signal problem, with DC sources and large capacitors as AC shorts",
+        "Find the signal across a biased diode, a Zener or an LED with r_d in place of the device, and choose a bias resistor that sets a given attenuation",
+        "Tell when the small-signal model holds and predict the distortion when the signal across the junction approaches nV_T"
+      ],
+      "intuition": "Zoom in on a diode's exponential curve at its bias point and it is a straight line: a small signal sees a resistor r_d = nV_T/I_D, and more DC current makes that resistor smaller.",
+      "why": "A forward-biased junction's current is I = I_S(e^(V/(nV_T)) − 1): each extra nV_T of forward voltage multiplies the current by e, because it lowers the barrier the carriers must climb by that much energy per charge. So a small change in voltage, v, changes the current in proportion to the current already flowing: i = (I_D/(nV_T))·v. The ratio v/i = nV_T/I_D is the junction's resistance to the change, r_d. At 1 mA it is 25.85 Ω; at 10 mA, 2.6 Ω. It has nothing to do with V_D/I_D, the static ratio, which is about 650 Ω at 1 mA. The straight-line picture holds only while the signal stays small next to nV_T; a larger swing climbs the exponential unevenly and distorts.",
+      "explanation": "A diode carrying a DC bias current I_D sits at one point on its exponential curve. Add a small signal and the operating point moves only a little along the curve, where the curve is nearly straight. To that signal the diode behaves as a resistor, its dynamic or small-signal resistance r_d = nV_T/I_D: 25.85 Ω at 1 mA for n = 1, 2.6 Ω at 10 mA. More bias current, smaller r_d.\n\nThe method is superposition on the linearized circuit. First solve the DC bias with the 0.7 V model or a measured drop. Then draw the AC circuit: each DC source becomes a wire, since its voltage never changes; each large coupling capacitor becomes a wire; the diode becomes r_d. Divider and parallel rules then give the signal anywhere. Every transistor amplifier is analyzed the same way.\n\nThe model holds while the signal across the diode stays well under nV_T, a few millivolts. Uses: a current-controlled attenuator, a Zener's r_z that sets how much ripple reaches a regulator's output, and an LED's ripple current.",
+      "workedExample": {
+        "problem": "A silicon diode (n = 1) is biased at 1.0 mA. A 100 mV peak, 1 kHz signal reaches it through 1.0 kΩ, coupled by a 10 µF capacitor. Find r_d and the signal across the diode, and check that it is small.",
+        "steps": [
+          "r_d = nV_T/I_D = 25.85 mV / 1.0 mA = 25.85 Ω.",
+          "AC circuit: the 10 µF capacitor has 1/(2π × 1 kHz × 10 µF) = 15.9 Ω, small next to 1.0 kΩ, so treat it as a wire. The bias source is a wire to ground. The diode is 25.85 Ω.",
+          "Divider: v_d = 100 mV × 25.85 Ω / (1000 Ω + 25.85 Ω) = 100 mV × 0.0252 = 2.52 mV peak.",
+          "Check: 2.52 mV is about a tenth of nV_T = 25.85 mV, so the straight-line model holds. The diode current swings by v_d/r_d = 2.52 mV / 25.85 Ω = 97.5 µA peak, about 10% of the 1 mA bias.",
+          "Size check: doubling the bias to 2 mA halves r_d to 12.9 Ω and nearly halves the signal, to 1.27 mV: the bias current controls the attenuation."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, ModEL: Modular Electronics Learning, \"PN Junctions and Diodes\", ch. 2 \"Tutorial\", section 2.3 \"PN junction diode behavior\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_pn.pdf",
+          "note": "Checked the Shockley diode equation with ideality factor n and thermal voltage, and that a diode's voltage and current are not in fixed proportion (not Ohm's law), so its resistance depends on the operating point."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 4 \"Bipolar Junction Transistors\", section \"Biasing techniques\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_4.html",
+          "note": "Checked the superposition method for bias plus signal, in which the DC source is shorted for the AC step and the coupling capacitor acts as a wire at signal frequency and as an open circuit for DC."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "dss_rd",
+      "topicId": "diode_small_signal",
+      "level": "recall",
+      "prompt": "Find D1's small-signal resistance r_d at room temperature (V_T = 25.85 mV).",
+      "variables": [
+        {
+          "name": "Id",
+          "unit": "A",
+          "values": [
+            0.0001,
+            0.0002,
+            0.0005,
+            0.001,
+            0.002,
+            0.005,
+            0.01
+          ]
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "values": [
+            1,
+            2
+          ]
+        },
+        {
+          "name": "VT",
+          "unit": "V",
+          "value": 0.025852
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rstat",
+          "formula": "0.7/Id",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "n*VT/Id",
+        "unit": "Ω",
+        "tolerance": 0.02
+      },
+      "formulaSteps": 1,
+      "formulaStepsWhy": "one textbook relation, r_d = nV_T/I_D, with n and I_D read off the drawing",
+      "explanation": "r_d = nV_T/I_D = {n} × 25.85 mV / {Id} = {answer}. It is the slope of the diode's curve at the bias point, the resistance a small change in voltage sees.",
+      "hints": [
+        "A small signal sees the slope of the I–V curve at the bias point, not the ratio V_D/I_D.",
+        "r_d = nV_T/I_D, with V_T = 25.85 mV and n from the drawing."
+      ],
+      "misconceptions": [
+        {
+          "formula": "0.7/Id",
+          "feedback": "That is the static ratio V_D/I_D, about {Rstat}. A signal sees how much the current changes for a small change in voltage, the slope of the exponential: nV_T/I_D, far smaller."
+        },
+        {
+          "formula": "VT/Id",
+          "when": "n-1",
+          "feedback": "That leaves out n. This diode has n = {n}: its current rises by e for every {n} × 25.85 mV, so its slope is shallower and r_d = nV_T/I_D is {n} times larger."
+        },
+        {
+          "formula": "Id/(n*VT)",
+          "feedback": "That is the conductance g_d = I_D/(nV_T), in siemens. Its reciprocal is the resistance: r_d = nV_T/I_D."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why is r_d so much smaller than V_D/I_D?",
+          "choices": [
+            {
+              "text": "The current is exponential in the voltage, so near the bias point a small step in voltage changes the current a lot",
+              "correct": true,
+              "feedback": "Right: dI/dV = I_D/(nV_T). Each extra nV_T of forward voltage multiplies the current by e, so the curve is steep where the diode conducts."
+            },
+            {
+              "text": "Most of V_D is lost across the diode's internal series resistance, which is small",
+              "feedback": "The bulk series resistance of a small-signal diode is a few ohms and plays no part in r_d here. r_d comes from the exponential junction law alone: it is the slope nV_T/I_D."
+            },
+            {
+              "text": "The signal frequency is high enough that the junction's capacitance takes over",
+              "feedback": "r_d is a low-frequency result; it holds at DC. Junction capacitance matters only at much higher frequencies, where it would lower the impedance further."
+            },
+            {
+              "text": "V_D/I_D counts the 0.7 V twice, once for the barrier and once for the current",
+              "feedback": "Nothing is counted twice. V_D/I_D is the slope of a line from the origin to the bias point; r_d is the slope of the curve itself there. The exponential is much steeper than that line."
+            }
+          ],
+          "explanation": "The static ratio V_D/I_D is the slope of a line from the origin to the bias point, about 650 Ω at 1 mA. The curve at the bias point is far steeper, because the current is exponential in the voltage: r_d = nV_T/I_D, 25.85 Ω at 1 mA for n = 1."
+        }
+      ],
+      "schematic": {
+        "netlist": "bias by a current source\nI1 0 a DC {Id:spice} AC 1\nD1 a 0 DS\n.model DS D(IS=1e-14 N={n:spice})\n.ac lin 1 1k 1k\n",
+        "parts": [
+          {
+            "ref": "I1",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 270,
+            "label": "I_D\n{Id}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              6,
+              2
+            ],
+            "rot": 90,
+            "label": "D1\nn = {n}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            3,
+            6
+          ]
+        ]
+      },
+      "placement": true,
+      "review": "checked"
+    },
+    {
+      "id": "dss_rd_slope",
+      "topicId": "diode_small_signal",
+      "level": "recall",
+      "prompt": "Raising D1's current by {dI} raises its drop by {dV}. Find D1's small-signal resistance r_d at this bias point.",
+      "variables": [
+        {
+          "name": "Id",
+          "unit": "A",
+          "values": [
+            0.0005,
+            0.001,
+            0.002,
+            0.005
+          ]
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "values": [
+            1,
+            2
+          ]
+        },
+        {
+          "name": "VT",
+          "unit": "V",
+          "value": 0.025852
+        }
+      ],
+      "derived": [
+        {
+          "name": "IS",
+          "formula": "1e-14*250000^(n-1)",
+          "unit": "A"
+        },
+        {
+          "name": "Vd",
+          "formula": "n*VT*ln(Id/(1e-14*250000^(n-1))+1)",
+          "unit": "V"
+        },
+        {
+          "name": "dI",
+          "formula": "0.02*Id",
+          "unit": "A"
+        },
+        {
+          "name": "dV",
+          "formula": "n*VT*ln(1.02)",
+          "unit": "V"
+        },
+        {
+          "name": "Rstat",
+          "formula": "n*VT*ln(Id/(1e-14*250000^(n-1))+1)/Id",
+          "unit": "Ω"
+        },
+        {
+          "name": "rdf",
+          "formula": "n*VT/Id",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "dV/dI",
+        "unit": "Ω",
+        "tolerance": 0.02
+      },
+      "explanation": "r_d = ΔV/ΔI = {dV} / {dI} = {answer}: the slope of D1's curve at the bias point, the resistance a small signal sees. The formula agrees: nV_T/I_D = {rdf} for this diode's n = {n}; the measured slope is about 1% lower because the curve bends slightly over the step. The static ratio V_D/I_D = {Vd} / {Id} = {Rstat} is far larger: it is the slope of a line from the origin to the bias point, not of the curve.",
+      "hints": [
+        "A small signal sees the slope of the I–V curve at the bias point, not the ratio V_D/I_D.",
+        "r_d = ΔV/ΔI for a small step around the bias point."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Rstat",
+          "feedback": "That is the static ratio V_D/I_D, {Rstat}: the slope of a line from the origin to the bias point. A small signal sees the slope of the curve itself, ΔV/ΔI."
+        },
+        {
+          "formula": "dI/dV",
+          "feedback": "That is ΔI/ΔV, the conductance in siemens. The resistance is its reciprocal: ΔV/ΔI."
+        },
+        {
+          "formula": "dV/Id",
+          "feedback": "That divides the change in voltage by the whole bias current. r_d is a change over a change: {dV} / {dI}."
+        },
+        {
+          "formula": "VT/Id",
+          "when": "n-1.5",
+          "feedback": "That is V_T/I_D with n = 1. This diode's n isn't given, and the measured step already includes it: r_d = ΔV/ΔI = {dV} / {dI} = {answer}, twice that value, so n = 2 here."
+        }
+      ],
+      "schematic": {
+        "netlist": "bias by a current source\nI1 0 a DC {Id:spice} AC 1\nD1 a 0 DS\n.model DS D(IS={IS:spice} N={n:spice})\n.ac lin 1 1k 1k\n",
+        "parts": [
+          {
+            "ref": "I1",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 270,
+            "label": "I_D\n{Id}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              6,
+              2
+            ],
+            "rot": 90,
+            "label": "D1\n{Vd} at {Id}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            3,
+            6
+          ]
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "dss_vd_signal",
+      "topicId": "diode_small_signal",
+      "level": "reason",
+      "prompt": "Find the peak signal across D1. Use the measured DC drop shown.",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            5,
+            9,
+            12
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            1000,
+            2200,
+            4700,
+            10000
+          ]
+        },
+        {
+          "name": "vs",
+          "unit": "V",
+          "values": [
+            0.05,
+            0.1,
+            0.2
+          ]
+        },
+        {
+          "name": "VT",
+          "unit": "V",
+          "value": 0.025852
+        }
+      ],
+      "derived": [
+        {
+          "name": "I0",
+          "formula": "(V-0.65)/R",
+          "unit": "A"
+        },
+        {
+          "name": "V1",
+          "formula": "VT*ln(I0/1e-14+1)",
+          "unit": "V"
+        },
+        {
+          "name": "I1",
+          "formula": "(V-V1)/R",
+          "unit": "A"
+        },
+        {
+          "name": "V2",
+          "formula": "VT*ln(I1/1e-14+1)",
+          "unit": "V"
+        },
+        {
+          "name": "I2",
+          "formula": "(V-V2)/R",
+          "unit": "A"
+        },
+        {
+          "name": "Vd",
+          "formula": "VT*ln(I2/1e-14+1)",
+          "unit": "V"
+        },
+        {
+          "name": "Id",
+          "formula": "(V-Vd)/R",
+          "unit": "A"
+        },
+        {
+          "name": "rd",
+          "formula": "VT/(Id+1e-14)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rstat",
+          "formula": "Vd/Id",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "vs*rd/(R+rd)",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "DC: I_D = ({V} − {Vd}) / {R} = {Id}, so r_d = 25.85 mV / {Id} = {rd}. AC: V1 is a wire to the signal, so V2, R1 and r_d form a divider: v_d = {vs} × {rd} / ({R} + {rd}) = {answer} peak. That is well under nV_T, so the straight-line model holds.",
+      "hints": [
+        "Solve the DC bias first: the current through R1 sets r_d.",
+        "In the AC circuit V1 is a wire, D1 is r_d = nV_T/I_D, and V2 drives R1 and r_d in series."
+      ],
+      "misconceptions": [
+        {
+          "formula": "vs",
+          "feedback": "That treats D1 as an open circuit to the signal. A conducting diode is a small resistance r_d = {rd} to a signal, so most of V2's swing is across R1."
+        },
+        {
+          "formula": "vs*Rstat/(R+Rstat)",
+          "feedback": "That uses the static ratio V_D/I_D = {Rstat} for the diode. A signal sees the slope of the curve, r_d = nV_T/I_D = {rd}, which is far smaller."
+        },
+        {
+          "formula": "(V+vs)*rd/(R+rd)",
+          "feedback": "V1's DC only sets the bias. In the AC circuit a DC source is a wire, because its voltage never changes; only V2's {vs} drives the divider."
+        }
+      ],
+      "schematic": {
+        "netlist": "biased diode\nV1 in 0 {V:spice}\nV2 s in SIN(0 {vs:spice} 1k) AC {vs:spice}\nR1 s a {R:spice}\nD1 a 0 DS\n.model DS D(IS=1e-14 N=1)\n.ac lin 1 1k 1k\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 90,
+            "label": "V1\n{V}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V2\n{vs} peak, 1 kHz"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              6
+            ],
+            "rot": 90,
+            "label": "D1, n = 1\n{Vd} DC"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              0,
+              10
+            ],
+            [
+              8,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            10
+          ]
+        ]
+      },
+      "placement": true,
+      "review": "checked"
+    },
+    {
+      "id": "dss_what_if_bias",
+      "topicId": "diode_small_signal",
+      "prompt": "The bias current through D1 is raised tenfold. What happens to r_d?",
+      "variables": [
+        {
+          "name": "Id",
+          "unit": "A",
+          "values": [
+            0.0001,
+            0.0002,
+            0.0005,
+            0.001
+          ]
+        },
+        {
+          "name": "VT",
+          "unit": "V",
+          "value": 0.025852
+        }
+      ],
+      "whatIf": {
+        "quantity": "the small-signal resistance r_d",
+        "formula": "VT/Id",
+        "unit": "Ω",
+        "change": {
+          "Id": "10*Id"
+        },
+        "askFactor": true,
+        "feedback": {
+          "up": "More current doesn't mean more resistance here. r_d is the slope of the exponential, and the curve gets steeper as the current rises: dI/dV = I_D/(nV_T) grows with I_D, so r_d = nV_T/I_D falls.",
+          "same": "r_d is not a fixed property of the part. It is the slope of the curve at the bias point, and the slope of an exponential grows in proportion to the current there: ten times the current, a tenth of r_d."
+        }
+      },
+      "explanation": "r_d = nV_T/I_D: going from {Id} to {new_Id} takes r_d from {before} to {after}. The diode's voltage barely moves (about 60 mV for the tenfold step), but the curve is ten times steeper there. This is how a bias current controls a diode attenuator.",
+      "hints": [
+        "On an exponential, the slope at a point is proportional to the value at that point.",
+        "r_d = nV_T/I_D."
+      ],
+      "schematic": {
+        "netlist": "bias by a current source\nI1 0 a DC {Id:spice}\nD1 a 0 DS\n.model DS D(IS=1e-14 N=1)\n",
+        "parts": [
+          {
+            "ref": "I1",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 270,
+            "label": "I_D\n{Id}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              6,
+              2
+            ],
+            "rot": 90,
+            "label": "D1\nn = 1"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              6,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            3,
+            6
+          ]
+        ]
+      },
+      "placement": true,
+      "review": "checked"
+    },
+    {
+      "id": "dss_large_signal",
+      "topicId": "diode_small_signal",
+      "prompt": "V2 adds a sine to D1's bias. Which describes the current through D1?",
+      "variables": [
+        {
+          "name": "v",
+          "unit": "V",
+          "values": [
+            0.02,
+            0.03,
+            0.05
+          ]
+        },
+        {
+          "name": "Id",
+          "unit": "A",
+          "value": 0.001
+        },
+        {
+          "name": "VT",
+          "unit": "V",
+          "value": 0.025852
+        }
+      ],
+      "derived": [
+        {
+          "name": "Vq",
+          "formula": "VT*ln(Id/1e-14+1)",
+          "unit": "V"
+        },
+        {
+          "name": "Ipk",
+          "formula": "Id*exp(v/VT)",
+          "unit": "A"
+        },
+        {
+          "name": "Imin",
+          "formula": "Id*exp(-v/VT)",
+          "unit": "A"
+        },
+        {
+          "name": "lin",
+          "formula": "v*Id/VT",
+          "unit": "A"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Distorted: it peaks at {Ipk} but dips only to {Imin}",
+          "correct": true,
+          "feedback": "Right: I = I_S·e^(V/(nV_T)), so +{v} multiplies the current by e^({v}/25.85 mV) and −{v} divides it by the same factor. Equal voltage steps give unequal current steps."
+        },
+        {
+          "text": "A clean sine, 1.00 mA ± {lin}, set by r_d = 25.85 Ω",
+          "feedback": "r_d describes the curve only for a few millivolts. {v} is not small next to nV_T = 25.85 mV, so the current follows the exponential, not a straight line: up to {Ipk} and down only to {Imin}."
+        },
+        {
+          "text": "Clipped flat at both peaks, as a limiter clips",
+          "feedback": "A limiter clips because a diode turns on at a threshold. Here D1 is already on and its current keeps following the exponential: the positive half is stretched and the negative half squashed, but nothing is cut off."
+        },
+        {
+          "text": "A steady 1.00 mA: a diode passes no signal",
+          "feedback": "A biased diode passes signal current. Each small change in its voltage changes the current along the exponential, here from {Imin} up to {Ipk}."
+        }
+      ],
+      "explanation": "At 1.00 mA the diode's curve is exponential: I = 1.00 mA × e^(v/25.85 mV). For v = +{v}, I = {Ipk}; for v = −{v}, I = {Imin}. The swing up, {Ipk} − 1.00 mA, is larger than the swing down, so a sine of voltage gives a current with stretched positive peaks: second-harmonic distortion. The r_d model, a straight line, would predict ±{lin}; it holds only while the signal is a few millivolts.",
+      "hints": [
+        "Is {v} small next to nV_T = 25.85 mV?",
+        "Put v = +{v} and v = −{v} into I = 1.00 mA × e^(v/25.85 mV)."
+      ],
+      "schematic": {
+        "netlist": "large signal\nV1 m 0 {Vq:spice}\nV2 a m SIN(0 {v:spice} 1k)\nD1 a 0 DS\n.model DS D(IS=1e-14 N=1)\n",
+        "noBuild": "a voltage source straight across a diode is a test fixture, not a circuit to build",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 90,
+            "label": "V1\n{Vq}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V2\n{v} peak, 1 kHz"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              4
+            ],
+            "rot": 90,
+            "label": "D1, n = 1\n1.00 mA DC"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              4
+            ]
+          ],
+          [
+            [
+              8,
+              8
+            ],
+            [
+              8,
+              10
+            ],
+            [
+              0,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            10
+          ]
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "dss_dc_source_ac",
+      "topicId": "diode_small_signal",
+      "prompt": "What takes V1's place in the small-signal (AC) circuit?",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            5,
+            9,
+            12
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            1000,
+            2200,
+            4700
+          ]
+        },
+        {
+          "name": "vs",
+          "unit": "V",
+          "values": [
+            0.05,
+            0.1
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "text": "A wire: its voltage never changes, so it adds no signal",
+          "correct": true,
+          "feedback": "Right: superposition on the linearized circuit. The AC circuit holds only what changes; a fixed source changes nothing, and it passes signal current like a wire."
+        },
+        {
+          "text": "An open circuit: a DC source blocks AC",
+          "feedback": "A voltage source holds a fixed voltage whatever current flows through it, so it passes the signal current. Removing it would break the loop V2 drives."
+        },
+        {
+          "text": "A resistor equal to {V} divided by the DC current",
+          "feedback": "An ideal voltage source has no resistance to a change in current: its voltage stays at {V} whatever flows. To the signal it is a wire."
+        },
+        {
+          "text": "It stays as it is: the signal rides on its {V}",
+          "feedback": "The signal does ride on the DC in the real circuit, but the AC circuit keeps only the changes. V1's part of the total never changes, so in the AC circuit it is a wire."
+        }
+      ],
+      "explanation": "The real circuit holds DC and signal together. The small-signal method splits them: DC sources set the bias and r_d; then the AC circuit keeps only what changes. A source whose voltage is fixed is a wire to the signal (and a fixed current source an open), large coupling capacitors are wires, and the diode is r_d. Here that leaves V2 driving R1 into r_d.",
+      "hints": [
+        "Superposition: the AC circuit keeps only what changes. Does V1's voltage change?",
+        "What is the resistance of an ideal voltage source to a change in current?"
+      ],
+      "schematic": {
+        "netlist": "biased diode\nV1 in 0 {V:spice}\nV2 s in SIN(0 {vs:spice} 1k)\nR1 s a {R:spice}\nD1 a 0 DS\n.model DS D(IS=1e-14 N=1)\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 90,
+            "label": "V1\n{V}"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "V2\n{vs} peak, 1 kHz"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              6
+            ],
+            "rot": 90,
+            "label": "D1"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              0,
+              10
+            ],
+            [
+              8,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            10
+          ]
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "dss_design_attenuator",
+      "topicId": "diode_small_signal",
+      "prompt": "Choose RB (E24) so the signal at a is {target} peak, within 6% (±0.5 dB).",
+      "variables": [
+        {
+          "name": "VB",
+          "unit": "V",
+          "values": [
+            5,
+            12
+          ]
+        },
+        {
+          "name": "vs",
+          "unit": "V",
+          "value": 0.02
+        },
+        {
+          "name": "target",
+          "unit": "V",
+          "values": [
+            0.001,
+            0.002,
+            0.004
+          ]
+        },
+        {
+          "name": "VT",
+          "unit": "V",
+          "value": 0.025852
+        }
+      ],
+      "derived": [
+        {
+          "name": "k",
+          "formula": "target/vs",
+          "unit": ""
+        },
+        {
+          "name": "rp",
+          "formula": "1000*k/(1-k)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Ineed",
+          "formula": "VT/rp",
+          "unit": "A"
+        },
+        {
+          "name": "RBneed",
+          "formula": "(VB-0.65)/Ineed",
+          "unit": "Ω"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "RB",
+            "label": "RB",
+            "unit": "Ω",
+            "series": "E24",
+            "min": 1000,
+            "max": 1000000
+          }
+        ],
+        "result": "vs*(VT*RB/(VB-0.65))*RB/(VT*RB/(VB-0.65)+RB)/(1000+(VT*RB/(VB-0.65))*RB/(VT*RB/(VB-0.65)+RB))",
+        "resultLabel": "the peak signal at a",
+        "resultUnit": "V",
+        "target": "target",
+        "tolerance": 0.06,
+        "sim": {
+          "netlist": "diode attenuator\nVB b 0 {VB:spice}\nRB b a {RB:spice}\nD1 a 0 DS\nVS s 0 SIN(0 {vs:spice} 1k) AC {vs:spice}\nRS s c 1k\nC1 c a 10u\n.model DS D(IS=1e-14 N=1)\n.ac lin 1 1k 1k\n",
+          "measure": "mag:v(a)",
+          "note": "The diode's drop falls by about 60 mV for each tenfold drop in current, so at small bias currents it is nearer 0.6 V than 0.65 V; the bias current, and with it r_d, shift a little."
+        }
+      },
+      "explanation": "Work backward from the signal. At a, the signal is vs × r/(1 kΩ + r), with r = r_d ∥ RB ≈ r_d. {target} out of {vs} needs r = 1 kΩ × {k}/(1 − {k}) = {rp}. r_d = 25.85 mV/I_D, so I_D = 25.85 mV / {rp} = {Ineed}, and RB = ({VB} − 0.65 V)/I_D ≈ {RBneed}: pick the nearest E24 value. C1 keeps VB's DC out of RS and the signal source, so all of the bias current flows through D1.",
+      "hints": [
+        "The signal at a comes from a divider: RS on top, r_d (in parallel with RB) below.",
+        "Find the r_d that gives the target, then the bias current that gives that r_d, then RB = (VB − V_D)/I_D."
+      ],
+      "schematic": {
+        "netlist": "diode attenuator\nVB b 0 {VB:spice}\nRB b a {RBneed:spice}\nD1 a 0 DS\nVS s 0 SIN(0 {vs:spice} 1k) AC {vs:spice}\nRS s c 1k\nC1 c a 10u\n.model DS D(IS=1e-14 N=1)\n.ac lin 1 1k 1k\n",
+        "parts": [
+          {
+            "ref": "VB",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "VB\n{VB}"
+          },
+          {
+            "ref": "RB",
+            "at": [
+              2,
+              0
+            ],
+            "label": "RB = ?"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "D1\nn = 1"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              14,
+              0
+            ],
+            "rot": 180,
+            "label": "C1\n10 µF"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              18,
+              0
+            ],
+            "rot": 180,
+            "label": "RS\n1 kΩ"
+          },
+          {
+            "ref": "VS",
+            "at": [
+              20,
+              2
+            ],
+            "rot": 90,
+            "label": "VS\n{vs} peak\n1 kHz",
+            "labelOpposite": true
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              20,
+              0
+            ],
+            [
+              20,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              20,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              7,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "dss_troubleshoot_rb",
+      "topicId": "diode_small_signal",
+      "level": "design",
+      "prompt": "RB should be 10 kΩ, for about {vexp} peak at a. The scope shows {va} peak at a, and a meter reads {Vd} DC there. Find the value of RB actually fitted.",
+      "variables": [
+        {
+          "name": "VB",
+          "unit": "V",
+          "value": 5
+        },
+        {
+          "name": "vs",
+          "unit": "V",
+          "value": 0.02
+        },
+        {
+          "name": "RB",
+          "unit": "Ω",
+          "values": [
+            4700,
+            22000,
+            33000,
+            47000
+          ]
+        },
+        {
+          "name": "VT",
+          "unit": "V",
+          "value": 0.025852
+        }
+      ],
+      "derived": [
+        {
+          "name": "I0",
+          "formula": "(VB-0.65)/RB",
+          "unit": "A"
+        },
+        {
+          "name": "V1",
+          "formula": "VT*ln(I0/1e-14+1)",
+          "unit": "V"
+        },
+        {
+          "name": "I1",
+          "formula": "(VB-V1)/RB",
+          "unit": "A"
+        },
+        {
+          "name": "V2",
+          "formula": "VT*ln(I1/1e-14+1)",
+          "unit": "V"
+        },
+        {
+          "name": "I2",
+          "formula": "(VB-V2)/RB",
+          "unit": "A"
+        },
+        {
+          "name": "Vd",
+          "formula": "VT*ln(I2/1e-14+1)",
+          "unit": "V"
+        },
+        {
+          "name": "Id",
+          "formula": "(VB-Vd)/RB",
+          "unit": "A"
+        },
+        {
+          "name": "rd",
+          "formula": "VT/(Id+1e-14)",
+          "unit": "Ω"
+        },
+        {
+          "name": "rpa",
+          "formula": "rd*RB/(rd+RB)",
+          "unit": "Ω"
+        },
+        {
+          "name": "va",
+          "formula": "vs*rpa/(1000+rpa)",
+          "unit": "V"
+        },
+        {
+          "name": "eI0",
+          "formula": "(VB-0.65)/10000",
+          "unit": "A"
+        },
+        {
+          "name": "eV1",
+          "formula": "VT*ln(eI0/1e-14+1)",
+          "unit": "V"
+        },
+        {
+          "name": "eI1",
+          "formula": "(VB-eV1)/10000",
+          "unit": "A"
+        },
+        {
+          "name": "eV2",
+          "formula": "VT*ln(eI1/1e-14+1)",
+          "unit": "V"
+        },
+        {
+          "name": "eI2",
+          "formula": "(VB-eV2)/10000",
+          "unit": "A"
+        },
+        {
+          "name": "eVd",
+          "formula": "VT*ln(eI2/1e-14+1)",
+          "unit": "V"
+        },
+        {
+          "name": "eId",
+          "formula": "(VB-eVd)/10000",
+          "unit": "A"
+        },
+        {
+          "name": "erd",
+          "formula": "VT/(eId+1e-14)",
+          "unit": "Ω"
+        },
+        {
+          "name": "erp",
+          "formula": "erd*10000/(erd+10000)",
+          "unit": "Ω"
+        },
+        {
+          "name": "vexp",
+          "formula": "vs*erp/(1000+erp)",
+          "unit": "V"
+        },
+        {
+          "name": "k",
+          "formula": "va/vs",
+          "unit": ""
+        },
+        {
+          "name": "rm",
+          "formula": "1000*k/(1-k)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Im",
+          "formula": "VT/rm",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "(VB-Vd)*rm/VT",
+        "unit": "Ω",
+        "tolerance": 0.03
+      },
+      "explanation": "Work back from the scope. The divider RS over r_d gives {va} from {vs}: r = 1 kΩ × {k}/(1 − {k}) = {rm}, and r ≈ r_d since RB is far larger. Then I_D = 25.85 mV / {rm} = {Im}, and RB = ({VB} − {Vd}) / {Im} = {answer}. A wrong value from the E24 series, or a misread band, fits that.",
+      "hints": [
+        "From the scope reading, find the resistance at a that the signal sees: the divider is RS over r_d.",
+        "That r_d gives I_D = nV_T/r_d, and RB = (VB − V_D)/I_D, with V_D from the meter."
+      ],
+      "misconceptions": [
+        {
+          "formula": "rm",
+          "feedback": "That is r_d, the diode's small-signal resistance, which the scope reading gives directly. RB sets the DC bias: from r_d find I_D = nV_T/r_d, then RB = (VB − V_D)/I_D."
+        },
+        {
+          "formula": "VB*rm/VT",
+          "feedback": "That leaves out the diode's drop. RB has VB − V_D across it, {VB} − {Vd}, not the full {VB}."
+        },
+        {
+          "formula": "(VB-Vd)/(va/1000)",
+          "feedback": "That divides by the signal current through RS. RB carries the DC bias current, I_D = nV_T/r_d; the signal tells you r_d, and r_d tells you I_D."
+        }
+      ],
+      "schematic": {
+        "netlist": "diode attenuator\nVB b 0 {VB:spice}\nRB b a {RB:spice}\nD1 a 0 DS\nVS s 0 SIN(0 {vs:spice} 1k) AC {vs:spice}\nRS s c 1k\nC1 c a 10u\n.model DS D(IS=1e-14 N=1)\n.ac lin 1 1k 1k\n",
+        "parts": [
+          {
+            "ref": "VB",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "VB\n{VB}"
+          },
+          {
+            "ref": "RB",
+            "at": [
+              2,
+              0
+            ],
+            "label": "RB"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "D1\nn = 1"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              14,
+              0
+            ],
+            "rot": 180,
+            "label": "C1\n10 µF"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              18,
+              0
+            ],
+            "rot": 180,
+            "label": "RS\n1 kΩ"
+          },
+          {
+            "ref": "VS",
+            "at": [
+              20,
+              2
+            ],
+            "rot": 90,
+            "label": "VS\n{vs} peak\n1 kHz",
+            "labelOpposite": true
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              20,
+              0
+            ],
+            [
+              20,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              20,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              7,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "dss_zener_ripple",
+      "topicId": "diode_small_signal",
+      "prompt": "Find the ripple at the output, peak to peak. No load is connected.",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            330,
+            390,
+            470,
+            560,
+            680,
+            820
+          ]
+        },
+        {
+          "name": "rz",
+          "unit": "Ω",
+          "values": [
+            10,
+            20,
+            40
+          ]
+        },
+        {
+          "name": "vr",
+          "unit": "V",
+          "values": [
+            0.5,
+            1,
+            2
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Iz",
+          "formula": "(12-5.1)/R",
+          "unit": "A"
+        },
+        {
+          "name": "vrpk",
+          "formula": "vr/2",
+          "unit": "V"
+        },
+        {
+          "name": "ratio",
+          "formula": "rz/(R+rz)",
+          "unit": ""
+        }
+      ],
+      "level": "reason",
+      "answer": {
+        "formula": "vr*rz/(R+rz)",
+        "unit": "V",
+        "tolerance": 0.02
+      },
+      "explanation": "DC: the Zener holds about 5.1 V and carries (12 V − 5.1 V)/R = {Iz}. AC: the 12 V source is a wire, the Zener is its dynamic resistance r_z = {rz}, so the ripple divides between R and r_z: {vr} × {rz} / ({R} + {rz}) = {answer} peak to peak.",
+      "hints": [
+        "To the ripple, the Zener in breakdown is a small resistance r_z, not a fixed 5.1 V.",
+        "The ripple source drives R in series with r_z; the output is across r_z."
+      ],
+      "misconceptions": [
+        {
+          "formula": "0",
+          "feedback": "An ideal Zener would hold the output perfectly still, but a real one has a dynamic resistance r_z = {rz}: its voltage changes by r_z for each change in current, so part of the ripple gets through."
+        },
+        {
+          "formula": "vr",
+          "feedback": "The Zener takes almost all the change in current: the ripple divides between R ({R}) and r_z ({rz}), and only the share across r_z reaches the output."
+        },
+        {
+          "formula": "vr*5.1/12",
+          "feedback": "That scales the ripple by the DC ratio 5.1 V/12 V. The ripple sees the small-signal circuit: R over r_z, not the DC voltages."
+        }
+      ],
+      "schematic": {
+        "netlist": "zener ripple\nV1 in 0 12\nV2 s in SIN(0 {vrpk:spice} 120)\nR1 s out {R:spice}\nD1 0 out DZ\n.model DZ D(BV=5.1)\n",
+        "noBuild": "the 12 V supply's ripple is drawn as a separate source; a real one comes from a rectifier",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 90,
+            "label": "V1\n12 V"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "ripple\n{vr} p-p"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R\n{R}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              10
+            ],
+            "rot": 270,
+            "label": "D1, 5.1 V\nr_z = {rz} (datasheet)"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              0,
+              10
+            ],
+            [
+              8,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            10
+          ]
+        ],
+        "labels": [
+          {
+            "text": "out",
+            "at": [
+              8,
+              2
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "dss_led_ripple",
+      "topicId": "diode_small_signal",
+      "prompt": "Which part sets the LED's ripple current?",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "values": [
+            150,
+            180,
+            220,
+            270,
+            330
+          ]
+        },
+        {
+          "name": "vr",
+          "unit": "V",
+          "values": [
+            0.05,
+            0.1,
+            0.2
+          ]
+        },
+        {
+          "name": "V",
+          "unit": "V",
+          "value": 5
+        },
+        {
+          "name": "VT",
+          "unit": "V",
+          "value": 0.025852
+        }
+      ],
+      "derived": [
+        {
+          "name": "I0",
+          "formula": "(V-1.9)/R",
+          "unit": "A"
+        },
+        {
+          "name": "V1",
+          "formula": "2*VT*ln(I0/1e-18+1)",
+          "unit": "V"
+        },
+        {
+          "name": "I1",
+          "formula": "(V-V1)/R",
+          "unit": "A"
+        },
+        {
+          "name": "V2",
+          "formula": "2*VT*ln(I1/1e-18+1)",
+          "unit": "V"
+        },
+        {
+          "name": "I2",
+          "formula": "(V-V2)/R",
+          "unit": "A"
+        },
+        {
+          "name": "Vd",
+          "formula": "2*VT*ln(I2/1e-18+1)",
+          "unit": "V"
+        },
+        {
+          "name": "Id",
+          "formula": "(V-Vd)/R",
+          "unit": "A"
+        },
+        {
+          "name": "rd",
+          "formula": "2*VT/(Id+1e-18)",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rstat",
+          "formula": "Vd/Id",
+          "unit": "Ω"
+        },
+        {
+          "name": "ir",
+          "formula": "vr/(R+rd)",
+          "unit": "A"
+        }
+      ],
+      "choices": [
+        {
+          "text": "Mostly R1: the LED's r_d is only {rd}",
+          "correct": true,
+          "feedback": "Right: at {Id} the LED's r_d = 2 × 25.85 mV / {Id} = {rd}, small next to R1 = {R}. The ripple current is {vr} / ({R} + {rd}) = {ir} peak, almost exactly {vr}/R1."
+        },
+        {
+          "text": "Mostly the LED: its V_F/I_F is {Rstat}",
+          "feedback": "{Rstat} is the static ratio V_F/I_F. A change in current sees the slope of the LED's curve, r_d = nV_T/I_D = {rd}, which is small next to R1."
+        },
+        {
+          "text": "Neither: the LED's {Vd} drop blocks the ripple",
+          "feedback": "The forward drop is a DC level, not a barrier to changes. A small change in voltage across a conducting LED changes its current through r_d = {rd}, so ripple current flows: {ir} peak."
+        },
+        {
+          "text": "The LED alone: R1 only sets the DC current",
+          "feedback": "R1 is in the ripple's path too: the ripple source drives R1 and the LED's r_d in series, and R1 = {R} is by far the larger of the two."
+        }
+      ],
+      "explanation": "DC: I_D = (5 V − {Vd}) / {R} = {Id}. AC: the 5 V source is a wire, the ripple source drives R1 in series with the LED's r_d = nV_T/I_D = 2 × 25.85 mV / {Id} = {rd} (n ≈ 2 for this LED). The ripple current is {vr} / ({R} + {rd}) = {ir} peak: a conducting LED is close to a short for small changes, so the series resistor sets the ripple current.",
+      "hints": [
+        "Compare R1 with the LED's r_d = nV_T/I_D (n = 2 for this LED).",
+        "In the AC circuit the ripple source drives R1 and r_d in series."
+      ],
+      "schematic": {
+        "netlist": "led ripple\nV1 in 0 5\nV2 s in SIN(0 {vr:spice} 120)\nR1 s a {R:spice}\nD1 a 0 DLED\n.model DLED D(IS=1e-18 N=2)\n",
+        "noBuild": "the supply's ripple is drawn as a separate source; a real one comes from the supply itself",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              6
+            ],
+            "rot": 90,
+            "label": "V1\n5 V"
+          },
+          {
+            "ref": "V2",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "ripple\n{vr} peak"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              6
+            ],
+            "rot": 90,
+            "label": "D1, n = 2\n{Vd} DC",
+            "symbol": "led"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              6
+            ]
+          ],
+          [
+            [
+              0,
+              10
+            ],
+            [
+              8,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            10
+          ]
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "dss_coupling_cap",
+      "topicId": "diode_small_signal",
+      "prompt": "Which job does C1 do in this attenuator?",
+      "variables": [
+        {
+          "name": "VB",
+          "unit": "V",
+          "values": [
+            5,
+            9
+          ]
+        },
+        {
+          "name": "vs",
+          "unit": "V",
+          "value": 0.02
+        },
+        {
+          "name": "RB",
+          "unit": "Ω",
+          "values": [
+            10000,
+            22000,
+            47000
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "text": "It keeps VB's DC out of RS and VS, while passing the 1 kHz signal",
+          "correct": true,
+          "feedback": "Right: C1 blocks DC, so all of RB's bias current flows through D1 and sets r_d. At 1 kHz its 16 Ω is small next to RS's 1 kΩ, so the signal passes as if through a wire."
+        },
+        {
+          "text": "It smooths the signal so that the diode sees only DC",
+          "feedback": "Then the attenuator would pass nothing. C1 is in series with the signal path, not across it: at 1 kHz its 16 Ω lets the signal through to D1."
+        },
+        {
+          "text": "It stores charge that keeps D1 conducting between signal peaks",
+          "feedback": "RB's steady current keeps D1 conducting. C1 carries no DC at all once charged; it only lets the signal through while blocking the DC."
+        },
+        {
+          "text": "It sets the attenuation together with RS, as an RC divider",
+          "feedback": "At 1 kHz C1's 16 Ω is small next to RS's 1 kΩ, so it barely affects the signal. The attenuation is set by RS and the diode's r_d."
+        }
+      ],
+      "explanation": "Without C1, VB's DC would also push current back through RS into the signal source, and the source's DC level would shift the bias. With C1, the DC bias flows only through RB and D1 and sets r_d, while the signal sees C1 as a near-short: 1/(2π × 1 kHz × 10 µF) = 16 Ω against RS's 1 kΩ. In the small-signal circuit C1 is a wire, VB is a wire to ground, and D1 is r_d.",
+      "hints": [
+        "What would VB's DC do through RS without C1?",
+        "Compare C1's reactance at 1 kHz with RS."
+      ],
+      "schematic": {
+        "netlist": "diode attenuator\nVB b 0 {VB:spice}\nRB b a {RB:spice}\nD1 a 0 DS\nVS s 0 SIN(0 {vs:spice} 1k)\nRS s c 1k\nC1 c a 10u\n.model DS D(IS=1e-14 N=1)\n",
+        "parts": [
+          {
+            "ref": "VB",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "VB\n{VB}"
+          },
+          {
+            "ref": "RB",
+            "at": [
+              2,
+              0
+            ],
+            "label": "RB\n{RB}"
+          },
+          {
+            "ref": "D1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "D1\nn = 1"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              14,
+              0
+            ],
+            "rot": 180,
+            "label": "C1\n10 µF"
+          },
+          {
+            "ref": "RS",
+            "at": [
+              18,
+              0
+            ],
+            "rot": 180,
+            "label": "RS\n1 kΩ"
+          },
+          {
+            "ref": "VS",
+            "at": [
+              20,
+              2
+            ],
+            "rot": 90,
+            "label": "VS\n{vs} peak\n1 kHz",
+            "labelOpposite": true
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              18,
+              0
+            ],
+            [
+              20,
+              0
+            ],
+            [
+              20,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              20,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              7,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    }
+  ]
+}

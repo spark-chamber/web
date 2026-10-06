@@ -1,0 +1,2379 @@
+{
+  "topics": [
+    {
+      "id": "rl_time_constant",
+      "title": "RL time constant: current rise and decay",
+      "mapTitle": "RL time constant",
+      "glyph": "toroid",
+      "summary": "How fast a coil's current rises and falls: τ = L/R, with R everything in the current's path, the winding included; more resistance is faster.",
+      "lenses": [
+        "circuit",
+        "physics",
+        "math"
+      ],
+      "prerequisites": [
+        "inductors",
+        "rc_time_constant"
+      ],
+      "prerequisiteNotes": {
+        "inductors": "v = L·di/dt, ½LI², and the rule that an inductor's current cannot change instantly come from the inductors topic.",
+        "rc_time_constant": "The exponential, 63% per time constant, and t = τ·ln(…) for the time to reach a level are the same mathematics as the RC circuit."
+      },
+      "lensNotes": {
+        "circuit": "τ = L/R sets how fast a relay pulls in and lets go, how fast a solenoid or motor winding reaches its current, and how long a coil's current circulates in its switch-off path.",
+        "physics": "The inductance turns current into magnetic field and back. The current changes only as fast as the voltage left over across the inductance allows, di/dt = v_L/L, and at switch-off the field's energy, ½LI², keeps the current flowing until resistance turns it into heat.",
+        "math": "KVL gives V = iR + L·di/dt, so di/dt = (V/R − i)/(L/R): the rate is proportional to the remaining gap, and the solution is i = (V/R)(1 − e^(−t/τ)) with τ = L/R."
+      },
+      "formulas": [
+        {
+          "label": "Time constant",
+          "tex": "\\tau = \\frac{L}{R}\\ \\ (R\\text{: all the resistance in the current's path})"
+        },
+        {
+          "label": "Rise",
+          "tex": "i(t) = \\frac{V}{R}\\left(1 - e^{-t/\\tau}\\right)"
+        },
+        {
+          "label": "Decay",
+          "tex": "i(t) = I_0\\, e^{-t/\\tau}"
+        },
+        {
+          "label": "Time to reach a current",
+          "tex": "t = \\tau \\ln\\frac{I_\\text{final}}{I_\\text{final} - i}\\ \\ (\\text{rising from } 0)"
+        }
+      ],
+      "goals": [
+        "Find the time constant τ = L/R of a coil circuit, with R all the resistance in the current's path, the winding included",
+        "Find a coil's current at any moment as it rises toward V/R or decays from its starting value, and the time it takes to reach a given current",
+        "Explain why more resistance makes an RL circuit faster, the opposite of an RC circuit",
+        "Choose a resistor for a coil's switch-off path, trading a faster release against a higher voltage on the switch"
+      ],
+      "intuition": "An inductor's current starts where it was and heads for V/R, changing only as fast as the voltage left across the inductance allows, so each time constant τ = L/R closes 63% of the remaining gap.",
+      "why": "The voltage across an inductance is L·di/dt, so its current changes only as fast as the voltage across it allows. In series with a resistance R on a supply V, KVL gives V = iR + L·di/dt. At the first instant the current is still zero, R drops nothing, and all of V is across the inductance: the current starts rising at V/L. As it grows, R takes more of V and less is left to drive the change, so the rise slows and stops at V/R, where R takes all of V. A rate proportional to the gap still left is an exponential, and its time constant is the final current divided by the starting rate: (V/R)/(V/L) = L/R. More R lowers the final current but not the starting rate, so the current gets there sooner. When the supply is cut, the magnetic field's energy, ½LI², keeps the same current flowing for a moment; it needs a closed path, and in that path it decays with τ = L/R_path as the resistance turns the energy into heat.",
+      "explanation": "Apply a voltage V to a coil of inductance L through a total resistance R; the coil's own winding resistance counts. The current cannot jump, so at the first instant it is zero and all of V is across the inductance: the current starts rising at V/L. As it rises, R drops more of V and less is left across L, so the rise slows. The current approaches V/R as i(t) = (V/R)(1 − e^(−t/τ)), with τ = L/R. Henries over ohms give seconds; tens of millihenries over hundreds of ohms give tens to hundreds of microseconds. After one τ the current is at 63% of V/R, and after 5τ within 1%. More resistance means faster: the final current V/R is smaller, while the starting rate V/L is not. Interrupt the current and it still cannot stop at once: the coil's voltage reverses and rises until the current finds a path. Give it one, such as a diode across a relay coil, and the current decays as I₀·e^(−t/τ), with τ = L over all the resistance in that loop. A resistor added to the loop shortens the decay but raises the voltage on the switch: just after switch-off, the supply plus I₀ times the added resistance.",
+      "workedExample": {
+        "problem": "A 12 V relay coil has an inductance of 100 mH and a winding resistance of 240 Ω. Find τ, the final current, the current 200 µs after switch-on, and the time to reach 40 mA. At switch-off the current flows on through a diode and a 330 Ω resistor in series, across the coil; take the diode as ideal. Find the new τ and the voltage on the switch just after it opens.",
+        "steps": [
+          "τ = L/R = 100 mH / 240 Ω = 0.1 H / 240 Ω = 417 µs.",
+          "Final current: the inductance drops nothing once the current is steady, so I = 12 V / 240 Ω = 50 mA.",
+          "At 200 µs: i = 50 mA × (1 − e^(−200 µs / 417 µs)) = 50 mA × (1 − e^(−0.48)) = 50 mA × (1 − 0.619) = 19.1 mA.",
+          "40 mA is 80% of the final 50 mA: 1 − e^(−t/τ) = 0.8, so e^(−t/τ) = 0.2 and t = τ·ln 5 = 417 µs × 1.609 = 671 µs.",
+          "At switch-off the 50 mA cannot stop; it flows on around the coil, the diode and the 330 Ω resistor. All of that loop's resistance counts: τ = 100 mH / (240 Ω + 330 Ω) = 0.1 H / 570 Ω = 175 µs, against 417 µs with the diode alone.",
+          "Just after switch-off the switch's upper end must sit far enough above the 12 V rail to push 50 mA through the 330 Ω: 12 V + 50 mA × 330 Ω = 12 V + 16.5 V = 28.5 V. A switch rated 30 V just copes; a larger resistor would release faster and break it down."
+        ]
+      },
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 16 \"RC and L/R Time Constants\", section \"Inductor transient response\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_16.html#xtocid88422",
+          "note": "A discharged inductor starts with zero current and the full supply voltage across it, then its current climbs toward supply voltage over series resistance while its voltage falls to zero, because an inductor opposes changes in current."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 16 \"RC and L/R Time Constants\", section \"Voltage and current calculations\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_16.html#xtocid88423",
+          "note": "For an L/R circuit the time constant is inductance over total resistance in seconds, each τ closes about 63% of the remaining gap, the inductor's current is the quantity that carries over, and the inductor's voltage is what is left after the resistor's drop."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 16 \"RC and L/R Time Constants\", section \"Why L/R and not LR?\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_16.html#xtocid88424",
+          "note": "Explains from energy release into the resistor why an inductive circuit's time constant is a quotient, so more resistance makes the current die away faster, the opposite of an RC circuit."
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "rl_tau",
+      "topicId": "rl_time_constant",
+      "level": "recall",
+      "prompt": "Find the time constant of the current in L1 after the step. Treat L1 as ideal.",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            2,
+            3
+          ]
+        },
+        {
+          "name": "L",
+          "unit": "H",
+          "series": "E12",
+          "decades": [
+            -2,
+            -1
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "L/R",
+        "unit": "s",
+        "tolerance": 0.02
+      },
+      "explanation": "τ = L/R = {L} / {R} = {answer}. Henries over ohms give seconds. After one τ the current has reached 63% of its final value, 5 V / R1. A real coil's winding resistance carries the same current, so it adds to R1: τ = L/(R1 + R_w).",
+      "hints": [
+        "Which two parts set how fast the current can change?",
+        "τ = L/R, with L in henries and R in ohms."
+      ],
+      "misconceptions": [
+        {
+          "formula": "L*R",
+          "feedback": "τ is L divided by R, not multiplied: H/Ω = s, while H·Ω is not a time. More resistance makes an RL circuit faster."
+        },
+        {
+          "formula": "R/L",
+          "feedback": "That is 1/τ, a rate in s⁻¹. The time constant itself is τ = L/R."
+        },
+        {
+          "formula": "5*L/R",
+          "feedback": "5τ is the time to settle within 1%. The time constant is one τ = L/R, when the current has reached 63%."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "More resistance slows an RC circuit. Why does it speed up this one?",
+          "choices": [
+            {
+              "text": "The current starts rising at V/L whatever R is, but more R lowers the final current V/R, so there is less to build up",
+              "feedback": "Right: the time constant is the final current over the starting rate, (V/R)/(V/L) = L/R.",
+              "correct": true
+            },
+            {
+              "text": "More R puts more of the step across L1 from the start, so the current rises faster",
+              "feedback": "At the first instant the current is zero, so R drops nothing and all of the step is across L1, whatever R is. Later, a larger R takes more of the step and leaves less across L1."
+            },
+            {
+              "text": "More R turns the energy into heat faster, so the field fills up sooner",
+              "feedback": "The field holds ½Li², and a larger R makes the final current, and so the stored energy, smaller. The heat in R doesn't fill the field; the voltage across L1 does."
+            },
+            {
+              "text": "It doesn't: τ = L·R, so more resistance slows this circuit as well",
+              "feedback": "Check the units: H/Ω = s, while H·Ω is not a time. τ = L/R, so doubling R halves it."
+            }
+          ],
+          "explanation": "The time constant is the final current divided by the starting rate: (V/R)/(V/L) = L/R. A capacitor is the other way round: its final voltage V needs the same charge CV whatever R is, and more R delivers that charge at a lower current, so τ = RC grows with R."
+        }
+      ],
+      "schematic": {
+        "netlist": "RL step\nV1 in 0 PULSE(0 5 0 1n 1n 1 2)\nR1 in a {R:spice}\nL1 a 0 {L:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "5 V\nstep"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "L1\n{L}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "rl_final_current",
+      "topicId": "rl_time_constant",
+      "level": "recall",
+      "prompt": "Find the coil's current once it has settled after S1 closes. R_w is the winding's resistance.",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "H",
+          "values": [
+            0.1,
+            0.22,
+            0.47
+          ]
+        },
+        {
+          "name": "Rw",
+          "unit": "Ω",
+          "values": [
+            270,
+            330,
+            390,
+            470
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "tau",
+          "formula": "L/Rw",
+          "unit": "s"
+        },
+        {
+          "name": "t5",
+          "formula": "5*L/Rw",
+          "unit": "s"
+        },
+        {
+          "name": "i1",
+          "formula": "(1-exp(-1))*12/Rw",
+          "unit": "A"
+        }
+      ],
+      "answer": {
+        "formula": "12/Rw",
+        "unit": "A",
+        "tolerance": 0.02
+      },
+      "explanation": "Once the current stops changing, the inductance drops L·di/dt = 0, so all 12 V is across the winding's resistance: I = 12 V / {Rw} = {answer}. The inductance, {L}, sets only how long the current takes to get there: τ = L/R_w = {tau}, within 1% after 5τ = {t5}. That is why a relay datasheet lists the coil's resistance: at the rated voltage it alone sets the steady current.",
+      "hints": [
+        "What voltage does the inductance drop once the current stops changing?",
+        "With L·di/dt = 0, all 12 V is across R_w."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(1-exp(-1))*12/Rw",
+          "feedback": "That is the current one τ after S1 closes, {i1}. It keeps rising toward 12 V / R_w and is within 1% of it after 5τ = {t5}."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why doesn't L1's inductance lower the settled current?",
+          "choices": [
+            {
+              "text": "Once the current stops changing, L·di/dt = 0: the inductance drops no voltage, so R_w alone sets the current",
+              "correct": true,
+              "feedback": "Right: an inductor's voltage answers to how fast its current changes, not to how large the current is."
+            },
+            {
+              "text": "It does: a larger inductance opposes the current more, so the coil settles below 12 V / R_w",
+              "feedback": "An inductance opposes changes in current, not the current itself. A larger L1 makes the rise slower, τ = L/R_w, but the current still heads for 12 V / R_w."
+            },
+            {
+              "text": "The supply is DC, so L1's reactance 2πfL is zero and the coil is a short from the moment S1 closes",
+              "feedback": "Just after S1 closes the current is zero and changing fast, so all 12 V is across the inductance. L1 drops nothing only once the current has settled, after about 5τ = {t5}."
+            },
+            {
+              "text": "Its field fills up with energy, then its turns stop carrying current and only R_w is left in the path",
+              "feedback": "The field holds ½LI² while the current flows through every turn; the turns never stop carrying it. The inductance drops nothing because the current no longer changes: v = L·di/dt = 0."
+            }
+          ],
+          "explanation": "An inductor's voltage is L·di/dt. At switch-on the current is changing fastest and the inductance takes all 12 V; once the current is steady it takes none, and the coil is just its winding resistance."
+        }
+      ],
+      "schematic": {
+        "netlist": "relay settled\nV1 a 0 12\nRS1 a b 1m\nL1 b c {L:spice}\nRw c 0 {Rw:spice}\n",
+        "noBuild": "R_w is the coil's winding resistance, drawn as a separate part",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V",
+            "symbol": "battery"
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "S1\n(closes)",
+            "symbol": "switchClosed"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "coil\n{L}",
+            "symbol": "relayCoil"
+          },
+          {
+            "ref": "Rw",
+            "at": [
+              8,
+              6
+            ],
+            "rot": 90,
+            "label": "R_w\n{Rw}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              10
+            ],
+            [
+              8,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            10
+          ]
+        ],
+        "labels": []
+      },
+      "review": "checked"
+    },
+    {
+      "id": "rl_current_at_t",
+      "topicId": "rl_time_constant",
+      "prompt": "Find the current through L1 {t} after the step. Treat L1 as ideal.",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            5,
+            9,
+            12
+          ]
+        },
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "L",
+          "unit": "H",
+          "series": "E12",
+          "decades": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "name": "n",
+          "unit": "",
+          "values": [
+            0.5,
+            1,
+            2
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "t",
+          "formula": "1e-6*round(1e6*n*L/R)",
+          "unit": "s"
+        },
+        {
+          "name": "tau",
+          "formula": "L/R",
+          "unit": "s"
+        },
+        {
+          "name": "If",
+          "formula": "V/R",
+          "unit": "A"
+        },
+        {
+          "name": "ts",
+          "formula": "1e-6*round(1e6*n*L/R)/500",
+          "unit": "s"
+        }
+      ],
+      "answer": {
+        "formula": "(V/R)*(1-exp(-t*R/L))",
+        "unit": "A",
+        "tolerance": 0.02
+      },
+      "explanation": "τ = L/R = {L} / {R} = {tau}, and the current heads for V/R = {V} / {R} = {If}. i = (V/R)(1 − e^(−t/τ)) = {If} × (1 − e^(−{t} / {tau})) = {answer}.",
+      "hints": [
+        "Where does the current start, where does it end up, and how fast does it get there?",
+        "i = (V/R)(1 − e^(−t/τ)), with τ = L/R."
+      ],
+      "misconceptions": [
+        {
+          "formula": "(V/R)*exp(-t*R/L)",
+          "feedback": "That is a decay from V/R. Here the current starts at zero and rises toward V/R: i = (V/R)(1 − e^(−t/τ))."
+        },
+        {
+          "formula": "V/R",
+          "feedback": "V/R is where the current ends up, after about 5τ. At {t} it hasn't got there: i = (V/R)(1 − e^(−t/τ)).",
+          "when": "exp(-t*R/L)-0.03"
+        },
+        {
+          "formula": "V*t/L",
+          "feedback": "V·t/L is a straight-line ramp at the starting rate V/L. It holds only while R drops little; as the current grows, R takes more of the step and the rise slows.",
+          "when": "t*R/L-0.3"
+        },
+        {
+          "formula": "(V/R)*(1-exp(-t/(L*R)))",
+          "feedback": "That uses τ = L·R. The time constant is τ = L/R."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "What is the voltage across L1 just after the step?",
+          "choices": [
+            {
+              "text": "All of {V}: the current is still zero, so R1 drops nothing",
+              "feedback": "Right: the current can't jump, so at first R1 has no voltage across it and L1 has the whole step.",
+              "correct": true
+            },
+            {
+              "text": "Zero: no current flows in L1 yet, so it has no voltage",
+              "feedback": "v = L·di/dt: the current is zero but rising at its fastest, so L1's voltage is at its largest. It is the current that cannot jump; the voltage can."
+            },
+            {
+              "text": "Half of {V}: R1 and L1 share the step equally at first",
+              "feedback": "Sharing would need current in R1. At the first instant there is none, so R1 drops nothing and L1 has all of the step."
+            },
+            {
+              "text": "63% of {V}: one time constant's share of the step",
+              "feedback": "63% describes how far the current has got after one τ, not the voltage at the start. At the first instant L1 has all of the step."
+            }
+          ],
+          "explanation": "An inductor's current cannot jump, but its voltage can. With i = 0, R1 drops nothing, so L1 has all {V}; as the current grows, L1's voltage falls as {V}·e^(−t/τ), and the current rises fastest at the start."
+        }
+      ],
+      "schematic": {
+        "netlist": "RL step\nV1 in 0 PULSE(0 {V:spice} 0 1n 1n 1 2)\nR1 in a {R:spice}\nL1 a 0 {L:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}\nstep"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "L1\n{L}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "rl_pull_in_time",
+      "topicId": "rl_time_constant",
+      "prompt": "Find how long after S1 closes the relay pulls in. It pulls in once the coil current reaches the steady current at its must-operate voltage. Treat the coil's inductance as constant until the armature moves.",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "H",
+          "values": [
+            0.1,
+            0.22,
+            0.47
+          ]
+        },
+        {
+          "name": "Rw",
+          "unit": "Ω",
+          "values": [
+            270,
+            330,
+            390,
+            470
+          ]
+        },
+        {
+          "name": "Vpi",
+          "unit": "V",
+          "values": [
+            8.4,
+            9,
+            9.6
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "tau",
+          "formula": "L/Rw",
+          "unit": "s"
+        },
+        {
+          "name": "If",
+          "formula": "12/Rw",
+          "unit": "A"
+        },
+        {
+          "name": "Ipi",
+          "formula": "Vpi/Rw",
+          "unit": "A"
+        },
+        {
+          "name": "tau2",
+          "formula": "L/(2*Rw)",
+          "unit": "s"
+        }
+      ],
+      "answer": {
+        "formula": "(L/Rw)*ln(12/(12-Vpi))",
+        "unit": "s",
+        "tolerance": 0.02
+      },
+      "explanation": "The coil current rises toward 12 V / R_w = {If} with τ = L/R_w = {L} / {Rw} = {tau}. The relay pulls in at {Vpi} / R_w = {Ipi}. Solve {Ipi} = {If} × (1 − e^(−t/τ)): t = τ·ln(I_final / (I_final − I_pull-in)) = {tau} × ln(12 V / (12 V − {Vpi})) = {answer}. The armature then takes a few milliseconds more to move; a datasheet's operate time includes both.",
+      "hints": [
+        "What final current does the coil head for, and what fraction of it does the relay need?",
+        "Solve I_pull-in = I_final(1 − e^(−t/τ)) for t, with τ = L/R_w."
+      ],
+      "misconceptions": [
+        {
+          "formula": "L/Rw",
+          "feedback": "One τ takes the current to 63% of its final value. Pull-in needs {Vpi} out of 12 V, so t = τ·ln(I_final / (I_final − I_pull-in))."
+        },
+        {
+          "formula": "5*L/Rw",
+          "feedback": "5τ is when the current has essentially settled. The relay pulls in on the way, as soon as the current passes {Ipi}."
+        },
+        {
+          "formula": "(L/Rw)*Vpi/12",
+          "feedback": "That assumes the current rises in a straight line to its final value in one τ. It rises fastest at first and then slows: solve I_pull-in = I_final(1 − e^(−t/τ))."
+        },
+        {
+          "formula": "(L/Rw)*ln(12/Vpi)",
+          "feedback": "That is the time for a decay from the full current down to {Ipi}. Here the current rises from zero: t = τ·ln(I_final / (I_final − I_pull-in))."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Which change shortens the pull-in time while keeping the coil's steady current at {If}?",
+          "choices": [
+            {
+              "text": "A 24 V supply with a resistor equal to R_w in series: the final current stays {If}, and τ halves to {tau2}",
+              "feedback": "Right: τ = L/(R_w + R) halves while the final current, 24 V / (2R_w), stays the same, so the pull-in time halves too.",
+              "correct": true
+            },
+            {
+              "text": "A 24 V supply alone: the current rises twice as fast toward twice the final value",
+              "feedback": "The relay would pull in sooner, but the steady current would be 24 V / R_w, twice the rating, and the winding would make four times the heat."
+            },
+            {
+              "text": "A resistor in series on the same 12 V: τ = L/(R_w + R) gets shorter",
+              "feedback": "τ shrinks, but the final current falls to 12 V / (R_w + R), so the relay needs a larger share of it, or never reaches pull-in at all."
+            },
+            {
+              "text": "Nothing: L and R_w belong to the relay, so the pull-in time is fixed",
+              "feedback": "τ is L over all the resistance in the current's path, not just the coil's. Adding series resistance and raising the supply to match keeps the final current and shortens τ."
+            }
+          ],
+          "explanation": "τ uses all the resistance in the path, while the steady current is the supply over that same resistance. Doubling both keeps {If} and halves τ, and the pull-in time with it. This is the idea behind an L/R drive for stepper motors."
+        }
+      ],
+      "schematic": {
+        "netlist": "relay switch-on\nV1 a 0 12\nRS1 a b 1m\nL1 b c {L:spice}\nRw c 0 {Rw:spice}\n",
+        "noBuild": "R_w is the coil's winding resistance, drawn as a separate part",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V",
+            "symbol": "battery"
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "S1\n(closes)",
+            "symbol": "switchClosed"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "coil\n{L}\noperate ≥ {Vpi}",
+            "symbol": "relayCoil"
+          },
+          {
+            "ref": "Rw",
+            "at": [
+              8,
+              6
+            ],
+            "rot": 90,
+            "label": "R_w\n{Rw}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              10
+            ],
+            [
+              8,
+              10
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            10
+          ]
+        ],
+        "labels": []
+      },
+      "review": "checked"
+    },
+    {
+      "id": "rl_release_time",
+      "topicId": "rl_time_constant",
+      "prompt": "Find how long after S1 opens the relay releases. It releases once the coil current falls to the steady current at its must-release voltage. D1 conducts only from d toward R2; treat it as ideal.",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "H",
+          "values": [
+            0.1,
+            0.22,
+            0.47
+          ]
+        },
+        {
+          "name": "Rw",
+          "unit": "Ω",
+          "values": [
+            270,
+            330,
+            390
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            100,
+            220,
+            330,
+            470
+          ]
+        },
+        {
+          "name": "Vrel",
+          "unit": "V",
+          "values": [
+            1.2,
+            1.8,
+            2.4
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "I0",
+          "formula": "12/Rw",
+          "unit": "A"
+        },
+        {
+          "name": "Irel",
+          "formula": "Vrel/Rw",
+          "unit": "A"
+        },
+        {
+          "name": "Rp",
+          "formula": "Rw+R2",
+          "unit": "Ω"
+        },
+        {
+          "name": "tau",
+          "formula": "L/(Rw+R2)",
+          "unit": "s"
+        },
+        {
+          "name": "tauw",
+          "formula": "L/Rw",
+          "unit": "s"
+        },
+        {
+          "name": "tw",
+          "formula": "L/Rw*ln(12/Vrel)",
+          "unit": "s"
+        },
+        {
+          "name": "Vsw",
+          "formula": "12+12*R2/Rw",
+          "unit": "V"
+        }
+      ],
+      "answer": {
+        "formula": "L/(Rw+R2)*ln(12/Vrel)",
+        "unit": "s",
+        "tolerance": 0.02
+      },
+      "explanation": "Before S1 opens, I₀ = 12 V / R_w = {I0}. At switch-off that current carries on around L1, R_w, D1 and R2, and decays with τ = L/(R_w + R2) = {L} / {Rp} = {tau}. The relay releases at {Vrel} / R_w = {Irel}: {Irel} = {I0} × e^(−t/τ), so t = τ·ln(I₀/I_release) = {tau} × ln(12 V / {Vrel}) = {answer}. With D1 alone the current would decay through R_w only, with τ = {tauw}, and release would take {tw}. A real diode's forward drop, about 0.7 V, opposes the current too and shortens the release by 5 to 15% here, most when R2 and the release current are small.",
+      "hints": [
+        "At switch-off, where does the coil's current go, and through which resistances?",
+        "i = I₀·e^(−t/τ) with τ = L/(R_w + R2); solve for the time it reaches {Irel}."
+      ],
+      "misconceptions": [
+        {
+          "formula": "L/(Rw+R2)",
+          "feedback": "That is one τ, which takes the current down to 37% of I₀. Release needs it down to {Irel}: t = τ·ln(I₀/I_release)."
+        },
+        {
+          "formula": "L/Rw*ln(12/Vrel)",
+          "feedback": "That is the release with D1 alone. R2 is in the loop as well, so τ = L/(R_w + R2)."
+        },
+        {
+          "formula": "L/R2*ln(12/Vrel)",
+          "feedback": "R2 alone leaves out the winding: the decaying current flows through R_w as well, so τ = L/(R_w + R2).",
+          "when": "abs(R2-Rw)/Rw-0.05"
+        },
+        {
+          "formula": "L/(Rw+R2)*ln(12/(12-Vrel))",
+          "feedback": "That is the rise formula. The current falls from I₀ to {Irel}: t = τ·ln(I₀/I_release)."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why does R2 make the relay release sooner?",
+          "choices": [
+            {
+              "text": "It adds resistance to the decaying current's loop, so τ = L/(R_w + R2) is shorter",
+              "feedback": "Right: the coil's stored energy is turned into heat faster.",
+              "correct": true
+            },
+            {
+              "text": "It lowers the current D1 carries from the first instant of switch-off",
+              "feedback": "The current at switch-off is set by L1: {I0}, whatever R2 is. R2 changes how fast it decays, not where it starts."
+            },
+            {
+              "text": "It lets the supply pull the current out of the coil faster",
+              "feedback": "The supply isn't in the loop: L1, R_w, D1 and R2 close on themselves at the 12 V rail, and the current decays on its own."
+            },
+            {
+              "text": "It doesn't: the relay releases at the same moment with or without R2",
+              "feedback": "With D1 alone τ = {tauw}; with R2, τ = {tau}. The release time scales with τ."
+            }
+          ],
+          "explanation": "Before the relay lets go, the coil's stored energy, ½LI², must be turned into heat. With D1 alone only R_w and the diode absorb it; R2 absorbs it faster, at the cost of a higher voltage on S1 at switch-off: 12 V + I₀·R2 = {Vsw}."
+        }
+      ],
+      "schematic": {
+        "netlist": "relay switch-off\nV1 vcc 0 12\nL1 vcc a {L:spice}\nRw a d {Rw:spice}\nRS1 d 0 1e9\nD1 d k DF\nR2 k vcc {R2:spice}\n.model DF D\n",
+        "noBuild": "R_w is the coil's winding resistance, drawn as a separate part",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V",
+            "symbol": "battery"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "coil\n{L}\nrelease ≤ {Vrel}",
+            "symbol": "relayCoil",
+            "labelOpposite": true
+          },
+          {
+            "ref": "Rw",
+            "at": [
+              10,
+              4
+            ],
+            "rot": 90,
+            "label": "R_w\n{Rw}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              10,
+              8
+            ],
+            "rot": 90,
+            "label": "S1\n(opens)",
+            "symbol": "switch",
+            "labelOpposite": true
+          },
+          {
+            "ref": "D1",
+            "at": [
+              16,
+              8
+            ],
+            "rot": 270,
+            "label": "D1"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              16,
+              4
+            ],
+            "rot": 270,
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              10,
+              8
+            ],
+            [
+              16,
+              8
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            10,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "d",
+            "at": [
+              13,
+              8
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "rl_energy_split",
+      "topicId": "rl_time_constant",
+      "prompt": "Find the energy R2 turns into heat after S1 opens. D1 conducts only from d toward R2; treat it as ideal.",
+      "variables": [
+        {
+          "name": "L",
+          "unit": "H",
+          "values": [
+            0.1,
+            0.22,
+            0.47
+          ]
+        },
+        {
+          "name": "Rw",
+          "unit": "Ω",
+          "values": [
+            240,
+            330
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            100,
+            220,
+            330
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "I0",
+          "formula": "12/Rw",
+          "unit": "A"
+        },
+        {
+          "name": "E0",
+          "formula": "0.5*L*(12/Rw)^2",
+          "unit": "J"
+        },
+        {
+          "name": "Rp",
+          "formula": "Rw+R2",
+          "unit": "Ω"
+        }
+      ],
+      "answer": {
+        "formula": "0.5*L*(12/Rw)^2*R2/(Rw+R2)",
+        "unit": "J",
+        "tolerance": 0.02
+      },
+      "explanation": "Before S1 opens, I₀ = 12 V / R_w = {I0}, and L1 holds ½LI₀² = ½ × {L} × ({I0})² = {E0}. After it opens, the current decays around L1, R_w, D1 and R2 until all of that energy is heat. R_w and R2 carry the same current at every instant, so they share the heat in proportion to their resistances: R2 takes R2/(R_w + R2) = {R2} / {Rp} of it, {answer}.",
+      "hints": [
+        "How much energy does L1 hold just before S1 opens, and where must it all go?",
+        "R_w and R2 carry the same current, so they split the heat in the ratio of their resistances."
+      ],
+      "misconceptions": [
+        {
+          "formula": "0.5*L*(12/Rw)^2",
+          "feedback": "That is all of the stored energy. The winding R_w carries the same current and takes its share, R_w/(R_w + R2)."
+        },
+        {
+          "formula": "0.5*L*(12/Rw)^2*Rw/(Rw+R2)",
+          "feedback": "That is R_w's share. R2 takes R2/(R_w + R2) of the energy.",
+          "when": "abs(R2-Rw)/Rw-0.05"
+        },
+        {
+          "formula": "L*(12/Rw)^2*R2/(Rw+R2)",
+          "feedback": "The stored energy is ½LI², not LI²."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "Why doesn't R2's share depend on how fast the current decays?",
+          "choices": [
+            {
+              "text": "R_w and R2 carry the same current at every instant, so their heats, i²R_w and i²R2, stay in the same ratio all the way down",
+              "feedback": "Right: whatever the decay looks like, the ratio of the two heats is R_w : R2 at every moment, so it is for the totals too.",
+              "correct": true
+            },
+            {
+              "text": "It does: a faster decay puts more of the energy into R2",
+              "feedback": "A faster decay delivers the energy sooner, but R_w and R2 carry the same current throughout, so their shares stay R_w : R2."
+            },
+            {
+              "text": "All the energy goes into R2, since it is the part added to absorb it",
+              "feedback": "R_w is in the same loop and carries the same current; it takes R_w/(R_w + R2) of the energy whether or not it was meant to."
+            },
+            {
+              "text": "The energy stays in the magnetic field until S1 closes again",
+              "feedback": "The field holds energy only while the current flows. As the current decays to zero, all of ½LI₀² is turned into heat in the loop's resistances."
+            }
+          ],
+          "explanation": "Heat in a resistor is i²R. Two resistors in series carry the same i, so at every instant the heat divides as R_w : R2, and the totals divide the same way. That fixes R2's pulse energy rating whatever τ is."
+        }
+      ],
+      "schematic": {
+        "netlist": "relay switch-off\nV1 vcc 0 12\nL1 vcc a {L:spice}\nRw a d {Rw:spice}\nRS1 d 0 1e9\nD1 d k DF\nR2 k vcc {R2:spice}\n.model DF D\n",
+        "noBuild": "R_w is the coil's winding resistance, drawn as a separate part",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V",
+            "symbol": "battery"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "coil\n{L}",
+            "symbol": "relayCoil",
+            "labelOpposite": true
+          },
+          {
+            "ref": "Rw",
+            "at": [
+              10,
+              4
+            ],
+            "rot": 90,
+            "label": "R_w\n{Rw}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              10,
+              8
+            ],
+            "rot": 90,
+            "label": "S1\n(opens)",
+            "symbol": "switch",
+            "labelOpposite": true
+          },
+          {
+            "ref": "D1",
+            "at": [
+              16,
+              8
+            ],
+            "rot": 270,
+            "label": "D1"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              16,
+              4
+            ],
+            "rot": 270,
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              10,
+              8
+            ],
+            [
+              16,
+              8
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            10,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "d",
+            "at": [
+              13,
+              8
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "rl_what_if_r_double",
+      "topicId": "rl_time_constant",
+      "prompt": "A second {R} resistor is added in series with R1. What happens to the time constant of the current in L1? Treat L1 as ideal.",
+      "variables": [
+        {
+          "name": "R",
+          "unit": "Ω",
+          "series": "E12",
+          "decades": [
+            3,
+            3
+          ]
+        },
+        {
+          "name": "L",
+          "unit": "H",
+          "series": "E12",
+          "decades": [
+            -1,
+            -1
+          ]
+        }
+      ],
+      "whatIf": {
+        "quantity": "the time constant",
+        "formula": "L/R",
+        "unit": "s",
+        "change": {
+          "R": "2*R"
+        },
+        "askFactor": true,
+        "feedback": {
+          "up": "That is the RC rule. Here doubling R halves the final current, V/R, while the starting rate, V/L, stays the same, so the current reaches 63% of its new final value sooner.",
+          "same": "τ = L/R contains R: the final current halves while the starting rate V/L stays the same, so the time to get 63% of the way there halves too."
+        }
+      },
+      "explanation": "τ = L/R. Two {R} resistors in series make 2R, so τ halves: {before} → {after}. The current settles at half the old value and gets there in half the time; its starting rate, V/L, is unchanged.",
+      "followUps": [
+        {
+          "prompt": "What happens to the final current?",
+          "choices": [
+            {
+              "text": "It halves: 12 V / 2R",
+              "feedback": "Right: once the current is steady L1 drops nothing, and the resistors alone set it.",
+              "correct": true
+            },
+            {
+              "text": "It stays the same: L1 sets the final current",
+              "feedback": "Once the current is steady, v = L·di/dt = 0, so L1 drops nothing; the resistors alone set the current, 12 V / 2R."
+            },
+            {
+              "text": "It doubles, since the current gets there twice as fast",
+              "feedback": "Getting there faster comes from having less to build up: the final current halves to 12 V / 2R."
+            },
+            {
+              "text": "It falls to a quarter, since R appears in both τ and V/R",
+              "feedback": "The final current is V/R, which only halves. τ halving is a separate effect: the same starting rate V/L, half as far to go."
+            }
+          ],
+          "explanation": "Final current V/R halves; τ = L/R halves; the starting slope V/L is unchanged. Half as much current to build up at the same starting rate is why the circuit gets faster."
+        }
+      ],
+      "schematic": {
+        "netlist": "RL step\nV1 in 0 PULSE(0 12 0 1n 1n 1 2)\nR1 in a {R:spice}\nL1 a 0 {L:spice}\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V\nstep"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1\n{R}"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "L1\n{L}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "checked",
+      "placement": true
+    },
+    {
+      "id": "rl_vs_rc",
+      "topicId": "rl_time_constant",
+      "prompt": "A second 1 kΩ is added in series with R1 and a second 100 Ω in series with R2. Which describes the two responses to the step?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "C1's voltage settles twice as slowly (τ = 200 µs); L1's current twice as fast (τ = 50 µs)",
+          "feedback": "Right: τ = RC grows with R, while τ = L/R shrinks with it.",
+          "correct": true
+        },
+        {
+          "text": "Both settle twice as slowly (τ = 200 µs): more resistance always slows a circuit",
+          "feedback": "True for C1, whose τ = R1·C1 grows with R1. For L1, τ = L1/R2: doubling R2 halves the final current, while the starting rate V/L stays the same, so it settles in 50 µs."
+        },
+        {
+          "text": "Both settle twice as fast (τ = 50 µs): more resistance means less to build up",
+          "feedback": "True for L1. C1 still needs the same charge, C·V, to reach the same 5 V, and a larger R1 delivers it at a lower current, so τ = R1·C1 doubles to 200 µs."
+        },
+        {
+          "text": "C1's voltage settles twice as fast (τ = 50 µs); L1's current twice as slowly (τ = 200 µs)",
+          "feedback": "That is swapped. τ = RC grows with R; τ = L/R shrinks with it."
+        }
+      ],
+      "explanation": "Before: τ_RC = 1 kΩ × 100 nF = 100 µs and τ_RL = 10 mH / 100 Ω = 100 µs. After: 2 kΩ × 100 nF = 200 µs and 10 mH / 200 Ω = 50 µs. A capacitor's final state, 5 V across it, needs a fixed charge, and more R slows the current that delivers it. An inductor's final state, V/R through it, gets smaller with more R, while its starting rate V/L does not change.",
+      "schematic": {
+        "netlist": "RC and RL\nV1 in 0 PULSE(0 5 0 1n 1n 1 2)\nR1 in a 1k\nC1 a 0 100n\nR2 in b 100\nL1 b 0 10m\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "5 V\nstep"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              5,
+              0
+            ],
+            "rot": 90,
+            "label": "R1\n1 kΩ"
+          },
+          {
+            "ref": "C1",
+            "at": [
+              5,
+              4
+            ],
+            "rot": 90,
+            "label": "C1\n100 nF"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              13,
+              0
+            ],
+            "rot": 90,
+            "label": "R2\n100 Ω"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              13,
+              4
+            ],
+            "rot": 90,
+            "label": "L1\n10 mH"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              5,
+              0
+            ]
+          ],
+          [
+            [
+              5,
+              0
+            ],
+            [
+              13,
+              0
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              8
+            ],
+            [
+              5,
+              8
+            ]
+          ],
+          [
+            [
+              5,
+              8
+            ],
+            [
+              13,
+              8
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            9,
+            8
+          ]
+        ],
+        "labels": []
+      },
+      "bridge": [
+        "circuit",
+        "physics"
+      ],
+      "review": "checked"
+    },
+    {
+      "id": "rl_switch_off_current",
+      "topicId": "rl_time_constant",
+      "prompt": "S1 opens after a long time closed. D1 conducts only from d toward R2; treat it as ideal. Which is the current through R2 just after S1 opens?",
+      "variables": [],
+      "choices": [
+        {
+          "text": "50 mA: the coil's current a moment earlier, now flowing through D1 and R2 instead of S1",
+          "feedback": "Right: L1's current cannot change instantly, so it moves from S1 into D1 and R2 and then decays.",
+          "correct": true
+        },
+        {
+          "text": "0 mA, rising from there: current in a new path has to build up",
+          "feedback": "That is how current starts in an inductor at rest. Here L1 already carries 50 mA, and that current cannot change instantly: the moment S1 opens, it moves into D1 and R2."
+        },
+        {
+          "text": "21 mA: the 12 V supply across R_w and R2 in series, 12 V / 570 Ω",
+          "feedback": "The battery isn't in the loop that L1, R_w, D1 and R2 form, so it sets no current there. The current is whatever L1 carried a moment before: 50 mA."
+        },
+        {
+          "text": "36 mA: the 12 V supply across R2 alone, 12 V / 330 Ω",
+          "feedback": "With S1 open, nothing holds d at ground, so R2 doesn't have 12 V across it. The current is set by L1, which carried 50 mA a moment ago and can't change it instantly."
+        }
+      ],
+      "explanation": "With S1 closed, 12 V / 240 Ω = 50 mA flows through L1, R_w and S1. An inductor's current cannot change instantly (v = L·di/dt), so just after S1 opens the same 50 mA flows on, now around the loop L1, R_w, D1, R2. To push it through R2, L1's voltage reverses: d rises to 12 V + 50 mA × 330 Ω = 28.5 V. The current then decays as 50 mA × e^(−t/τ), with τ = 100 mH / 570 Ω = 175 µs.",
+      "followUps": [
+        {
+          "prompt": "What voltage does S1 have across it just after it opens?",
+          "choices": [
+            {
+              "text": "28.5 V: the 12 V rail plus 50 mA × 330 Ω across R2",
+              "feedback": "Right: d sits above the rail by the drop across R2 (and D1, ideal here), and S1 runs from d to ground.",
+              "correct": true
+            },
+            {
+              "text": "12 V: the supply is the highest voltage in the circuit",
+              "feedback": "Once S1 opens, L1 acts as a source that keeps its current flowing, and d rises above the rail until that current can flow through R2."
+            },
+            {
+              "text": "16.5 V: the drop across R2",
+              "feedback": "That is R2's voltage. S1's top end, d, sits that far above the 12 V rail, and its bottom end is at ground: 12 V + 16.5 V."
+            },
+            {
+              "text": "Thousands of volts: the coil's current is stopped in an instant",
+              "feedback": "That happens when the current has no path. D1 and R2 give it one, so d rises only as far as it takes to push 50 mA through R2: 28.5 V."
+            }
+          ],
+          "explanation": "Just after switch-off, d = 12 V + I₀·R2 = 12 V + 50 mA × 330 Ω = 28.5 V. This is the voltage S1 must be rated for, and it grows with R2."
+        }
+      ],
+      "schematic": {
+        "netlist": "relay switch-off\nV1 vcc 0 12\nL1 vcc a 100m\nRw a d 240\nRS1 d 0 1e9\nD1 d k DF\nR2 k vcc 330\n.model DF D\n",
+        "noBuild": "R_w is the coil's winding resistance, drawn as a separate part",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V",
+            "symbol": "battery"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "coil\n100 mH",
+            "symbol": "relayCoil",
+            "labelOpposite": true
+          },
+          {
+            "ref": "Rw",
+            "at": [
+              10,
+              4
+            ],
+            "rot": 90,
+            "label": "R_w\n240 Ω",
+            "labelOpposite": true
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              10,
+              8
+            ],
+            "rot": 90,
+            "label": "S1\n(opens)",
+            "symbol": "switch",
+            "labelOpposite": true
+          },
+          {
+            "ref": "D1",
+            "at": [
+              16,
+              8
+            ],
+            "rot": 270,
+            "label": "D1"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              16,
+              4
+            ],
+            "rot": 270,
+            "label": "R2\n330 Ω"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              10,
+              8
+            ],
+            [
+              16,
+              8
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            10,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "d",
+            "at": [
+              13,
+              8
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "rl_what_if_flyback_r",
+      "topicId": "rl_time_constant",
+      "prompt": "A second {R2} resistor is added in series with R2. What happens to the peak voltage at d when S1 opens? D1 conducts only from d toward R2; treat it as ideal.",
+      "variables": [
+        {
+          "name": "Rw",
+          "unit": "Ω",
+          "values": [
+            240,
+            330
+          ]
+        },
+        {
+          "name": "R2",
+          "unit": "Ω",
+          "values": [
+            100,
+            150,
+            220
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "I0",
+          "formula": "12/Rw",
+          "unit": "A"
+        }
+      ],
+      "whatIf": {
+        "quantity": "the peak voltage at d",
+        "formula": "12+12*R2/Rw",
+        "unit": "V",
+        "change": {
+          "R2": "2*R2"
+        },
+        "askFactor": false,
+        "feedback": {
+          "down": "More resistance in the loop doesn't lower the current at the instant S1 opens: L1 sets it at 12 V / R_w. Pushing that current through twice the resistance takes twice the voltage across R2.",
+          "same": "The supply doesn't cap the voltage at d once S1 opens: d must rise until L1's current can flow through R2, so it sits at 12 V plus I₀ × R2."
+        }
+      },
+      "explanation": "At switch-off, L1's current I₀ = 12 V / R_w = {I0} carries on through D1 and R2, so d peaks at 12 V + I₀·R2: {before} → {after}. The part above the rail doubles; the total rises by less than double, because the 12 V stays.",
+      "followUps": [
+        {
+          "prompt": "What happens to the time the current takes to decay?",
+          "choices": [
+            {
+              "text": "It shortens: τ = L/(R_w + R2) has more resistance in it",
+              "feedback": "Right: the coil's energy is turned into heat faster, which is why a larger R2 releases a relay sooner.",
+              "correct": true
+            },
+            {
+              "text": "It lengthens: more resistance slows the decay, as in an RC circuit",
+              "feedback": "In an RL loop τ = L/R, so more resistance makes it shorter. The RC rule runs the other way."
+            },
+            {
+              "text": "It stays the same: the coil alone sets how fast its current decays",
+              "feedback": "τ = L/R has two parts: the coil's L, and all the resistance the decaying current flows through, R2 included."
+            },
+            {
+              "text": "It shortens, because the higher voltage pushes the current back into the supply",
+              "feedback": "The supply isn't in the decaying current's loop. The decay is faster because the loop's resistance turns the energy into heat faster."
+            }
+          ],
+          "explanation": "τ = L/(R_w + R2) falls as R2 grows: a faster release, paid for with a higher voltage on S1."
+        }
+      ],
+      "schematic": {
+        "netlist": "relay switch-off\nV1 vcc 0 12\nL1 vcc a 100m\nRw a d {Rw:spice}\nRS1 d 0 1e9\nD1 d k DF\nR2 k vcc {R2:spice}\n.model DF D\n",
+        "noBuild": "R_w is the coil's winding resistance, drawn as a separate part",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V",
+            "symbol": "battery"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "coil\n100 mH",
+            "symbol": "relayCoil",
+            "labelOpposite": true
+          },
+          {
+            "ref": "Rw",
+            "at": [
+              10,
+              4
+            ],
+            "rot": 90,
+            "label": "R_w\n{Rw}",
+            "labelOpposite": true
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              10,
+              8
+            ],
+            "rot": 90,
+            "label": "S1\n(opens)",
+            "symbol": "switch",
+            "labelOpposite": true
+          },
+          {
+            "ref": "D1",
+            "at": [
+              16,
+              8
+            ],
+            "rot": 270,
+            "label": "D1"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              16,
+              4
+            ],
+            "rot": 270,
+            "label": "R2\n{R2}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              10,
+              8
+            ],
+            [
+              16,
+              8
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            10,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "d",
+            "at": [
+              13,
+              8
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "rl_design_flyback_r",
+      "topicId": "rl_time_constant",
+      "level": "design",
+      "prompt": "Choose the largest E12 value for R2 that keeps d at or below S1's voltage rating when S1 opens. D1 conducts only from d toward R2, dropping 0.7 V.",
+      "variables": [
+        {
+          "name": "Vmax",
+          "unit": "V",
+          "values": [
+            30,
+            40,
+            45,
+            50,
+            60
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rmax",
+          "formula": "(Vmax-12.7)*240/12",
+          "unit": "Ω"
+        }
+      ],
+      "design": {
+        "inputs": [
+          {
+            "name": "R2",
+            "label": "R2",
+            "unit": "Ω",
+            "series": "E12",
+            "min": 10,
+            "max": 10000
+          }
+        ],
+        "result": "12.7+0.05*R2",
+        "resultLabel": "peak voltage at d",
+        "resultUnit": "V",
+        "target": "Vmax",
+        "tolerance": 0.115,
+        "mode": "atMost"
+      },
+      "explanation": "With S1 closed, 12 V / 240 Ω = 50 mA flows. At the instant S1 opens, the same 50 mA flows through D1 and R2, so d rises to 12 V + 0.7 V + 50 mA × R2. For at most {Vmax}: R2 ≤ ({Vmax} − 12.7 V) / 50 mA = {Rmax}. Take the E12 value at or just below it; the next one up would put d over the rating. Within that limit, larger is better: the current decays with τ = L/(R_w + R2), down from 100 mH / 240 Ω = 417 µs with D1 alone, so the relay releases sooner. Keep some margin in practice: a diode drops more than 0.7 V at higher currents, and a supply above 12 V raises both the current and the rail.",
+      "hints": [
+        "At the instant S1 opens, how much current flows through R2?",
+        "V_d = 12 V + 0.7 V + 50 mA × R2 ≤ {Vmax}. Solve for R2 and round down to E12."
+      ],
+      "followUps": [
+        {
+          "prompt": "Why not leave R2 out and let D1 carry the current alone?",
+          "choices": [
+            {
+              "text": "d would sit just 0.7 V above the rail, but the current would decay through R_w alone, τ = 417 µs, so the relay releases more slowly",
+              "feedback": "Right: D1 alone is the gentlest clamp and the slowest release.",
+              "correct": true
+            },
+            {
+              "text": "Without R2, d would rise to thousands of volts at switch-off",
+              "feedback": "That happens with no path at all. D1 alone still gives the current a path; it decays slowly, through R_w only."
+            },
+            {
+              "text": "Without R2, the supply would drive current backwards through D1",
+              "feedback": "D1 conducts only from d toward the rail; with S1 closed, d is at ground and D1 blocks the 12 V."
+            },
+            {
+              "text": "Without R2, D1 would carry more current than with it, and overheat",
+              "feedback": "D1 carries the coil's current either way, starting at 50 mA; R2 only changes how long it flows."
+            }
+          ],
+          "explanation": "D1 alone holds S1's voltage lowest and releases slowest. A resistor, or a Zener, in series with D1 trades a higher switch voltage for a faster release, and the switch's rating sets the limit."
+        }
+      ],
+      "schematic": {
+        "netlist": "relay switch-off\nV1 vcc 0 12\nL1 vcc a 100m\nRw a d 240\nRS1 d 0 1e9\nD1 d k DF\nR2 k vcc {Rmax:spice}\n.model DF D\n",
+        "noBuild": "R_w is the coil's winding resistance, drawn as a separate part",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "12 V",
+            "symbol": "battery"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              10,
+              0
+            ],
+            "rot": 90,
+            "label": "coil\n100 mH",
+            "symbol": "relayCoil",
+            "labelOpposite": true
+          },
+          {
+            "ref": "Rw",
+            "at": [
+              10,
+              4
+            ],
+            "rot": 90,
+            "label": "R_w\n240 Ω",
+            "labelOpposite": true
+          },
+          {
+            "ref": "RS1",
+            "at": [
+              10,
+              8
+            ],
+            "rot": 90,
+            "label": "S1\n{Vmax} max",
+            "symbol": "switch",
+            "labelOpposite": true
+          },
+          {
+            "ref": "D1",
+            "at": [
+              16,
+              8
+            ],
+            "rot": 270,
+            "label": "D1"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              16,
+              4
+            ],
+            "rot": 270,
+            "label": "R2 = ?"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ],
+          [
+            [
+              10,
+              8
+            ],
+            [
+              16,
+              8
+            ]
+          ],
+          [
+            [
+              16,
+              0
+            ],
+            [
+              10,
+              0
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            0,
+            6
+          ],
+          [
+            10,
+            12
+          ]
+        ],
+        "labels": [
+          {
+            "text": "d",
+            "at": [
+              13,
+              8
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    },
+    {
+      "id": "rl_trouble_shorted_turns",
+      "topicId": "rl_time_constant",
+      "level": "design",
+      "prompt": "Expected the coil current to reach 63% of its final value {te} after the step. The scope at a shows it at {tm}. R_w now measures {Rwm}. Find the inductance the circuit now sees.",
+      "variables": [
+        {
+          "name": "Lnom",
+          "unit": "H",
+          "values": [
+            0.01,
+            0.022,
+            0.047,
+            0.1
+          ]
+        },
+        {
+          "name": "Rw",
+          "unit": "Ω",
+          "values": [
+            10,
+            22,
+            47
+          ]
+        },
+        {
+          "name": "R1",
+          "unit": "Ω",
+          "values": [
+            100,
+            220,
+            470
+          ]
+        },
+        {
+          "name": "k",
+          "unit": "",
+          "values": [
+            0.1,
+            0.15,
+            0.2,
+            0.3
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "Rwm",
+          "formula": "0.9*Rw",
+          "unit": "Ω"
+        },
+        {
+          "name": "Rt",
+          "formula": "R1+0.9*Rw",
+          "unit": "Ω"
+        },
+        {
+          "name": "te",
+          "formula": "Lnom/(R1+Rw)",
+          "unit": "s"
+        },
+        {
+          "name": "tm",
+          "formula": "k*Lnom/(R1+0.9*Rw)",
+          "unit": "s"
+        }
+      ],
+      "answer": {
+        "formula": "tm*(R1+0.9*Rw)",
+        "unit": "H",
+        "tolerance": 0.02
+      },
+      "explanation": "The scope gives τ directly: the current reaches 63% of its final value after one τ, {tm}. It flows through R1 and the winding, so R = {R1} + {Rwm} = {Rt}, and L = τ·R = {tm} × {Rt} = {answer}, against {Lnom} marked. Strictly the shorted turns add a second, slower time constant as their own current dies away, so the trace isn't one clean exponential; the 63% point gives the effective inductance for a step like this one. The winding's resistance fell only 10%, while its inductance fell far more: the mark of shorted turns, where the insulation between neighboring turns has broken down. An inductance meter confirms it; an ohmmeter barely notices.",
+      "hints": [
+        "What does the time to 63% tell you directly?",
+        "τ = L/R, so L = τ × (R1 + R_w), with R_w as it measures now."
+      ],
+      "misconceptions": [
+        {
+          "formula": "tm*R1",
+          "feedback": "That uses R1 alone. The current flows through the winding as well: L = τ × (R1 + R_w).",
+          "when": "0.9*Rw/(R1+0.9*Rw)-0.03"
+        },
+        {
+          "formula": "tm/(R1+0.9*Rw)",
+          "feedback": "L = τ·R, not τ/R: τ = L/R."
+        },
+        {
+          "formula": "Lnom",
+          "feedback": "That is the marked value, which would give {te}. The scope shows {tm}."
+        },
+        {
+          "formula": "tm*(R1+Rw)",
+          "feedback": "That uses a good coil's winding resistance. Use what R_w measures now, {Rwm}.",
+          "when": "0.1*Rw/(R1+0.9*Rw)-0.03"
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "R_w reads only 10% low, yet the inductance has fallen much further. Why?",
+          "choices": [
+            {
+              "text": "L goes with the square of the turns, and the shorted turns carry an induced current that cancels part of the flux; R only drops by the wire bypassed",
+              "feedback": "Right: shorting a few turns costs a little resistance and a lot of inductance.",
+              "correct": true
+            },
+            {
+              "text": "The 10% drop in R_w alone shortens τ = L/R this much",
+              "feedback": "Less resistance makes τ = L/R longer, not shorter. The short τ comes from L itself."
+            },
+            {
+              "text": "The step is smaller than expected, and a smaller step reaches 63% sooner",
+              "feedback": "τ doesn't depend on the step's size: any step reaches 63% of its own final value after one τ."
+            },
+            {
+              "text": "The coil is open, so only R1 sets the current on the scope",
+              "feedback": "An open coil would pass no current at all, and R_w would read open. This one conducts with nearly its normal resistance."
+            }
+          ],
+          "explanation": "Turns shorted together are bypassed by the current, which cuts the resistance only by the share of wire bypassed. Inductance goes with N², and the shorted loop also acts like a shorted secondary winding: the current induced in it opposes the flux. A τ test like this one, or an inductance meter, catches it."
+        }
+      ],
+      "schematic": {
+        "netlist": "RL step, coil as marked\nV1 in 0 PULSE(0 5 0 1n 1n 1 2)\nL1 in b {Lnom:spice}\nRw b a {Rw:spice}\nR1 a 0 {R1:spice}\n",
+        "noBuild": "R_w is the coil's winding resistance, drawn as a separate part",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "5 V\nstep"
+          },
+          {
+            "ref": "L1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "L1\nmarked {Lnom}"
+          },
+          {
+            "ref": "Rw",
+            "at": [
+              8,
+              0
+            ],
+            "label": "R_w\n{Rw} new"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              14,
+              2
+            ],
+            "rot": 90,
+            "label": "R1\n{R1}"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          [
+            [
+              12,
+              0
+            ],
+            [
+              14,
+              0
+            ],
+            [
+              14,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              14,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            7,
+            6
+          ]
+        ],
+        "labels": [
+          {
+            "text": "a",
+            "at": [
+              14,
+              0
+            ]
+          }
+        ]
+      },
+      "review": "checked"
+    }
+  ]
+}

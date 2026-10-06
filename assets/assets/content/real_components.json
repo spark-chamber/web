@@ -28,6 +28,96 @@
       },
       "formulas": [
         {
+          "label": "Resistor color code (IEC 60062; multiplier 10ⁿ = n zeros; blank tolerance: not used on common parts)",
+          "table": {
+            "columns": [
+              "Color",
+              "Digit",
+              "Multiplier",
+              "Tolerance"
+            ],
+            "swatches": true,
+            "rows": [
+              [
+                "black",
+                "0",
+                "×10⁰ (×1)",
+                ""
+              ],
+              [
+                "brown",
+                "1",
+                "×10¹",
+                "±1%"
+              ],
+              [
+                "red",
+                "2",
+                "×10²",
+                "±2%"
+              ],
+              [
+                "orange",
+                "3",
+                "×10³",
+                ""
+              ],
+              [
+                "yellow",
+                "4",
+                "×10⁴",
+                ""
+              ],
+              [
+                "green",
+                "5",
+                "×10⁵",
+                "±0.5%"
+              ],
+              [
+                "blue",
+                "6",
+                "×10⁶",
+                "±0.25%"
+              ],
+              [
+                "violet",
+                "7",
+                "×10⁷",
+                "±0.1%"
+              ],
+              [
+                "gray",
+                "8",
+                "×10⁸",
+                ""
+              ],
+              [
+                "white",
+                "9",
+                "×10⁹",
+                ""
+              ],
+              [
+                "gold",
+                "",
+                "×10⁻¹ (×0.1)",
+                "±5%"
+              ],
+              [
+                "silver",
+                "",
+                "×10⁻² (×0.01)",
+                "±10%"
+              ]
+            ]
+          }
+        },
+        {
+          "label": "Three-digit code",
+          "tex": "\\text{“}d_1 d_2 m\\text{”} = d_1 d_2 \\times 10^{m}\\ (\\Omega\\ \\text{or pF})"
+        },
+        {
           "label": "E-series step",
           "tex": "\\frac{R_{k+1}}{R_k} \\approx 10^{1/n}\\quad (n = 6, 12, 24, 96)"
         },
@@ -46,10 +136,6 @@
         {
           "label": "Resistor voltage limit",
           "tex": "V_\\text{max} = \\min\\left(\\sqrt{P_\\text{rated}\\,R},\\ V_\\text{limit}\\right)"
-        },
-        {
-          "label": "Three-digit code",
-          "tex": "\\text{“}d_1 d_2 m\\text{”} = d_1 d_2 \\times 10^{m}\\ (\\Omega\\ \\text{or pF})"
         }
       ],
       "goals": [
@@ -60,7 +146,7 @@
       ],
       "intuition": "A marked value is a guaranteed range, not a single number: a ±5% part lies anywhere in a band 10% wide, the standard values are spaced so neighboring bands meet, and every rating is a limit the circuit's real conditions must stay below.",
       "why": "A resistor is a film of metal alloy, metal oxide, or carbon on a ceramic body, a printed thick film on a chip, or a wound wire. Its value is set by the material and the shape, and in production each part is trimmed, often by cutting a groove into the film, until it reaches its value. The film, the cut, and the end contacts all vary slightly from part to part, so the maker guarantees a band: a ±5% part lies within 5% of its marking as delivered. That band is fixed when the part is made. In use the value moves for other reasons, each specified separately: temperature changes the resistivity (in a metal the hotter lattice scatters the electrons more often; carbon's resistance falls instead), given as a temperature coefficient in ppm/°C, and long operation when hot slowly changes the film, given as load-life stability. Two ratings are physical limits as well. The power rating is the heat the body can lose before its hottest spot reaches its maximum temperature. The limiting element voltage is the voltage the film, its trim cuts, and the gap between the terminals can hold off without arcing, however little power flows. Since a tolerance is a percentage of the value, the standard values are spaced by an equal ratio, so that neighboring bands meet all along each decade.",
-      "explanation": "Resistors and capacitors are made in standard values, the E-series of IEC 60063. Each divides a decade into n steps of equal ratio, about 10^(1/n): E6 (ratio 1.47), E12 (1.21), E24 (1.10), E96 (1.024). E6 to E24 values are rounded to two digits (4.7, not 4.64). E6 goes with ±20%, E12 with ±10%, and E24 with ±5%: neighboring bands just meet. Take the nearest standard value to a calculated one and check the circuit with it.\n\nTolerance is how far a part may be from its marking as made, not how much it changes in use. Worst-case analysis puts each part at the end of its band that makes the result worst.\n\nThe color code is IEC 60062. Four bands: two digits, a multiplier (the number of zeros), the tolerance. Five bands: three digits, multiplier, tolerance. As the last band, gold is ±5% and silver ±10%; as the multiplier they mean ×0.1 and ×0.01. Chip resistors print digits: 472 = 47 × 10² Ω = 4.7 kΩ, 4701 = 4.70 kΩ, 4R7 = 4.7 Ω. Capacitor codes count picofarads: 104 = 100 nF.\n\nRatings are limits: power (derated when hot), voltage, temperature. Absolute maximum ratings mark where damage may begin; design inside the recommended operating conditions.",
+      "explanation": "Resistors and capacitors are made in standard values, the E-series of IEC 60063. Each divides a decade into n steps of equal ratio, about 10^(1/n): E6 (ratio 1.47), E12 (1.21), E24 (1.10), E96 (1.024). E6 to E24 values are rounded to two digits (4.7, not 4.64). E6 goes with ±20%, E12 with ±10%, and E24 with ±5%: neighboring bands just meet. Take the nearest standard value to a calculated one and check the circuit with it.\n\nTolerance is how far a part may be from its marking as made, not how much it changes in use. Worst-case analysis puts each part at the end of its band that makes the result worst.\n\nThe color code is IEC 60062; its table is on the formula sheet. Four bands: two digits, a multiplier (the number of zeros), the tolerance. Five bands: three digits, multiplier, tolerance. Gold and silver are never digits: as the multiplier they mean ×0.1 and ×0.01, as the last band ±5% and ±10%. The tolerance band is set apart by a wider gap, which tells a brown ±1% band from a brown digit; if it is unclear, measure the part. No tolerance band means ±20%. Chip resistors print digits: 472 = 47 × 10² Ω = 4.7 kΩ, 4701 = 4.70 kΩ, 4R7 = 4.7 Ω. Capacitor codes count picofarads: 104 = 100 nF.\n\nRatings are limits: power (derated when hot), voltage, temperature. Absolute maximum ratings mark where damage may begin; design inside the recommended operating conditions.",
       "workedExample": {
         "problem": "A resistor across a 12 V supply should draw about 2.4 mA. Choose an E24 value, find the range of current a ±5% part allows, choose its power rating, and give its color bands.",
         "steps": [
@@ -91,7 +177,7 @@
       "id": "real_color_4band",
       "topicId": "real_components",
       "level": "recall",
-      "prompt": "A leaded resistor has four color bands. Read from left to right they are {R:bands4}. What is its marked resistance?",
+      "prompt": "Find the marked resistance of a four-band resistor: {R:bands4}, read from left to right.",
       "variables": [
         {
           "name": "R",
@@ -139,10 +225,31 @@
         "formula": "R",
         "unit": "Ω"
       },
-      "explanation": "In the four-band code of IEC 60062 the first two bands are digits, the third is the multiplier (the number of zeros), and the fourth is the tolerance. The bands {R:bands4} give the digits {N}, and the third band's color stands for {e}: that many zeros follow the digits (brown one, red two, orange three, yellow four). So the value is {answer}. Gold in the fourth place is the tolerance, ±5%: the part lies somewhere between {Rlo} and {Rhi}. E24 values have two significant figures, which is why a ±5% part needs only a four-band code.",
+      "explanation": "Four bands: digit, digit, multiplier, tolerance; each color's value is in the color-code table on the formula sheet. In {R:bands4}, the first two bands give the digits {N}, and the third band's digit, {e}, is the power of ten (the number of zeros after them). R = {N} × 10^{e} Ω = {answer}. The fourth band, gold, is the tolerance, ±5%: the part lies between {Rlo} and {Rhi}. E24 values have two digits, so a ±5% part needs only two digit bands.",
+      "explanationSteps": [
+        {
+          "text": "Four bands: digit, digit, multiplier, tolerance; each color's value is in the color-code table on the formula sheet."
+        },
+        {
+          "text": "In {R:bands4}, the first two bands give the digits {N}, and the third band's digit, {e}, is the power of ten (the number of zeros after them)."
+        },
+        {
+          "math": "R = [[N]] \\times 10^{[[e]]}\\ \\Omega",
+          "result": "[[answer]]"
+        },
+        {
+          "text": "The fourth band, gold, is the tolerance, ±5%: the part lies between"
+        },
+        {
+          "math": "[[Rlo]] \\le R_\\text{actual} \\le [[Rhi]]"
+        },
+        {
+          "text": "E24 values have two digits, so a ±5% part needs only two digit bands."
+        }
+      ],
       "hints": [
-        "In a four-band code, which bands are digits and which one counts zeros?",
-        "The first two bands give {N}; the third band's color is a number of zeros."
+        "Four bands: digit, digit, multiplier, tolerance. Look up each color in the color-code table on the formula sheet.",
+        "The first two bands give {N}; the third band's digit is the power of ten, the number of zeros after them."
       ],
       "misconceptions": [
         {
@@ -151,36 +258,36 @@
         },
         {
           "formula": "R/10",
-          "feedback": "One zero short. The multiplier band counts the zeros written after the two digits ({e} of them after {N}), not the total number of digits in the value."
+          "feedback": "One zero short. The multiplier band's digit is the number of zeros written after the two digits ({e} after {N}), not the total number of digits in the value."
         },
         {
           "formula": "R*10",
-          "feedback": "One zero too many. The multiplier band's color is its digit value, the number of zeros after {N}: {e} here. Black means no zeros, brown one, red two."
+          "feedback": "One zero too many. The multiplier band's digit is the power of ten, the number of zeros after {N}: {e} here."
         }
       ],
       "followUps": [
         {
-          "prompt": "How do you know the gold band here is the tolerance and not a multiplier?",
+          "prompt": "What tells you the gold band here is the tolerance, not a multiplier?",
           "choices": [
             {
-              "text": "It is the fourth of four bands: bands 1 and 2 are digits, band 3 the multiplier, band 4 the tolerance. Gold means ×0.1 only when it is the multiplier band, the third of four",
-              "feedback": "Right: position decides. With gold in the third place, {Rg:bands4} would be {Rg}.",
+              "text": "Its position: in a four-band code the fourth band is the tolerance",
+              "feedback": "Right: position decides. Gold in the third place would be the multiplier ×0.1: {Rg:bands4} is {Rg}.",
               "correct": true
             },
             {
-              "text": "Gold is always the tolerance band, wherever it appears",
-              "feedback": "Not always: in the third place gold is the multiplier ×0.1, used for values below 10 Ω ({Rg:bands4} is {Rg}). Its position tells which."
+              "text": "Gold always marks the tolerance band, in whatever position it appears",
+              "feedback": "Not always: in the third place gold is the multiplier ×0.1, used for values below 10 Ω ({Rg:bands4} is {Rg}). The band's position decides."
             },
             {
-              "text": "Gold is always the multiplier ×0.1, so the value is {Rgm}",
-              "feedback": "That reads the third band as a third digit. A four-band code has only two digits, and the band after the multiplier is the tolerance; gold there means ±5%."
+              "text": "Gold is always the multiplier ×0.1, which makes the value {Rgm}",
+              "feedback": "That reads the third band as a third digit. A four-band code has two digits; the band after the multiplier is the tolerance, and gold there means ±5%."
             },
             {
-              "text": "Gold is a digit band read first, so the value should be read from the gold end",
-              "feedback": "Gold and silver are never digits, so a gold band at one end marks the end where reading stops. Start from the other end."
+              "text": "Gold is a digit, so the bands are read starting from the gold end",
+              "feedback": "Gold and silver are never digits. A gold band at one end is the last band, the tolerance: start reading from the other end."
             }
           ],
-          "explanation": "A four-band code reads digit, digit, multiplier, tolerance. Gold and silver can be a multiplier (×0.1, ×0.01) or a tolerance (±5%, ±10%), never a digit; the band's position says which."
+          "explanation": "A four-band code reads digit, digit, multiplier, tolerance. Gold and silver are never digits: in the third place they are multipliers (×0.1, ×0.01), in the fourth they are tolerances (±5%, ±10%)."
         }
       ],
       "noDrawing": "reading a part's marking; no circuit to solve",
@@ -191,7 +298,7 @@
       "id": "real_color_5band",
       "topicId": "real_components",
       "level": "recall",
-      "prompt": "A metal film resistor has five color bands. Read from left to right they are {R:bands5}. What is its marked resistance?",
+      "prompt": "Find the marked resistance of a five-band resistor: {R:bands5}, read from left to right.",
       "variables": [
         {
           "name": "R",
@@ -245,10 +352,34 @@
         "unit": "Ω",
         "tolerance": 0.001
       },
-      "explanation": "A five-band code has three digits, then the multiplier, then the tolerance. The bands {R:bands5} give the digits {N}, and the fourth band's color has the digit value {e}, the number of zeros to write after them (black adds none), so the value is {answer}. The last band, brown, is the tolerance, ±1%: between {Rlo} and {Rhi}. Precision parts need the third figure because their standard values, the E96 series, are only about 2.4% apart (5.49, 5.62, 5.76 …); two figures could not name them. A ±1% brown band at one end can look like a brown first digit, so look for the wider gap before the tolerance band, and if in doubt measure the part out of circuit.",
+      "explanation": "Five bands: digit, digit, digit, multiplier, tolerance; each color's value is in the color-code table on the formula sheet. In {R:bands5}, the first three bands give the digits {N}, and the fourth band's digit, {e}, is the power of ten (the number of zeros after them). R = {N} × 10^{e} Ω = {answer}. The last band, brown, is the tolerance, ±1%: the part lies between {Rlo} and {Rhi}. Precision parts need the third digit because their standard values, the E96 series, are only about 2.4% apart (5.49, 5.62, 5.76 …); two digits could not name them. A brown tolerance band at one end can look like a brown first digit: the tolerance band sits after a wider gap, and if the gap is unclear, measure the part out of circuit.",
+      "explanationSteps": [
+        {
+          "text": "Five bands: digit, digit, digit, multiplier, tolerance; each color's value is in the color-code table on the formula sheet."
+        },
+        {
+          "text": "In {R:bands5}, the first three bands give the digits {N}, and the fourth band's digit, {e}, is the power of ten (the number of zeros after them)."
+        },
+        {
+          "math": "R = [[N]] \\times 10^{[[e]]}\\ \\Omega",
+          "result": "[[answer]]"
+        },
+        {
+          "text": "The last band, brown, is the tolerance, ±1%: the part lies between"
+        },
+        {
+          "math": "[[Rlo]] \\le R_\\text{actual} \\le [[Rhi]]"
+        },
+        {
+          "text": "Precision parts need the third digit because their standard values, the E96 series, are only about 2.4% apart (5.49, 5.62, 5.76 …); two digits could not name them."
+        },
+        {
+          "text": "A brown tolerance band at one end can look like a brown first digit: the tolerance band sits after a wider gap, and if the gap is unclear, measure the part out of circuit."
+        }
+      ],
       "hints": [
-        "Five bands: how many of them are digits?",
-        "The first three bands give {N}; the fourth band counts zeros."
+        "Five bands: digit, digit, digit, multiplier, tolerance. Look up each color in the color-code table on the formula sheet.",
+        "The first three bands give {N}; the fourth band's digit is the power of ten, the number of zeros after them."
       ],
       "misconceptions": [
         {
@@ -257,37 +388,37 @@
         },
         {
           "formula": "R/10",
-          "feedback": "That is ten times too small. The fourth band's color is its digit value, the number of zeros after {N}: {e} here (black means none, so the value is just the three digits)."
+          "feedback": "That is ten times too small. The fourth band's digit is the power of ten, the number of zeros after {N}: {e} here."
         },
         {
           "formula": "R*10",
-          "feedback": "One zero too many. The fourth band's color is its digit value, the number of zeros after {N}: {e} here, and black means none."
+          "feedback": "One zero too many. The fourth band's digit is the power of ten, the number of zeros after {N}: {e} here."
         }
       ],
       "noDrawing": "reading a part's marking; no circuit to solve",
       "followUps": [
         {
-          "prompt": "On a five-band ±1% resistor whose first digit is 1, both end bands are brown. How do you tell which end to start reading from?",
+          "prompt": "Both end bands of a five-band ±1% resistor are brown. Which end do you start reading from?",
           "choices": [
             {
-              "text": "The tolerance band sits after a wider gap; start from the other end, and measure the part if the gap is unclear",
-              "feedback": "Right: the spacing is what the code provides for this. Read backward, the same bands usually give a different value, and sometimes a plausible one, so a measurement settles any doubt.",
+              "text": "The end opposite the band set apart by the wider gap; measure if unclear",
+              "feedback": "Right: the wider gap before the tolerance band is what the code provides for this. Read backward, the same bands usually give a different value, sometimes a plausible one, so a measurement settles any doubt.",
               "correct": true
             },
             {
-              "text": "Always start from the end nearest the printed side of the board",
-              "feedback": "A leaded resistor can be fitted either way around, so its orientation on the board says nothing about the code. The wider gap before the tolerance band, or a measurement, decides."
+              "text": "The end nearest the part's label printed on the circuit board",
+              "feedback": "A resistor with wire leads fits into the board either way around, so its orientation says nothing about the code. The wider gap before the tolerance band, or a measurement, decides."
             },
             {
-              "text": "Brown is always a digit, so either end gives the same value",
+              "text": "Either end: brown is a digit, so both readings give the same value",
               "feedback": "Brown is a digit (1) in the first three places, the multiplier ×10 in the fourth, and ±1% in the fifth. Read backward, the bands usually give a different value, so the end matters."
             },
             {
-              "text": "Start from whichever end gives the larger value, since the code is chosen to be read that way",
+              "text": "Whichever end gives the larger value; the code is meant to read that way",
               "feedback": "The code has no such rule. Either reading can be the larger one; only the wider gap before the tolerance band, or a measurement, tells you."
             }
           ],
-          "explanation": "Gold and silver are never digits, so on a ±5% four-band part the gold end is obviously the tolerance end. On a ±1% five-band part the tolerance band is brown, which is also a digit color, so the code puts a wider gap before the tolerance band. When that gap is hard to see, measure the resistor out of circuit and see which of the two readings it matches; if both directions give the same value, the direction does not matter."
+          "explanation": "Gold and silver are never digits, so on a ±5% four-band part the gold end is plainly the tolerance end. On a ±1% five-band part the tolerance band is brown, also a digit color, so the code sets it apart with a wider gap. When that gap is hard to see, measure the resistor out of circuit and see which of the two readings it matches; if both directions give the same value, the direction does not matter."
         }
       ],
       "review": "verified"
@@ -441,7 +572,7 @@
       "id": "real_color_4band_gold",
       "topicId": "real_components",
       "level": "recall",
-      "prompt": "A leaded resistor has four color bands. Read from left to right they are {R:bands4}. What is its marked resistance?",
+      "prompt": "Find the marked resistance of a four-band resistor: {R:bands4}, read from left to right.",
       "variables": [
         {
           "name": "R",
@@ -457,15 +588,33 @@
         "formula": "R",
         "unit": "Ω"
       },
-      "explanation": "The first two bands are digits: {N}. The third band is the multiplier, and gold there means ×0.1, so the value is {N} × 0.1 Ω = {answer}. The fourth band, gold again, is the tolerance, ±5%. The same color means different things in the third and fourth places; position decides. Values below 10 Ω use a gold (×0.1) or silver (×0.01) multiplier, because a multiplier of ×1 (black) cannot go below 10 Ω with two digits.",
+      "explanation": "Four bands: digit, digit, multiplier, tolerance. In {R:bands4}, the first two bands give the digits {N}. Gold in the third place is the multiplier ×10⁻¹, that is ×0.1. R = {N} × 0.1 Ω = {answer}. Gold in the fourth place is the tolerance, ±5%: the same color means different things in the third and fourth places, and position decides. Values below 10 Ω need a gold or silver multiplier: with black (×10⁰) the smallest two-digit value is 10 Ω.",
+      "explanationSteps": [
+        {
+          "text": "Four bands: digit, digit, multiplier, tolerance. In {R:bands4}, the first two bands give the digits {N}."
+        },
+        {
+          "text": "Gold in the third place is the multiplier ×10⁻¹, that is ×0.1."
+        },
+        {
+          "math": "R = [[N]] \\times 0.1\\ \\Omega",
+          "result": "[[answer]]"
+        },
+        {
+          "text": "Gold in the fourth place is the tolerance, ±5%: the same color means different things in the third and fourth places, and position decides."
+        },
+        {
+          "text": "Values below 10 Ω need a gold or silver multiplier: with black (×10⁰) the smallest two-digit value is 10 Ω."
+        }
+      ],
       "hints": [
-        "Two digits, then the multiplier, then the tolerance.",
-        "The digits give {N}; gold in the third place multiplies by 0.1."
+        "Four bands: digit, digit, multiplier, tolerance. Look up each color in the color-code table on the formula sheet.",
+        "The digits give {N}; gold in the third place is the multiplier ×0.1."
       ],
       "misconceptions": [
         {
           "formula": "N",
-          "feedback": "That leaves out the multiplier. The third band is gold, which as a multiplier means ×0.1: {N} × 0.1."
+          "feedback": "That leaves out the multiplier. The third band is gold, which as the multiplier means ×0.1: {N} × 0.1."
         },
         {
           "formula": "R/10",
@@ -486,7 +635,7 @@
       "id": "real_color_4band_yellow",
       "topicId": "real_components",
       "level": "recall",
-      "prompt": "A leaded resistor has four color bands. Read from left to right they are {R:bands4}. What is its marked resistance?",
+      "prompt": "Find the marked resistance of a four-band resistor: {R:bands4}, read from left to right.",
       "variables": [
         {
           "name": "R",
@@ -502,10 +651,28 @@
         "formula": "R",
         "unit": "Ω"
       },
-      "explanation": "The first two bands are digits: {N}. The third band, yellow, is the multiplier: yellow is 4, so four zeros follow, {N} × 10 000 Ω = {answer}. The gold fourth band is the tolerance, ±5%. Counting zeros is the quick check: four zeros after two digits is a six-digit number of ohms, between 100 kΩ and 1 MΩ.",
+      "explanation": "Four bands: digit, digit, multiplier, tolerance. In {R:bands4}, the first two bands give the digits {N}. Yellow in the third place is the multiplier: digit 4, ×10⁴, four zeros. R = {N} × 10⁴ Ω = {answer}. The gold fourth band is the tolerance, ±5%. Check by counting: two digits and four zeros make a six-digit number of ohms, between 100 kΩ and 1 MΩ (10⁵ to 10⁶ Ω).",
+      "explanationSteps": [
+        {
+          "text": "Four bands: digit, digit, multiplier, tolerance. In {R:bands4}, the first two bands give the digits {N}."
+        },
+        {
+          "text": "Yellow in the third place is the multiplier: digit 4, ×10⁴, four zeros."
+        },
+        {
+          "math": "R = [[N]] \\times 10^{4}\\ \\Omega",
+          "result": "[[answer]]"
+        },
+        {
+          "text": "The gold fourth band is the tolerance, ±5%."
+        },
+        {
+          "text": "Check by counting: two digits and four zeros make a six-digit number of ohms, between 100 kΩ and 1 MΩ (10⁵ to 10⁶ Ω)."
+        }
+      ],
       "hints": [
-        "Two digits, then the multiplier, then the tolerance.",
-        "The digits give {N}; yellow is 4, so four zeros."
+        "Four bands: digit, digit, multiplier, tolerance. Look up each color in the color-code table on the formula sheet.",
+        "The digits give {N}; yellow is 4, so the multiplier is ×10⁴, four zeros."
       ],
       "misconceptions": [
         {
@@ -535,7 +702,7 @@
       "id": "real_color_5band_brown",
       "topicId": "real_components",
       "level": "recall",
-      "prompt": "A metal film resistor has five color bands. Read from left to right they are {R:bands5}. What is its marked resistance?",
+      "prompt": "Find the marked resistance of a five-band resistor: {R:bands5}, read from left to right.",
       "variables": [
         {
           "name": "R",
@@ -574,10 +741,38 @@
         "unit": "Ω",
         "tolerance": 0.001
       },
-      "explanation": "Three digits first: {N}. The fourth band, brown, is the multiplier: brown is 1, so one zero follows, {N} × 10 Ω = {answer}. The last band, also brown, is the tolerance, ±1%. Here both end bands are brown, so the code can be read from either end. Read backward, the same bands give the digits 1, 1, {d3}: a value of {Rback}, with a brown ±1% band at the end too. Only the wider gap before the tolerance band, or a measurement out of circuit, tells which end is which. A backward reading in the hundreds of megohms or more is itself a clue, since leaded metal film parts rarely go above about 10 MΩ.",
+      "explanation": "Five bands: digit, digit, digit, multiplier, tolerance. In {R:bands5}, the first three bands give the digits {N}. Brown in the fourth place is the multiplier ×10¹, one zero. R = {N} × 10¹ Ω = {answer}. The last band, also brown, is the tolerance, ±1%. Both end bands are brown, so the bands also read from the other end. Read backward, they give the digits {Nback}, and the fourth band from that end sets the multiplier: R_backward = {Nback} × 10^{d2} Ω = {Rback}. That reading has a brown ±1% band at its end too. Usually only the wider gap before the tolerance band, or a measurement out of circuit, tells which end is which. But a backward reading of millions of ohms or more is itself a clue (1 MΩ is 10⁶ Ω, 1 GΩ is 10⁹ Ω): metal film resistors with wire leads, the usual five-band parts, rarely go above about 10 MΩ.",
+      "explanationSteps": [
+        {
+          "text": "Five bands: digit, digit, digit, multiplier, tolerance. In {R:bands5}, the first three bands give the digits {N}."
+        },
+        {
+          "text": "Brown in the fourth place is the multiplier ×10¹, one zero."
+        },
+        {
+          "math": "R = [[N]] \\times 10^{1}\\ \\Omega",
+          "result": "[[answer]]"
+        },
+        {
+          "text": "The last band, also brown, is the tolerance, ±1%. Both end bands are brown, so the bands also read from the other end."
+        },
+        {
+          "text": "Read backward, they give the digits {Nback}, and the fourth band from that end sets the multiplier:"
+        },
+        {
+          "math": "R_\\text{backward} = [[Nback]] \\times 10^{[[d2]]}\\ \\Omega",
+          "result": "[[Rback]]"
+        },
+        {
+          "text": "That reading has a brown ±1% band at its end too. Usually only the wider gap before the tolerance band, or a measurement out of circuit, tells which end is which."
+        },
+        {
+          "text": "But a backward reading of millions of ohms or more is itself a clue (1 MΩ is 10⁶ Ω, 1 GΩ is 10⁹ Ω): metal film resistors with wire leads, the usual five-band parts, rarely go above about 10 MΩ."
+        }
+      ],
       "hints": [
-        "Three digits, then the multiplier, then the tolerance.",
-        "The digits give {N}; brown as the multiplier means one zero."
+        "Five bands: digit, digit, digit, multiplier, tolerance. Look up each color in the color-code table on the formula sheet.",
+        "The digits give {N}; brown as the multiplier is ×10¹, one zero."
       ],
       "misconceptions": [
         {
@@ -590,7 +785,7 @@
         },
         {
           "formula": "R/10",
-          "feedback": "That leaves out the multiplier: brown as the fourth band means ×10, one zero after {N}. Brown is 1; black would be ×1."
+          "feedback": "That leaves out the multiplier: brown as the fourth band means ×10, one zero after {N}. Black would be ×1."
         }
       ],
       "noDrawing": "reading a part's marking; no circuit to solve",
@@ -621,6 +816,11 @@
           "unit": ""
         },
         {
+          "name": "Nback",
+          "formula": "110+d3",
+          "unit": ""
+        },
+        {
           "name": "Rback",
           "formula": "(110+d3)*10^d2",
           "unit": "Ω"
@@ -632,7 +832,7 @@
       "id": "real_color_5band_silver",
       "topicId": "real_components",
       "level": "recall",
-      "prompt": "A metal film resistor has five color bands. Read from left to right they are {R:bands5}. What is its marked resistance?",
+      "prompt": "Find the marked resistance of a five-band resistor: {R:bands5}, read from left to right.",
       "variables": [
         {
           "name": "R",
@@ -649,9 +849,27 @@
         "unit": "Ω",
         "tolerance": 0.001
       },
-      "explanation": "Three digits: {N}. The fourth band, silver, is the multiplier ×0.01, so the value is {N} × 0.01 Ω = {answer}. The last band, brown, is the tolerance, ±1%. With three digits, a ×0.01 multiplier is what puts a value between 1 and 10 Ω; silver and gold are never digits, so a silver band is either a multiplier (×0.01) or, as the last of four bands, a ±10% tolerance.",
+      "explanation": "Five bands: digit, digit, digit, multiplier, tolerance. In {R:bands5}, the first three bands give the digits {N}. Silver in the fourth place is the multiplier ×10⁻², that is ×0.01. R = {N} × 0.01 Ω = {answer}. The last band, brown, is the tolerance, ±1%. With three digits, ×0.01 is the multiplier that puts a value between 1 Ω and 10 Ω. Silver is never a digit: it is a multiplier (×0.01) or, as the last band, a ±10% tolerance.",
+      "explanationSteps": [
+        {
+          "text": "Five bands: digit, digit, digit, multiplier, tolerance. In {R:bands5}, the first three bands give the digits {N}."
+        },
+        {
+          "text": "Silver in the fourth place is the multiplier ×10⁻², that is ×0.01."
+        },
+        {
+          "math": "R = [[N]] \\times 0.01\\ \\Omega",
+          "result": "[[answer]]"
+        },
+        {
+          "text": "The last band, brown, is the tolerance, ±1%."
+        },
+        {
+          "text": "With three digits, ×0.01 is the multiplier that puts a value between 1 Ω and 10 Ω. Silver is never a digit: it is a multiplier (×0.01) or, as the last band, a ±10% tolerance."
+        }
+      ],
       "hints": [
-        "Three digits, then the multiplier, then the tolerance.",
+        "Five bands: digit, digit, digit, multiplier, tolerance. Look up each color in the color-code table on the formula sheet.",
         "The digits give {N}; silver as the multiplier is ×0.01."
       ],
       "misconceptions": [
@@ -661,7 +879,7 @@
         },
         {
           "formula": "N",
-          "feedback": "That leaves out the multiplier. The fourth band is silver, which as a multiplier means ×0.01: {N} × 0.01."
+          "feedback": "That leaves out the multiplier. The fourth band is silver, which as the multiplier means ×0.01: {N} × 0.01."
         },
         {
           "formula": "R*10",

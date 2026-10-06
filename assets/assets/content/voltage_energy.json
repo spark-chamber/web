@@ -12,10 +12,12 @@
         "math"
       ],
       "prerequisites": [
-        "charge_current"
+        "charge_current",
+        "loops_nodes"
       ],
       "prerequisiteNotes": {
-        "charge_current": "Voltage is energy per coulomb, so it builds on the coulomb and on current as charge per second; the charge that flows through a part is what the field does work on as it crosses that part."
+        "charge_current": "Voltage is energy per coulomb, so it builds on the coulomb and on current as charge per second; the charge that flows through a part is what the field does work on as it crosses that part.",
+        "loops_nodes": "A node voltage is the voltage of one node, so it needs the node: all the metal joined together, wherever it is drawn. Parallel parts sit on the same two nodes, which is why they share one voltage."
       },
       "lensNotes": {
         "physics": "The volt is defined from energy: 1 V = 1 J/C. Inside a battery, chemical reactions do work on charge, moving it against the electric field between the terminals; in the wires and parts outside, the field does work on the moving charge, and the parts turn that energy into heat, light, or motion. Only differences of potential are physical: adding the same constant to every potential changes no force and no energy transfer.",
@@ -34,6 +36,10 @@
         {
           "label": "Voltage across a part",
           "tex": "V_{ab} = V_a - V_b"
+        },
+        {
+          "label": "Charge of one electron (magnitude; q in the calculator)",
+          "tex": "e = 1.602 \\times 10^{-19}\\ \\text{C}"
         },
         {
           "label": "Electron-volt",
@@ -222,6 +228,156 @@
       "placement": true
     },
     {
+      "id": "ve_energy_resistors",
+      "topicId": "voltage_energy",
+      "level": "recall",
+      "prompt": "{Q} flows around the loop. Find the energy the battery delivers. Assume an ideal battery.",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            4.5,
+            6,
+            9
+          ]
+        },
+        {
+          "name": "Q",
+          "unit": "C",
+          "values": [
+            0.001,
+            0.0015,
+            0.002,
+            0.003,
+            0.005,
+            0.01
+          ]
+        }
+      ],
+      "answer": {
+        "formula": "Q*V",
+        "unit": "J"
+      },
+      "explanation": "Each coulomb that goes from the battery's + terminal through R1 and R2 and back to its − terminal gives up the battery's voltage in energy, 1 V = 1 J/C: part in R1 and the rest in R2, in proportion to the voltage across each. The total doesn't depend on how it splits. So W = Q·V = {Q} × {V} = {answer}. The prefix carries through: 1 mC = 10⁻³ C, so millicoulombs times volts gives millijoules.",
+      "explanationSteps": [
+        {
+          "text": "Each coulomb that goes from the battery's + terminal through R1 and R2 and back to its − terminal gives up the battery's voltage in energy: part in R1 and the rest in R2, in proportion to the voltage across each. The total doesn't depend on how it splits. In units:"
+        },
+        {
+          "math": "1\\ \\mathrm{V} = 1\\ \\mathrm{J/C}"
+        },
+        {
+          "text": "So the energy is"
+        },
+        {
+          "math": "W = Q\\cdot V = [[Q]]\\times [[V]]",
+          "result": "[[answer]]"
+        },
+        {
+          "text": "The prefix carries through: 1 mC = 10⁻³ C, so millicoulombs times volts gives millijoules."
+        }
+      ],
+      "hints": [
+        "A volt is a joule per coulomb. Which voltage does each coulomb cross on its way from the battery's + terminal back to its − terminal?",
+        "W = Q·V, with the charge in coulombs: 1 mC = 10⁻³ C."
+      ],
+      "misconceptions": [
+        {
+          "formula": "Q/V",
+          "feedback": "Charge divided by voltage is coulombs per volt, not joules. Each coulomb that crosses {V} gives up that many joules, so multiply: W = Q·V."
+        },
+        {
+          "formula": "V/Q",
+          "feedback": "Volts per coulomb is not an energy. The voltage is already joules per coulomb; multiply it by the number of coulombs: W = Q·V."
+        },
+        {
+          "formula": "Q*V*1000",
+          "feedback": "That is 1000× too big: it uses the number of millicoulombs as coulombs. 1 mC = 10⁻³ C, so millicoulombs times volts gives millijoules, not joules."
+        }
+      ],
+      "schematic": {
+        "netlist": "battery and two resistors\nV1 a 0 {V:spice}\nR1 a b 1k\nR2 b 0 1k\n",
+        "parts": [
+          {
+            "ref": "V1",
+            "at": [
+              0,
+              2
+            ],
+            "rot": 90,
+            "label": "{V}",
+            "symbol": "battery"
+          },
+          {
+            "ref": "R1",
+            "at": [
+              2,
+              0
+            ],
+            "label": "R1"
+          },
+          {
+            "ref": "R2",
+            "at": [
+              8,
+              2
+            ],
+            "rot": 90,
+            "label": "R2"
+          }
+        ],
+        "wires": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          [
+            [
+              6,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              6
+            ],
+            [
+              8,
+              6
+            ]
+          ]
+        ],
+        "grounds": [
+          [
+            4,
+            6
+          ]
+        ],
+        "labels": []
+      },
+      "review": "verified"
+    },
+    {
       "id": "ve_same_mah_energy",
       "topicId": "voltage_energy",
       "level": "reason",
@@ -286,15 +442,21 @@
     {
       "id": "ve_charge_from_energy",
       "topicId": "voltage_energy",
-      "prompt": "A power bank is labeled {cap}: the charge its lithium-ion cell can deliver at the cell's nominal {Vc} (its average voltage over a full discharge). A converter inside (a circuit that changes one DC voltage into another) raises the cell's voltage to the USB port's {Vo}, and, like most such converters, it passes on about 85% of the energy and turns the rest into heat (it gets slightly warm). Starting fully charged, a USB meter between the bank and a phone counts {Qm} by the time the bank shuts off. The owner says the label must be false. Does the reading show that?",
+      "level": "design",
+      "ladder": [
+        "ve_energy_charge",
+        "ve_same_mah_energy",
+        "ve_what_if_charge_v"
+      ],
+      "prompt": "A power bank's lithium-ion battery is rated {cap} at a nominal {Vc}. Inside, a converter circuit raises {Vc} to {Vo} for the USB port and passes on 85% of the battery's energy. A USB meter at the port counts {Qm} over a full discharge. Is the {cap} rating wrong?",
       "variables": [
         {
           "name": "cap",
           "unit": "Ah",
           "values": [
-            5,
             10,
-            20
+            20,
+            25
           ]
         },
         {
@@ -342,35 +504,135 @@
       ],
       "choices": [
         {
-          "text": "No: the cell stores {E}, and at {Vo} each coulomb carries more joules than at {Vc}, so even a converter that wasted nothing could deliver only {Qout}",
+          "text": "No: even a converter with no loss could deliver only {Qout} at the port",
           "correct": true,
-          "feedback": "Right: the converter passes on energy; it doesn't have to pass on the same number of coulombs. Q = E/V = {E} / {Vo} = {QoC} = {Qout}; the meter's {Qm} is less, and the difference is the energy the converter turned into heat."
+          "feedback": "Right: the converter passes on energy, not coulombs. The battery stores {E}, and at {Vo} that is enough for Q = W/V = {E} / {Vo} = {Qout}. The meter's {Qm} is 85% of it; the other 15% became heat in the converter."
         },
         {
-          "text": "Yes: charge is conserved, so every coulomb the cell delivers must come out of the USB port, and an honest bank would show {cap}",
-          "feedback": "Charge is conserved at every junction, but that doesn't force the converter's output current to equal its input current. Inside it, for part of each cycle the cell's current flows through the inductor and a switch straight back to the cell's negative terminal, so fewer coulombs reach the port, each carrying more energy. What the converter conserves (less its losses) is power, V·I. The energy is fixed at {E}, and at {Vo} it can carry at most Q = E/V = {Qout}."
+          "text": "Yes: charge is conserved, so the port should count the full {cap}",
+          "feedback": "Charge is conserved at every junction, but a converter is not a wire: its output current needn't equal its input current. What it passes on is energy. The battery holds {E}, and at {Vo} that is enough for at most Q = W/V = {Qout}, before the converter's own loss."
         },
         {
-          "text": "Yes: the higher output voltage pushes more charge out, so an honest bank would show more than its label, about {Qup}",
-          "feedback": "That multiplies by the voltage ratio instead of dividing. A higher voltage means more joules per coulomb, so the same {E} fills fewer coulombs: Q = E/V = {Qout}. A converter can't make energy, and making more charge at a higher voltage would need more energy than the cell holds."
+          "text": "Yes: the higher voltage pushes out more charge, so it should count {Qup}",
+          "feedback": "That multiplies by the voltage ratio instead of dividing. More volts means more joules per coulomb, so the same {E} is enough for fewer coulombs: Q = W/V = {Qout}. More charge at a higher voltage would need more energy than the battery holds."
         },
         {
-          "text": "No: the meter counts current, not charge, so its reading in Ah can't be compared with the label at all",
-          "feedback": "An Ah counter adds up current × time, which is a charge, the same quantity the label counts (1 Ah = 3600 C). The two numbers can be compared; they differ because they count charge at different voltages, and at {Vo} each coulomb carries more energy."
+          "text": "No: the meter counts current, not charge, so the two numbers can't be compared",
+          "feedback": "An Ah counter adds up current × time, which is charge, the quantity the rating counts (1 Ah = 3600 C). The numbers can be compared; they differ because each coulomb at {Vo} carries more energy than at {Vc}."
         }
       ],
-      "explanation": "The label is a charge: {cap} = {Qc} (1 Ah = 3600 C). Each of those coulombs gains 3.7 J on average crossing the cell's nominal {Vc}, so the cell stores E = Q·V = {Qc} × {Vc} = {E}. The converter hands on that energy, not a fixed number of coulombs: at the USB port each coulomb gives up 5 J, so the most charge the energy can carry is Q = E/V = {E} / {Vo} = {QoC} = {Qout}. The converter passes on about 85% of the energy, and 0.85 × {Qout} = {Qm}, which is exactly what the meter counted. So the reading fits an honest label. Many power banks print both numbers: the cell's capacity at 3.7 V, and a smaller rated capacity at 5 V that already allows for the converter's losses.",
+      "explanation": "The rating is a charge: {cap} = {Qc} (1 Ah = 3600 C), counted at the battery's nominal {Vc}. A volt is a joule per coulomb, so the battery stores about W = Q·V = {Qc} × {Vc} = {E}. The converter passes on energy, not a fixed number of coulombs. At {Vo} that energy is enough for at most Q = W/V = {E} / {Vo} = {Qout}, and 85% of it is 0.85 × {Qout} = {Qm}: exactly the meter's count, so the rating fits. Many power banks print both numbers: the battery's capacity at {Vc} and a smaller rated capacity at {Vo} that already allows for the converter's loss.",
       "hints": [
-        "Does the label count charge or energy? Which of the two must the converter pass on from the cell to the USB port?",
-        "Find the cell's energy, E = Q·V at {Vc}, then how much charge carries that energy at {Vo}: Q = E/V."
+        "Does the rating count charge or energy? Which of the two must the converter pass on?",
+        "Find the battery's energy, W = Q·V at {Vc}, then the charge that carries it at {Vo}: Q = W/V."
       ],
       "noDrawing": "a power bank's label and a USB meter's count; the converter inside is not a circuit to solve here",
       "review": "verified"
     },
     {
+      "id": "ve_electron_energy",
+      "topicId": "voltage_energy",
+      "level": "recall",
+      "prompt": "An X-ray tube has {V} between its hot cathode (the electron source) and its tungsten anode, anode positive. Each electron leaves the cathode almost at rest. Find the kinetic energy it has gained when it reaches the anode, in joules. The electron's charge is e = 1.602 × 10⁻¹⁹ C. Enter a power of ten as 2.5e-9 or 2.5 × 10^-9.",
+      "variables": [
+        {
+          "name": "V",
+          "unit": "V",
+          "values": [
+            50000,
+            60000,
+            70000,
+            80000,
+            100000,
+            120000
+          ]
+        }
+      ],
+      "derived": [
+        {
+          "name": "kv",
+          "formula": "V/1000",
+          "unit": ""
+        },
+        {
+          "name": "Wf",
+          "formula": "1.602176634e-19*V*1e15",
+          "unit": ""
+        },
+        {
+          "name": "EeV",
+          "formula": "V",
+          "unit": "eV"
+        }
+      ],
+      "answer": {
+        "formula": "1.602176634e-19*V",
+        "unit": "J"
+      },
+      "explanation": "A charge Q crossing a voltage V gains W = Q·V, and for one electron Q = e = 1.602 × 10⁻¹⁹ C. With the voltage in volts, {V} = {kv} × 10³ V, so W = e·V = 1.602 × 10⁻¹⁹ C × {kv} × 10³ V = {Wf} × 10⁻¹⁵ J = {answer} (1 fJ = 10⁻¹⁵ J). Units: C × J/C = J. In electron-volts the same energy is {EeV}: an electron crossing 1 V gains 1 eV. It is also the most energy any one X-ray photon from the tube can carry: every photon's energy comes from a single electron stopping in the anode, so no photon can carry more than that electron brought.",
+      "explanationSteps": [
+        {
+          "text": "A charge Q crossing a voltage V gains"
+        },
+        {
+          "math": "W = Q\\cdot V"
+        },
+        {
+          "text": "For one electron,"
+        },
+        {
+          "math": "Q = e = 1.602\\times 10^{-19}\\ \\mathrm{C}"
+        },
+        {
+          "text": "With the voltage in volts:"
+        },
+        {
+          "math": "[[V]] = [[kv]]\\times 10^{3}\\ \\mathrm{V}"
+        },
+        {
+          "math": "W = e\\cdot V = 1.602\\times 10^{-19}\\ \\mathrm{C}\\times [[kv]]\\times 10^{3}\\ \\mathrm{V} = [[Wf]]\\times 10^{-15}\\ \\mathrm{J}",
+          "result": "[[answer]]"
+        },
+        {
+          "text": "1 fJ = 10⁻¹⁵ J."
+        },
+        {
+          "math": "\\text{Units: }\\ \\mathrm{C}\\times \\mathrm{J/C} = \\mathrm{J}"
+        },
+        {
+          "text": "In electron-volts the same energy is {EeV}: an electron crossing 1 V gains 1 eV. It is also the most energy any one X-ray photon from the tube can carry: every photon's energy comes from a single electron stopping in the anode, so no photon can carry more than that electron brought."
+        }
+      ],
+      "hints": [
+        "W = Q·V holds for one electron too: Q is the electron's charge.",
+        "W = e·V, with the voltage in volts: 1 kV = 10³ V."
+      ],
+      "misconceptions": [
+        {
+          "formula": "V/1.602176634e-19",
+          "feedback": "Dividing the voltage by the charge gives volts per coulomb, not joules. A volt is a joule per coulomb, so multiply: W = e·V."
+        },
+        {
+          "formula": "1.602176634e-19/V",
+          "feedback": "Charge divided by voltage is coulombs per volt, not an energy. A volt is a joule per coulomb, so multiply: W = e·V."
+        },
+        {
+          "formula": "1.602176634e-19*V/1000",
+          "feedback": "That is 1000× too small: it uses the number of kilovolts as volts. 1 kV = 10³ V, so {V} is {kv} × 10³ V."
+        },
+        {
+          "formula": "V",
+          "feedback": "That is the energy in electron-volts, {EeV}, entered as joules. One electron-volt is 1.602 × 10⁻¹⁹ J, so in joules W = e·V."
+        }
+      ],
+      "noDrawing": "a single electron accelerated in a vacuum tube; no circuit to solve",
+      "review": "verified"
+    },
+    {
       "id": "ve_ev_voltage",
       "topicId": "voltage_energy",
-      "prompt": "In a cathode-ray tube (an old television picture tube), each electron leaves the hot cathode almost at rest and reaches the screen with a kinetic energy of {W}, all of it gained from the accelerating voltage. Through what voltage was it accelerated?",
+      "level": "reason",
+      "prompt": "In a cathode-ray tube (an old TV picture tube), the voltage between the cathode (the electron source) and the screen speeds up the electrons. An electron leaves the cathode almost at rest and reaches the screen having gained {W} ({Wf} × 10⁻¹⁵ J) of energy. Its charge has magnitude e = 1.602 × 10⁻¹⁹ C. What is that voltage?",
       "variables": [
         {
           "name": "V",
@@ -390,6 +652,11 @@
           "unit": "J"
         },
         {
+          "name": "Wf",
+          "formula": "1.602176634e-19*V*1e15",
+          "unit": ""
+        },
+        {
           "name": "EeV",
           "formula": "V",
           "unit": "eV"
@@ -399,10 +666,10 @@
         "formula": "W/1.602176634e-19",
         "unit": "V"
       },
-      "explanation": "An electron carries a charge of magnitude e = 1.602 × 10⁻¹⁹ C, and crossing a voltage V it gains W = e·V. So V = W/e = {W} / (1.602 × 10⁻¹⁹ C) = {answer}. In electron-volts the energy is {EeV}: an electron crossing a voltage gains that many electron-volts, which is why the unit exists. Joules are an awkward size for one particle.",
+      "explanation": "W = Q·V holds for a single electron, with Q the magnitude of its charge, e = 1.602 × 10⁻¹⁹ C. Crossing a voltage V it gains W = e·V, so V = W/e = {Wf} × 10⁻¹⁵ J / (1.602 × 10⁻¹⁹ C) = {answer}. In electron-volts the energy is {EeV} (1 keV = 1000 eV): by definition an electron crossing 1 V picks up 1 eV, so crossing {answer} it picks up {EeV}. Joules are an awkward size for one particle, which is why the unit exists.",
       "hints": [
-        "W = Q·V still holds; here Q is the charge of one electron.",
-        "V = W/e, with e = 1.602 × 10⁻¹⁹ C."
+        "W = Q·V holds for a single electron too. What is Q here?",
+        "Q is the magnitude of one electron's charge, e = 1.602 × 10⁻¹⁹ C, so V = W/e, with W in joules."
       ],
       "misconceptions": [
         {
@@ -412,6 +679,43 @@
         {
           "formula": "W",
           "feedback": "That is the energy in joules, not a voltage. Divide by the electron's charge, 1.602 × 10⁻¹⁹ C, to get joules per coulomb (volts)."
+        },
+        {
+          "formula": "1000*W/1.602176634e-19",
+          "feedback": "That is 1000× too big: as if the f in {W} were pico (10⁻¹²). Femto is 10⁻¹⁵, a thousand times smaller, so the energy and the voltage are both a thousand times smaller than that."
+        },
+        {
+          "formula": "W/1.602176634e-19/1000",
+          "feedback": "That is 1000× too small. Either the result came out in kilovolts and was entered without the k, or the f in {W} was read as atto (10⁻¹⁸); femto is 10⁻¹⁵."
+        },
+        {
+          "formula": "W*1.602176634e-19",
+          "feedback": "That multiplies the energy by the electron's charge, which gives joule-coulombs, not volts. A volt is a joule per coulomb, so divide: V = W/e."
+        }
+      ],
+      "followUps": [
+        {
+          "prompt": "The voltage is {answer} and the electron's energy is {EeV} (1 keV = 1000 eV): the same number. Why?",
+          "choices": [
+            {
+              "text": "1 eV is the energy one electron gains crossing 1 V",
+              "correct": true,
+              "feedback": "Right: 1 eV = e × 1 V = 1.602 × 10⁻¹⁹ J. For one electron, W = e·V joules is V electron-volts; the unit was defined to make that so."
+            },
+            {
+              "text": "A volt and an electron-volt are the same unit",
+              "feedback": "A volt is energy per charge (J/C); an electron-volt is an energy (J). They differ by the factor e: 1 eV = 1.602 × 10⁻¹⁹ C × 1 V. The numbers match only because one electron's charge crossed."
+            },
+            {
+              "text": "Picture-tube voltages happen to give matching numbers",
+              "feedback": "It holds for any voltage: one electron crossing V volts gains e·V joules, and e·V joules is V electron-volts by the unit's definition. Two electrons crossing V would gain twice as many electron-volts between them."
+            },
+            {
+              "text": "An electron's charge is 1 C, so W = Q·V gives V joules",
+              "feedback": "The electron's charge has magnitude 1.602 × 10⁻¹⁹ C, not 1 C, so its energy in joules is 1.602 × 10⁻¹⁹ × V. The electron-volt is defined per electron, and that makes the number in eV equal the number in V."
+            }
+          ],
+          "explanation": "1 eV = e × 1 V. For a single electron W = e·V, so its energy in electron-volts is numerically the voltage in volts."
         }
       ],
       "noDrawing": "a single electron accelerated in a vacuum tube; no circuit to solve",

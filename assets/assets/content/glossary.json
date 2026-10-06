@@ -2129,7 +2129,8 @@
       ],
       "seeAlso": [
         "resistance",
-        "conductor"
+        "conductor",
+        "cross_sectional_area"
       ],
       "group": "components and materials",
       "drills": [
@@ -2849,7 +2850,8 @@
       ],
       "seeAlso": [
         "current",
-        "electron"
+        "electron",
+        "cross_sectional_area"
       ],
       "group": "charge and fields",
       "drills": [
@@ -2990,6 +2992,216 @@
       ]
     },
     {
+      "id": "cross_sectional_area",
+      "term": "cross-sectional area",
+      "symbol": "A",
+      "aliases": [
+        "cross-sectional areas",
+        "cross-section",
+        "cross-sections",
+        "cross section",
+        "cross sections",
+        "cross-sectional"
+      ],
+      "definition": "The area of the face you would see if you cut a wire, a PCB trace, or a coil's core straight across, at right angles to its length. For a round wire of diameter d, A = πd²/4.",
+      "taughtIn": [
+        "charge_current",
+        "ohms_law"
+      ],
+      "seeAlso": [
+        "resistivity",
+        "resistance",
+        "drift_velocity",
+        "current"
+      ],
+      "group": "charge and fields",
+      "drills": [
+        {
+          "id": "cross_section_unit",
+          "kind": "unit",
+          "prompt": "A wire table lists a conductor as 0.5 mm². In square meters, as the formulas need it, that is:",
+          "choices": [
+            {
+              "text": "5 × 10⁻⁷ m²",
+              "correct": true
+            },
+            {
+              "text": "5 × 10⁻⁴ m²",
+              "feedback": "That converts it like a length, 1 mm = 10⁻³ m. Both sides of the square shrink: 1 mm² = (10⁻³ m)² = 10⁻⁶ m², so 0.5 mm² = 5 × 10⁻⁷ m²."
+            },
+            {
+              "text": "5 × 10⁻¹⁰ m²",
+              "feedback": "10⁻⁹ per unit belongs to mm³, a volume. An area is two lengths multiplied: 1 mm² = 10⁻⁶ m², so 0.5 mm² = 5 × 10⁻⁷ m²."
+            },
+            {
+              "text": "0.5 m²",
+              "feedback": "That leaves the number unconverted. A square meter is a million square millimeters, so 0.5 mm² = 5 × 10⁻⁷ m²."
+            }
+          ]
+        },
+        {
+          "id": "cross_section_from_d",
+          "kind": "relation",
+          "prompt": "A round wire is 0.80 mm in diameter. Its cross-sectional area is about:",
+          "choices": [
+            {
+              "text": "0.50 mm²",
+              "correct": true
+            },
+            {
+              "text": "0.64 mm²",
+              "feedback": "d² = 0.64 mm² is the area of a square 0.80 mm on a side. The round face fits inside that square and fills π/4 of it: πd²/4 = 0.50 mm²."
+            },
+            {
+              "text": "2.0 mm²",
+              "feedback": "π × 0.80² puts the diameter where the radius belongs. A = π(d/2)² = πd²/4 = 0.50 mm²."
+            },
+            {
+              "text": "2.5 mm²",
+              "feedback": "πd = 2.5 mm is the circumference, the length around the edge, not the area inside it. A = πd²/4 = 0.50 mm²."
+            }
+          ]
+        },
+        {
+          "id": "cross_section_double_d",
+          "kind": "spot",
+          "prompt": "A round copper wire is replaced by one with twice the diameter, same length. Which is true?",
+          "choices": [
+            {
+              "text": "Its cross-section quadruples, so its resistance falls to a quarter.",
+              "correct": true
+            },
+            {
+              "text": "Its cross-section doubles, so its resistance falls to a half.",
+              "feedback": "The diameter is a length across the face; the area goes with its square, A = πd²/4. Twice d is four times A, and R = ρL/A falls to a quarter."
+            },
+            {
+              "text": "Its cross-section quadruples, so its resistance rises fourfold.",
+              "feedback": "A is under the line in R = ρL/A. Four times the area puts four times as many carriers side by side, so the same current needs a quarter of the voltage: a quarter of the resistance."
+            }
+          ]
+        },
+        {
+          "id": "cross_section_drift",
+          "kind": "which",
+          "prompt": "A 22 AWG copper wire (0.326 mm²) is spliced to a 14 AWG copper wire (2.08 mm²), and 1 A flows through both. Where do the electrons drift more slowly?",
+          "choices": [
+            {
+              "text": "In the 14 AWG wire, about 6 times more slowly",
+              "correct": true
+            },
+            {
+              "text": "In the 22 AWG wire, about 6 times more slowly",
+              "feedback": "The thin wire has fewer carriers side by side, so each must drift faster to pass the same 1 A: v_d = I/(nAe), and 22 AWG has about a sixth of the area."
+            },
+            {
+              "text": "Neither: the same current means the same drift",
+              "feedback": "The same current means the same charge per second through each face, not the same speed. v_d = I/(nAe): 2.08/0.326 ≈ 6.4 times the area, about 6 times slower drift."
+            }
+          ]
+        },
+        {
+          "id": "cross_section_resistance",
+          "kind": "relation",
+          "prompt": "One meter of 20 AWG copper (0.518 mm²) measures 33 mΩ. About what does one meter of 14 AWG copper (2.08 mm²) measure?",
+          "choices": [
+            {
+              "text": "8.3 mΩ",
+              "correct": true
+            },
+            {
+              "text": "133 mΩ",
+              "feedback": "That multiplies by the area ratio. A is under the line in R = ρL/A: 2.08/0.518 ≈ 4 times the area puts four times as many carriers side by side, so the resistance falls to a quarter, 8.3 mΩ."
+            },
+            {
+              "text": "16.6 mΩ",
+              "feedback": "That halves it, as if resistance followed the diameter. It follows the area, and 2.08/0.518 ≈ 4: a quarter, 8.3 mΩ."
+            },
+            {
+              "text": "33 mΩ",
+              "feedback": "The same metal means the same resistivity, not the same resistance. R = ρL/A with about 4 times the area: a quarter, 8.3 mΩ."
+            }
+          ]
+        }
+      ],
+      "unit": "square meter (m²) in formulas; wire is quoted in mm² (1 mm² = 10⁻⁶ m²) or by gauge (AWG), where a larger gauge number is a thinner wire",
+      "physics": [
+        "Cut a wire straight across, at right angles to its length, and the face you see is its cross-section, of area A. Every carrier that moves along the wire passes through that face. For a round wire of diameter d, A = π(d/2)² = πd²/4, so the area goes with the square of the diameter: twice as wide is four times the area. A 0.5 mm² wire is √(4 × 0.5/π) = 0.80 mm across, and a 2.0 mm² one is 1.60 mm. A flat conductor such as a PCB trace has A = width × thickness. On the AWG scale, three gauge numbers up very nearly halve the area, and six halve the diameter.",
+        "Current is the charge that crosses that face each second. With n free carriers per cubic meter, each of charge e, drifting at v_d, every carrier in the slab of length v_d·t behind the face crosses it in a time t: the slab's volume is A·v_d·t, it holds n·A·v_d·t carriers, so I = n·A·v_d·e. At the same current, twice the area needs only half the drift speed. In copper (n ≈ 8.5 × 10²⁸ m⁻³), 1 A drifts at about 0.15 mm/s through 0.5 mm² and about 0.073 mm/s through 1.0 mm².",
+        "Resistance falls as the area grows: R = ρL/A. With twice the area, each slice of the wire has twice as many free carriers side by side, so the same current needs only half the drift speed. That takes half the electric field along the wire, since the drift speed is proportional to the field, and so half the voltage across the same length: the resistance halves. One meter of 0.5 mm² copper (ρ = 1.72 × 10⁻⁸ Ω·m) has 1.72 × 10⁻⁸ × 1 / (0.5 × 10⁻⁶) = 34 mΩ, and one meter of 1.0 mm² has 17 mΩ. This holds at DC, where the current spreads evenly over the face; at high frequencies the skin effect crowds the current toward the surface, and less of the area carries it."
+      ],
+      "typical": [
+        {
+          "what": "PCB trace, 0.25 mm wide, 1 oz copper (35 µm thick)",
+          "value": "0.0088 mm²"
+        },
+        {
+          "what": "24 AWG, each conductor of a Cat 5e Ethernet cable",
+          "value": "0.205 mm² (0.511 mm diameter)"
+        },
+        {
+          "what": "22 AWG solid, breadboard hookup wire",
+          "value": "0.326 mm² (0.644 mm diameter)"
+        },
+        {
+          "what": "20 AWG, the nearest gauge to metric 0.5 mm²",
+          "value": "0.518 mm² (0.812 mm diameter)"
+        },
+        {
+          "what": "14 AWG, US 15 A household branch circuits",
+          "value": "2.08 mm² (1.63 mm diameter)"
+        },
+        {
+          "what": "12 AWG, US 20 A household branch circuits",
+          "value": "3.31 mm² (2.05 mm diameter)"
+        }
+      ],
+      "figures": [
+        {
+          "kind": "wire",
+          "title": "A wire cut straight across",
+          "caption": "The hatched face is the cross-section, A = πd²/4: 0.5 mm² is 0.80 mm across. Twice the diameter, four times the area.",
+          "area": "0.5 mm²",
+          "diameter": "0.80 mm"
+        }
+      ],
+      "confusions": [
+        {
+          "title": "Cross-section is an area, not a diameter.",
+          "text": "A = πd²/4 grows with the square of the diameter. 14 AWG (1.63 mm) is twice as wide as 20 AWG (0.812 mm) but has four times the cross-section, 2.08 mm² against 0.518 mm², and so a quarter of the resistance per meter."
+        },
+        {
+          "title": "mm² is not mm.",
+          "text": "1 mm² = (10⁻³ m)² = 10⁻⁶ m², not 10⁻³ m². Converting 0.5 mm² as if it were a length, to 0.5 × 10⁻³ m², makes the area 1000 times too large, and the resistance or drift speed computed from it 1000 times too small."
+        },
+        {
+          "title": "A thicker wire does not make the electrons faster.",
+          "text": "At the same current, the same charge crosses every face each second; with twice the area there are twice as many carriers side by side, so each drifts at half the speed: 1 A in 0.5 mm² copper drifts at about 0.15 mm/s, in 1.0 mm² at about 0.073 mm/s. With a fixed voltage across the same length, the field along the wire is unchanged, so the drift speed stays the same and the current doubles instead."
+        }
+      ],
+      "uses": "Sizing wires and PCB traces: wire tables list each gauge's area and resistance per meter, and the area sets both the voltage drop and the heating at a given current. In an inductor the core's cross-section enters the inductance (L = µN²A/l for a long coil) and sets how much flux the core carries before it saturates.",
+      "usedIn": [
+        "inductors"
+      ],
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 12 \"Physics of Conductors and Insulators\", section \"Conductor size\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_12.html#xtocid88061",
+          "note": "The AWG table of diameters and areas for solid copper wire (checked for 24, 22, 20, 14 and 12 AWG, converted from inches and circular mils), and that every three gauge steps roughly double the area; a larger gauge number is a thinner wire."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 12 \"Physics of Conductors and Insulators\", section \"Conductor ampacity\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_12.html#xtocid88062",
+          "note": "Thin wires tolerate less current because their greater resistance dissipates more heat at a given current, so ampacity is set by the insulation's thermal limit; its NEC-derived table is for free air and is not the 15 A and 20 A branch-circuit rule."
+        },
+        {
+          "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. I (DC), ch. 15 \"Inductors\", section \"Factors affecting inductance\"",
+          "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/DC/DC_15.html#xtocid88332",
+          "note": "Inductance rises with turns, core area and permeability and falls with coil length; the section's approximate formula is L = N²µA/l (µ = µrµ0, A in m², l in m)."
+        }
+      ]
+    },
+    {
       "id": "power",
       "term": "power",
       "symbol": "P",
@@ -2997,7 +3209,9 @@
       "exclude": [
         "power of ten",
         "power of the voltage",
-        "fourth power"
+        "fourth power",
+        "power bank",
+        "power banks"
       ],
       "definition": "The rate of energy transfer, in watts (1 W = 1 J/s). For any two-terminal part P = V·I; in a resistance this is P = I²R = V²/R.",
       "taughtIn": [
@@ -4806,8 +5020,9 @@
       "aliases": [
         "nodes"
       ],
-      "definition": "A set of points joined by wire, all at one voltage. Each terminal of a part connects to exactly one node, and the currents into a node sum to zero (Kirchhoff's current law).",
+      "definition": "All the metal joined by wire, however it is drawn; a crossing without a dot doesn't join, and same-named net labels do. The whole node is at one voltage, and the currents into it sum to zero (KCL).",
       "taughtIn": [
+        "loops_nodes",
         "kirchhoff",
         "schem_nodes"
       ],
@@ -4836,21 +5051,21 @@
           ]
         },
         {
-          "id": "node_kcl",
-          "kind": "relation",
-          "prompt": "Three wires meet at a node. 2 A flows in on one and 3 A flows in on another. The third carries:",
+          "id": "node_crossing",
+          "kind": "which",
+          "prompt": "Two wires cross on a schematic, with no dot at the crossing. What are they?",
           "choices": [
             {
-              "text": "5 A out",
+              "text": "Two separate wires passing each other, not joined",
               "correct": true
             },
             {
-              "text": "1 A out",
-              "feedback": "The currents in must equal the currents out (KCL): 2 + 3 = 5 A out."
+              "text": "One node, since they touch on the page",
+              "feedback": "Touching on paper doesn't join wires. Only a dot marks a joint, which is why careful drawings join wires in T-junctions and let crossings pass."
             },
             {
-              "text": "5 A in",
-              "feedback": "If all three carried current in, charge would pile up at the node. The third must carry 5 A out."
+              "text": "One node if they cross at a right angle",
+              "feedback": "The angle means nothing. Without a dot, crossing wires are not joined, at any angle."
             }
           ]
         },
@@ -4870,6 +5085,25 @@
             {
               "text": "It carries the full loop current",
               "feedback": "With both ends at one voltage, V = 0, so I = V/R = 0; the wire carries the current instead."
+            }
+          ]
+        },
+        {
+          "id": "node_label",
+          "kind": "spot",
+          "prompt": "Two net labels on a schematic both read VREF, with no wire drawn between them. What does that mean?",
+          "choices": [
+            {
+              "text": "They are one node: labels with the same name are joined",
+              "correct": true
+            },
+            {
+              "text": "They are two nodes that happen to share a name",
+              "feedback": "A net label is a name for a node. The same name in two places is the same node, which KiCad and SPICE both join without a drawn wire."
+            },
+            {
+              "text": "They are joined only if a wire is also drawn between them",
+              "feedback": "The label replaces the wire: it saves running a line across a crowded drawing. Same name, one node."
             }
           ]
         }
@@ -5544,10 +5778,13 @@
       "exclude": [
         "the series are paired",
         "the series is a choice",
-        "the series is spaced"
+        "the series is spaced",
+        "ideal series with equal ratios",
+        "the series and the tolerance"
       ],
-      "definition": "Two parts are in series when they share a node that nothing else connects to, so the same current must pass through both. Series resistances add, and the voltages across the parts add up to the voltage across the whole string.",
+      "definition": "Two parts are in series when they meet at a node that nothing else connects to, however far apart they are drawn, so there is one path and the same current passes through both. Series resistances add, and the voltages across the parts add up to the voltage across the whole string.",
       "taughtIn": [
+        "loops_nodes",
         "series_parallel"
       ],
       "seeAlso": [
@@ -5576,25 +5813,21 @@
           ]
         },
         {
-          "id": "series_current",
-          "kind": "relation",
-          "prompt": "A 1.0 kΩ and a 2.2 kΩ resistor are in series across 6.4 V. What current flows?",
+          "id": "series_far",
+          "kind": "which",
+          "prompt": "R1 and R4 are drawn on opposite sides of a schematic. A long wire runs from R1's lower end to R4's upper end, and nothing else connects to that wire. Are they in series?",
           "choices": [
             {
-              "text": "2.0 mA",
+              "text": "Yes: they meet at a node that nothing else touches",
               "correct": true
             },
             {
-              "text": "9.3 mA",
-              "feedback": "That uses the parallel combination, 1.0 kΩ ∥ 2.2 kΩ ≈ 688 Ω. In series one current crosses both, so the resistances add: 3.2 kΩ, and 6.4 V / 3.2 kΩ = 2.0 mA."
+              "text": "No: parts in series are drawn next to each other in a line",
+              "feedback": "Position on the page means nothing. The wire between them is one node with only R1 and R4 on it, so all of R1's current must pass through R4."
             },
             {
-              "text": "6.4 mA",
-              "feedback": "6.4 V / 1.0 kΩ leaves out the 2.2 kΩ. Every series resistor is in the current's path, so they add to 3.2 kΩ: 2.0 mA."
-            },
-            {
-              "text": "2.9 mA",
-              "feedback": "6.4 V / 2.2 kΩ leaves out the 1.0 kΩ. The resistances add to 3.2 kΩ: 2.0 mA."
+              "text": "Only if R1 and R4 have the same value",
+              "feedback": "Values don't decide it; the connections do. With nothing else on the node between them, they carry one current whatever their values."
             }
           ]
         },
@@ -5842,8 +6075,9 @@
       "aliases": [
         "in parallel"
       ],
-      "definition": "Parts are in parallel when both their ends connect to the same two nodes, so they have the same voltage across them. Their currents add, and the combined resistance is less than the smallest of them.",
+      "definition": "Parts are in parallel when both their ends connect to the same two nodes, however they are drawn, so each is its own path with the same voltage across it and a break in one leaves the others running. Their currents add, and the combined resistance is less than the smallest of them.",
       "taughtIn": [
+        "loops_nodes",
         "series_parallel"
       ],
       "seeAlso": [
@@ -5872,44 +6106,40 @@
           ]
         },
         {
-          "id": "parallel_value",
-          "kind": "relation",
-          "prompt": "What is a 10 kΩ resistor in parallel with a 15 kΩ resistor?",
+          "id": "parallel_ends",
+          "kind": "which",
+          "prompt": "Two lamps are drawn side by side. Their upper ends are joined. The lower end of one goes to the battery's − terminal; the lower end of the other goes to a resistor. Are the lamps in parallel?",
           "choices": [
             {
-              "text": "6.0 kΩ",
+              "text": "No: their lower ends are on different nodes",
               "correct": true
             },
             {
-              "text": "25 kΩ",
-              "feedback": "That is the series sum. In parallel each resistor adds a path, so the pair conducts better than either alone: (10 × 15)/(10 + 15) = 6.0 kΩ, less than the smaller one."
+              "text": "Yes: they are drawn side by side",
+              "feedback": "Position on the page means nothing. Parallel needs both ends on the same two nodes, and the lower ends here go to different places."
             },
             {
-              "text": "12.5 kΩ",
-              "feedback": "That is the average. A parallel pair is always below its smaller resistor: 1/R = 1/10k + 1/15k gives 6.0 kΩ."
-            },
-            {
-              "text": "5.0 kΩ",
-              "feedback": "Half of 10 kΩ is what two 10 kΩ parts in parallel give. A 15 kΩ path conducts less than a second 10 kΩ would, so the result is a little higher: 6.0 kΩ."
+              "text": "Yes: they share a node",
+              "feedback": "Sharing one node isn't enough; parallel parts share both. These lamps share only their upper node."
             }
           ]
         },
         {
-          "id": "parallel_mismatch",
-          "kind": "spot",
-          "prompt": "A 100 Ω resistor is put in parallel with a 1 MΩ resistor. The pair is:",
+          "id": "parallel_branch",
+          "kind": "relation",
+          "prompt": "Three lamps are in parallel across a bench supply that holds 12 V. One filament breaks. What do the other two lamps do?",
           "choices": [
             {
-              "text": "just under 100 Ω: the 1 MΩ barely changes it",
+              "text": "Stay lit as before: each still has its own loop through the supply",
               "correct": true
             },
             {
-              "text": "about 500 kΩ",
-              "feedback": "Parallel resistances don't average. Their conductances add: 1/100 + 1/1 000 000 comes almost all from the 100 Ω, so the pair is about 99.99 Ω."
+              "text": "Go dark: a break stops the current everywhere",
+              "feedback": "A break stops the current only in the loops that pass through it. Each lamp's loop runs from the supply through that lamp alone."
             },
             {
-              "text": "just over 1 MΩ",
-              "feedback": "Adding a parallel path always lowers the resistance, below the smaller of the two: just under 100 Ω."
+              "text": "Glow brighter: they take over the broken lamp's share",
+              "feedback": "Each lamp still has the same 12 V across it, so each draws what it drew before. The supply simply delivers less in total."
             }
           ]
         }
@@ -6946,6 +7176,108 @@
           "note": "An inductor's voltage is v = L·di/dt, so a rapidly changing current produces a voltage in a coil even though its steady-current drop is zero."
         }
       ]
+    },
+    {
+      "id": "mesh",
+      "term": "mesh",
+      "symbol": "mesh",
+      "aliases": [
+        "meshes",
+        "mesh current",
+        "mesh currents"
+      ],
+      "definition": "A loop in a circuit drawn without crossings that encloses no other branch: one window of the drawing. Mesh analysis gives each mesh a current and writes Kirchhoff's voltage law around it.",
+      "taughtIn": [
+        "mesh_analysis"
+      ],
+      "seeAlso": [
+        "kirchhoffs_voltage_law",
+        "node"
+      ],
+      "group": "networks",
+      "drills": [
+        {
+          "id": "mesh_count",
+          "kind": "which",
+          "prompt": "A circuit drawn without crossings has 7 branches and 5 nodes, ground included. How many meshes does it have?",
+          "choices": [
+            {
+              "text": "3",
+              "correct": true
+            },
+            {
+              "text": "2",
+              "feedback": "That is branches − nodes. Count the independent loops: meshes = branches − nodes + 1 = 7 − 5 + 1 = 3."
+            },
+            {
+              "text": "4",
+              "feedback": "That is nodes − 1, the number of nodal equations when no node is fixed. Meshes = branches − nodes + 1 = 3."
+            },
+            {
+              "text": "7",
+              "feedback": "Not every branch closes a loop of its own. Meshes = branches − nodes + 1 = 3."
+            }
+          ]
+        },
+        {
+          "id": "mesh_shared",
+          "kind": "relation",
+          "prompt": "Two clockwise mesh currents, I_1 = 3 mA and I_2 = 1 mA, share one resistor, and mesh 1 runs down through it. What current does the resistor carry?",
+          "choices": [
+            {
+              "text": "2 mA, down",
+              "correct": true
+            },
+            {
+              "text": "4 mA, down",
+              "feedback": "Both clockwise, the two currents run through the shared resistor in opposite directions: I_1 down, I_2 up. The difference flows: 2 mA down."
+            },
+            {
+              "text": "3 mA, down",
+              "feedback": "That is I_1 alone. I_2 also flows through the shared resistor, the other way: 3 − 1 = 2 mA down."
+            },
+            {
+              "text": "2 mA, up",
+              "feedback": "The size is right. The larger current, I_1, runs down, so the net 2 mA flows down."
+            }
+          ]
+        },
+        {
+          "id": "mesh_negative",
+          "kind": "spot",
+          "prompt": "A mesh current, assumed clockwise, solves to −0.5 mA. This means:",
+          "choices": [
+            {
+              "text": "0.5 mA flows counterclockwise; the solution is right",
+              "correct": true
+            },
+            {
+              "text": "a sign error in the equations; solve them again",
+              "feedback": "Nothing is wrong. The clockwise direction was a guess made before solving; a negative result means the current runs the other way."
+            },
+            {
+              "text": "no current flows in that mesh",
+              "feedback": "0.5 mA flows; the minus sign gives its direction, counterclockwise."
+            }
+          ]
+        }
+      ],
+      "physics": [
+        "A mesh current is a bookkeeping current that circulates around one window of the drawing. It enters and leaves every node it passes, so Kirchhoff's current law holds by construction, and only Kirchhoff's voltage law is left to write, once per mesh.",
+        "A branch on the outside of the drawing carries one mesh current; a branch between two meshes carries the difference of theirs, with both taken clockwise. Written for every mesh, KVL becomes R·i = v: each mesh's total resistance on the diagonal, minus the resistance two meshes share off it, and the source voltages around each mesh on the right.",
+        "Meshes exist only for circuits that can be drawn without crossings, and their number is branches − nodes + 1. Simulators use nodal analysis instead, which works for every circuit."
+      ],
+      "confusions": [
+        {
+          "title": "A negative mesh current is not an error.",
+          "text": "The clockwise direction is chosen before solving. A result of −0.5 mA means 0.5 mA counterclockwise; the size is the same whichever direction was assumed."
+        },
+        {
+          "title": "A shared resistor carries the difference.",
+          "text": "With 3 mA and 1 mA clockwise in two meshes, the resistor between them carries 3 − 1 = 2 mA, in the direction of the larger one, not 3 mA or 4 mA."
+        }
+      ],
+      "uses": "Hand analysis of circuits drawn without crossings that have fewer windows than unknown nodes, such as a bridge with a meter across it or two supplies sharing a load, and checking a simulator's branch currents by KVL."
     },
     {
       "id": "thevenin_equivalent",
@@ -9684,6 +10016,7 @@
       ],
       "definition": "The ratio of a circuit's output signal to its input signal, such as V_out/V_in for voltage gain; a negative gain means the output is inverted. It is often given in decibels, 20·log₁₀ of the voltage ratio.",
       "taughtIn": [
+        "dependent_sources",
         "opamp_inverting",
         "opamp_noninverting"
       ],
@@ -9695,21 +10028,48 @@
       "group": "amplifiers",
       "drills": [
         {
-          "id": "gain_noninv",
-          "kind": "relation",
-          "prompt": "A non-inverting amplifier has R_f = 47 kΩ and R_g = 4.7 kΩ. What is its voltage gain?",
+          "id": "gain_inverted",
+          "kind": "spot",
+          "prompt": "A stage's v_o/v_s is −8. Which is true?",
           "choices": [
             {
-              "text": "11",
+              "text": "The output is 8 times the input, and inverted",
               "correct": true
             },
             {
-              "text": "10",
-              "feedback": "R_f/R_g = 10 is the inverting stage's gain. A non-inverting stage gives 1 + R_f/R_g = 11, because its output must also lift the − input up to V_in."
+              "text": "The output is −8 V",
+              "feedback": "A gain is a ratio of two voltages, volts per volt, so it has no unit: v_o = −8 × v_s, whatever v_s is."
             },
             {
-              "text": "−10",
-              "feedback": "That is the inverting configuration. Fed at the + input, the output is in phase: 1 + 47/4.7 = 11."
+              "text": "The stage loses signal: the output is smaller than the input",
+              "feedback": "A negative gain isn't a loss. Its size, 8, is above 1, so the output is larger; the minus sign only inverts it."
+            },
+            {
+              "text": "The gain is 1/8: the output is an eighth of the input",
+              "feedback": "v_o/v_s = −8 puts v_o on top: the output is 8 times v_s. An eighth would be v_s/v_o."
+            }
+          ]
+        },
+        {
+          "id": "gain_noninv",
+          "kind": "relation",
+          "prompt": "An amplifier with A_vo = 50 gives v_o/v_s = 41.7 between a 10 kΩ source and a 2.2 kΩ load. Where did the rest of the gain go?",
+          "choices": [
+            {
+              "text": "Into two dividers: R_s with R_in at the input, R_out with the load at the output",
+              "correct": true
+            },
+            {
+              "text": "The amplifier is faulty: a working one gives A_vo in any circuit",
+              "feedback": "A_vo holds only with an ideal source and no load. A real source's R_s and a real load divide some of the signal away at each end."
+            },
+            {
+              "text": "The dependent source loses it as heat",
+              "feedback": "The dependent source gives exactly A_vo·v_in. The signal is lost across R_s and R_out, which drop part of it before it reaches R_in and the load."
+            },
+            {
+              "text": "Into the load: a larger load current always means a larger gain",
+              "feedback": "More load current means a larger drop across R_out and so less v_o. A heavier load lowers the gain."
             }
           ]
         },
@@ -9735,7 +10095,7 @@
         {
           "id": "gain_follower",
           "kind": "spot",
-          "prompt": "A voltage follower has a voltage gain of 1. Which is true?",
+          "prompt": "A stage has v_o/v_s = 1. Which is true?",
           "choices": [
             {
               "text": "It can still deliver far more power than the source, from its own supply.",
@@ -9743,11 +10103,11 @@
             },
             {
               "text": "It does nothing useful.",
-              "feedback": "Its input draws almost nothing while its output can supply tens of milliamps, so it keeps a weak source from being loaded."
+              "feedback": "With a large R_in it draws almost nothing from the source, and with a small R_out it can drive a heavy load: it keeps a weak source from being loaded."
             },
             {
-              "text": "Its gain in decibels is 1 dB.",
-              "feedback": "20·log₁₀(1) = 0 dB. A gain of 1 is 0 dB."
+              "text": "Its output equals v_s whatever load it drives.",
+              "feedback": "v_o/v_s = 1 holds for the load it was measured with. A heavier load draws more current through R_out and pulls v_o below v_s."
             }
           ]
         }
@@ -9871,6 +10231,162 @@
           "cite": "Tony R. Kuphaldt, Lessons in Electric Circuits, Vol. III (Semiconductors), ch. 8 \"Operational Amplifiers\", section \"Negative feedback\"",
           "url": "https://www.ibiblio.org/kuphaldt/electricCircuits/Semi/SEMI_8.html#xtocid90723",
           "note": "An op amp's output can only swing to its saturation voltages, about +14 V and −13 V for a 741 on ±15 V, so a circuit's gain holds only inside those limits."
+        }
+      ]
+    },
+    {
+      "id": "dependent_source",
+      "term": "dependent source",
+      "symbol": "E/G/F/H",
+      "aliases": [
+        "dependent sources",
+        "controlled source",
+        "controlled sources",
+        "VCVS",
+        "VCCS",
+        "CCVS",
+        "CCCS"
+      ],
+      "definition": "A source whose voltage or current is set by a voltage or current elsewhere in the circuit, times a fixed factor: a VCVS gives A·v, a VCCS g_m·v, a CCVS R_m·i and a CCCS β·i. It is drawn as a diamond and models what an amplifier or a transistor does; it is not a part you can buy.",
+      "taughtIn": [
+        "dependent_sources"
+      ],
+      "seeAlso": [
+        "gain",
+        "thevenin_equivalent",
+        "node"
+      ],
+      "group": "amplifiers",
+      "drills": [
+        {
+          "id": "depsrc_mosfet_kind",
+          "kind": "relation",
+          "prompt": "A MOSFET's gate draws no current, and each volt of v_gs changes its drain current by g_m. Which dependent source models it?",
+          "choices": [
+            {
+              "text": "VCCS: a voltage sets a current",
+              "correct": true
+            },
+            {
+              "text": "CCCS: a current sets a current",
+              "feedback": "No gate current flows, so there is no input current to do the controlling. The control is v_gs, a voltage."
+            },
+            {
+              "text": "VCVS: a voltage sets a voltage",
+              "feedback": "The drain carries a current set by v_gs; the voltage it makes depends on what the drain drives. The output is a current."
+            },
+            {
+              "text": "CCVS: a current sets a voltage",
+              "feedback": "Both ends are the other way round: the control is a voltage, v_gs, and the output is a current, g_m·v_gs."
+            }
+          ]
+        },
+        {
+          "id": "depsrc_rth",
+          "kind": "spot",
+          "prompt": "To find R_th of a circuit that contains a dependent source, which is right?",
+          "choices": [
+            {
+              "text": "Zero only the independent sources, then apply a test source (or use V_oc/I_sc)",
+              "correct": true
+            },
+            {
+              "text": "Zero every source, the dependent ones too, then combine resistors",
+              "feedback": "A dependent source's value follows the circuit's own voltages, which the test source changes. Zeroed, a source follower with R_S = 1 kΩ and g_m = 10 mS would read 1 kΩ instead of 91 Ω."
+            },
+            {
+              "text": "Replace the dependent source with a resistor of 1/gain",
+              "feedback": "That works only in special cases, such as a VCCS controlled by its own terminal voltage. In general, apply a test source and let the dependent source answer it."
+            }
+          ]
+        },
+        {
+          "id": "depsrc_unit",
+          "kind": "unit",
+          "prompt": "What unit does the factor g_m of a VCCS carry?",
+          "choices": [
+            {
+              "text": "siemens (A/V)",
+              "correct": true
+            },
+            {
+              "text": "ohms (V/A)",
+              "feedback": "Volts per amp is the R_m of a CCVS. A VCCS turns volts into amps: A/V, siemens."
+            },
+            {
+              "text": "none",
+              "feedback": "The A of a VCVS and the β of a CCCS are pure ratios. A VCCS turns volts into amps, so g_m is in A/V, siemens."
+            }
+          ]
+        },
+        {
+          "id": "depsrc_loaded_gain",
+          "kind": "relation",
+          "prompt": "An amplifier with R_in = 100 kΩ, A_vo = 50 and R_out = 200 Ω is driven from R_s = 10 kΩ and drives 2.2 kΩ. What is v_o/v_s?",
+          "choices": [
+            {
+              "text": "41.7",
+              "correct": true
+            },
+            {
+              "text": "50",
+              "feedback": "That is A_vo, the gain with an ideal source and no load. Both ends lose some: 100/110 at the input, 2.2/2.4 at the output."
+            },
+            {
+              "text": "45.5",
+              "feedback": "That keeps the input divider, 100/110, but leaves out the output one: R_out and the 2.2 kΩ load keep only 2.2/2.4."
+            },
+            {
+              "text": "45.8",
+              "feedback": "That keeps the output divider, 2.2/2.4, but leaves out the input one: R_s and R_in keep only 100/110 of v_s."
+            }
+          ]
+        }
+      ],
+      "unit": "the factor's: V/V for a VCVS's A, A/V (siemens) for a VCCS's g_m, V/A (ohms) for a CCVS's R_m, A/A for a CCCS's β",
+      "physics": [
+        "An independent source holds its voltage or current whatever the rest of the circuit does. A dependent source copies a voltage or current from somewhere else in the circuit, scaled by a fixed factor. In a real part the copy is done by a physical mechanism: the gate field of a MOSFET sets how much drain current flows, the base current of a bipolar transistor sets a collector current about β times larger, and an op amp's internal stages drive its output to about 10⁵ times the voltage between its inputs.",
+        "Near an operating point each of these relations is a straight line, so the model is linear and every linear method still works: nodal analysis, Thevenin, superposition. The one rule that changes is zeroing: only independent sources are inputs and can be set to zero. A dependent source stays in, because its value follows the circuit's own voltages and currents. In G·v = i its current at one node depends on another node's voltage, which adds a term to one row only, so G is no longer symmetric.",
+        "The model leaves out the supply that provides the energy. That is why a dependent source can deliver more power than its control takes, and why the model holds only while the real part stays in its linear range: an output can't swing beyond its supply."
+      ],
+      "typical": [
+        {
+          "what": "op amp, open-loop A (VCVS)",
+          "value": "10⁵–10⁶ V/V"
+        },
+        {
+          "what": "bipolar transistor, β (CCCS)",
+          "value": "about 100–300"
+        },
+        {
+          "what": "bipolar transistor at I_C = 1 mA, g_m = I_C/V_T",
+          "value": "about 39 mS"
+        },
+        {
+          "what": "small MOSFET at a few mA, g_m (VCCS)",
+          "value": "about 5–50 mS"
+        }
+      ],
+      "confusions": [
+        {
+          "title": "A dependent source is never zeroed.",
+          "text": "To find R_th, or for superposition, zero only the independent sources. A source follower with R_S = 1 kΩ and g_m = 10 mS has R_th = 1 kΩ ∥ 100 Ω = 91 Ω; zeroing g_m·v_gs would give 1 kΩ."
+        },
+        {
+          "title": "A_vo is not the gain you get.",
+          "text": "A_vo holds with an ideal source and no load. Driven from R_s = 10 kΩ into R_in = 100 kΩ, with R_out = 200 Ω into 2.2 kΩ, an A_vo of 50 gives 41.7."
+        },
+        {
+          "title": "A dependent current source ignores its load.",
+          "text": "β·i_b stays β·i_b whatever the load: a ten times smaller load resistance changes the output voltage, not the source's current."
+        }
+      ],
+      "uses": "Small-signal models of transistor stages, amplifier and op amp models (R_in, A_vo, R_out), SPICE's E, G, F and H elements, and the loading budget of a signal chain from a sensor through amplifier stages to its load.",
+      "sources": [
+        {
+          "cite": "Tony R. Kuphaldt, ModEL, SPICE Modeling of Amplifier Circuits (mod_spice_amp.pdf, last update 1 October 2026), ch. 3 \"SPICE Component Descriptions\", section 3.8 \"Linear dependent sources\"",
+          "url": "https://www.ibiblio.org/kuphaldt/socratic/model/mod_spice_amp.pdf",
+          "note": "Checked the four dependent-source types (a voltage- or current-controlled voltage or current source, SPICE E, G, H and F), that the current-controlled ones sense current through a named 0 V source, and that they model parts rather than being parts."
         }
       ]
     },
