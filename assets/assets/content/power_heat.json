@@ -1827,7 +1827,7 @@
         },
         {
           "text": "1/2 W",
-          "feedback": "0.45 W is 90% of 1/2 W. It might survive in cool air, but its body would run near its maximum temperature, against the rule: half of 1/2 W is only 0.25 W."
+          "feedback": "0.45 W is 90% of 1/2 W: inside its rating, so it would work, but with almost no margin. Its body would run hot even in room air, and in a warm enclosure it would come close to its temperature limit. The rule allows only half of 1/2 W, 0.25 W."
         },
         {
           "text": "1 W",

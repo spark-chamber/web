@@ -1,13 +1,13 @@
 {
-  "version": "0.6.0",
-  "date": "2026-10-06",
+  "version": "0.6.1",
+  "date": "2026-10-09",
   "highlights": [
-    "Ten new topics: loops and nodes, node-voltage and mesh-current analysis, superposition, dependent sources, RL time constants, switching transients, second-order circuits, clampers and voltage doublers, and small signals on a biased diode.",
-    "Solutions show their working as typeset math, one step per line, instead of flat text; more problems are converted in the next updates.",
-    "The calculator line is upright: fractions stack, powers rise and roots grow as you type; Settings switches back to a flat line.",
-    "The calculator gains Matrix and Complex modes, with complex numbers drawn as you type.",
-    "The drift problems show the conductor's cut face and its cross-section, and smaller steps lead up to the drift-time problem.",
-    "Formula sheets never clip: a long note moves to its own line."
+    "Practice keeps one steady layout: the circuit stays whole and in place, with Formulas on the left and the calculator on the right.",
+    "Keyboard play works throughout: Enter after a set, keys 1-4 in the final test, typing after the calculator closes, and Page Up and Page Down to scroll.",
+    "The upright calculator is easier to type in: exponents end where you expect, operators stay in their box, and a new ×10ⁿ key.",
+    "Loops and nodes explains node counting one node per line and says what an ideal supply does where it is used.",
+    "The X-ray tube problem gives the kinetic-energy step, and the Voltage and energy topic opens with a one-step problem.",
+    "Several wrong answers and false statements in problems are fixed."
   ],
   "notes_url": "https://sparkchamber.app/download.html#notes"
 }

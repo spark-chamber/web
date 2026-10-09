@@ -34,6 +34,10 @@
           "tex": "W = Q\\,V"
         },
         {
+          "label": "Kinetic energy (energy of motion) gained by a charge crossing V from rest, in a vacuum",
+          "tex": "\\mathrm{KE} = Q\\,V"
+        },
+        {
           "label": "Voltage across a part",
           "tex": "V_{ab} = V_a - V_b"
         },
@@ -532,8 +536,8 @@
     {
       "id": "ve_electron_energy",
       "topicId": "voltage_energy",
-      "level": "recall",
-      "prompt": "An X-ray tube has {V} between its hot cathode (the electron source) and its tungsten anode, anode positive. Each electron leaves the cathode almost at rest. Find the kinetic energy it has gained when it reaches the anode, in joules. The electron's charge is e = 1.602 × 10⁻¹⁹ C. Enter a power of ten as 2.5e-9 or 2.5 × 10^-9.",
+      "level": "reason",
+      "prompt": "An X-ray tube has {V} between its hot cathode (the electron source) and its tungsten anode, anode positive. Each electron leaves the cathode almost at rest and crosses the vacuum inside the tube. Find the kinetic energy (the energy of its motion) it has gained when it reaches the anode, in joules. The electron's charge is e = 1.602 × 10⁻¹⁹ C. Enter a power of ten as 2.5e-9 or 2.5 × 10^-9.",
       "variables": [
         {
           "name": "V",
@@ -569,16 +573,16 @@
         "formula": "1.602176634e-19*V",
         "unit": "J"
       },
-      "explanation": "A charge Q crossing a voltage V gains W = Q·V, and for one electron Q = e = 1.602 × 10⁻¹⁹ C. With the voltage in volts, {V} = {kv} × 10³ V, so W = e·V = 1.602 × 10⁻¹⁹ C × {kv} × 10³ V = {Wf} × 10⁻¹⁵ J = {answer} (1 fJ = 10⁻¹⁵ J). Units: C × J/C = J. In electron-volts the same energy is {EeV}: an electron crossing 1 V gains 1 eV. It is also the most energy any one X-ray photon from the tube can carry: every photon's energy comes from a single electron stopping in the anode, so no photon can carry more than that electron brought.",
+      "explanation": "Crossing the tube, the electric field does work Q·V on the electron. The tube is a vacuum, so nothing else takes that energy along the way: all of it becomes kinetic energy, KE = Q·V. For one electron, Q is the magnitude of its charge, e = 1.602 × 10⁻¹⁹ C. With the voltage in volts, {V} = {kv} × 10³ V, so KE = 1.602 × 10⁻¹⁹ C × {kv} × 10³ V = {Wf} × 10⁻¹⁵ J = {answer} (1 fJ = 10⁻¹⁵ J). Units: C × J/C = J. In electron-volts the same energy is {EeV}: an electron crossing 1 V gains 1 eV. It is also the most energy any one X-ray photon from the tube can carry: every photon's energy comes from a single electron stopping in the anode, so no photon can carry more than that electron brought.",
       "explanationSteps": [
         {
-          "text": "A charge Q crossing a voltage V gains"
+          "text": "Crossing the tube, the electric field does work Q·V on the electron. The tube is a vacuum, so nothing else takes that energy along the way: all of it becomes kinetic energy."
         },
         {
-          "math": "W = Q\\cdot V"
+          "math": "\\mathrm{KE} = Q\\cdot V"
         },
         {
-          "text": "For one electron,"
+          "text": "For one electron, Q is the magnitude of its charge:"
         },
         {
           "math": "Q = e = 1.602\\times 10^{-19}\\ \\mathrm{C}"
@@ -590,7 +594,10 @@
           "math": "[[V]] = [[kv]]\\times 10^{3}\\ \\mathrm{V}"
         },
         {
-          "math": "W = e\\cdot V = 1.602\\times 10^{-19}\\ \\mathrm{C}\\times [[kv]]\\times 10^{3}\\ \\mathrm{V} = [[Wf]]\\times 10^{-15}\\ \\mathrm{J}",
+          "math": "\\mathrm{KE} = 1.602\\times 10^{-19}\\ \\mathrm{C}\\times [[kv]]\\times 10^{3}\\ \\mathrm{V}"
+        },
+        {
+          "math": "\\mathrm{KE} = [[Wf]]\\times 10^{-15}\\ \\mathrm{J}",
           "result": "[[answer]]"
         },
         {
@@ -604,17 +611,17 @@
         }
       ],
       "hints": [
-        "W = Q·V holds for one electron too: Q is the electron's charge.",
-        "W = e·V, with the voltage in volts: 1 kV = 10³ V."
+        "Crossing the tube, the field does work Q·V on the electron. The tube is a vacuum, so nothing else takes that energy: it all becomes kinetic energy, KE = Q·V.",
+        "Q is the electron's charge, e = 1.602 × 10⁻¹⁹ C, and the voltage goes in volts: 1 kV = 10³ V. So KE = e·V."
       ],
       "misconceptions": [
         {
           "formula": "V/1.602176634e-19",
-          "feedback": "Dividing the voltage by the charge gives volts per coulomb, not joules. A volt is a joule per coulomb, so multiply: W = e·V."
+          "feedback": "Dividing the voltage by the charge gives volts per coulomb, not joules. A volt is a joule per coulomb, so multiply: KE = e·V."
         },
         {
           "formula": "1.602176634e-19/V",
-          "feedback": "Charge divided by voltage is coulombs per volt, not an energy. A volt is a joule per coulomb, so multiply: W = e·V."
+          "feedback": "Charge divided by voltage is coulombs per volt, not an energy. A volt is a joule per coulomb, so multiply: KE = e·V."
         },
         {
           "formula": "1.602176634e-19*V/1000",
@@ -622,7 +629,7 @@
         },
         {
           "formula": "V",
-          "feedback": "That is the energy in electron-volts, {EeV}, entered as joules. One electron-volt is 1.602 × 10⁻¹⁹ J, so in joules W = e·V."
+          "feedback": "That is the energy in electron-volts, {EeV}, entered as joules. One electron-volt is 1.602 × 10⁻¹⁹ J, so in joules KE = e·V."
         }
       ],
       "noDrawing": "a single electron accelerated in a vacuum tube; no circuit to solve",
@@ -1211,7 +1218,7 @@
     {
       "id": "ve_voltage_across",
       "topicId": "voltage_energy",
-      "level": "recall",
+      "level": "reason",
       "prompt": "A 12 V battery lights a lamp. Which sentence describes the circuit correctly?",
       "variables": [],
       "choices": [
@@ -1304,7 +1311,7 @@
     {
       "id": "ve_node_label",
       "topicId": "voltage_energy",
-      "level": "recall",
+      "level": "reason",
       "prompt": "A schematic labels node b \"5 V\". What does that label mean?",
       "variables": [],
       "choices": [

@@ -279,7 +279,7 @@
             },
             {
               "text": "Yes: electrons have almost no mass, so nothing slows them down",
-              "feedback": "Free electrons collide constantly with the vibrating atoms of the metal; those collisions keep their net drift slow, and they are what heat a wire carrying current."
+              "feedback": "Something does hold them back: they collide constantly with the vibrating atoms of the metal, which is the wire's resistance and what heats it. But neither mass nor collisions set the drift at a given current: v = I/(nAe), and n is enormous, so the drift is slow. A superconductor (a wire with no resistance at all) carrying the same current drifts just as slowly."
             },
             {
               "text": "No: electrons don't move along a wire at all in DC; only energy moves",

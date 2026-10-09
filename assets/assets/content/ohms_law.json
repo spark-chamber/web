@@ -178,7 +178,7 @@
           "prompt": "An ammeter is inserted in the wire from R1 back to the battery's − terminal. What does it read?",
           "choices": [
             {
-              "text": "{I}, the same as the current into R1",
+              "text": "{I}, because every coulomb that enters R1 also leaves it",
               "correct": true,
               "feedback": "Right: charge can't pile up in R1 or vanish in it, so the current out equals the current in. What each coulomb gives up in R1 is energy, measured as the voltage across it."
             },
@@ -191,8 +191,8 @@
               "feedback": "R1 turns energy into heat, not current. If no current came out of R1, none could go in either: a resistor in a single loop sets the current for the whole loop."
             },
             {
-              "text": "More than {I}, because the battery's − terminal attracts the electrons",
-              "feedback": "The current in a single loop is the same at every point, the terminals included. The − terminal has no extra pull that adds current on one side of R1."
+              "text": "More than {I}, because the charge speeds up after passing R1",
+              "feedback": "Current is the charge passing a point each second, not the speed of the charge: in a thinner wire the same current drifts faster. Charge can't pile up or appear anywhere in the loop, so the same {I} passes every point, after R1 too."
             }
           ],
           "explanation": "In a single loop the current is the same at every point (charge and current). R1 sets how large that current is, I = V/R, and the energy each coulomb gives up crossing it, {Wc}, appears as heat in R1."
@@ -1059,7 +1059,7 @@
       "derived": [
         {
           "name": "Rh",
-          "formula": "Rc*(1+0.00393*(T-20))",
+          "formula": "round(Rc*(1+0.00393*(T-20)))",
           "unit": "Ω"
         },
         {

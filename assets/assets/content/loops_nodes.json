@@ -30,6 +30,10 @@
           "tex": "I_{\\text{lead}} = I_1 + I_2"
         },
         {
+          "label": "Branches straight across an ideal supply",
+          "tex": "I_1 \\ \\text{unchanged when branch 2 opens}"
+        },
+        {
           "label": "A break in a loop",
           "tex": "I = 0 \\ \\text{everywhere in that loop}"
         },
@@ -84,7 +88,7 @@
         "unitless": true,
         "tolerance": 0.001
       },
-      "explanation": "A node is all the metal joined together, so follow the wires instead of counting lines: the battery's + terminal and R1's left end (1); R1's right end, the dot above LMP1, the hump over the top and R2's left end, all one wire (2); between R2 and R3 (3); the long return along the bottom, joining the battery's − terminal, LMP1 and R3 (4). Check: five parts have 10 terminals, and 2 + 3 + 2 + 3 = 10.",
+      "explanation": "A node is all the metal joined together, so follow the wires instead of counting lines. Node 1 joins 2 terminals: the battery's + terminal and R1's left end. Node 2 joins 3: R1's right end, LMP1's top and R2's left end. The dot above LMP1, the hump over the top and the runs between them are all one wire. Node 3 joins 2: R2's right end and R3's top. Node 4 joins 3: the battery's − terminal, LMP1's bottom and R3's bottom, all on the long return along the bottom. Check: the terminals listed for each node must together cover every terminal exactly once. Five parts, the battery included, have 2 terminals each, 10 in all, and the node counts must add up to the same: 2 + 3 + 2 + 3 = 10.",
       "hints": [
         "Bends, length and a hump in a wire don't split it. Only a part does.",
         "Start at one terminal and follow every piece of wire joined to it until you reach parts. That whole set is one node. Then do the same from a terminal you haven't reached yet."
@@ -233,7 +237,31 @@
           ]
         ]
       },
-      "review": "checked"
+      "review": "checked",
+      "explanationSteps": [
+        {
+          "text": "A node is all the metal joined together, so follow the wires instead of counting lines."
+        },
+        {
+          "text": "Node 1 joins 2 terminals: the battery's + terminal and R1's left end."
+        },
+        {
+          "text": "Node 2 joins 3: R1's right end, LMP1's top and R2's left end. The dot above LMP1, the hump over the top and the runs between them are all one wire."
+        },
+        {
+          "text": "Node 3 joins 2: R2's right end and R3's top."
+        },
+        {
+          "text": "Node 4 joins 3: the battery's − terminal, LMP1's bottom and R3's bottom, all on the long return along the bottom."
+        },
+        {
+          "text": "Check: each node's line names the terminals it joins, and together the lines must name every terminal exactly once. Five parts, the battery included, have 2 terminals each, 10 in all, and the node counts must add up to the same:"
+        },
+        {
+          "math": "2 + 3 + 2 + 3",
+          "result": "10"
+        }
+      ]
     },
     {
       "id": "ln_read_series",
@@ -404,6 +432,7 @@
     {
       "id": "ln_parallel_which",
       "topicId": "loops_nodes",
+      "level": "recall",
       "prompt": "Which part is in parallel with LMP1?",
       "variables": [],
       "choices": [
@@ -937,7 +966,7 @@
       "id": "ln_branch_break",
       "topicId": "loops_nodes",
       "level": "reason",
-      "prompt": "LMP2's filament breaks. Find the new reading on A2. Assume an ideal supply.",
+      "prompt": "LMP2's filament breaks. Find the new reading on A2. Assume an ideal supply: one that drives each branch exactly as before, whatever else is connected.",
       "variables": [
         {
           "name": "I1",
@@ -972,10 +1001,10 @@
         "unit": "A",
         "tolerance": 0.02
       },
-      "explanation": "LMP1 has a loop of its own: from the supply's + terminal through A1 and A2, through LMP1 and back. The break is in LMP2's branch, outside that loop. An ideal supply drives each branch the same whether or not the other is connected (a real supply sags a little), so LMP1 carries what it did before: A2 stays at {I1}. Only LMP2's loop is open, so A3 falls to 0 A.",
+      "explanation": "LMP1 has a loop of its own: from the supply's + terminal through A1 and A2, through LMP1 and back. The break is in LMP2's branch, outside that loop. LMP1's loop is untouched, and an ideal supply drives it exactly as before, whether or not LMP2's branch is connected (a real one sags a little): it holds its voltage, the push on the charges, fixed. So LMP1 carries what it did before: A2 stays at {I1}. Only LMP2's loop is open, so A3 falls to 0 A.",
       "hints": [
         "Trace the loop that runs through A2 and LMP1. Does it pass through LMP2?",
-        "LMP1's two ends are still on the supply's two terminals, and an ideal supply drives them just as before."
+        "LMP1's two ends are still joined to the supply's two terminals, so its loop is untouched. An ideal supply drives that loop exactly as before, whatever else is connected, so A2 doesn't change."
       ],
       "misconceptions": [
         {
@@ -1122,7 +1151,7 @@
     {
       "id": "ln_fault_branches",
       "topicId": "loops_nodes",
-      "prompt": "Which fault explains the readings?",
+      "prompt": "Which fault explains the readings? Assume an ideal supply: it drives each branch exactly as before, whatever else is connected.",
       "variables": [
         {
           "name": "R1",
@@ -1192,7 +1221,7 @@
       "explanation": "Read the meters as loops. The supply lead carries the sum of the two branches, so A1 = A2 + A3 in every case. A branch reading 0 A has a break in that branch only; every meter at 0 A means the break is in the path both branches share; a branch reading higher than healthy has had part of its path bridged.",
       "hints": [
         "Which meters read 0 A? A break stops the current in every loop that passes through it, and only those.",
-        "A1 is in the path both branches share. A2 and A3 are each in one branch."
+        "A1 is in the path both branches share; A2 and A3 are each in one branch. An ideal supply drives each branch as before, so a break in one branch leaves the other branch's reading unchanged."
       ],
       "schematic": {
         "netlist": "branches\nV1 a d 9\nRS1 a b 0.01\nR1 b c {R1:spice}\nRL1 c d 120\nR2 b e {R2:spice}\nRL2 e d 120\n",

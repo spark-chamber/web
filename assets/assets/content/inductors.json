@@ -778,16 +778,17 @@
       "id": "ind_turns_al",
       "topicId": "inductors",
       "level": "recall",
-      "prompt": "A ferrite toroid's datasheet gives its inductance factor A_L = {AL} per turn² (L = A_L·N²). How many turns must be wound on it for an inductance of {L}? Give the number of turns (enter 12 for 12 turns).",
+      "prompt": "A ferrite toroid's datasheet gives its inductance factor A_L = {AL} per turn² (L = A_L·N²). Each turn is one full pass of the wire through the core's hole, so a winding has a whole number of turns. What is the fewest whole turns that give at least {L}? (Enter 12 for 12 turns.)",
       "variables": [
         {
           "name": "L",
           "unit": "H",
           "values": [
-            0.0001,
+            0.00015,
             0.00022,
+            0.00033,
             0.00047,
-            0.001
+            0.00068
           ]
         },
         {
@@ -801,15 +802,15 @@
         }
       ],
       "answer": {
-        "formula": "sqrt(L/AL)",
+        "formula": "N",
         "unit": "",
         "unitless": true,
-        "tolerance": 0.05
+        "tolerance": 0.005
       },
-      "explanation": "L = A_L·N², so N = √(L/A_L) = √({L} / {AL}) = {answer}. Wind the nearest whole number of turns and measure: one turn more or less changes L by about 2/N of its value. The square root is there because L grows as N²: each turn adds to the flux, and the flux passes through every turn.",
+      "explanation": "L = A_L·N², so N = √(L/A_L) = √({L} / {AL}) = {Nx}. The wire can't stop partway through the core, and fewer turns give less inductance, so round up: {answer} turns, which give A_L·N² = {AL} × {answer}² = {Lw}, at least the {L} needed. Then wind it and measure: A_L has a wide tolerance, and one turn more or less changes L by about 2/N of its value. The square root is there because L grows as N²: each turn adds to the flux, and the flux passes through every turn.",
       "hints": [
-        "Rearrange L = A_L·N² for N.",
-        "N = √(L/A_L), with both in henries."
+        "Rearrange L = A_L·N² for N, then think about which way to round.",
+        "N = √(L/A_L), with both in henries; round up to a whole turn."
       ],
       "misconceptions": [
         {
@@ -819,6 +820,14 @@
         {
           "formula": "sqrt(L*AL)",
           "feedback": "You multiplied by A_L. L = A_L·N², so N² = L/A_L: divide the inductance by A_L, then take the square root."
+        },
+        {
+          "formula": "sqrt(L/AL)",
+          "feedback": "That is √(L/A_L) exactly, but a winding can't stop partway through the core: each turn is a full pass of the wire. Round up to the next whole turn."
+        },
+        {
+          "formula": "round(sqrt(L/AL)-0.4999)",
+          "feedback": "You rounded down. Fewer turns give less inductance, so A_L·N² with that count falls short of {L}. Round up to the next whole turn."
         }
       ],
       "followUps": [
@@ -847,7 +856,24 @@
         }
       ],
       "noDrawing": "about winding a coil on a core; no circuit to analyze",
-      "review": "verified"
+      "review": "verified",
+      "derived": [
+        {
+          "name": "Nx",
+          "formula": "sqrt(L/AL)",
+          "unit": ""
+        },
+        {
+          "name": "N",
+          "formula": "round(sqrt(L/AL)+0.4999)",
+          "unit": ""
+        },
+        {
+          "name": "Lw",
+          "formula": "AL*N^2",
+          "unit": "H"
+        }
+      ]
     },
     {
       "id": "ind_choose_part",
