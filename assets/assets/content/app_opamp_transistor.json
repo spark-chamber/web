@@ -851,6 +851,18 @@
           }
         }
       ],
+      "derived": [
+        {
+          "name": "Rf",
+          "formula": "1000*(G1-1)",
+          "unit": "Ω"
+        },
+        {
+          "name": "R2",
+          "formula": "1000*G2",
+          "unit": "Ω"
+        }
+      ],
       "answer": {
         "formula": "-G1*G2",
         "unit": "",
@@ -897,7 +909,8 @@
         }
       ],
       "schematic": {
-        "netlist": "Two stages (drawing)\nV1 in 0 1\nX1 in fb m OA\nRF m fb 1k\nRG fb 0 1k\nR3 m inv2 1k\nR4 inv2 out 1k\nX2 0 inv2 out OA\n.model OA OPAMP(A=1e5)\n",
+        "netlist": "Two stages\nV1 in 0 10m\nX1 in fb m OA\nRF m fb {Rf:spice}\nRG fb 0 1k\nR1 m inv2 1k\nR2 inv2 out {R2:spice}\nX2 0 inv2 out OA\n.model OA OPAMP(A=1e5)\n",
+        "benchNote": "R_f = {Rf} over R_g = 1 kΩ gives stage 1 its gain of {G1}, and R_2 = {R2} over R_1 = 1 kΩ gives stage 2 −{G2}; the input is 10 mV so both outputs stay well inside the op amps' ±12 V limits.",
         "parts": [
           {
             "ref": "V1",
@@ -936,7 +949,7 @@
             "label": "R_f"
           },
           {
-            "ref": "R3",
+            "ref": "R1",
             "at": [
               16,
               4
@@ -944,7 +957,7 @@
             "label": "R_1"
           },
           {
-            "ref": "R4",
+            "ref": "R2",
             "at": [
               22,
               1

@@ -413,6 +413,16 @@
           "name": "f",
           "formula": "fc*x",
           "unit": "Hz"
+        },
+        {
+          "name": "C",
+          "formula": "1e-8",
+          "unit": "F"
+        },
+        {
+          "name": "R",
+          "formula": "1/(2*pi*C*fc)",
+          "unit": "Ω"
         }
       ],
       "answer": {
@@ -458,7 +468,8 @@
         }
       ],
       "schematic": {
-        "netlist": "RC low-pass\nV1 in 0 SIN(0 1 {f:spice})\nR1 in out 1k\nC1 out 0 1u\n",
+        "netlist": "RC low-pass\nV1 in 0 SIN(0 1 {f:spice})\nR1 in out {R:spice}\nC1 out 0 {C:spice}\n",
+        "benchNote": "C is fixed at {C} and R set to {R}, so the filter's corner is this problem's f_c = {fc}; the generator runs at {f}, 1 V peak.",
         "parts": [
           {
             "ref": "V1",
@@ -1251,6 +1262,16 @@
           "name": "tau",
           "formula": "1/(2*pi*fc)",
           "unit": "s"
+        },
+        {
+          "name": "C",
+          "formula": "1e-7",
+          "unit": "F"
+        },
+        {
+          "name": "R",
+          "formula": "1/(2*pi*C*fc)",
+          "unit": "Ω"
         }
       ],
       "answer": {
@@ -1306,7 +1327,8 @@
         }
       ],
       "schematic": {
-        "netlist": "Sensor into an RC low-pass\nV1 in 0 PULSE(0 1 0 1n 1n 1 2)\nR1 in out 1k\nC1 out 0 1u\n",
+        "netlist": "Sensor into an RC low-pass\nV1 in 0 PULSE(0 1 0 1n 1n 1 2)\nR1 in out {R:spice}\nC1 out 0 {C:spice}\n",
+        "benchNote": "C is fixed at {C} and R set to {R}, so RC = {tau}, the time constant of this problem's f_c = {fc}.",
         "parts": [
           {
             "ref": "V1",

@@ -298,6 +298,18 @@
           }
         }
       ],
+      "derived": [
+        {
+          "name": "R1",
+          "formula": "10000*(1-k)",
+          "unit": "Ω"
+        },
+        {
+          "name": "R2",
+          "formula": "10000*k",
+          "unit": "Ω"
+        }
+      ],
       "answer": {
         "formula": "20*log10(k)",
         "unit": "dB",
@@ -409,7 +421,8 @@
             ]
           }
         ],
-        "netlist": "divider\nV1 in 0 5\nR1 in out 1k\nR2 out 0 1k\n"
+        "netlist": "divider\nV1 in 0 5\nR1 in out {R1:spice}\nR2 out 0 {R2:spice}\n",
+        "benchNote": "R1 = {R1} and R2 = {R2} (10 kΩ in total) make the output {k} times the 5 V input."
       },
       "review": "verified"
     },

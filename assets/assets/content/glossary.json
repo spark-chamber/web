@@ -3084,7 +3084,7 @@
         {
           "id": "cross_section_drift",
           "kind": "which",
-          "prompt": "A 22 AWG copper wire (0.326 mm²) is spliced to a 14 AWG copper wire (2.08 mm²), and 1 A flows through both. Where do the electrons drift more slowly?",
+          "prompt": "AWG is American Wire Gauge, the US wire-size scale: a bigger number is a thinner wire. A 22 AWG copper wire (0.326 mm²) is spliced to a 14 AWG copper wire (2.08 mm²), and 1 A flows through both. Where do the electrons drift more slowly?",
           "choices": [
             {
               "text": "In the 14 AWG wire, about 6 times more slowly",
@@ -3103,7 +3103,7 @@
         {
           "id": "cross_section_resistance",
           "kind": "relation",
-          "prompt": "One meter of 20 AWG copper (0.518 mm²) measures 33 mΩ. About what does one meter of 14 AWG copper (2.08 mm²) measure?",
+          "prompt": "AWG is American Wire Gauge, the US wire-size scale: a bigger number is a thinner wire. One meter of 20 AWG copper (0.518 mm²) measures 33 mΩ. About what does one meter of 14 AWG copper (2.08 mm²) measure?",
           "choices": [
             {
               "text": "8.3 mΩ",
@@ -3200,6 +3200,122 @@
           "note": "Inductance rises with turns, core area and permeability and falls with coil length; the section's approximate formula is L = N²µA/l (µ = µrµ0, A in m², l in m)."
         }
       ]
+    },
+    {
+      "id": "awg",
+      "term": "AWG",
+      "symbol": "AWG",
+      "aliases": [
+        "American Wire Gauge",
+        "wire gauge",
+        "wire gauges"
+      ],
+      "definition": "American Wire Gauge, the US scale of wire sizes, on which a bigger number is a thinner wire: 22 AWG, typical hookup wire, is 0.644 mm across and 0.326 mm² in cross-section. The number only names a size; a calculation uses the cross-section or diameter it stands for, read from a wire table.",
+      "taughtIn": [
+        "ohms_law"
+      ],
+      "seeAlso": [
+        "cross_sectional_area",
+        "resistivity"
+      ],
+      "group": "charge and fields",
+      "drills": [
+        {
+          "id": "awg_thicker",
+          "kind": "which",
+          "prompt": "Which copper wire is thicker?",
+          "choices": [
+            {
+              "text": "14 AWG",
+              "correct": true
+            },
+            {
+              "text": "22 AWG",
+              "feedback": "AWG runs backward: a bigger number is a thinner wire. 22 AWG is 0.326 mm², 14 AWG is 2.08 mm², about six times the area."
+            },
+            {
+              "text": "Neither can be said without knowing their lengths",
+              "feedback": "The gauge names the wire's diameter, and so its cross-section, whatever the length: 14 AWG is 1.63 mm across, 22 AWG 0.644 mm."
+            }
+          ]
+        },
+        {
+          "id": "awg_six_steps",
+          "kind": "relation",
+          "prompt": "Copper wire of the same length is changed from 14 AWG (2.08 mm²) to 20 AWG (0.518 mm²). Its resistance becomes about:",
+          "choices": [
+            {
+              "text": "4 times as large",
+              "correct": true
+            },
+            {
+              "text": "a quarter as large",
+              "feedback": "A bigger gauge number is a thinner wire: 20 AWG has a quarter of the area, and R = ρL/A, so four times the resistance."
+            },
+            {
+              "text": "1.4 times as large, from 20/14",
+              "feedback": "Gauge numbers can't be divided like sizes: the scale is geometric, about 12% in diameter per step. Six steps halve the diameter and quarter the area: 2.08/0.518 ≈ 4."
+            },
+            {
+              "text": "2 times as large",
+              "feedback": "Six steps halve the diameter, but resistance follows the area, which goes with the diameter squared: a quarter of the area, four times the resistance."
+            }
+          ]
+        },
+        {
+          "id": "awg_in_formula",
+          "kind": "spot",
+          "prompt": "Which is true of 22 AWG copper hookup wire?",
+          "choices": [
+            {
+              "text": "Its cross-section is 0.326 mm², and that area, not the number 22, goes into R = ρL/A",
+              "correct": true
+            },
+            {
+              "text": "It is 22 thousandths of an inch across, and that diameter goes into A = πd²/4",
+              "feedback": "The gauge number is not a dimension: 22 AWG is 0.644 mm (0.025 in) across. A wire table turns the number into its diameter and area."
+            },
+            {
+              "text": "It is thicker than 14 AWG, since 22 is the larger number and gauge numbers grow with the diameter",
+              "feedback": "AWG runs backward: a bigger number is a thinner wire. 14 AWG is 2.08 mm², over six times the area of 22 AWG's 0.326 mm²."
+            }
+          ]
+        }
+      ],
+      "unit": "none: a gauge number names a size; wire tables give its diameter (mm) and cross-section (mm²)",
+      "physics": [
+        "The scale is geometric, not linear. It is fixed by two ends, 36 AWG at 0.005 in (0.127 mm) across and 0000 AWG (\"4/0\") at 0.46 in (11.7 mm), with 39 equal ratio steps between them, so gauge n has the diameter d = 0.127 mm × 92^((36 − n)/39). Each step changes the diameter by 92^(1/39) ≈ 1.123, about 12%. Six steps double the diameter (1.123⁶ ≈ 2.005), and since the area goes with the diameter squared, three steps very nearly double the area and halve the resistance per meter.",
+        "Going down the numbers makes the wire thicker: 14 AWG has about six times the area of 22 AWG (2.08 mm² against 0.326 mm²), so a sixth of the resistance per meter. Above 0000 AWG, US tables give conductors by area instead, in kcmil: thousands of circular mils, where a circular mil is the area of a circle 0.001 in across, so 1 kcmil = 0.507 mm². Outside the US, wire is sold by its cross-section in mm² directly (0.5 mm², 1.5 mm², 2.5 mm²)."
+      ],
+      "typical": [
+        {
+          "what": "24 AWG, each conductor of a Cat 5e Ethernet cable",
+          "value": "0.205 mm² (0.511 mm diameter)"
+        },
+        {
+          "what": "22 AWG solid, breadboard hookup wire",
+          "value": "0.326 mm² (0.644 mm diameter)"
+        },
+        {
+          "what": "18 AWG, a typical 12 V lamp or pump lead",
+          "value": "0.823 mm² (1.02 mm diameter)"
+        },
+        {
+          "what": "14 AWG, US 15 A household branch circuits",
+          "value": "2.08 mm² (1.63 mm diameter)"
+        }
+      ],
+      "confusions": [
+        {
+          "title": "A bigger gauge number is a thinner wire.",
+          "text": "The scale runs backward: 22 AWG (0.326 mm²) is thinner than 14 AWG (2.08 mm²), and has about six times its resistance per meter."
+        },
+        {
+          "title": "The gauge number is not a size to calculate with.",
+          "text": "22 is a position on the scale, not a diameter or an area, and it has no unit. R = ρL/A needs the cross-section it stands for: 0.326 mm² = 0.326 × 10⁻⁶ m² for 22 AWG."
+        }
+      ],
+      "uses": "Choosing hookup wire and cable from US parts lists and datasheets: a wire table turns the gauge into a cross-section and a resistance per meter, which set the voltage a run loses and how warm it gets at a given current."
     },
     {
       "id": "power",

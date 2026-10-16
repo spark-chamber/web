@@ -250,7 +250,7 @@
     {
       "id": "divider_current",
       "quantity": "Divider current",
-      "how": "The A and W tool on the battery, at 9.6 V",
+      "how": "With the battery at 9.6 V, after Run, press M until the meter's A tool is on, click one of the battery's pins (the meter goes into the loop there), then put the red lead in the socket marked mA (click it).",
       "measure": {
         "kind": "supplyCurrent"
       },

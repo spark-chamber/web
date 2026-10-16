@@ -3,7 +3,9 @@
   "number": "0",
   "region": "indicators",
   "title": "First light",
-  "brief": "A 9 V battery, a 1 kΩ resistor and a red LED are on the Bench, wired except for the return from the LED's cathode to the battery's negative terminal. Before you run anything, predict the LED's current: the resistor drops what the LED leaves of the 9 V, and a red LED drops about 1.9 V when lit. Close the loop with one wire (W), press Run (F5) and read the current with the meter's A and W tool on the LED. Then submit the design.",
+  "brief": "A 9 V battery, a 1 kΩ (1000 Ω) resistor and a red LED are on the Bench, wired except for the return from the LED's cathode (its bar end) to the battery's − terminal. Close the loop with one wire (W), then press Run (F5): it asks for your prediction of the LED's current before it runs. One loop: the same current flows through the battery, R1 and D1, so the LED's current is R1's, and a resistor's current is the voltage across it divided by its resistance. To read the current, press M until the meter's A tool is on, click D1's anode pin (the one on R1's side; the meter goes into the loop there), then click the socket marked mA (milliamps: 1 mA = 0.001 A) to put the red lead in it. Then submit the design.",
+  "debrief": "If you predicted 9 V / 1 kΩ = 9 mA, the meter said 7.11 mA. Where did the rest of the 9 V go? Put the meter across each part (M, V between): 1.887 V across the LED (D1), 7.11 V across the resistor (R1; 7.113 V, but from 6 V up the meter shows two decimals). 1.887 V + 7.113 V = 9.000 V: around a closed loop the voltages across the parts add up to the source.\n\nA lit LED holds a nearly fixed voltage (its forward voltage), about 1.9 V for this red LED, so R1 gets only what is left: 7.113 V / 1 kΩ = 7.113 mA, not 9 mA. The meter's own 1 Ω mA shunt adds to the loop's 1 kΩ while it reads, lowering the current by about one part in a thousand, too little to change the display. At the cathode pin the same current reads −7.11 mA: it enters the black lead, and the sign says which way it flows through the meter.\n\n7.11 mA means 7.11 thousandths of a coulomb of charge pass each second, about 4.4 × 10¹⁶ electrons: Charge and current, below, is about that.",
+  "learn": "charge_current",
   "card": {
     "goal": "Close the loop and light the LED.",
     "predict": "Predict the LED current before you run it.",
@@ -18,16 +20,17 @@
       },
       "R1": {
         "label": "1 kΩ resistor",
-        "detail": "1 kΩ, given and fixed"
+        "detail": "1 kΩ (1000 Ω), given and fixed"
       },
       "D1": {
         "label": "Red LED",
-        "detail": "Bench model DRED: about 1.9 V when lit"
+        "detail": "A red LED: lights when current flows the way its arrow points, in at the anode (+) and out at the cathode (−, the bar). Bench model DRED."
       }
     },
     "details": [
-      "Open: the return from the LED's cathode to the battery's negative terminal. One wire closes it.",
-      "R1 drops what the LED leaves of the 9 V."
+      "Open: the return from the LED's cathode (its bar end) to the battery's − terminal. One wire closes it.",
+      "One loop: the same current flows through the battery, R1 and D1, so the LED's current is R1's.",
+      "A resistor's current is the voltage across it divided by its resistance."
     ]
   },
   "silhouette": {
@@ -188,7 +191,7 @@
     {
       "id": "led_current",
       "quantity": "LED current",
-      "how": "Meter in series with the LED (the A and W tool on D1), after Run",
+      "how": "After Run, press M until the meter's A tool is on, click D1's anode pin (the one on R1's side; the meter goes into the loop there), then click the socket marked mA (milliamps: 1 mA = 0.001 A) to put the red lead in it.",
       "measure": {
         "kind": "current",
         "type": "led"
@@ -196,18 +199,18 @@
       "min": 0.005,
       "max": 0.01,
       "unit": "A",
-      "note": "With the loop open, no current flows and the LED stays dark. The window fails a loop that bypasses the LED or shorts the resistor."
+      "note": "With the loop open, no current flows and the LED stays dark. The check fails if the wire goes around the LED or across the resistor."
     },
     {
       "id": "led_voltage",
       "quantity": "Voltage across the LED",
-      "how": "V between, red lead on the anode, black on the cathode",
+      "how": "The meter's V between (M): red lead on the anode, black on the cathode",
       "measure": {
         "kind": "voltageAcross",
         "type": "led"
       },
       "unit": "V",
-      "note": "A reading, not a limit: the LED's forward voltage at this current, from the Bench's red LED model (DRED)."
+      "note": "A reading, not a limit: the voltage the LED holds while lit (its forward voltage), from the Bench's red LED model."
     }
   ],
   "clearing": {

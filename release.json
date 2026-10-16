@@ -1,12 +1,13 @@
 {
-  "version": "0.6.2",
-  "date": "2026-10-12",
+  "version": "0.7.0",
+  "date": "2026-10-16",
   "highlights": [
-    "The Bench oscilloscope is now a full front panel: glowing traces, volts and time per division knobs with printed scales, AC/GND/DC switches, trigger level, mode and slope, Run/Stop, Single and Autoset.",
-    "MEASURE reads Vpp, Vmax, Vavg, Vrms, frequency and the phase and lag between the two channels; CURSOR gives Δt, 1/Δt and ΔV.",
-    "The scope behaves like one on a real bench: its probes load the circuit, AC coupling is a real high-pass, and a ×10 probe needs compensating.",
-    "The ground clip is tied to earth, so clipping it to a node that isn't ground shorts that node, as it would on a real bench.",
-    "The snap is also built for 64-bit ARM Linux."
+    "The Workshop is rebuilt: the circuit fills the window, tools sit on a rail with their keys, Run (F5) is one amber key, and the multimeter stays in view.",
+    "Build on a clear 830-point breadboard: put each lead in a hole, run jumpers, and the schematic redraws from what you built.",
+    "A new game starts on First light's Bench: predict the LED's current, close the loop, measure it, and see the map when the design clears.",
+    "The oscilloscope trace is live: every sweep is a fresh 8-bit capture with realistic noise.",
+    "The calculator is laid out like the scope, and its Complex line and Matrix cells type upright.",
+    "The Theory map has a low drone and a swell when a topic lights, with Music and Effects volume and Mute in Settings."
   ],
   "notes_url": "https://sparkchamber.app/download.html#notes"
 }

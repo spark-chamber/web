@@ -204,7 +204,7 @@
     {
       "id": "led_current",
       "quantity": "LED current",
-      "how": "Meter in series with the LED (the A and W tool on the LED)",
+      "how": "The meter's A tool (M) in series at the LED's anode, red lead in mA",
       "measure": {
         "kind": "current",
         "type": "led"
@@ -217,7 +217,7 @@
     {
       "id": "resistor_power",
       "quantity": "Resistor power, against its ¼ W rating",
-      "how": "The A and W tool on the resistor: its power as a share of 250 mW",
+      "how": "V between across the resistor and the A tool through it; P = V × I, of 250 mW",
       "measure": {
         "kind": "powerOfRating",
         "type": "resistor"
