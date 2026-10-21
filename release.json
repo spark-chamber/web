@@ -1,13 +1,13 @@
 {
-  "version": "0.7.0",
-  "date": "2026-10-16",
+  "version": "0.7.2",
+  "date": "2026-10-21",
   "highlights": [
-    "The Workshop is rebuilt: the circuit fills the window, tools sit on a rail with their keys, Run (F5) is one amber key, and the multimeter stays in view.",
-    "Build on a clear 830-point breadboard: put each lead in a hole, run jumpers, and the schematic redraws from what you built.",
-    "A new game starts on First light's Bench: predict the LED's current, close the loop, measure it, and see the map when the design clears.",
-    "The oscilloscope trace is live: every sweep is a fresh 8-bit capture with realistic noise.",
-    "The calculator is laid out like the scope, and its Complex line and Matrix cells type upright.",
-    "The Theory map has a low drone and a swell when a topic lights, with Music and Effects volume and Mute in Settings."
+    "The scope leaves no ghost, catches a comparator's fast switching, keeps running after Autoset, and its readings hold their digits still and update three times as often.",
+    "Settings opens from anywhere with Ctrl+comma or the gear and puts you back where you were. Listening on: Speakers or Headphones; the ambience plays quieter.",
+    "On a big window the docked scope takes half the window and scrolling no longer turns its knobs; on a touchpad, pinch zooms and two fingers pan the Bench.",
+    "Simulations are exact at any time step, no longer ring where a diode cuts off a coil's current, and read rectifier ripple right.",
+    "Circuits started from rest always run, Copy for LTspice copies the same circuit, and the breadboard refuses a dead short.",
+    "Every analysis is checked against ngspice, an independent circuit simulator."
   ],
   "notes_url": "https://sparkchamber.app/download.html#notes"
 }
