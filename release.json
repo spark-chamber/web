@@ -1,13 +1,12 @@
 {
-  "version": "0.7.2",
-  "date": "2026-10-21",
+  "version": "0.7.3",
+  "date": "2026-10-22",
   "highlights": [
-    "The scope leaves no ghost, catches a comparator's fast switching, keeps running after Autoset, and its readings hold their digits still and update three times as often.",
-    "Settings opens from anywhere with Ctrl+comma or the gear and puts you back where you were. Listening on: Speakers or Headphones; the ambience plays quieter.",
-    "On a big window the docked scope takes half the window and scrolling no longer turns its knobs; on a touchpad, pinch zooms and two fingers pan the Bench.",
-    "Simulations are exact at any time step, no longer ring where a diode cuts off a coil's current, and read rectifier ripple right.",
-    "Circuits started from rest always run, Copy for LTspice copies the same circuit, and the breadboard refuses a dead short.",
-    "Every analysis is checked against ngspice, an independent circuit simulator."
+    "The three simulator readings that 0.7.2 listed as a little off now agree with ngspice or the exact answer, and two rarer circuits that went wrong now run right.",
+    "While the scope works it says what it is doing: how many periods it has let the circuit settle, then how much of the record it has acquired.",
+    "A capture after Autoset no longer settles the circuit a second time, and an AC-coupled channel no longer waits out its coupling capacitor's charge.",
+    "Keys for the scope: 1 and 2 pick a channel, the arrows turn its VOLTS/DIV and TIME/DIV, Shift with the arrows moves its trace.",
+    "In the calculator, Backspace after a bracket removes the pair and keeps what was inside, and the side panel's heading reads GIVEN."
   ],
   "notes_url": "https://sparkchamber.app/download.html#notes"
 }
